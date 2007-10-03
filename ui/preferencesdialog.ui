@@ -1,0 +1,185 @@
+<ui version="4.0" >
+ <class>PreferencesDialog</class>
+ <widget class="QWidget" name="PreferencesDialog" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>467</width>
+    <height>420</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Preferences</string>
+  </property>
+  <layout class="QGridLayout" >
+   <item row="0" column="0" >
+    <widget class="QSplitter" name="splitter" >
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="childrenCollapsible" >
+      <bool>false</bool>
+     </property>
+     <widget class="QWidget" name="layoutWidget" >
+      <layout class="QHBoxLayout" >
+       <item>
+        <widget class="QTreeWidget" name="categoryList" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+           <horstretch>1</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize" >
+          <size>
+           <width>150</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize" >
+          <size>
+           <width>250</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="indentation" >
+          <number>15</number>
+         </property>
+         <property name="rootIsDecorated" >
+          <bool>false</bool>
+         </property>
+         <property name="uniformRowHeights" >
+          <bool>true</bool>
+         </property>
+         <property name="itemsExpandable" >
+          <bool>false</bool>
+         </property>
+         <column>
+          <property name="text" >
+           <string/>
+          </property>
+         </column>
+        </widget>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" >
+         <property name="spacing" >
+          <number>6</number>
+         </property>
+         <property name="leftMargin" >
+          <number>0</number>
+         </property>
+         <property name="topMargin" >
+          <number>0</number>
+         </property>
+         <property name="rightMargin" >
+          <number>0</number>
+         </property>
+         <property name="bottomMargin" >
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="currentLabel" >
+           <property name="indent" >
+            <number>5</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line_2" >
+           <property name="orientation" >
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QStackedWidget" name="widgetStack" >
+           <property name="frameShape" >
+            <enum>QFrame::NoFrame</enum>
+           </property>
+           <property name="frameShadow" >
+            <enum>QFrame::Plain</enum>
+           </property>
+           <property name="currentIndex" >
+            <number>2</number>
+           </property>
+           <widget class="QWidget" name="LookNFeelPage" >
+            <widget class="QCheckBox" name="chkHiddenStart" >
+             <property name="geometry" >
+              <rect>
+               <x>10</x>
+               <y>30</y>
+               <width>251</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="sizePolicy" >
+              <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text" >
+              <string>Hidden Start</string>
+             </property>
+            </widget>
+           </widget>
+           <widget class="QWidget" name="page" />
+           <widget class="QWidget" name="page_2" />
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item row="1" column="0" >
+    <layout class="QHBoxLayout" >
+     <property name="spacing" >
+      <number>6</number>
+     </property>
+     <property name="leftMargin" >
+      <number>0</number>
+     </property>
+     <property name="topMargin" >
+      <number>0</number>
+     </property>
+     <property name="rightMargin" >
+      <number>0</number>
+     </property>
+     <property name="bottomMargin" >
+      <number>0</number>
+     </property>
+     <item>
+      <spacer>
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" >
+        <size>
+         <width>131</width>
+         <height>31</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="closeButton" >
+       <property name="text" >
+        <string>&amp;Close</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>categoryList</tabstop>
+  <tabstop>closeButton</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

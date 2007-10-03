@@ -1,0 +1,109 @@
+<ui version="4.0" >
+ <class>formAbout</class>
+ <widget class="QDialog" name="formAbout" >
+  <property name="windowModality" >
+   <enum>Qt::ApplicationModal</enum>
+  </property>
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Dialog</string>
+  </property>
+  <widget class="QPushButton" name="Button" >
+   <property name="geometry" >
+    <rect>
+     <x>140</x>
+     <y>260</y>
+     <width>111</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>OK</string>
+   </property>
+   <property name="default" >
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label" >
+   <property name="geometry" >
+    <rect>
+     <x>140</x>
+     <y>10</y>
+     <width>107</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="font" >
+    <font>
+     <pointsize>16</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text" >
+    <string>StilDC++</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2" >
+   <property name="geometry" >
+    <rect>
+     <x>170</x>
+     <y>110</y>
+     <width>48</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground" >
+    <bool>false</bool>
+   </property>
+   <property name="text" >
+    <string/>
+   </property>
+   <property name="alignment" >
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="VerLabel" >
+   <property name="geometry" >
+    <rect>
+     <x>30</x>
+     <y>40</y>
+     <width>331</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string/>
+   </property>
+   <property name="alignment" >
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>Button</sender>
+   <signal>clicked()</signal>
+   <receiver>formAbout</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>195</x>
+     <y>275</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

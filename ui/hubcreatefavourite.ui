@@ -1,0 +1,170 @@
+<ui version="4.0" >
+ <class>HUBCreateFavorite</class>
+ <widget class="QDialog" name="HUBCreateFavorite" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>268</width>
+    <height>223</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Create Favourite</string>
+  </property>
+  <layout class="QVBoxLayout" >
+   <property name="spacing" >
+    <number>6</number>
+   </property>
+   <property name="leftMargin" >
+    <number>9</number>
+   </property>
+   <property name="topMargin" >
+    <number>9</number>
+   </property>
+   <property name="rightMargin" >
+    <number>9</number>
+   </property>
+   <property name="bottomMargin" >
+    <number>9</number>
+   </property>
+   <item>
+    <layout class="QGridLayout" >
+     <property name="leftMargin" >
+      <number>0</number>
+     </property>
+     <property name="topMargin" >
+      <number>0</number>
+     </property>
+     <property name="rightMargin" >
+      <number>0</number>
+     </property>
+     <property name="bottomMargin" >
+      <number>0</number>
+     </property>
+     <property name="horizontalSpacing" >
+      <number>6</number>
+     </property>
+     <property name="verticalSpacing" >
+      <number>6</number>
+     </property>
+     <item row="3" column="0" >
+      <widget class="QLabel" name="pwdLabel" >
+       <property name="text" >
+        <string>Password:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1" >
+      <widget class="QLineEdit" name="nickEdit" />
+     </item>
+     <item row="3" column="1" >
+      <widget class="QLineEdit" name="pwdEdit" />
+     </item>
+     <item row="0" column="1" >
+      <widget class="QLineEdit" name="nameEdit" />
+     </item>
+     <item row="0" column="0" >
+      <widget class="QLabel" name="nameLabel" >
+       <property name="text" >
+        <string>Name:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0" >
+      <widget class="QLabel" name="serverLabel" >
+       <property name="text" >
+        <string>Server:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1" >
+      <widget class="QLineEdit" name="serverEdit" />
+     </item>
+     <item row="2" column="0" >
+      <widget class="QLabel" name="nickLabel" >
+       <property name="text" >
+        <string>Nick:</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="autoConnectCheckBox" >
+     <property name="text" >
+      <string>Connect automatically on startup</string>
+     </property>
+     <property name="checked" >
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" >
+     <property name="spacing" >
+      <number>6</number>
+     </property>
+     <property name="leftMargin" >
+      <number>0</number>
+     </property>
+     <property name="topMargin" >
+      <number>0</number>
+     </property>
+     <property name="rightMargin" >
+      <number>0</number>
+     </property>
+     <property name="bottomMargin" >
+      <number>0</number>
+     </property>
+     <item>
+      <spacer>
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" >
+        <size>
+         <width>131</width>
+         <height>31</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="createButton" >
+       <property name="text" >
+        <string>Create</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="cancelButton" >
+       <property name="text" >
+        <string>Cancel</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>cancelButton</sender>
+   <signal>clicked()</signal>
+   <receiver>HUBCreateFavorite</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>205</x>
+     <y>178</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>127</x>
+     <y>102</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
