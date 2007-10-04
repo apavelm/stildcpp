@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QString>
 #include <QAction>
+#include <QWidget>
 
 
 #include "ui_PMWindow.h"

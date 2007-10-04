@@ -8,15 +8,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>442</width>
     <height>120</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>Quick Connect</string>
-  </property>
-  <property name="modal" >
-   <bool>true</bool>
   </property>
   <layout class="QGridLayout" >
    <item row="0" column="0" >
@@ -26,7 +23,7 @@
        <item>
         <widget class="QLabel" name="IconLabel" >
          <property name="text" >
-          <string>TextLabel</string>
+          <string/>
          </property>
         </widget>
        </item>
@@ -98,8 +95,87 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../src/systray.qrc" />
- </resources>
- <connections/>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>OKButton</sender>
+   <signal>clicked()</signal>
+   <receiver>quickConnectwin</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>317</x>
+     <y>93</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>220</x>
+     <y>59</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>OKButton</sender>
+   <signal>pressed()</signal>
+   <receiver>quickConnectwin</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>317</x>
+     <y>93</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>220</x>
+     <y>59</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>CancelButton</sender>
+   <signal>clicked()</signal>
+   <receiver>quickConnectwin</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>390</x>
+     <y>93</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>220</x>
+     <y>59</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>CancelButton</sender>
+   <signal>pressed()</signal>
+   <receiver>quickConnectwin</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>390</x>
+     <y>93</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>220</x>
+     <y>59</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>adrline</sender>
+   <signal>returnPressed()</signal>
+   <receiver>OKButton</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>188</x>
+     <y>53</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>317</x>
+     <y>93</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

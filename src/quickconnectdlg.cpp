@@ -9,30 +9,14 @@ TQuickConnectDialog::TQuickConnectDialog(QWidget *parent) : QDialog(parent)
 	IconLabel->setPixmap(QPixmap(":/images/QuickCon.png"));
 	adrline->setText(tr(""));
 	spinBox->setValue(411);
-	port=411;
-	adr=tr("");
-
-	connect(CancelButton, SIGNAL(clicked()), this, SLOT(reject()));
-	connect(OKButton, SIGNAL(clicked()), this, SLOT(on_ok()));
-	connect(spinBox, SIGNAL(valueChanged(int)), this, SLOT(onPortChange(int)));
-	connect(adrline, SIGNAL(returnPressed()), this, SLOT(on_ok()));
-	connect(adrline, SIGNAL(textChanged()), this, SLOT(onAdrChange(QString &)));
-
+	
+	connect(this,SIGNAL(accepted()),this,SLOT(okFunc()));
+	
 	show();
 }
-void TQuickConnectDialog::on_ok()
-{	
-	emit on_Connect(adr,port);
-	accept();
-}
 
-void TQuickConnectDialog::onPortChange(int n)
+void TQuickConnectDialog::okFunc()
 {
-	port=n;
+	QString a=adrline->text();
+	emit con_pressed(a,spinBox->value());
 }
-
-void TQuickConnectDialog::onAdrChange(QString &s)
-{
-	adr=s;
-}
-

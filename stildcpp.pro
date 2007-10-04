@@ -1,6 +1,10 @@
 TEMPLATE = app
 QT = gui core
-CONFIG += qt warn_on console debug
+CONFIG += qt \
+ warn_on \
+ console \
+ debug \
+ build_all
 DESTDIR = bin
 OBJECTS_DIR = build
 MOC_DIR = build
@@ -26,5 +30,5 @@ SOURCES = src/mainwindowimpl.cpp \
  src/preferencesdialog.cpp \
  src/config.cpp \
  src/quickconnectdlg.cpp
-RESOURCES += src/systray.qrc
+RESOURCES += src/stildcpp.qrc
 VERNUM = 0.1

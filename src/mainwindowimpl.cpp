@@ -37,10 +37,8 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f) : QMainWindow(pa
 	createTrayIcon();
 
 	connect(trayIcon, SIGNAL(messageClicked()), this, SLOT(messageClicked()));
-	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
-
-	setIcon(0);
-	setWindowIcon(QIcon(":/images/icon.png"));
+	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));	
+	
 	setToolTip(tr("StilDC++"));
 	setWindowTitle(tr("StilDC++"));
 	
@@ -48,6 +46,8 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f) : QMainWindow(pa
 	setShareSize(tr("Total shared: 0b"));
 	statusBar()->addPermanentWidget(shareStatusLbl);
 	
+	setIcon(0);
+	setWindowIcon(QIcon(":/images/icon.png"));
 	trayIcon->show();
 	
 	show(); //insert "if" startHidden
@@ -170,7 +170,6 @@ void MainWindowImpl::createActions()
 	
 
 	connect(actionAbout, SIGNAL(triggered()), this, SLOT(About()));	
-	connect(actionQuick_Connect, SIGNAL(triggered()), this, SLOT(QuickConFunc()));	
 	connect(aboutqtact, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 	connect(actionTransfers, SIGNAL(triggered()), this, SLOT(transcheck()));
 	connect(actionStatusBar, SIGNAL(triggered()), this, SLOT(statusbarcheck()));
@@ -184,7 +183,7 @@ void MainWindowImpl::createActions()
 	connect(actionHomepage, SIGNAL(triggered()), this, SLOT(HomepageFunc()));
 	connect(actionSearch, SIGNAL(triggered()), this, SLOT(SearchFunc()));
 	connect(actionFavorite_Hubs, SIGNAL(triggered()), this, SLOT(FavHubListFunc()));
-	
+	connect(actionQuick_Connect, SIGNAL(triggered()), this, SLOT(fQuickConFunc()));		
 	
 }
 
@@ -306,9 +305,8 @@ QMdiSubWindow *MainWindowImpl::findMdiChild(const int id)
 
 void MainWindowImpl::setActiveSubWindow(QWidget *window)
 {
-    if (!window)
-        return;
-    mdiArea->setActiveSubWindow(qobject_cast<QMdiSubWindow *>(window));
+	if (!window) return;
+	mdiArea->setActiveSubWindow(qobject_cast<QMdiSubWindow *>(window));
 }
 
 void MainWindowImpl::DonateFunc()
@@ -327,11 +325,11 @@ void MainWindowImpl::DonateFunc()
 
 void MainWindowImpl::HomepageFunc()
 {
-	QUrl url = QUrl(tr("http://www.stildcpp.org"));
+	QUrl url = QUrl(tr("http://code.google.com/p/stildcpp/"));
 	QDesktopServices::openUrl(url);
 }
 
-void MainWindowImpl::OpenHub(QString &adr)
+void MainWindowImpl::OpenHub(QString &adr, int port)
 {
 	HubWindow *child = new HubWindow(this,adr);
 	mdiArea->addSubWindow(child);
@@ -376,9 +374,15 @@ void MainWindowImpl::FavHubListFunc()
 	}
 }
 
-void MainWindowImpl::QuickConFunc()
+void MainWindowImpl::qcdconFunc(QString adr, int port)
 {
-	new TQuickConnectDialog(this);
+	OpenHub(adr,port);
+}
+
+void MainWindowImpl::fQuickConFunc()
+{
+	TQuickConnectDialog *qcd = new TQuickConnectDialog(this);
+	connect(qcd,SIGNAL(con_pressed(QString, int)),this,SLOT(qcdconFunc(QString, int)));
 }
 
 void MainWindowImpl::transcheck()

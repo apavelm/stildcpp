@@ -7,17 +7,15 @@
 
 class TQuickConnectDialog : public QDialog, private Ui::quickConnectwin
 {
-private:
-	QString &adr;
-	int port;
+	Q_OBJECT
 private slots:
-	void on_ok();
-	void onPortChange(int);
-	void onAdrChange(QString &);
+	void okFunc();
+
 public:
 	TQuickConnectDialog(QWidget *);
+
 signals:
-	void on_Connect(QString &, int);
+	void con_pressed(QString, int);
 };
 
 #endif // __QUICKCONNECTDLG_H__

@@ -48,10 +48,11 @@ private slots:
 	void DonateFunc();
 	void HomepageFunc();
 	void SearchFunc();
+	void qcdconFunc(QString , int);
 	void PreferencesFunc();
 	void FavHubListFunc();
-	void QuickConFunc();
-	void OpenHub(QString &adr);
+	void fQuickConFunc();
+	void OpenHub(QString &adr, int port);
 	void transcheck(); // if TransferWindow Checked in menu @View@
 	void statusbarcheck(); // if StatusBar Checked in menu @View@
 	void toolbarcheck(); // if ToolBar Checked in menu @View@
