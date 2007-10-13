@@ -1,9 +1,29 @@
+/***************************************************************************
+ *   Copyright (C) 2007 by Pavel Andreev                                   *
+ *   Mail: apavelm on gmail dot com (apavelm@gmail.com)                    *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 3 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
 #include "mainwindowimpl.h"
-
+using namespace std;
 //
-
 MainWindowImpl::~MainWindowImpl()
 {
+	thrdGetTTh.stop();
 	delete closeAct;
 	delete closeAllAct;
 	delete tileAct;
@@ -19,7 +39,8 @@ MainWindowImpl::~MainWindowImpl()
 	delete trayIconMenu;
 	delete shareStatusLbl;		
 	delete mdiArea;
-	delete windowMapper;	
+	delete windowMapper;
+	thrdGetTTh.wait();
 }
 
 MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f) : QMainWindow(parent, f)
@@ -49,7 +70,7 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f) : QMainWindow(pa
 	setIcon(0);
 	setWindowIcon(QIcon(":/images/icon.png"));
 	trayIcon->show();
-	
+
 	show(); //insert "if" startHidden
 }
 
@@ -182,8 +203,12 @@ void MainWindowImpl::createActions()
 	connect(actionDonate, SIGNAL(triggered()), this, SLOT(DonateFunc()));
 	connect(actionHomepage, SIGNAL(triggered()), this, SLOT(HomepageFunc()));
 	connect(actionSearch, SIGNAL(triggered()), this, SLOT(SearchFunc()));
+	connect(actionGet_TTH_for_file, SIGNAL(triggered()), this, SLOT(GetTTHFunc()));
+	
 	connect(actionFavorite_Hubs, SIGNAL(triggered()), this, SLOT(FavHubListFunc()));
-	connect(actionQuick_Connect, SIGNAL(triggered()), this, SLOT(fQuickConFunc()));		
+	connect(actionQuick_Connect, SIGNAL(triggered()), this, SLOT(fQuickConFunc()));
+	
+	connect(&thrdGetTTh, SIGNAL(ready()), this, SLOT(show_tthFunc()));
 	
 }
 
@@ -414,5 +439,86 @@ void MainWindowImpl::slotclosemdi(QAction *act)
 {
 	WindowToolBar->removeAction(act);
 }
+
+QString ThreadGetTTH::getA()
+{
+	return a;
+}
+
+void ThreadGetTTH::setA(QString s)
+{
+	a=s;
+}
+
+QString ThreadGetTTH::getB()
+{
+	return b;
+}
+
+QString ThreadGetTTH::getC()
+{
+	return c;
+}
+
+void ThreadGetTTH::stop()
+{
+	 _stp = true;
+}
+
+void ThreadGetTTH::run()
+{	
+	_stp = false;
+	b="";
+	c="";
+	if (!a.isEmpty()) {
+		using namespace dcpp;
+		AutoArray<char> buf(512*1024);
+
+		try {
+			QFile f(a);
+			QFileInfo fi(f);
+			TigerTree tth(TigerTree::calcBlockSize(f.size(), 1));
+
+			f.open(QIODevice::ReadOnly);
+			if (fi.size() > 0) {
+				qint64 n = 512*1024;
+				while( (n = f.read(buf, n)) > 0) {
+					if (_stp) break;
+					tth.update(buf, n);
+					n = 512*1024;
+					if (_stp) break;
+				}
+			} else tth.update("", 0);
+			tth.finalize();
+
+			b = tr(tth.getRoot().toBase32().c_str());
+			
+			c = "magnet:?xt=urn:tree:tiger:" + b + "&xl=" + QString::number(fi.size()) + "&dn=" + (Util::encodeURI(fi.fileName().toLocal8Bit().data())).c_str();
+			f.close();
+			if (_stp) return;
+		} catch(...) { }
+	using namespace std;
+	emit ready();
+	}
+	return ;
+}
+
+void MainWindowImpl::GetTTHFunc()
+{	
+	actionGet_TTH_for_file->setEnabled(false);
+	QString selectedFilter=tr("");
+	QFileDialog::Options options;
+	//options |= QFileDialog::DontUseNativeDialog;	
+	thrdGetTTh.setA( QFileDialog::getOpenFileName(this, tr("Select File"),"", tr("All Files (*)"), &selectedFilter, options) );
+	
+	thrdGetTTh.start(QThread::LowPriority);
+}
+
+void MainWindowImpl::show_tthFunc()
+{
+	QMessageBox::information(this, tr("Tiger Tree Hash"),tr("File: ")+thrdGetTTh.getA()+tr("\nTTH: ")+thrdGetTTh.getB()+tr("\n")+thrdGetTTh.getC());
+	actionGet_TTH_for_file->setEnabled(true);
+}
+
 
 //

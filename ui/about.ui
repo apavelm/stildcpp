@@ -86,6 +86,22 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
+  <widget class="QLabel" name="thxlabel" >
+   <property name="geometry" >
+    <rect>
+     <x>10</x>
+     <y>230</y>
+     <width>381</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>TextLabel</string>
+   </property>
+   <property name="alignment" >
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections>

@@ -1,7 +1,30 @@
+/***************************************************************************
+ *   Copyright (C) 2007 by Pavel Andreev                                   *
+ *   Mail: apavelm on gmail dot com (apavelm@gmail.com)                    *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 3 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
 #ifndef MAINWINDOWIMPL_H
 #define MAINWINDOWIMPL_H
 //
 #include <QMainWindow>
+#include <QFileDialog>
+#include <QFileInfo>
+#include <QFile>
 #include <QSystemTrayIcon>
 #include <QMessageBox>
 #include <QCloseEvent>
@@ -13,6 +36,9 @@
 #include <QSignalMapper>
 #include <QDesktopServices>
 #include <QUrl>
+#include <QThread>
+#include <sstream>
+#include <boost/filesystem/path.hpp>
 #include "ui_mainwindow.h"
 
 #include "config.h"
@@ -23,6 +49,30 @@
 #include "quickconnectdlg.h"
 
 //
+#include "client/stdinc.h"
+#include "client/DCPlusPlus.h"
+#include "client/MerkleTree.h"
+#include "client/Util.h"
+#include "client/Text.h"
+#include "client/File.h"
+//
+
+class ThreadGetTTH : public QThread
+{
+	Q_OBJECT
+public:
+	void run();
+	void stop();
+	QString getA();
+	void setA(QString);
+	QString getB();
+	QString getC();
+private:
+	bool _stp;
+	QString a,b,c;
+signals:
+	void ready();
+};
 
 class MainWindowImpl : public QMainWindow, public Ui::MainWindow
 {
@@ -49,6 +99,8 @@ private slots:
 	void HomepageFunc();
 	void SearchFunc();
 	void qcdconFunc(QString , int);
+	void show_tthFunc();
+	void GetTTHFunc();
 	void PreferencesFunc();
 	void FavHubListFunc();
 	void fQuickConFunc();
@@ -93,6 +145,8 @@ private:
 	QMdiSubWindow *findMdiChild(const int id, QString &idtext, QAction *act);
 	QMdiSubWindow *findMdiChild(const int id, QString &idtext);
 	QMdiSubWindow *findMdiChild(const int id);
+	
+	ThreadGetTTH thrdGetTTh;
 	
 
 };
