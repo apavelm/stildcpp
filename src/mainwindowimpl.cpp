@@ -31,10 +31,7 @@ MainWindowImpl::~MainWindowImpl()
 	delete nextAct;
 	delete previousAct;
 	delete separatorAct;
-	delete minimizeAction;
-	delete maximizeAction;
-	delete restoreAction;
-	delete quitAction;
+	delete showhide;
 	delete trayIcon;
 	delete trayIconMenu;
 	delete shareStatusLbl;		
@@ -73,14 +70,6 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f) : QMainWindow(pa
 	trayIcon->show();
 
 	show(); //insert "if" startHidden
-}
-
-void MainWindowImpl::setVisible(bool visible)
-{
-	minimizeAction->setEnabled(visible);
-	maximizeAction->setEnabled(!isMaximized());
-	restoreAction->setEnabled(isMaximized() || !visible);
-	QWidget::setVisible(visible);
 }
 
 void MainWindowImpl::closeEvent(QCloseEvent *event)
@@ -137,19 +126,12 @@ void MainWindowImpl::messageClicked()
 
 void MainWindowImpl::createActions()
 {	
-	minimizeAction = new QAction(tr("Mi&nimize"), this);
-	connect(minimizeAction, SIGNAL(triggered()), this, SLOT(hide()));
-
-	maximizeAction = new QAction(tr("Ma&ximize"), this);
-	connect(maximizeAction, SIGNAL(triggered()), this, SLOT(showMaximized()));
-
-	restoreAction = new QAction(tr("&Restore"), this);
-	connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
-
-	quitAction = new QAction(tr("&Quit"), this);
-	connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
-	connect(actionExit, SIGNAL(triggered()), qApp, SLOT(quit()));
+	showhide = new QAction(tr("Show / Hide"), this);
+	showhide->setStatusTip(tr("Show / Hide application window"));
+	showhide->setToolTip(tr("Show / Hide application window"));
+	connect(showhide, SIGNAL(triggered()), this, SLOT(showhideFunc()));
 	
+	connect(actionExit, SIGNAL(triggered()), qApp, SLOT(quit()));
 	
 	closeAct = new QAction(tr("Cl&ose"), this);
 	closeAct->setShortcut(tr("Ctrl+F4"));
@@ -179,6 +161,11 @@ void MainWindowImpl::createActions()
 	separatorAct = new QAction(this);
 	separatorAct->setSeparator(true);
 	
+	
+	connect(actionOpen_filelist, SIGNAL(triggered()), this, SLOT(openfilelistFunc()));
+	connect(actionOpen_own_filelist, SIGNAL(triggered()), this, SLOT(openownfilelistFunc()));
+	connect(actionOpen_Downloads_Folder, SIGNAL(triggered()), this, SLOT(OpenDownloadsFolderFunc()));
+	connect(actionRefresh_own_filelist, SIGNAL(triggered()), this, SLOT(RefreshOwnFileListFunc()));
 
 	connect(actionAbout, SIGNAL(triggered()), this, SLOT(About()));	
 	connect(aboutqtact, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
@@ -202,14 +189,17 @@ void MainWindowImpl::createActions()
 	
 }
 
-void MainWindowImpl::createTrayIcon()
+void MainWindowImpl::showhideFunc()
 {
+	if (this->isHidden()) this->show(); else this->hide();
+}
+
+void MainWindowImpl::createTrayIcon()
+{	
 	trayIconMenu = new QMenu(this);	
-	trayIconMenu->addAction(minimizeAction);
-	trayIconMenu->addAction(maximizeAction);
-	trayIconMenu->addAction(restoreAction);
+	trayIconMenu->addAction(showhide);
 	trayIconMenu->addSeparator();
-	trayIconMenu->addAction(quitAction);
+	trayIconMenu->addAction(actionExit);
 
 	trayIcon = new QSystemTrayIcon(this);
 	trayIcon->setContextMenu(trayIconMenu);
@@ -507,8 +497,40 @@ void MainWindowImpl::GetTTHFunc()
 void MainWindowImpl::show_tthFunc()
 {
 	new TthDialog(this,thrdGetTTh.getA(),thrdGetTTh.getB(),thrdGetTTh.getC());
-//	QMessageBox::information(this, tr("Tiger Tree Hash"),tr("File: ")+thrdGetTTh.getA()+tr("\nTTH: ")+thrdGetTTh.getB()+tr("\n")+thrdGetTTh.getC());
 	actionGet_TTH_for_file->setEnabled(true);
+}
+
+void MainWindowImpl::openfilelistFunc()
+{
+	// Open Custom FileList
+	
+	QString selectedFilter=tr("");
+	QFileDialog::Options options;
+	//options |= QFileDialog::DontUseNativeDialog;
+	QString fn = QFileDialog::getOpenFileName(this, tr("Select File"),"", tr("All Files (*)"), &selectedFilter, options);
+	if (!fn.isEmpty()) OpenList(fn);
+}
+
+void MainWindowImpl::openownfilelistFunc()
+{
+	// Open Own FileList
+	OpenList("");
+}
+
+void MainWindowImpl::OpenList(const QString &filename)
+{
+	// Function to open filelists
+	return;
+}
+
+void MainWindowImpl::OpenDownloadsFolderFunc()
+{
+	//Opens Downloads Folder (DOWNDIR) in File Manager;
+}
+
+void MainWindowImpl::RefreshOwnFileListFunc()
+{
+	// Refreshes (rehash) own filelist
 }
 
 //

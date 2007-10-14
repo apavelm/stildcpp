@@ -82,9 +82,7 @@ Q_OBJECT
 public:
 	MainWindowImpl( QWidget * parent = 0, Qt::WFlags f = 0 );
 	~MainWindowImpl();
-	
-	void setVisible(bool visible);
-	
+
 protected:
 	void closeEvent(QCloseEvent *event);
 
@@ -96,11 +94,16 @@ private slots:
 	void statusMessage(const QString & mes);
 	void slotclosemdi(QAction *act);
 	void About();
+	void openfilelistFunc();
+	void OpenDownloadsFolderFunc();
+	void RefreshOwnFileListFunc();
+	void openownfilelistFunc();
 	void DonateFunc();
 	void HomepageFunc();
 	void SearchFunc();
 	void qcdconFunc(QString , int);
 	void show_tthFunc();
+	void showhideFunc();
 	void GetTTHFunc();
 	void PreferencesFunc();
 	void FavHubListFunc();
@@ -118,14 +121,11 @@ private:
 	void createActions();
 	void createTrayIcon();
 	void createToolBars();
+	void OpenList(const QString &);
 	void setShareSize(const QString &sz);
 
+	QAction *showhide;
 
-	QAction *minimizeAction;
-	QAction *maximizeAction;
-	QAction *restoreAction;
-	QAction *quitAction;
-	
 	QAction *closeAct;
 	QAction *closeAllAct;
 	QAction *tileAct;

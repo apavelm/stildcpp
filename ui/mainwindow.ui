@@ -180,25 +180,40 @@
    <property name="text" >
     <string>Open filelist</string>
    </property>
+   <property name="statusTip" >
+    <string>Open Your Own FileList</string>
+   </property>
   </action>
   <action name="actionOpen_own_filelist" >
    <property name="text" >
     <string>Open own filelist</string>
+   </property>
+   <property name="statusTip" >
+    <string>Open FileList From File...</string>
    </property>
   </action>
   <action name="actionRefresh_own_filelist" >
    <property name="text" >
     <string>Refresh own filelist</string>
    </property>
+   <property name="statusTip" >
+    <string>Refresh Your FileList</string>
+   </property>
   </action>
   <action name="actionOpen_Downloads_Folder" >
    <property name="text" >
     <string>Open Downloads Folder</string>
    </property>
+   <property name="statusTip" >
+    <string>Open Downloads Folder in FileManager</string>
+   </property>
   </action>
   <action name="actionQuick_Connect" >
    <property name="text" >
     <string>Quick Connect</string>
+   </property>
+   <property name="statusTip" >
+    <string>Quick Connect to Hub</string>
    </property>
   </action>
   <action name="actionFollow_last_redirect" >
@@ -210,15 +225,27 @@
    <property name="text" >
     <string>Reconnect</string>
    </property>
+   <property name="statusTip" >
+    <string>Reconnect to Hub</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+R</string>
+   </property>
   </action>
   <action name="actionSettings" >
    <property name="text" >
     <string>Settings</string>
    </property>
+   <property name="statusTip" >
+    <string>Configure StilDC++ client</string>
+   </property>
   </action>
   <action name="actionGet_TTH_for_file" >
    <property name="text" >
     <string>Get TTH for file...</string>
+   </property>
+   <property name="statusTip" >
+    <string>Calculate TTH for custom file...</string>
    </property>
   </action>
   <action name="actionPublic_Hubs" >
