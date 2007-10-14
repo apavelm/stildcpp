@@ -46,6 +46,7 @@
 #include "frmAbout.h"
 #include "preferencesdialog.h"
 #include "mdi_c.h"
+#include "tthdial.h"
 #include "quickconnectdlg.h"
 
 //

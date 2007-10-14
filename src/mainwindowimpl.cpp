@@ -516,7 +516,8 @@ void MainWindowImpl::GetTTHFunc()
 
 void MainWindowImpl::show_tthFunc()
 {
-	QMessageBox::information(this, tr("Tiger Tree Hash"),tr("File: ")+thrdGetTTh.getA()+tr("\nTTH: ")+thrdGetTTh.getB()+tr("\n")+thrdGetTTh.getC());
+	new TthDialog(this,thrdGetTTh.getA(),thrdGetTTh.getB(),thrdGetTTh.getC());
+//	QMessageBox::information(this, tr("Tiger Tree Hash"),tr("File: ")+thrdGetTTh.getA()+tr("\nTTH: ")+thrdGetTTh.getB()+tr("\n")+thrdGetTTh.getC());
 	actionGet_TTH_for_file->setEnabled(true);
 }
 
