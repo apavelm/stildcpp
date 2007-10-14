@@ -18,19 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef FRMABOUT_H
-#define FRMABOUT_H
-
-#include <QDialog>
-
 #include "defs.h"
 
-#include "ui_about.h"
-
-class AboutDialog : public QDialog, private Ui::formAbout
-{
-public:
-	AboutDialog(QWidget *);
-};
-
-#endif
+// place your code here

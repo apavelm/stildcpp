@@ -18,19 +18,15 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef FRMABOUT_H
-#define FRMABOUT_H
+#ifndef __DEFS_H__
+#define __DEFS_H__
 
-#include <QDialog>
+#define APPLICATIONNAME "StilDC++"
+#define APPVER "0.1"
+#define APPVER_FLOAT 0.1
+#define APPVER_FULL "Version 0.1"
+#define SPECIALTHX "Special thanks to Suraev Yakov (adminbsd@gmail.com)"
+#define APPHOMEPAGE "http://code.google.com/p/stildcpp/"
 
-#include "defs.h"
 
-#include "ui_about.h"
-
-class AboutDialog : public QDialog, private Ui::formAbout
-{
-public:
-	AboutDialog(QWidget *);
-};
-
-#endif
+#endif // __DEFS_H__

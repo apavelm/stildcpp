@@ -24,6 +24,7 @@
 #include "mainwindowimpl.h"
 #include "frmAbout.h"
 #include "mdi_c.h"
+#include "defs.h"
 
 //
 

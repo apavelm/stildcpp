@@ -27,8 +27,8 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent)
 	setupUi(this);
 	setAttribute(Qt::WA_DeleteOnClose, true);
 
-	VerLabel->setText(tr("Version 0.1"));
-	thxlabel->setText(tr("Special thanks to Suraev Yakov (adminbsd@gmail.com)"));
+	VerLabel->setText(tr(APPVER_FULL));
+	thxlabel->setText(tr(SPECIALTHX));
 	label_2->setPixmap(QPixmap(":/images/icon_linux.png"));
 
 	connect(Button, SIGNAL(clicked()), this, SLOT(accept()));

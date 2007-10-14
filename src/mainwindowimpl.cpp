@@ -57,8 +57,8 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f) : QMainWindow(pa
 	connect(trayIcon, SIGNAL(messageClicked()), this, SLOT(messageClicked()));
 	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));	
 	
-	setToolTip(tr("StilDC++"));
-	setWindowTitle(tr("StilDC++"));
+	setToolTip(tr(APPLICATIONNAME));
+	setWindowTitle(tr(APPLICATIONNAME));
 	
 	shareStatusLbl = new QLabel;
 	setShareSize(tr("Total shared: 0b"));
@@ -330,7 +330,7 @@ void MainWindowImpl::DonateFunc()
 
 void MainWindowImpl::HomepageFunc()
 {
-	QUrl url = QUrl(tr("http://code.google.com/p/stildcpp/"));
+	QUrl url = QUrl(tr(APPHOMEPAGE));
 	QDesktopServices::openUrl(url);
 }
 
@@ -514,7 +514,7 @@ void MainWindowImpl::openfilelistFunc()
 void MainWindowImpl::openownfilelistFunc()
 {
 	// Open Own FileList
-	OpenList("");
+	OpenList(tr(""));
 }
 
 void MainWindowImpl::OpenList(const QString &filename)
@@ -523,14 +523,15 @@ void MainWindowImpl::OpenList(const QString &filename)
 	return;
 }
 
-void MainWindowImpl::OpenDownloadsFolderFunc()
-{
-	//Opens Downloads Folder (DOWNDIR) in File Manager;
-}
-
 void MainWindowImpl::RefreshOwnFileListFunc()
 {
 	// Refreshes (rehash) own filelist
+}
+
+void MainWindowImpl::OpenDownloadsFolderFunc()
+{
+	QUrl url = QUrl(tr("/home/")).toLocalFile(); // FIXME : Change to downloadDIR variable.
+	QDesktopServices::openUrl(url);
 }
 
 //

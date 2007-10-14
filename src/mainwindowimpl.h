@@ -48,6 +48,7 @@
 #include "mdi_c.h"
 #include "tthdial.h"
 #include "quickconnectdlg.h"
+#include "defs.h"
 
 //
 #include "client/stdinc.h"
