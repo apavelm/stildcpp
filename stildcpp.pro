@@ -17,7 +17,8 @@ FORMS = ui/mainwindow.ui \
  ui/search.ui \
  ui/favhublist.ui \
  ui/quickconnect.ui \
- ui/tthdialog.ui
+ ui/tthdialog.ui \
+ ui/filelistdialog.ui
 HEADERS = src/mainwindowimpl.h \
  src/frmAbout.h \
  src/mdi_c.h \
@@ -109,7 +110,8 @@ HEADERS = src/mainwindowimpl.h \
  src/client/version.h \
  src/client/ZUtils.h \
  src/highlighter.h \
- src/tthdial.h
+ src/tthdial.h \
+ src/mdi_filelist.h
 SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
  src/frmAbout.cpp \
@@ -166,7 +168,8 @@ SOURCES = src/mainwindowimpl.cpp \
  src/client/Util.cpp \
  src/client/ZUtils.cpp \
  src/highlighter.cpp \
- src/tthdial.cpp
+ src/tthdial.cpp \
+ src/mdi_filelist.cpp
 RESOURCES += src/stildcpp.qrc
 VERNUM = 0.1
 LIBS += -lssl -lbz2 -lcrypto

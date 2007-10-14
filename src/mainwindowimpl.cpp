@@ -372,7 +372,7 @@ void MainWindowImpl::FavHubListFunc()
 	child->action  = menuWindow->addAction(tr("Fav_Hubs"));
 	
 		child->action->setCheckable(true);
-		connect(child->action, SIGNAL(triggered()), windowMapper, SLOT(map()));		
+		connect(child->action, SIGNAL(triggered()), windowMapper, SLOT(map()));
 		connect(child, SIGNAL(actionReleased(QAction *)), this, SLOT(slotclosemdi(QAction *)));
 		WindowToolBar->addAction(child->action);	
 	child->show();
