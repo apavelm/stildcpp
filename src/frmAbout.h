@@ -20,7 +20,6 @@
 
 #ifndef FRMABOUT_H
 #define FRMABOUT_H
-//
 
 #include <QDialog>
 
@@ -31,8 +30,5 @@ class AboutDialog : public QDialog, private Ui::formAbout
 public:
 	AboutDialog(QWidget *);
 };
+
 #endif
-
-
-
-

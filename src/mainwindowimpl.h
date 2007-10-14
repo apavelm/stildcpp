@@ -58,18 +58,19 @@
 #include "client/File.h"
 //
 
+
 class ThreadGetTTH : public QThread
 {
 	Q_OBJECT
 public:
 	void run();
 	void stop();
-	QString getA();
+	const QString & getA();
 	void setA(QString);
-	QString getB();
-	QString getC();
+	const QString & getB();
+	const QString & getC();
 private:
-	bool _stp;
+	volatile bool _stp;
 	QString a,b,c;
 signals:
 	void ready();
@@ -88,7 +89,6 @@ protected:
 	void closeEvent(QCloseEvent *event);
 
 private slots:
-	void setIcon(int index);
 	void setToolTip(const QString & title);
 	void iconActivated(QSystemTrayIcon::ActivationReason reason);
 	void showMessage(const QString & title, const QString & message, int type, int millisecondsTimeoutHint = 10000);

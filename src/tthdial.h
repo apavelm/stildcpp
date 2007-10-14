@@ -21,15 +21,14 @@
 #ifndef __TTHDIAL_H__
 #define __TTHDIAL_H__
 
-#include "ui_tthdialog.h"
 #include <QDialog>
-#include <QString>
+
+#include "ui_tthdialog.h"
 
 class TthDialog : public QDialog, private Ui::tthdlg
-{
-	Q_OBJECT
+{ 
 public:
-	TthDialog(QWidget *parent, QString, QString, QString);
+	TthDialog(QWidget *parent,const QString &,const QString &,const QString &);
 };
 
 #endif // __TTHDIAL_H__

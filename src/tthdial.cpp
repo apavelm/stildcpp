@@ -20,11 +20,15 @@
 
 #include "tthdial.h"
 
-TthDialog::TthDialog(QWidget *parent, QString a, QString b, QString c)
+TthDialog::TthDialog(QWidget *parent,const QString &a,const QString &b,const QString &c) : QDialog(parent)
 {
+	setupUi(this);
 	setAttribute(Qt::WA_DeleteOnClose, true);
-//	icolabel->setPixmap(QPixmap(":/images/magnet.ico"));
-//	filebox->text=a;
-//	tthbox->text=b;
-//	magnetbox->text=c;
+	connect(OKBtn, SIGNAL(clicked()), this, SLOT(accept()));
+	setWindowIcon(QIcon(":/images/magnet.png"));
+	icolabel->setPixmap(QPixmap(":/images/magnet.png"));
+	filebox->setText(a);
+	tthbox->setText(b);
+	magnetbox->setText(c);
+	show();
 }

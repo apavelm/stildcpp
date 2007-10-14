@@ -67,7 +67,8 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f) : QMainWindow(pa
 	setShareSize(tr("Total shared: 0b"));
 	statusBar()->addPermanentWidget(shareStatusLbl);
 	
-	setIcon(0);
+	trayIcon->setIcon(QIcon(":/images/icon.png"));
+	
 	setWindowIcon(QIcon(":/images/icon.png"));
 	trayIcon->show();
 
@@ -95,17 +96,6 @@ void MainWindowImpl::closeEvent(QCloseEvent *event)
 void MainWindowImpl::setToolTip(const QString & title)
 {
 	trayIcon->setToolTip(title);
-}
-
-void MainWindowImpl::setIcon(int index)
-{
-	QIcon icon = QIcon(":/images/icon.png");
-	switch (index) {
-		case 1: icon = QIcon(":/images/icon_mail.png"); break;
-		case 2:	icon = QIcon(":/images/icon_error.png"); break;
-		default: ;
-	};
-	trayIcon->setIcon(icon);
 }
 
 void MainWindowImpl::iconActivated(QSystemTrayIcon::ActivationReason reason)
@@ -345,7 +335,7 @@ void MainWindowImpl::DonateFunc()
 		connect(child, SIGNAL(actionReleased(QAction *)), this, SLOT(slotclosemdi(QAction *)));
 		WindowToolBar->addAction(child->action);
 	
-	child->show();
+	child->show();	
 }
 
 void MainWindowImpl::HomepageFunc()
@@ -440,7 +430,7 @@ void MainWindowImpl::slotclosemdi(QAction *act)
 	WindowToolBar->removeAction(act);
 }
 
-QString ThreadGetTTH::getA()
+const QString & ThreadGetTTH::getA()
 {
 	return a;
 }
@@ -450,12 +440,12 @@ void ThreadGetTTH::setA(QString s)
 	a=s;
 }
 
-QString ThreadGetTTH::getB()
+const QString & ThreadGetTTH::getB()
 {
 	return b;
 }
 
-QString ThreadGetTTH::getC()
+const QString & ThreadGetTTH::getC()
 {
 	return c;
 }
@@ -520,6 +510,5 @@ void MainWindowImpl::show_tthFunc()
 //	QMessageBox::information(this, tr("Tiger Tree Hash"),tr("File: ")+thrdGetTTh.getA()+tr("\nTTH: ")+thrdGetTTh.getB()+tr("\n")+thrdGetTTh.getC());
 	actionGet_TTH_for_file->setEnabled(true);
 }
-
 
 //

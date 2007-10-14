@@ -10,6 +10,6 @@
 		<file>images/pref_icon.png</file>
 		<file>images/pref_sounds.png</file>
 		<file>images/icon_linux.png</file>
-		<file>images/magnet.ico</file>
+		<file>images/magnet.png</file>
 	</qresource>
 </RCC>
