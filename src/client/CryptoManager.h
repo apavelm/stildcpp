@@ -16,8 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#if !defined(CRYPTO_MANAGER_H)
-#define CRYPTO_MANAGER_H
+#ifndef DCPLUSPLUS_DCPP_CRYPTO_MANAGER_H
+#define DCPLUSPLUS_DCPP_CRYPTO_MANAGER_H
 
 #include "SettingsManager.h"
 
@@ -49,6 +49,7 @@ public:
 
 	void loadCertificates() throw();
 	void generateCertificate() throw(CryptoException);
+	bool checkCertificate() throw();
 
 	bool TLSOk() const throw();
 private:
@@ -58,12 +59,13 @@ private:
 	CryptoManager();
 	virtual ~CryptoManager();
 
-	SSL_CTX* clientContext;
-	SSL_CTX* clientVerContext;
-	SSL_CTX* serverContext;
-	SSL_CTX* serverVerContext;
+	ssl::SSL_CTX clientContext;
+	ssl::SSL_CTX clientVerContext;
+	ssl::SSL_CTX serverContext;
+	ssl::SSL_CTX serverVerContext;
 
-	DH* dh;
+	ssl::DH dh;
+	
 	bool certsLoaded;
 
 	const string lock;

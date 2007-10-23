@@ -112,7 +112,8 @@ HEADERS = src/mainwindowimpl.h \
  src/highlighter.h \
  src/tthdial.h \
  src/mdi_filelist.h \
- src/defs.h
+ src/defs.h \
+ src/client/SSL.h
 SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
  src/frmAbout.cpp \
@@ -171,7 +172,8 @@ SOURCES = src/mainwindowimpl.cpp \
  src/highlighter.cpp \
  src/tthdial.cpp \
  src/mdi_filelist.cpp \
- src/defs.cpp
+ src/defs.cpp \
+ src/client/SSL.cpp
 RESOURCES += src/stildcpp.qrc
 VERNUM = 0.1
 LIBS += -lssl -lbz2 -lcrypto

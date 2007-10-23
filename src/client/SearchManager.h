@@ -52,8 +52,13 @@ public:
 
 	SearchResult(Types aType, int64_t aSize, const string& name, const TTHValue& aTTH);
 
-	SearchResult(const UserPtr& aUser, Types aType, int aSlots, int aFreeSlots, int64_t aSize, const string& aFile, const string& aHubName, const string& aHubURL, const string& ip, TTHValue aTTH, const string& aToken) : file(aFile), hubName(aHubName), hubURL(aHubURL), user(aUser), size(aSize), type(aType), Slots(aSlots), freeSlots(aFreeSlots), IP(ip), tth(aTTH), token(aToken), ref(1) { }
-	
+	SearchResult(const UserPtr& aUser, Types aType, int aSlots, int aFreeSlots,
+		int64_t aSize, const string& aFile, const string& aHubName,
+		const string& aHubURL, const string& ip, TTHValue aTTH, const string& aToken) :
+	file(aFile), hubName(aHubName), hubURL(aHubURL), user(aUser),
+		size(aSize), type(aType), Slots(aSlots), freeSlots(aFreeSlots), IP(ip),
+		tth(aTTH), token(aToken), ref(1) { }
+
 	string getFileName() const;
 	string toSR(const Client& client) const;
 	AdcCommand toRES(char type) const;

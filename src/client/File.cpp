@@ -21,8 +21,6 @@
 
 #include "File.h"
 
-using namespace std;
-
 namespace dcpp {
 
 #ifdef _WIN32

@@ -60,6 +60,8 @@ UploadManager::~UploadManager() throw() {
 }
 
 bool UploadManager::prepareFile(UserConnection& aSource, const string& aType, const string& aFile, int64_t aStartPos, int64_t aBytes, bool listRecursive) {
+	dcdebug("Preparing %s %s " I64_FMT " " I64_FMT " %d\n", aType.c_str(), aFile.c_str(), aStartPos, aBytes, listRecursive);
+	
 	if(aFile.empty() || aStartPos < 0 || aBytes < -1 || aBytes == 0) {
 		aSource.fileNotAvail("Invalid request");
 		return false;
@@ -74,6 +76,7 @@ bool UploadManager::prepareFile(UserConnection& aSource, const string& aType, co
 
 	string sourceFile;
 	Transfer::Type type;
+	
 	try {
 		if(aType == Transfer::names[Transfer::TYPE_FILE]) {
 			sourceFile = ShareManager::getInstance()->toReal(aFile);
@@ -103,6 +106,7 @@ bool UploadManager::prepareFile(UserConnection& aSource, const string& aType, co
 
 				free = free || (size <= (int64_t)(SETTING(SET_MINISLOT_SIZE) * 1024) );
 
+				f->setPos(start);
 				is = f;
 				if((start + size) < sz) {
 					is = new LimitedInputStream<true>(is, size);
@@ -276,10 +280,10 @@ void UploadManager::on(UserConnectionListener::Send, UserConnection* aSource) th
 }
 
 void UploadManager::on(AdcCommand::GET, UserConnection* aSource, const AdcCommand& c) throw() {
-	int64_t aBytes = Util::toInt64(c.getParam(3));
-	int64_t aStartPos = Util::toInt64(c.getParam(2));
-	const string& fname = c.getParam(1);
 	const string& type = c.getParam(0);
+	const string& fname = c.getParam(1);
+	int64_t aStartPos = Util::toInt64(c.getParam(2));
+	int64_t aBytes = Util::toInt64(c.getParam(3));
 
 	if(prepareFile(*aSource, type, fname, aStartPos, aBytes, c.hasFlag("RE", 4))) {
 		Upload* u = aSource->getUpload();
@@ -287,8 +291,8 @@ void UploadManager::on(AdcCommand::GET, UserConnection* aSource, const AdcComman
 
 		AdcCommand cmd(AdcCommand::CMD_SND);
 		cmd.addParam(type).addParam(fname)
-			.addParam(Util::toString(u->getPos()))
-			.addParam(Util::toString(u->getSize() - u->getPos()));
+			.addParam(Util::toString(u->getStartPos()))
+			.addParam(Util::toString(u->getSize()));
 
 		if(c.hasFlag("ZL", 4)) {
 			u->setStream(new FilteredInputStream<ZFilter, true>(u->getStream()));
@@ -318,7 +322,7 @@ void UploadManager::on(UserConnectionListener::Failed, UserConnection* aSource, 
 	if(u) {
 		fire(UploadManagerListener::Failed(), u, aError);
 
-		dcdebug("UM::onFailed: Removing upload\n");
+		dcdebug("UM::onFailed (%s): Removing upload\n", aError.c_str());
 		removeUpload(u);
 	}
 

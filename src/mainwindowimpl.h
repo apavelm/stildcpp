@@ -38,7 +38,7 @@
 #include <QUrl>
 #include <QThread>
 #include <sstream>
-#include <boost/filesystem/path.hpp>
+//#include <boost/filesystem/path.hpp>
 #include "ui_mainwindow.h"
 
 #include "config.h"

@@ -16,13 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#if !defined(SSLSOCKET_H)
-#define SSLSOCKET_H
+#ifndef DCPLUSPLUS_DCPP_SSLSOCKET_H
+#define DCPLUSPLUS_DCPP_SSLSOCKET_H
 
 #include "Socket.h"
 #include "Singleton.h"
 
-#include <openssl/ssl.h>
+#include "SSL.h"
 
 #ifndef SSL_SUCCESS
 #define SSL_SUCCESS 1
@@ -50,7 +50,9 @@ public:
 
 	virtual bool isSecure() const throw() { return true; }
 	virtual bool isTrusted() const throw();
-
+	virtual std::string getCipherName() const throw();
+	virtual std::string getDigest() const throw();
+	
 private:
 	friend class CryptoManager;
 
@@ -59,7 +61,7 @@ private:
 	SSLSocket& operator=(const SSLSocket&);
 
 	SSL_CTX* ctx;
-	SSL* ssl;
+	ssl::SSL ssl;
 
 	int checkSSL(int ret) throw(SocketException);
 };
