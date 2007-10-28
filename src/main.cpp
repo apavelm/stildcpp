@@ -25,6 +25,7 @@
 #include "frmAbout.h"
 #include "mdi_c.h"
 #include "defs.h"
+#include "config.h"
 
 //
 
@@ -34,33 +35,42 @@ int main(int argc, char ** argv)
 {
 	QApplication app( argc, argv );
 	
-	QSplashScreen *splash = new QSplashScreen(QPixmap(":/images/splash.png"));
-	splash->show();
-	Qt::Alignment topRight = Qt::AlignRight | Qt::AlignTop; splash->showMessage(QObject::tr("Setting up the main window..."), topRight, Qt::white);
-	MainWindowImpl win;
-	
-	
-	splash->showMessage(QObject::tr("Loading Hash Tree..."), topRight, Qt::white);
-//	try {
-//		std::string module = File(Text::fromT(app.getModuleFileName()), File::READ, File::OPEN).read();
-//		TigerTree tth(TigerTree::calcBlockSize(module.size(), 1));
-//		tth.update(module.data(), module.size());
-//		tth.finalize();
-//		WinUtil::tth = Text::toT(tth.getRoot().toBase32());
-//	} catch(const FileException&) {
-//		dcdebug("Failed reading exe\n");
-//	}
-	
 
-	splash->showMessage(QObject::tr("Creating tray icon..."), topRight, Qt::white);
-//	establishConnections();
-	if (!QSystemTrayIcon::isSystemTrayAvailable()) {
-		QMessageBox::critical(0, QObject::tr("Systray"), QObject::tr("I couldn't detect any system tray on this system."));
-		return 1;
+	AppSettings::CfgMgr = new AppSettings::AppSettingsMgr;
+	if (AppSettings::CfgMgr->load()!=0) 
+	{
+		fprintf(stdout, "\nConfiguration file not found.\nUsing default values...\n");
+		AppSettings::CfgMgr->setDefaults();
+		AppSettings::CfgMgr->save();
+	}	
+	
+	int *pm = AppSettings::CfgMgr->getValueArray();
+	
+	QSplashScreen *splash;
+	Qt::Alignment alignBC = Qt::AlignBottom | Qt::AlignHCenter;
+	
+	if (pm[AppSettings::s_SHOWSPLASH])
+	{
+		splash = new QSplashScreen(QPixmap(":/images/splash.png"));
+		splash->show();
+		splash->showMessage(QObject::tr("Setting up the main window..."), alignBC, Qt::black);
 	}
-//	win.show();
+	
+	if (pm[AppSettings::s_USETRAY])
+	{
+		if (pm[AppSettings::s_SHOWSPLASH]) splash->showMessage(QObject::tr("Creating tray icon..."), alignBC, Qt::black);
+		if (!QSystemTrayIcon::isSystemTrayAvailable()) 
+			{
+			QMessageBox::critical(0, QObject::tr("Systray"), QObject::tr("I couldn't detect any system tray on this system."));
+			fprintf(stdout,"\nSystem tray wasn't detected!\nIf You want to run StilDC++ without tray icon:\n change \"UseTray\" visriable to \"0\" in stildcpp.xml file, which located in \"YourHomeDir/.stildcpp/\"");
+			return 1;
+			}
+	}
+	
+	MainWindowImpl win(pm);
+
 	app.connect( &app, SIGNAL( lastWindowClosed() ), &app, SLOT( quit() ) ); 
-	splash->finish(&win);
-	delete splash;
+	if (pm[AppSettings::s_SHOWSPLASH]) splash->finish(&win);
+	if (pm[AppSettings::s_SHOWSPLASH]) delete splash;
 	return app.exec();
 }

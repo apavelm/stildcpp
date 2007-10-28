@@ -32,36 +32,6 @@ MdiChild::~MdiChild()
 	emit actionReleased(action);
 }
 
-PMWindow::PMWindow(QWidget *parent, const QString &nick) : MdiChild(parent)
-{	
-	setupUi(this);
-	type = 2;
-	idText  = nick;
-	setWindowTitle(tr("Private Chat with: ")+nick);
-}
-
-HubWindow::HubWindow(QWidget *parent, const QString &hubaddr) : MdiChild(parent)
-{	
-	setupUi(this);
-	type = 1;
-	idText  = hubaddr;
-	setWindowTitle(tr("Hub: ")+hubaddr);
-	textEdit->clear();
-	setupeditor();
-}
-
-void HubWindow::setupeditor()
-{
-	QFont font;
-	font.setFamily("Courier");
-	font.setFixedPitch(true);
-	font.setPointSize(10);
-
-	textEdit->setFont(font);
-
-	highlighter = new Highlighter(textEdit->document());
-}
-
 SearchWindow::SearchWindow(QWidget *parent, const QString &what) : MdiChild(parent)
 {	
 	setupUi(this);

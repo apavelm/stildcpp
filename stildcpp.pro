@@ -25,6 +25,14 @@ HEADERS = src/mainwindowimpl.h \
  src/preferencesdialog.h \
  src/config.h \
  src/quickconnectdlg.h \
+ src/hub_win.h \
+ src/highlighter.h \
+ src/tthdial.h \
+ src/mdi_filelist.h \
+ src/defs.h \
+ src/pm_win.h \
+ src/xml/tinyxml.h \
+ src/xml/tinystr.h \
  src/client/AdcCommand.h \
  src/client/AdcHub.h \
  src/client/ADLSearch.h \
@@ -87,6 +95,7 @@ HEADERS = src/mainwindowimpl.h \
  src/client/Singleton.h \
  src/client/Socket.h \
  src/client/Speaker.h \
+ src/client/SSL.h \
  src/client/SSLSocket.h \
  src/client/stdinc.h \
  src/client/Streams.h \
@@ -108,12 +117,7 @@ HEADERS = src/mainwindowimpl.h \
  src/client/UserConnectionListener.h \
  src/client/Util.h \
  src/client/version.h \
- src/client/ZUtils.h \
- src/highlighter.h \
- src/tthdial.h \
- src/mdi_filelist.h \
- src/defs.h \
- src/client/SSL.h
+ src/client/ZUtils.h
 SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
  src/frmAbout.cpp \
@@ -121,6 +125,16 @@ SOURCES = src/mainwindowimpl.cpp \
  src/preferencesdialog.cpp \
  src/config.cpp \
  src/quickconnectdlg.cpp \
+ src/hub_win.cpp \
+ src/highlighter.cpp \
+ src/tthdial.cpp \
+ src/mdi_filelist.cpp \
+ src/defs.cpp \
+ src/pm_win.cpp \
+ src/xml/tinyxml.cpp \
+ src/xml/tinyxmlparser.cpp \
+ src/xml/tinystr.cpp \
+ src/xml/tinyxmlerror.cpp \
  src/client/AdcCommand.cpp \
  src/client/AdcHub.cpp \
  src/client/ADLSearch.cpp \
@@ -154,6 +168,7 @@ SOURCES = src/mainwindowimpl.cpp \
  src/client/ShareManager.cpp \
  src/client/SimpleXML.cpp \
  src/client/Socket.cpp \
+ src/client/SSL.cpp \
  src/client/SSLSocket.cpp \
  src/client/stdinc.cpp \
  src/client/StringDefs.cpp \
@@ -168,12 +183,7 @@ SOURCES = src/mainwindowimpl.cpp \
  src/client/User.cpp \
  src/client/UserConnection.cpp \
  src/client/Util.cpp \
- src/client/ZUtils.cpp \
- src/highlighter.cpp \
- src/tthdial.cpp \
- src/mdi_filelist.cpp \
- src/defs.cpp \
- src/client/SSL.cpp
+ src/client/ZUtils.cpp
 RESOURCES += src/stildcpp.qrc
 VERNUM = 0.1
 LIBS += -lssl -lbz2 -lcrypto

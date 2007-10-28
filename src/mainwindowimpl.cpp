@@ -40,7 +40,7 @@ MainWindowImpl::~MainWindowImpl()
 	thrdGetTTh.wait();
 }
 
-MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f) : QMainWindow(parent, f)
+void MainWindowImpl::initMain()
 {
 	setupUi(this);
 	
@@ -67,19 +67,55 @@ MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f) : QMainWindow(pa
 	trayIcon->setIcon(QIcon(":/images/icon.png"));
 	
 	setWindowIcon(QIcon(":/images/icon.png"));
-	trayIcon->show();
+	
+	if (p_opt[AppSettings::s_USETRAY]) 
+		trayIcon->show();
 
-	show(); //insert "if" startHidden
+	if (!p_opt[AppSettings::s_STARTHIDDEN])
+		this->show();
+	else
+		if (!p_opt[AppSettings::s_USETRAY]) this->show();
+}
+
+MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f) : QMainWindow(parent, f)
+{
+	initMain();
+}
+
+MainWindowImpl::MainWindowImpl(int *a, QWidget * parent, Qt::WFlags f) : QMainWindow(parent, f)
+{
+	p_opt = a;
+	initMain();
 }
 
 void MainWindowImpl::closeEvent(QCloseEvent *event)
 {
-	mdiArea->closeAllSubWindows();
-	if (trayIcon->isVisible()) {
-	QMessageBox::information(this, tr("Systray"),tr("The program will keep running in the system tray. To terminate the program, choose <b>Quit</b> in the context menu of the system tray entry."));
-	hide();
-	event->ignore();
-	}
+	if (p_opt[AppSettings::s_HIDEONCLOSE])
+	{
+		if (trayIcon->isVisible()) 
+			{
+				hide();
+				event->ignore();
+			}
+	} 
+	else 
+		{
+			if (p_opt[AppSettings::s_PROMPTONCLOSE])
+			{
+				QMessageBox::StandardButton reply;
+				reply = QMessageBox::question(this, tr("StilDC++"), tr("Do you realy want to exit?"), QMessageBox::Yes | QMessageBox::No);
+				if (reply == QMessageBox::Yes)
+				{
+					mdiArea->closeAllSubWindows();
+					event->accept();
+				}
+				else event->ignore();
+			} else
+			{
+				mdiArea->closeAllSubWindows();
+				event->accept();
+			}
+		}
 }
 
 void MainWindowImpl::setToolTip(const QString & title)
@@ -89,7 +125,8 @@ void MainWindowImpl::setToolTip(const QString & title)
 
 void MainWindowImpl::iconActivated(QSystemTrayIcon::ActivationReason reason)
 {
-	switch (reason) {
+	switch (reason) 
+	{
 		case QSystemTrayIcon::Trigger:
 		{	// Left Mouse Button
 			if (this->isHidden()) this->show(); else this->hide();
@@ -100,7 +137,7 @@ void MainWindowImpl::iconActivated(QSystemTrayIcon::ActivationReason reason)
 			statusMessage("Ready"); break;
 	default:
 	;
-					}
+	}
 }
 
 void MainWindowImpl::showMessage(const QString & title, const QString & message, int type, int millisecondsTimeoutHint)
@@ -156,7 +193,7 @@ void MainWindowImpl::createActions()
 
 	previousAct = new QAction(tr("Pre&vious"), this);
 	previousAct->setStatusTip(tr("Move the focus to the previous window"));
-    connect(previousAct, SIGNAL(triggered()), mdiArea, SLOT(activatePreviousSubWindow()));
+	connect(previousAct, SIGNAL(triggered()), mdiArea, SLOT(activatePreviousSubWindow()));
 
 	separatorAct = new QAction(this);
 	separatorAct->setSeparator(true);
@@ -260,9 +297,9 @@ void MainWindowImpl::updateWindowMenu()
 
 MdiChild *MainWindowImpl::activeMdiChild()
 {
-    if (QMdiSubWindow *activeSubWindow = mdiArea->activeSubWindow())
-        return qobject_cast<MdiChild *>(activeSubWindow->widget());
-    return 0;
+	if (QMdiSubWindow *activeSubWindow = mdiArea->activeSubWindow())
+		return qobject_cast<MdiChild *>(activeSubWindow->widget());
+	return 0;
 }
 
 
@@ -303,7 +340,7 @@ QMdiSubWindow *MainWindowImpl::findMdiChild(const int id)
 	foreach (QMdiSubWindow *window, mdiArea->subWindowList()) 
 	{
 		MdiChild *mdiChild = qobject_cast<MdiChild *>(window->widget());
-		if (mdiChild->type == id) return window;		
+		if (mdiChild->type == id) return window;
 	}
 	return NULL;
 }
@@ -321,7 +358,7 @@ void MainWindowImpl::DonateFunc()
 
 		child->action  = menuWindow->addAction(tr("PM: ")+child->idText);
 		child->action->setCheckable(true);
-		connect(child->action, SIGNAL(triggered()), windowMapper, SLOT(map()));		
+		connect(child->action, SIGNAL(triggered()), windowMapper, SLOT(map()));
 		connect(child, SIGNAL(actionReleased(QAction *)), this, SLOT(slotclosemdi(QAction *)));
 		WindowToolBar->addAction(child->action);
 	
@@ -341,7 +378,7 @@ void MainWindowImpl::OpenHub(QString &adr, int port)
 	child->action  = menuWindow->addAction(tr("HUB: ")+child->idText);
 	
 		child->action->setCheckable(true);
-		connect(child->action, SIGNAL(triggered()), windowMapper, SLOT(map()));		
+		connect(child->action, SIGNAL(triggered()), windowMapper, SLOT(map()));
 		connect(child, SIGNAL(actionReleased(QAction *)), this, SLOT(slotclosemdi(QAction *)));
 		WindowToolBar->addAction(child->action);
 	
@@ -488,7 +525,7 @@ void MainWindowImpl::GetTTHFunc()
 	actionGet_TTH_for_file->setEnabled(false);
 	QString selectedFilter=tr("");
 	QFileDialog::Options options;
-	//options |= QFileDialog::DontUseNativeDialog;	
+	//options |= QFileDialog::DontUseNativeDialog;
 	thrdGetTTh.setA( QFileDialog::getOpenFileName(this, tr("Select File"),"", tr("All Files (*)"), &selectedFilter, options) );
 	
 	thrdGetTTh.start(QThread::LowPriority);

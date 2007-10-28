@@ -38,16 +38,6 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent)
 
 /*
 
-void PreferencesDialog::on_fontButton_clicked() {
-	ASSERT;
-	bool ok;
-	QFont newfont = QFontDialog::getFont(&ok, fontButton->font(), this);
-	if (ok) {
-		d->config->setFont(newfont);
-		setFontString(newfont);
-	}
-}
-
 void PreferencesDialog::setFontString(const QFont &newfont) {
 	QString font = newfont.family();
 	if (newfont.bold())

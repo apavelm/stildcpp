@@ -26,10 +26,7 @@
 #include <QAction>
 #include <QWidget>
 
-#include "highlighter.h"
 
-#include "ui_PMWindow.h"
-#include "ui_HUBWindow.h"
 #include "ui_search.h"
 #include "ui_favhublist.h"
 
@@ -53,23 +50,6 @@ public:
 	QString idText;
 signals:
 	void actionReleased(QAction *action);
-};
-
-class PMWindow : public MdiChild, private Ui::mdiPMwin
-{
-	Q_OBJECT
-public:
-	PMWindow(QWidget *parent, const QString &nick);
-};
-
-class HubWindow : public MdiChild, private Ui::mdiHUBwin
-{
-	Q_OBJECT
-private:
-	Highlighter *highlighter;
-public:
-	HubWindow(QWidget *parent, const QString &hubaddr);
-	void setupeditor();
 };
 
 class SearchWindow : public MdiChild, private Ui::mdiSEARCHwin

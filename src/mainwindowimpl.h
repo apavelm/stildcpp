@@ -38,7 +38,7 @@
 #include <QUrl>
 #include <QThread>
 #include <sstream>
-//#include <boost/filesystem/path.hpp>
+
 #include "ui_mainwindow.h"
 
 #include "config.h"
@@ -46,6 +46,8 @@
 #include "frmAbout.h"
 #include "preferencesdialog.h"
 #include "mdi_c.h"
+#include "hub_win.h"
+#include "pm_win.h"
 #include "tthdial.h"
 #include "quickconnectdlg.h"
 #include "defs.h"
@@ -81,7 +83,9 @@ class MainWindowImpl : public QMainWindow, public Ui::MainWindow
 {
 Q_OBJECT
 public:
+	void initMain();
 	MainWindowImpl( QWidget * parent = 0, Qt::WFlags f = 0 );
+	MainWindowImpl(int *a, QWidget * parent = 0, Qt::WFlags f = 0 );
 	~MainWindowImpl();
 
 protected:
@@ -149,8 +153,8 @@ private:
 	QMdiSubWindow *findMdiChild(const int id);
 	
 	ThreadGetTTH thrdGetTTh;
+	int *p_opt;
 	
-
 };
 
 #endif
