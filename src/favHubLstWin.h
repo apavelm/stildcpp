@@ -23,6 +23,8 @@
 
 #include "mdi_c.h"
 
+#include "ui_favhublist.h"
+
 class FavoriteHubListWindow : public MdiChild, private Ui::mdiFAVHUBwin
 {
 	Q_OBJECT

@@ -37,7 +37,7 @@ void MainWindowImpl::initMain()
 	setupUi(this);
 	
 	m_tabwin = new TabWidget( this );
-	connect(m_tabwin, SIGNAL(currentChanged(int)), this, SLOT(slotCurrentTabChanged(int)) );	
+	connect(m_tabwin, SIGNAL(currentChanged(int)), this, SLOT(slotCurrentTabChanged(int)) );
 	setCentralWidget(m_tabwin);
 	
 	createActions();
@@ -46,6 +46,8 @@ void MainWindowImpl::initMain()
 
 	connect(trayIcon, SIGNAL(messageClicked()), this, SLOT(messageClicked()));
 	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));	
+	updateWindowMenu();
+	connect(menuWindow, SIGNAL(aboutToShow()), this, SLOT(updateWindowMenu()));
 	
 	setToolTip(tr(APPLICATIONNAME));
 	setWindowTitle(tr(APPLICATIONNAME));
@@ -177,9 +179,27 @@ void MainWindowImpl::createActions()
 	connect(actionGet_TTH_for_file, SIGNAL(triggered()), this, SLOT(GetTTHFunc()));
 	
 	connect(actionFavorite_Hubs, SIGNAL(triggered()), this, SLOT(FavHubListFunc()));
+	connect(actionPublic_Hubs, SIGNAL(triggered()), this, SLOT(PubHubFunc()));
 	connect(actionQuick_Connect, SIGNAL(triggered()), this, SLOT(fQuickConFunc()));
+	connect(actionDownload_Queue, SIGNAL(triggered()), this, SLOT(DLQueueFunc()));
+	connect(actionFavorite_Users, SIGNAL(triggered()), this, SLOT(FavUsrFunc()));
+	connect(actionIgnored_Users, SIGNAL(triggered()), this, SLOT(IgnoredUsrFunc()));
+	
+	connect(actionFinished_downloads, SIGNAL(triggered()), this, SLOT(DLFinFunc()));
+	connect(actionFinished_Uploads, SIGNAL(triggered()), this, SLOT(ULFinFunc()));
+	
+	connect(actionADL_Search, SIGNAL(triggered()), this, SLOT(ADLFunc()));
+	connect(actionSearch_Spy, SIGNAL(triggered()), this, SLOT(SSFunc()));
 	
 	connect(&thrdGetTTh, SIGNAL(ready()), this, SLOT(show_tthFunc()));
+	
+	connect(actionClose_All, SIGNAL(triggered()), m_tabwin, SLOT(slotCloseAllTab()));
+	
+	connect(actionClose_All_Hub_Windows, SIGNAL(triggered()), this, SLOT(slotCloseWinTypeHub()));
+	connect(actionClose_All_Private_Chat_Windows, SIGNAL(triggered()), this, SLOT(slotCloseWinTypePM()));
+	connect(actionClose_All_Search_Windows, SIGNAL(triggered()), this, SLOT(slotCloseWinTypeSearch()));
+	
+	connect(actionClose_All_FileList_Windows, SIGNAL(triggered()), this, SLOT(slotCloseWinTypeFL()));
 	
 }
 
@@ -190,8 +210,10 @@ void MainWindowImpl::showhideFunc()
 
 void MainWindowImpl::createTrayIcon()
 {	
-	trayIconMenu = new QMenu(this);	
+	trayIconMenu = new QMenu(this);
 	trayIconMenu->addAction(showhide);
+	trayIconMenu->addSeparator();
+	trayIconMenu->addAction(actionSettings);
 	trayIconMenu->addSeparator();
 	trayIconMenu->addAction(actionExit);
 
@@ -214,14 +236,27 @@ void MainWindowImpl::About()
 	new AboutDialog(this);
 }
 
+int MainWindowImpl::FindWinByType(int type)
+{
+	for (int i=0; i<m_tabwin->count(); i++)
+	{
+		MdiChild *p = static_cast<MdiChild *>(m_tabwin->widget(i));
+		if (p->type==type)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
 void MainWindowImpl::PreferencesFunc()
 {
-	new PreferencesDialog(this);	
+	new PreferencesDialog(this);
 }
 
 void MainWindowImpl::DonateFunc()
 {
-	m_tabwin->setCurrentIndex(m_tabwin->addTab((new PMWindow(this,tr("Vasya"))),"PM"));
+	m_tabwin->setCurrentIndex(m_tabwin->addTab((new PMWindow(this,"Vasya")),"PM"));
 }
 
 void MainWindowImpl::HomepageFunc()
@@ -240,9 +275,67 @@ void MainWindowImpl::SearchFunc()
 	m_tabwin->setCurrentIndex(m_tabwin->addTab((new SearchWindow(this,tr(""))),"search"));
 }
 
+void MainWindowImpl::ADLFunc()
+{
+	if (FindWinByType(12)==-1)
+		m_tabwin->setCurrentIndex(m_tabwin->addTab((new ADLSearchWindow(this)),"ADL Search"));
+	else m_tabwin->setCurrentIndex(FindWinByType(12));
+}
+
+void MainWindowImpl::SSFunc()
+{
+	if (FindWinByType(13)==-1)
+		m_tabwin->setCurrentIndex(m_tabwin->addTab((new SearchSpyWindow(this)),"Search Spy"));
+	else m_tabwin->setCurrentIndex(FindWinByType(13));
+}
+
+void MainWindowImpl::ULFinFunc()
+{
+	if (FindWinByType(11)==-1)
+		m_tabwin->setCurrentIndex(m_tabwin->addTab((new UploadFinishedWindow(this)),"UL_Fin"));
+	else m_tabwin->setCurrentIndex(FindWinByType(11));
+}
+
+void MainWindowImpl::DLFinFunc()
+{
+	if (FindWinByType(10)==-1)
+		m_tabwin->setCurrentIndex(m_tabwin->addTab((new DownloadFinishedWindow(this)),"DL_Fin"));
+	else m_tabwin->setCurrentIndex(FindWinByType(10));
+}
+
+void MainWindowImpl::IgnoredUsrFunc()
+{
+	if (FindWinByType(8)==-1)
+		m_tabwin->setCurrentIndex(m_tabwin->addTab((new IgnoredUsersWindow(this)),"Ign_Usr"));
+	else m_tabwin->setCurrentIndex(FindWinByType(8));
+}
+
+void MainWindowImpl::FavUsrFunc()
+{
+	if (FindWinByType(7)==-1)
+		m_tabwin->setCurrentIndex(m_tabwin->addTab((new FavoriteUsersWindow(this)),"Fav_Usr"));
+	else m_tabwin->setCurrentIndex(FindWinByType(7));
+}
+
 void MainWindowImpl::FavHubListFunc()
 {
-	m_tabwin->setCurrentIndex(m_tabwin->addTab((new FavoriteHubListWindow(this)),"Fav_Hub"));
+	if (FindWinByType(4)==-1)
+		m_tabwin->setCurrentIndex(m_tabwin->addTab((new FavoriteHubListWindow(this)),"Fav_Hub"));
+	else m_tabwin->setCurrentIndex(FindWinByType(4));
+}
+
+void MainWindowImpl::PubHubFunc()
+{
+	if (FindWinByType(9)==-1)
+		m_tabwin->setCurrentIndex(m_tabwin->addTab((new PublicHubWindow(this)),"Pub Hub"));
+	else m_tabwin->setCurrentIndex(FindWinByType(9));
+}
+
+void MainWindowImpl::DLQueueFunc()
+{
+	if (FindWinByType(6)==-1)
+		m_tabwin->setCurrentIndex(m_tabwin->addTab((new DownLoadQueueWindow(this)),"DL Queue"));
+	else m_tabwin->setCurrentIndex(FindWinByType(6));
 }
 
 void MainWindowImpl::qcdconFunc(QString adr, int port)
@@ -274,6 +367,60 @@ void MainWindowImpl::toolbarcheck()
 void MainWindowImpl::setShareSize(const QString &sz)
 {
 	shareStatusLbl->setText(sz);
+}
+
+void MainWindowImpl::updateWindowMenu()
+{
+	if (!m_tabwin) return;
+	int tst[20]; // 20 for reserv - Count of type mdi_child. see "mdi_c.h" for details
+	for (int i=0; i<20; i++) tst[i]=0;
+	actionClose_All->setEnabled(m_tabwin->count()>0);
+	actionClose_All_Hub_Windows->setEnabled(m_tabwin->count()>0);
+	actionClose_All_Private_Chat_Windows->setEnabled(m_tabwin->count()>0);
+	actionClose_All_Search_Windows->setEnabled(m_tabwin->count()>0);
+	actionClose_All_FileList_Windows->setEnabled(m_tabwin->count()>0);
+	
+	for (int i=0; i<m_tabwin->count(); i++)
+	{
+		MdiChild *p = static_cast<MdiChild *>(m_tabwin->widget(i));
+		tst[p->type]++;
+	}
+	
+	actionClose_All_Hub_Windows->setEnabled(tst[1]!=0);
+	actionClose_All_Private_Chat_Windows->setEnabled(tst[2]!=0);
+	actionClose_All_Search_Windows->setEnabled(tst[3]!=0);
+	
+	actionClose_All_FileList_Windows->setEnabled(tst[5]!=0);
+}
+
+void MainWindowImpl::slotCloseWinType(int type)
+{
+	for (int j=0; j<5; j++)
+	for (int i=0; i<m_tabwin->count(); i++)
+	{
+		MdiChild *p = static_cast<MdiChild *>(m_tabwin->widget(i));
+		if (p->type==type) delete m_tabwin->widget(i);
+	}
+}
+
+void MainWindowImpl::slotCloseWinTypeHub()
+{
+	slotCloseWinType(1);
+}
+
+void MainWindowImpl::slotCloseWinTypePM()
+{
+	slotCloseWinType(2);
+}
+
+void MainWindowImpl::slotCloseWinTypeSearch()
+{
+	slotCloseWinType(3);
+}
+
+void MainWindowImpl::slotCloseWinTypeFL()
+{
+	slotCloseWinType(5);
 }
 
 const QString & ThreadGetTTH::getA()
@@ -342,7 +489,7 @@ void ThreadGetTTH::run()
 void MainWindowImpl::GetTTHFunc()
 {	
 	actionGet_TTH_for_file->setEnabled(false);
-	QString selectedFilter=tr("");
+	QString selectedFilter="";
 	QFileDialog::Options options;
 	//options |= QFileDialog::DontUseNativeDialog;
 	thrdGetTTh.setA( QFileDialog::getOpenFileName(this, tr("Select File"),"", tr("All Files (*)"), &selectedFilter, options) );
@@ -360,7 +507,7 @@ void MainWindowImpl::openfilelistFunc()
 {
 	// Open Custom FileList
 	
-	QString selectedFilter=tr("");
+	QString selectedFilter="";
 	QFileDialog::Options options;
 	//options |= QFileDialog::DontUseNativeDialog;
 	QString fn = QFileDialog::getOpenFileName(this, tr("Select File"),"", tr("All Files (*)"), &selectedFilter, options);
@@ -370,7 +517,7 @@ void MainWindowImpl::openfilelistFunc()
 void MainWindowImpl::openownfilelistFunc()
 {
 	// Open Own FileList
-	OpenList(tr(""));
+	OpenList("");
 }
 
 void MainWindowImpl::OpenList(const QString &filename)

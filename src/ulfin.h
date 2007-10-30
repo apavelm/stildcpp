@@ -18,44 +18,18 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef __MDI_C_H__
-#define __MDI_C_H__
+#ifndef __ULFIN_H__
+#define __ULFIN_H__
 
-#include <QDialog>
-#include <QString>
-#include <QAction>
-#include <QWidget>
+#include "mdi_c.h"
 
+#include "ui_ul_finished.h"
 
-//
-
-class MdiChild : public QDialog
+class UploadFinishedWindow : public MdiChild, private Ui::mdi_ULfinished
 {
 	Q_OBJECT
 public:
-	MdiChild(QWidget *parent);
-	~MdiChild();
-	QAction *action;
-	
-	int type;
-	/*  0 - MdiChild (NONE)
-		1 - Hub
-		2 - Private Chat
-		3 - Search
-		4 - Favorite Hub List
-		5 - FileList
-		6 - DL Queue
-		7 - Favorite Users
-		8 - Ignored Users
-		9 - Public Hubs
-		10 - Finished DL
-		11 - Finished UL
-		12 - ADL Search
-		13 - Search Spy
-	*/
-	QString idText;
-signals:
-	void actionReleased(QAction *action);
+	UploadFinishedWindow(QWidget *parent);
 };
 
-#endif // __MDI_C_H__
+#endif // __ULFIN_H__

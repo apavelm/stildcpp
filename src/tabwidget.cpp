@@ -28,7 +28,7 @@ TabWidget::TabWidget(QWidget *parent) : QTabWidget(parent)
 	
 	// Context Menu
 	menu = new QMenu(this);
-	connect(menu->addAction(QIcon(":/images/cross.png"), tr("Close Tab")), SIGNAL(triggered()), this, SLOT(slotCloseTab()) );
+	connect(menu->addAction(QIcon(":/images/cross.png"), tr("Close Current Tab")), SIGNAL(triggered()), this, SLOT(slotCloseTab()) );
 	connect(menu->addAction(QIcon(":/images/cross.png"), tr("Close Other Tabs")), SIGNAL(triggered()), this, SLOT(slotCloseOtherTab()) );
 	connect(menu->addAction(QIcon(":/images/cross.png"), tr("Close All Tabs")), SIGNAL(triggered()), this, SLOT(slotCloseAllTab()) );
 	

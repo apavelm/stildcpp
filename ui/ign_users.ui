@@ -1,0 +1,11 @@
+<ui version="4.0" >
+ <class>mdi_IgnUsers</class>
+ <widget class="QDialog" name="mdi_IgnUsers" >
+  <property name="windowTitle" >
+   <string>Ignored Users</string>
+  </property>
+  <layout class="QGridLayout" />
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

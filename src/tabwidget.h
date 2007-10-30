@@ -41,7 +41,7 @@ private:
 	QToolButton *crossButton;
 	QMenu *menu;
 	void setCrossButton(bool activate);
-private slots:
+public slots:
 	void slotCloseTab();
 	void slotCloseTab(int n);
 	void slotCloseOtherTab();

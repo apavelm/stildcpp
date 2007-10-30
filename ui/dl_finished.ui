@@ -1,0 +1,19 @@
+<ui version="4.0" >
+ <class>mdi_DLfinished</class>
+ <widget class="QDialog" name="mdi_DLfinished" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Finished DownLoads</string>
+  </property>
+  <layout class="QGridLayout" />
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

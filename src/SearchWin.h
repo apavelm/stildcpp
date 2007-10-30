@@ -23,6 +23,8 @@
 
 #include "mdi_c.h"
 
+#include "ui_search.h"
+
 class SearchWindow : public MdiChild, private Ui::mdiSEARCHwin
 {
 	Q_OBJECT

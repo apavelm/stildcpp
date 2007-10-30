@@ -28,8 +28,6 @@
 #include <QSystemTrayIcon>
 #include <QMessageBox>
 #include <QCloseEvent>
-#include <QMdiSubWindow>
-#include <QMdiArea>
 #include <QLabel>
 #include <QMenu>
 #include <QAction>
@@ -49,7 +47,15 @@
 #include "favHubLstWin.h"
 #include "SearchWin.h"
 #include "hub_win.h"
+#include "publichubs.h"
+#include "FavUsr.h"
+#include "IgnUsr.h"
+#include "ulfin.h"
+#include "dlfin.h"
+#include "dl_queue.h"
 #include "pm_win.h"
+#include "adlsearch.h"
+#include "sspy.h"
 #include "tthdial.h"
 #include "quickconnectdlg.h"
 #include "defs.h"
@@ -99,15 +105,29 @@ private slots:
 	void iconActivated(QSystemTrayIcon::ActivationReason reason);
 	void showMessage(const QString & title, const QString & message, int type, int millisecondsTimeoutHint = 10000);
 	void messageClicked();
+	void slotCloseWinTypeHub();
+	void slotCloseWinTypePM();
+	void slotCloseWinTypeSearch();
+	void slotCloseWinTypeFL();
+	void slotCloseWinType(int type);
 	void slotCurrentTabChanged(int index);
 	void statusMessage(const QString & mes);
 	void About();
+	void updateWindowMenu();
 	void openfilelistFunc();
 	void OpenDownloadsFolderFunc();
 	void RefreshOwnFileListFunc();
 	void openownfilelistFunc();
 	void DonateFunc();
+	void DLQueueFunc();
+	void ADLFunc();
+	void SSFunc();
+	void ULFinFunc();
+	void DLFinFunc();
+	void PubHubFunc();
 	void HomepageFunc();
+	void FavUsrFunc();
+	void IgnoredUsrFunc();
 	void SearchFunc();
 	void qcdconFunc(QString , int);
 	void show_tthFunc();
@@ -127,6 +147,8 @@ private:
 	void createToolBars();
 	void OpenList(const QString &);
 	void setShareSize(const QString &sz);
+	
+	int FindWinByType(int type);
 
 	QAction *showhide;
 

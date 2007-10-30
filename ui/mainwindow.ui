@@ -76,6 +76,11 @@
     <property name="title" >
      <string>Window</string>
     </property>
+    <addaction name="actionClose_All_Hub_Windows" />
+    <addaction name="actionClose_All_FileList_Windows" />
+    <addaction name="actionClose_All_Private_Chat_Windows" />
+    <addaction name="actionClose_All_Search_Windows" />
+    <addaction name="actionClose_All" />
    </widget>
    <widget class="QMenu" name="menuHelp" >
     <property name="title" >
@@ -334,6 +339,31 @@
   <action name="aboutqtact" >
    <property name="text" >
     <string>About Qt</string>
+   </property>
+  </action>
+  <action name="actionClose_All_Search_Windows" >
+   <property name="text" >
+    <string>Close All Search Windows</string>
+   </property>
+  </action>
+  <action name="actionClose_All_Private_Chat_Windows" >
+   <property name="text" >
+    <string>Close All Private Chat Windows</string>
+   </property>
+  </action>
+  <action name="actionClose_All_Hub_Windows" >
+   <property name="text" >
+    <string>Close All Hub Windows</string>
+   </property>
+  </action>
+  <action name="actionClose_All" >
+   <property name="text" >
+    <string>Close All</string>
+   </property>
+  </action>
+  <action name="actionClose_All_FileList_Windows" >
+   <property name="text" >
+    <string>Close All FileList Windows</string>
    </property>
   </action>
  </widget>

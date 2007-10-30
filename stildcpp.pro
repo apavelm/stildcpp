@@ -18,7 +18,15 @@ FORMS = ui/mainwindow.ui \
  ui/favhublist.ui \
  ui/quickconnect.ui \
  ui/tthdialog.ui \
- ui/filelistdialog.ui
+ ui/filelistdialog.ui \
+ ui/dlqueue.ui \
+ ui/fav_users.ui \
+ ui/ign_users.ui \
+ ui/pubhub.ui \
+ ui/ul_finished.ui \
+ ui/dl_finished.ui \
+ ui/adl.ui \
+ ui/searchspy.ui
 HEADERS = src/mainwindowimpl.h \
  src/frmAbout.h \
  src/mdi_c.h \
@@ -120,7 +128,15 @@ HEADERS = src/mainwindowimpl.h \
  src/client/ZUtils.h \
  src/tabwidget.h \
  src/favHubLstWin.h \
- src/SearchWin.h
+ src/SearchWin.h \
+ src/dl_queue.h \
+ src/FavUsr.h \
+ src/IgnUsr.h \
+ src/publichubs.h \
+ src/dlfin.h \
+ src/ulfin.h \
+ src/adlsearch.h \
+ src/sspy.h
 SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
  src/frmAbout.cpp \
@@ -189,7 +205,15 @@ SOURCES = src/mainwindowimpl.cpp \
  src/client/ZUtils.cpp \
  src/tabwidget.cpp \
  src/favHubLstWin.cpp \
- src/SearchWin.cpp
+ src/SearchWin.cpp \
+ src/dl_queue.cpp \
+ src/FavUsr.cpp \
+ src/IgnUsr.cpp \
+ src/publichubs.cpp \
+ src/dlfin.cpp \
+ src/ulfin.cpp \
+ src/adlsearch.cpp \
+ src/sspy.cpp
 RESOURCES += src/stildcpp.qrc src/smiles.qrc src/langs.qrc
 VERNUM = 0.1
 LIBS += -lssl -lbz2 -lcrypto
