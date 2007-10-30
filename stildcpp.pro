@@ -117,7 +117,10 @@ HEADERS = src/mainwindowimpl.h \
  src/client/UserConnectionListener.h \
  src/client/Util.h \
  src/client/version.h \
- src/client/ZUtils.h
+ src/client/ZUtils.h \
+ src/tabwidget.h \
+ src/favHubLstWin.h \
+ src/SearchWin.h
 SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
  src/frmAbout.cpp \
@@ -183,7 +186,11 @@ SOURCES = src/mainwindowimpl.cpp \
  src/client/User.cpp \
  src/client/UserConnection.cpp \
  src/client/Util.cpp \
- src/client/ZUtils.cpp
-RESOURCES += src/stildcpp.qrc
+ src/client/ZUtils.cpp \
+ src/tabwidget.cpp \
+ src/favHubLstWin.cpp \
+ src/SearchWin.cpp
+RESOURCES += src/stildcpp.qrc src/smiles.qrc src/langs.qrc
 VERNUM = 0.1
 LIBS += -lssl -lbz2 -lcrypto
+TRANSLATIONS = lang/stildcpp_ru.ts

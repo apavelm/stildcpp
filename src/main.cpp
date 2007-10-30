@@ -21,6 +21,9 @@
 #include <QApplication>
 #include <QtGui>
 #include <QSplashScreen>
+#include <QTranslator>
+#include <QLocale>
+#include <QDir>
 #include "mainwindowimpl.h"
 #include "frmAbout.h"
 #include "mdi_c.h"
@@ -42,8 +45,7 @@ int main(int argc, char ** argv)
 		fprintf(stdout, "\nConfiguration file not found.\nUsing default values...\n");
 		AppSettings::CfgMgr->setDefaults();
 		AppSettings::CfgMgr->save();
-	}	
-	
+	}
 	int *pm = AppSettings::CfgMgr->getValueArray();
 	
 	QSplashScreen *splash;
@@ -53,8 +55,19 @@ int main(int argc, char ** argv)
 	{
 		splash = new QSplashScreen(QPixmap(":/images/splash.png"));
 		splash->show();
-		splash->showMessage(QObject::tr("Setting up the main window..."), alignBC, Qt::black);
+		splash->showMessage(QObject::tr("Starting..."), alignBC, Qt::black);
 	}
+	
+	// Translate qt
+	QTranslator *qtTranslator = new QTranslator(&app);
+	QString ql = QLocale::system().name();
+	qtTranslator->load("qt_" + ql, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+	app.installTranslator(qtTranslator);	
+	
+	QTranslator *translator = new QTranslator(&app);
+	translator->load(QString("stildcpp_") + ql, ":/lang/", QString(), ".qm");
+	app.installTranslator(translator); 
+	
 	
 	if (pm[AppSettings::s_USETRAY])
 	{

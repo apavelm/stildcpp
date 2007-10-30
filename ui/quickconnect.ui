@@ -114,22 +114,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>OKButton</sender>
-   <signal>pressed()</signal>
-   <receiver>quickConnectwin</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>317</x>
-     <y>93</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>220</x>
-     <y>59</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>CancelButton</sender>
    <signal>clicked()</signal>
    <receiver>quickConnectwin</receiver>

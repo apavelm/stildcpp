@@ -24,19 +24,11 @@ using namespace std;
 MainWindowImpl::~MainWindowImpl()
 {
 	thrdGetTTh.stop();
-	delete closeAct;
-	delete closeAllAct;
-	delete tileAct;
-	delete cascadeAct;
-	delete nextAct;
-	delete previousAct;
-	delete separatorAct;
 	delete showhide;
 	delete trayIcon;
 	delete trayIconMenu;
-	delete shareStatusLbl;		
-	delete mdiArea;
-	delete windowMapper;
+	delete shareStatusLbl;
+	delete m_tabwin;
 	thrdGetTTh.wait();
 }
 
@@ -44,11 +36,9 @@ void MainWindowImpl::initMain()
 {
 	setupUi(this);
 	
-	mdiArea = new QMdiArea;
-	setCentralWidget(mdiArea);
-	connect(mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow *)),this, SLOT(updateWindowMenu()));
-	windowMapper = new QSignalMapper(this);
-	connect(windowMapper, SIGNAL(mapped(QWidget *)),this, SLOT(setActiveSubWindow(QWidget *)));
+	m_tabwin = new TabWidget( this );
+	connect(m_tabwin, SIGNAL(currentChanged(int)), this, SLOT(slotCurrentTabChanged(int)) );	
+	setCentralWidget(m_tabwin);
 	
 	createActions();
 	createToolBars();
@@ -106,13 +96,11 @@ void MainWindowImpl::closeEvent(QCloseEvent *event)
 				reply = QMessageBox::question(this, tr("StilDC++"), tr("Do you realy want to exit?"), QMessageBox::Yes | QMessageBox::No);
 				if (reply == QMessageBox::Yes)
 				{
-					mdiArea->closeAllSubWindows();
 					event->accept();
 				}
 				else event->ignore();
 			} else
 			{
-				mdiArea->closeAllSubWindows();
 				event->accept();
 			}
 		}
@@ -170,35 +158,6 @@ void MainWindowImpl::createActions()
 	
 	connect(actionExit, SIGNAL(triggered()), qApp, SLOT(quit()));
 	
-	closeAct = new QAction(tr("Cl&ose"), this);
-	closeAct->setShortcut(tr("Ctrl+F4"));
-	closeAct->setStatusTip(tr("Close the active window"));
-	connect(closeAct, SIGNAL(triggered()), mdiArea, SLOT(closeActiveSubWindow()));
-
-	closeAllAct = new QAction(tr("Close &All"), this);
-	closeAllAct->setStatusTip(tr("Close all the windows"));
-	connect(closeAllAct, SIGNAL(triggered()),mdiArea, SLOT(closeAllSubWindows()));
-
-	tileAct = new QAction(tr("&Tile"), this);
-	tileAct->setStatusTip(tr("Tile the windows"));
-	connect(tileAct, SIGNAL(triggered()), mdiArea, SLOT(tileSubWindows()));
-
-	cascadeAct = new QAction(tr("&Cascade"), this);
-	cascadeAct->setStatusTip(tr("Cascade the windows"));
-	connect(cascadeAct, SIGNAL(triggered()), mdiArea, SLOT(cascadeSubWindows()));
-
-	nextAct = new QAction(tr("Ne&xt"), this);
-	nextAct->setStatusTip(tr("Move the focus to the next window"));
-	connect(nextAct, SIGNAL(triggered()), mdiArea, SLOT(activateNextSubWindow()));
-
-	previousAct = new QAction(tr("Pre&vious"), this);
-	previousAct->setStatusTip(tr("Move the focus to the previous window"));
-	connect(previousAct, SIGNAL(triggered()), mdiArea, SLOT(activatePreviousSubWindow()));
-
-	separatorAct = new QAction(this);
-	separatorAct->setSeparator(true);
-	
-	
 	connect(actionOpen_filelist, SIGNAL(triggered()), this, SLOT(openfilelistFunc()));
 	connect(actionOpen_own_filelist, SIGNAL(triggered()), this, SLOT(openownfilelistFunc()));
 	connect(actionOpen_Downloads_Folder, SIGNAL(triggered()), this, SLOT(OpenDownloadsFolderFunc()));
@@ -208,12 +167,10 @@ void MainWindowImpl::createActions()
 	connect(aboutqtact, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 	connect(actionTransfers, SIGNAL(triggered()), this, SLOT(transcheck()));
 	connect(actionStatusBar, SIGNAL(triggered()), this, SLOT(statusbarcheck()));
-	connect(actionToolBar, SIGNAL(triggered()), this, SLOT(toolbarcheck()));
-	connect(actionTabBar, SIGNAL(triggered()), this, SLOT(winbarcheck()));
+	connect(actionToolBar, SIGNAL(triggered()), this, SLOT(toolbarcheck()));	
 	
 	connect(actionSettings, SIGNAL(triggered()), this, SLOT(PreferencesFunc()));
-		
-	connect(menuWindow, SIGNAL(aboutToShow()), this, SLOT(updateWindowMenu()));
+
 	connect(actionDonate, SIGNAL(triggered()), this, SLOT(DonateFunc()));
 	connect(actionHomepage, SIGNAL(triggered()), this, SLOT(HomepageFunc()));
 	connect(actionSearch, SIGNAL(triggered()), this, SLOT(SearchFunc()));
@@ -262,107 +219,9 @@ void MainWindowImpl::PreferencesFunc()
 	new PreferencesDialog(this);	
 }
 
-void MainWindowImpl::updateWindowMenu()
-{
-	menuWindow->clear();
-	menuWindow->addAction(closeAct);
-	menuWindow->addAction(closeAllAct);
-	menuWindow->addSeparator();
-	menuWindow->addAction(tileAct);
-	menuWindow->addAction(cascadeAct);
-	menuWindow->addSeparator();
-	menuWindow->addAction(nextAct);
-	menuWindow->addAction(previousAct);
-	menuWindow->addSeparator();	
-	
-	bool hasMdiChild = (activeMdiChild() != 0);
-	closeAct->setEnabled(hasMdiChild);
-	closeAllAct->setEnabled(hasMdiChild);
-	tileAct->setEnabled(hasMdiChild);
-	cascadeAct->setEnabled(hasMdiChild);
-	nextAct->setEnabled(hasMdiChild);
-	previousAct->setEnabled(hasMdiChild);
-	separatorAct->setVisible(hasMdiChild);
-	
-	QList<QMdiSubWindow *> windows = mdiArea->subWindowList();
-
-	for (int i = 0; i < windows.size(); ++i) 
-	{
-		MdiChild *child = qobject_cast<MdiChild *>(windows.at(i)->widget());				
-		child->action->setChecked(child == activeMdiChild());
-		menuWindow->addAction(child->action);
-		windowMapper->setMapping(child->action, windows.at(i));
-	}
-}
-
-MdiChild *MainWindowImpl::activeMdiChild()
-{
-	if (QMdiSubWindow *activeSubWindow = mdiArea->activeSubWindow())
-		return qobject_cast<MdiChild *>(activeSubWindow->widget());
-	return 0;
-}
-
-
-QMdiSubWindow *MainWindowImpl::findMdiChild(const int id, QString & idtext, QAction *act)
-{
-	foreach (QMdiSubWindow *window, mdiArea->subWindowList()) 
-	{
-		MdiChild *mdiChild = qobject_cast<MdiChild *>(window->widget());
-		if (mdiChild->type == id) 
-		{
-			if (mdiChild->idText == idtext)
-			{
-				if (act!=NULL)
-				{
-					if (mdiChild->action==act) return window;
-				} else return window;
-			}
-		}
-	}
-	return NULL;
-}
-
-QMdiSubWindow *MainWindowImpl::findMdiChild(const int id, QString & idtext)
-{
-	foreach (QMdiSubWindow *window, mdiArea->subWindowList()) 
-	{
-		MdiChild *mdiChild = qobject_cast<MdiChild *>(window->widget());
-		if (mdiChild->type == id) 
-		{
-			if (mdiChild->idText == idtext) return window;
-		}
-	}
-	return NULL;
-}
-
-QMdiSubWindow *MainWindowImpl::findMdiChild(const int id)
-{
-	foreach (QMdiSubWindow *window, mdiArea->subWindowList()) 
-	{
-		MdiChild *mdiChild = qobject_cast<MdiChild *>(window->widget());
-		if (mdiChild->type == id) return window;
-	}
-	return NULL;
-}
-
-void MainWindowImpl::setActiveSubWindow(QWidget *window)
-{
-	if (!window) return;
-	mdiArea->setActiveSubWindow(qobject_cast<QMdiSubWindow *>(window));
-}
-
 void MainWindowImpl::DonateFunc()
 {
-	PMWindow *child = new PMWindow(this,tr("Vasya"));
-	mdiArea->addSubWindow(child);
-
-		child->action  = menuWindow->addAction(tr("PM: ")+child->idText);
-		child->action->setCheckable(true);
-		connect(child->action, SIGNAL(triggered()), windowMapper, SLOT(map()));
-		connect(child, SIGNAL(actionReleased(QAction *)), this, SLOT(slotclosemdi(QAction *)));
-		WindowToolBar->addAction(child->action);
-	
-	child->show();	
+	m_tabwin->setCurrentIndex(m_tabwin->addTab((new PMWindow(this,tr("Vasya"))),"PM"));
 }
 
 void MainWindowImpl::HomepageFunc()
@@ -373,47 +232,17 @@ void MainWindowImpl::HomepageFunc()
 
 void MainWindowImpl::OpenHub(QString &adr, int port)
 {
-	HubWindow *child = new HubWindow(this,adr);
-	mdiArea->addSubWindow(child);
-	child->action  = menuWindow->addAction(tr("HUB: ")+child->idText);
-	
-		child->action->setCheckable(true);
-		connect(child->action, SIGNAL(triggered()), windowMapper, SLOT(map()));
-		connect(child, SIGNAL(actionReleased(QAction *)), this, SLOT(slotclosemdi(QAction *)));
-		WindowToolBar->addAction(child->action);
-	
-	child->show();
+	m_tabwin->setCurrentIndex(m_tabwin->addTab((new HubWindow(this,tr("adress"))),"Hub"));
 }
 
 void MainWindowImpl::SearchFunc()
 {
-	SearchWindow *child = new SearchWindow(this,tr(""));
-	mdiArea->addSubWindow(child);
-	child->action  = menuWindow->addAction(tr("Search: ")+child->idText);
-	
-		child->action->setCheckable(true);
-		connect(child->action, SIGNAL(triggered()), windowMapper, SLOT(map()));		
-		connect(child, SIGNAL(actionReleased(QAction *)), this, SLOT(slotclosemdi(QAction *)));
-		WindowToolBar->addAction(child->action);
-	
-	child->show();
+	m_tabwin->setCurrentIndex(m_tabwin->addTab((new SearchWindow(this,tr(""))),"search"));
 }
 
 void MainWindowImpl::FavHubListFunc()
 {
-	QMdiSubWindow *w = findMdiChild(4);
-	if (w!=NULL) setActiveSubWindow(w); else
-	{
-	FavoriteHubListWindow *child = new FavoriteHubListWindow(this);
-	mdiArea->addSubWindow(child);
-	child->action  = menuWindow->addAction(tr("Fav_Hubs"));
-	
-		child->action->setCheckable(true);
-		connect(child->action, SIGNAL(triggered()), windowMapper, SLOT(map()));
-		connect(child, SIGNAL(actionReleased(QAction *)), this, SLOT(slotclosemdi(QAction *)));
-		WindowToolBar->addAction(child->action);	
-	child->show();
-	}
+	m_tabwin->setCurrentIndex(m_tabwin->addTab((new FavoriteHubListWindow(this)),"Fav_Hub"));
 }
 
 void MainWindowImpl::qcdconFunc(QString adr, int port)
@@ -437,11 +266,6 @@ void MainWindowImpl::statusbarcheck()
 	if (actionStatusBar->isChecked()) statusbar->setVisible(true); else statusbar->setVisible(false);
 }
 
-void MainWindowImpl::winbarcheck()
-{
-	if (actionTabBar->isChecked()) WindowToolBar->setVisible(true); else WindowToolBar->setVisible(false);
-}
-
 void MainWindowImpl::toolbarcheck()
 {
 	if (actionToolBar->isChecked()) toolBar->setVisible(true); else toolBar->setVisible(false);
@@ -450,11 +274,6 @@ void MainWindowImpl::toolbarcheck()
 void MainWindowImpl::setShareSize(const QString &sz)
 {
 	shareStatusLbl->setText(sz);
-}
-
-void MainWindowImpl::slotclosemdi(QAction *act)
-{
-	WindowToolBar->removeAction(act);
 }
 
 const QString & ThreadGetTTH::getA()
@@ -557,7 +376,6 @@ void MainWindowImpl::openownfilelistFunc()
 void MainWindowImpl::OpenList(const QString &filename)
 {
 	// Function to open filelists
-	return;
 }
 
 void MainWindowImpl::RefreshOwnFileListFunc()
@@ -567,8 +385,13 @@ void MainWindowImpl::RefreshOwnFileListFunc()
 
 void MainWindowImpl::OpenDownloadsFolderFunc()
 {
-	QUrl url = QUrl(tr("/home/")).toLocalFile(); // FIXME : Change to downloadDIR variable.
+	QUrl url = QUrl("/home/").toLocalFile(); // FIXME : Change to downloadDIR variable.
 	QDesktopServices::openUrl(url);
+}
+
+void MainWindowImpl::slotCurrentTabChanged(int index)
+{
+	// Insert Code Here 
 }
 
 //

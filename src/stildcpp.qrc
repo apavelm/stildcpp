@@ -13,5 +13,6 @@
 		<file>images/magnet.png</file>
 		<file>images/tth_file.png</file>
 		<file>images/tth_tth.png</file>
+		<file>images/cross.png</file>
 	</qresource>
 </RCC>

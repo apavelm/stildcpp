@@ -62,7 +62,6 @@
     <addaction name="actionToolBar" />
     <addaction name="actionStatusBar" />
     <addaction name="actionTransfers" />
-    <addaction name="actionTabBar" />
    </widget>
    <widget class="QMenu" name="menuTransfers" >
     <property name="title" >
@@ -99,34 +98,6 @@
    <property name="sizeGripEnabled" >
     <bool>false</bool>
    </property>
-  </widget>
-  <widget class="QToolBar" name="WindowToolBar" >
-   <property name="font" >
-    <font>
-     <pointsize>7</pointsize>
-    </font>
-   </property>
-   <property name="windowTitle" >
-    <string>WindowToolBar</string>
-   </property>
-   <property name="autoFillBackground" >
-    <bool>false</bool>
-   </property>
-   <property name="allowedAreas" >
-    <set>Qt::BottomToolBarArea|Qt::NoToolBarArea|Qt::TopToolBarArea</set>
-   </property>
-   <property name="toolButtonStyle" >
-    <enum>Qt::ToolButtonTextOnly</enum>
-   </property>
-   <property name="floatable" >
-    <bool>false</bool>
-   </property>
-   <attribute name="toolBarArea" >
-    <enum>BottomToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak" >
-    <bool>false</bool>
-   </attribute>
   </widget>
   <widget class="QDockWidget" name="TransDock" >
    <property name="features" >
@@ -363,20 +334,6 @@
   <action name="aboutqtact" >
    <property name="text" >
     <string>About Qt</string>
-   </property>
-  </action>
-  <action name="actionTabBar" >
-   <property name="checkable" >
-    <bool>true</bool>
-   </property>
-   <property name="checked" >
-    <bool>true</bool>
-   </property>
-   <property name="text" >
-    <string>Window Bar</string>
-   </property>
-   <property name="shortcut" >
-    <string>Ctrl+4</string>
    </property>
   </action>
  </widget>

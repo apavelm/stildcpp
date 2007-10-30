@@ -52,21 +52,4 @@ signals:
 	void actionReleased(QAction *action);
 };
 
-class SearchWindow : public MdiChild, private Ui::mdiSEARCHwin
-{
-	Q_OBJECT
-private slots:
-	void SearchBtn();
-public:
-	SearchWindow(QWidget *parent, const QString &what);
-};
-
-class FavoriteHubListWindow : public MdiChild, private Ui::mdiFAVHUBwin
-{
-	Q_OBJECT
-public:
-	FavoriteHubListWindow(QWidget *parent);
-};
-
-
 #endif // __MDI_C_H__

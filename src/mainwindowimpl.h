@@ -46,11 +46,14 @@
 #include "frmAbout.h"
 #include "preferencesdialog.h"
 #include "mdi_c.h"
+#include "favHubLstWin.h"
+#include "SearchWin.h"
 #include "hub_win.h"
 #include "pm_win.h"
 #include "tthdial.h"
 #include "quickconnectdlg.h"
 #include "defs.h"
+#include "tabwidget.h"
 
 //
 #include "client/stdinc.h"
@@ -92,12 +95,12 @@ protected:
 	void closeEvent(QCloseEvent *event);
 
 private slots:
-	void setToolTip(const QString & title);
+	void setToolTip(const QString & title);	
 	void iconActivated(QSystemTrayIcon::ActivationReason reason);
 	void showMessage(const QString & title, const QString & message, int type, int millisecondsTimeoutHint = 10000);
 	void messageClicked();
+	void slotCurrentTabChanged(int index);
 	void statusMessage(const QString & mes);
-	void slotclosemdi(QAction *act);
 	void About();
 	void openfilelistFunc();
 	void OpenDownloadsFolderFunc();
@@ -116,12 +119,8 @@ private slots:
 	void OpenHub(QString &adr, int port);
 	void transcheck(); // if TransferWindow Checked in menu @View@
 	void statusbarcheck(); // if StatusBar Checked in menu @View@
-	void toolbarcheck(); // if ToolBar Checked in menu @View@
-	void winbarcheck(); // if WinTabBar Checked in menu @View@
+	void toolbarcheck(); // if ToolBar Checked in menu @View@	
 	
-	void updateWindowMenu();
-	void setActiveSubWindow(QWidget *window);
-
 private:
 	void createActions();
 	void createTrayIcon();
@@ -131,28 +130,12 @@ private:
 
 	QAction *showhide;
 
-	QAction *closeAct;
-	QAction *closeAllAct;
-	QAction *tileAct;
-	QAction *cascadeAct;
-	QAction *nextAct;
-	QAction *previousAct;
-	QAction *separatorAct;
-
 	QSystemTrayIcon *trayIcon;
 	QMenu *trayIconMenu;
 	QLabel *shareStatusLbl;
 	
-	
-	QMdiArea *mdiArea;
-	QSignalMapper *windowMapper;
-	
-	MdiChild *activeMdiChild();
-	QMdiSubWindow *findMdiChild(const int id, QString &idtext, QAction *act);
-	QMdiSubWindow *findMdiChild(const int id, QString &idtext);
-	QMdiSubWindow *findMdiChild(const int id);
-	
 	ThreadGetTTH thrdGetTTh;
+	TabWidget *m_tabwin;
 	int *p_opt;
 	
 };

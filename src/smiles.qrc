@@ -1,0 +1,6 @@
+<!DOCTYPE RCC><RCC version="1.0">
+	<qresource>
+		<file>images/emotions/default/imagedef.xml</file>
+		<file>images/emotions/default/grin.png</file>
+	</qresource>
+</RCC>

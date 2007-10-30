@@ -18,18 +18,18 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#ifndef __SEARCHWIN_H__
+#define __SEARCHWIN_H__
+
 #include "mdi_c.h"
 
-MdiChild::MdiChild(QWidget *parent)
+class SearchWindow : public MdiChild, private Ui::mdiSEARCHwin
 {
-	setAttribute(Qt::WA_DeleteOnClose, true);
-	type=0;
-	idText=tr("");
-}
+	Q_OBJECT
+private slots:
+	void SearchBtn();
+public:
+	SearchWindow(QWidget *parent, const QString &what);
+};
 
-MdiChild::~MdiChild()
-{
-	emit actionReleased(action);
-}
-
-//
+#endif // __SEARCHWIN_H__

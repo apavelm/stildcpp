@@ -18,18 +18,16 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#ifndef __FAVHUBLSTWIN_H__
+#define __FAVHUBLSTWIN_H__
+
 #include "mdi_c.h"
 
-MdiChild::MdiChild(QWidget *parent)
+class FavoriteHubListWindow : public MdiChild, private Ui::mdiFAVHUBwin
 {
-	setAttribute(Qt::WA_DeleteOnClose, true);
-	type=0;
-	idText=tr("");
-}
+	Q_OBJECT
+public:
+	FavoriteHubListWindow(QWidget *parent);
+};
 
-MdiChild::~MdiChild()
-{
-	emit actionReleased(action);
-}
-
-//
+#endif // __FAVHUBLSTWIN_H__

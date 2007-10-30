@@ -17,19 +17,35 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+ 
+#ifndef TABWIDGET_H
+#define TABWIDGET_H
 
-#include "mdi_c.h"
+#include <QTabWidget>
+#include <QMouseEvent>
+#include <QTabBar>
+#include <QMenu>
+#include <QApplication>
+#include <QToolButton>
 
-MdiChild::MdiChild(QWidget *parent)
+class TabWidget : public QTabWidget
 {
-	setAttribute(Qt::WA_DeleteOnClose, true);
-	type=0;
-	idText=tr("");
-}
+	Q_OBJECT
+public:
+	TabWidget(QWidget *parent);
+	~TabWidget();
+protected:
+	bool eventFilter(QObject *obj, QEvent *event);
+private:
+	bool swapTabs(int index1, int index2);
+	QToolButton *crossButton;
+	QMenu *menu;
+	void setCrossButton(bool activate);
+private slots:
+	void slotCloseTab();
+	void slotCloseTab(int n);
+	void slotCloseOtherTab();
+	void slotCloseAllTab();
+};
 
-MdiChild::~MdiChild()
-{
-	emit actionReleased(action);
-}
-
-//
+#endif

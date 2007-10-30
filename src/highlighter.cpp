@@ -22,8 +22,7 @@
 
 #include "highlighter.h"
 
-Highlighter::Highlighter(QTextDocument *parent)
-    : QSyntaxHighlighter(parent)
+Highlighter::Highlighter(QTextDocument *parent) : QSyntaxHighlighter(parent)
 {
     HighlightingRule rule;
 
@@ -53,7 +52,7 @@ Highlighter::Highlighter(QTextDocument *parent)
     highlightingRules.append(rule);
 
     singleLineCommentFormat.setForeground(Qt::red);
-    rule.pattern = QRegExp("//[^\n]*");
+    rule.pattern = QRegExp("/me [^\n]*");
     rule.format = singleLineCommentFormat;
     highlightingRules.append(rule);
 

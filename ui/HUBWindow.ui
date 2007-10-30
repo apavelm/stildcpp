@@ -41,7 +41,7 @@
      <item>
       <layout class="QHBoxLayout" >
        <item>
-        <widget class="QLineEdit" name="lineEdit" />
+        <widget class="QTextEdit" name="lineEdit" />
        </item>
        <item>
         <widget class="QToolButton" name="SendBtn" >
