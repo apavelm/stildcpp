@@ -22,9 +22,9 @@
 #define __DEFS_H__
 
 #define APPLICATIONNAME "StilDC++"
-#define APPVER "0.1"
-#define APPVER_FLOAT 0.1
-#define APPVER_FULL "Version 0.1"
+#define APPVER "0.11"
+#define APPVER_FLOAT 0.11
+#define APPVER_FULL "Version 0.11"
 #define SPECIALTHX "Special thanks to Suraev Yakov (adminbsd@gmail.com)"
 #define APPHOMEPAGE "http://code.google.com/p/stildcpp/"
 #define APPDONATEPAGE "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=arnetheduck%40gmail%2ecom&item_name=DCPlusPlus&no_shipping=1&return=http%3a%2f%2fdcplusplus%2esf%2enet%2f&cancel_return=http%3a%2f%2fdcplusplus%2esf%2enet%2f&cn=Greeting&tax=0&currency_code=EUR&bn=PP%2dDonationsBF&charset=UTF%2d8"

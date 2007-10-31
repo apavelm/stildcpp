@@ -59,9 +59,7 @@
     <addaction name="separator" />
     <addaction name="actionIndexing_Progress" />
     <addaction name="separator" />
-    <addaction name="actionToolBar" />
     <addaction name="actionStatusBar" />
-    <addaction name="actionTransfers" />
    </widget>
    <widget class="QMenu" name="menuTransfers" >
     <property name="title" >
@@ -106,7 +104,7 @@
   </widget>
   <widget class="QDockWidget" name="TransDock" >
    <property name="features" >
-    <set>QDockWidget::DockWidgetMovable</set>
+    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable|QDockWidget::NoDockWidgetFeatures</set>
    </property>
    <property name="allowedAreas" >
     <set>Qt::BottomDockWidgetArea|Qt::NoDockWidgetArea|Qt::TopDockWidgetArea</set>
@@ -127,7 +125,7 @@
   </widget>
   <widget class="QToolBar" name="toolBar" >
    <property name="windowTitle" >
-    <string>Main</string>
+    <string>Main Bar</string>
    </property>
    <property name="toolButtonStyle" >
     <enum>Qt::ToolButtonTextOnly</enum>
@@ -269,20 +267,6 @@
     <string>Indexing Progress</string>
    </property>
   </action>
-  <action name="actionToolBar" >
-   <property name="checkable" >
-    <bool>true</bool>
-   </property>
-   <property name="checked" >
-    <bool>true</bool>
-   </property>
-   <property name="text" >
-    <string>ToolBar</string>
-   </property>
-   <property name="shortcut" >
-    <string>Ctrl+1</string>
-   </property>
-  </action>
   <action name="actionStatusBar" >
    <property name="checkable" >
     <bool>true</bool>
@@ -294,21 +278,7 @@
     <string>StatusBar</string>
    </property>
    <property name="shortcut" >
-    <string>Ctrl+2</string>
-   </property>
-  </action>
-  <action name="actionTransfers" >
-   <property name="checkable" >
-    <bool>true</bool>
-   </property>
-   <property name="checked" >
-    <bool>true</bool>
-   </property>
-   <property name="text" >
-    <string>Transfers</string>
-   </property>
-   <property name="shortcut" >
-    <string>Ctrl+3</string>
+    <string>Ctrl+1</string>
    </property>
   </action>
   <action name="actionDownload_Queue" >

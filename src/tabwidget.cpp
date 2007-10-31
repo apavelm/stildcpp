@@ -25,12 +25,21 @@ TabWidget::TabWidget(QWidget *parent) : QTabWidget(parent)
 {
 	setMouseTracking( true );
 	tabBar()->installEventFilter(this);
+	tb=0;
+	setTabShape(QTabWidget::Rounded);
 	
 	// Context Menu
 	menu = new QMenu(this);
+	
+	// Position Submenu
+	QMenu *a = menu->addMenu(tr("Position"));
+	connect(a->addAction(QIcon(":/images/tab_up.png"), tr("Tabs Position Up")), SIGNAL(triggered()), this, SLOT(tabup()) );
+	connect(a->addAction(QIcon(":/images/tab_down.png"), tr("Tabs Position Down")), SIGNAL(triggered()), this, SLOT(tabdown()) );
+
 	connect(menu->addAction(QIcon(":/images/cross.png"), tr("Close Current Tab")), SIGNAL(triggered()), this, SLOT(slotCloseTab()) );
-	connect(menu->addAction(QIcon(":/images/cross.png"), tr("Close Other Tabs")), SIGNAL(triggered()), this, SLOT(slotCloseOtherTab()) );
-	connect(menu->addAction(QIcon(":/images/cross.png"), tr("Close All Tabs")), SIGNAL(triggered()), this, SLOT(slotCloseAllTab()) );
+	connect(menu->addAction(QIcon(":/images/cross2.png"), tr("Close Other Tabs")), SIGNAL(triggered()), this, SLOT(slotCloseOtherTab()) );
+	connect(menu->addAction(QIcon(":/images/cross_black.png"), tr("Close All Tabs")), SIGNAL(triggered()), this, SLOT(slotCloseAllTab()) );
+
 	
 	// Corner Close-cross Button
 	crossButton = new QToolButton(this);
@@ -44,6 +53,24 @@ TabWidget::~TabWidget()
 {
 	delete menu;
 	delete crossButton;
+}
+
+void TabWidget::tabdown()
+{
+	setOpt(1);
+}
+
+void TabWidget::tabup()
+{
+	setOpt(0);
+}
+
+
+void TabWidget::setOpt(int k)
+{
+	tb=k;
+	if (k==0) setTabPosition(QTabWidget::North);
+		else setTabPosition(QTabWidget::South);
 }
 
 bool TabWidget::eventFilter(QObject *obj, QEvent *event)
@@ -70,7 +97,7 @@ bool TabWidget::eventFilter(QObject *obj, QEvent *event)
 				}
 			}
 			if ( mouseEvent->button() == Qt::LeftButton )
-				qApp->setOverrideCursor( Qt::OpenHandCursor );
+				qApp->setOverrideCursor( Qt::ClosedHandCursor );
 			if ( mouseEvent->button() == Qt::MidButton )
 				if (tmp2>-1) slotCloseTab(tmp2);
 			if ( mouseEvent->button() == Qt::RightButton )

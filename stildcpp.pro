@@ -39,6 +39,17 @@ HEADERS = src/mainwindowimpl.h \
  src/mdi_filelist.h \
  src/defs.h \
  src/pm_win.h \
+src/tabwidget.h \
+ src/favHubLstWin.h \
+ src/SearchWin.h \
+ src/dl_queue.h \
+ src/FavUsr.h \
+ src/IgnUsr.h \
+ src/publichubs.h \
+ src/dlfin.h \
+ src/ulfin.h \
+ src/adlsearch.h \
+ src/sspy.h \
  src/xml/tinyxml.h \
  src/xml/tinystr.h \
  src/client/AdcCommand.h \
@@ -125,18 +136,7 @@ HEADERS = src/mainwindowimpl.h \
  src/client/UserConnectionListener.h \
  src/client/Util.h \
  src/client/version.h \
- src/client/ZUtils.h \
- src/tabwidget.h \
- src/favHubLstWin.h \
- src/SearchWin.h \
- src/dl_queue.h \
- src/FavUsr.h \
- src/IgnUsr.h \
- src/publichubs.h \
- src/dlfin.h \
- src/ulfin.h \
- src/adlsearch.h \
- src/sspy.h
+ src/client/ZUtils.h
 SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
  src/frmAbout.cpp \
@@ -150,6 +150,17 @@ SOURCES = src/mainwindowimpl.cpp \
  src/mdi_filelist.cpp \
  src/defs.cpp \
  src/pm_win.cpp \
+src/tabwidget.cpp \
+ src/favHubLstWin.cpp \
+ src/SearchWin.cpp \
+ src/dl_queue.cpp \
+ src/FavUsr.cpp \
+ src/IgnUsr.cpp \
+ src/publichubs.cpp \
+ src/dlfin.cpp \
+ src/ulfin.cpp \
+ src/adlsearch.cpp \
+ src/sspy.cpp \
  src/xml/tinyxml.cpp \
  src/xml/tinyxmlparser.cpp \
  src/xml/tinystr.cpp \
@@ -202,19 +213,8 @@ SOURCES = src/mainwindowimpl.cpp \
  src/client/User.cpp \
  src/client/UserConnection.cpp \
  src/client/Util.cpp \
- src/client/ZUtils.cpp \
- src/tabwidget.cpp \
- src/favHubLstWin.cpp \
- src/SearchWin.cpp \
- src/dl_queue.cpp \
- src/FavUsr.cpp \
- src/IgnUsr.cpp \
- src/publichubs.cpp \
- src/dlfin.cpp \
- src/ulfin.cpp \
- src/adlsearch.cpp \
- src/sspy.cpp
+ src/client/ZUtils.cpp
 RESOURCES += src/stildcpp.qrc src/smiles.qrc src/langs.qrc
-VERNUM = 0.1
+VERNUM = 0.11
 LIBS += -lssl -lbz2 -lcrypto
 TRANSLATIONS = lang/stildcpp_ru.ts

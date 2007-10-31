@@ -39,6 +39,7 @@ void MainWindowImpl::initMain()
 	m_tabwin = new TabWidget( this );
 	connect(m_tabwin, SIGNAL(currentChanged(int)), this, SLOT(slotCurrentTabChanged(int)) );
 	setCentralWidget(m_tabwin);
+	m_tabwin->setOpt(p_opt[AppSettings::s_TABPOSIOTION]);
 	
 	createActions();
 	createToolBars();
@@ -167,9 +168,9 @@ void MainWindowImpl::createActions()
 
 	connect(actionAbout, SIGNAL(triggered()), this, SLOT(About()));	
 	connect(aboutqtact, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
-	connect(actionTransfers, SIGNAL(triggered()), this, SLOT(transcheck()));
+
 	connect(actionStatusBar, SIGNAL(triggered()), this, SLOT(statusbarcheck()));
-	connect(actionToolBar, SIGNAL(triggered()), this, SLOT(toolbarcheck()));	
+
 	
 	connect(actionSettings, SIGNAL(triggered()), this, SLOT(PreferencesFunc()));
 
@@ -223,7 +224,36 @@ void MainWindowImpl::createTrayIcon()
 
 void MainWindowImpl::createToolBars()
 {
-	toolBar->addAction(actionExit);
+	toolBar->setToolButtonStyle( Qt::ToolButtonIconOnly );
+	QAction *p = toolBar->toggleViewAction();
+	p->setShortcut(QKeySequence(tr("Ctrl+2")));
+	menuView->addAction(p);
+	p = TransDock->toggleViewAction();
+	p->setShortcut(QKeySequence(tr("Ctrl+3")));
+	menuView->addAction(p);
+	
+	// Insert Actions to "Main Bar"
+	toolBar->addAction(actionPublic_Hubs);
+	toolBar->addAction(actionReconnect);
+	toolBar->addAction(actionFollow_last_redirect);
+	toolBar->addSeparator();
+	toolBar->addAction(actionFavorite_Hubs);
+	toolBar->addAction(actionFavorite_Users);
+	toolBar->addAction(actionIgnored_Users);
+	toolBar->addSeparator();
+	toolBar->addAction(actionDownload_Queue);
+	toolBar->addAction(actionFinished_downloads);
+	toolBar->addAction(actionFinished_Uploads);
+	toolBar->addSeparator();
+	toolBar->addAction(actionSearch);
+	toolBar->addAction(actionADL_Search);
+	toolBar->addAction(actionSearch_Spy);
+	toolBar->addSeparator();
+	toolBar->addAction(actionSettings);
+	toolBar->addAction(actionOpen_filelist);
+	toolBar->addAction(actionGet_TTH_for_file);
+	//toolBar->addSeparator();
+
 }
 
 void MainWindowImpl::statusMessage(const QString & mes)
@@ -256,23 +286,24 @@ void MainWindowImpl::PreferencesFunc()
 
 void MainWindowImpl::DonateFunc()
 {
-	m_tabwin->setCurrentIndex(m_tabwin->addTab((new PMWindow(this,"Vasya")),"PM"));
+	QUrl url = QUrl(APPDONATEPAGE);
+	QDesktopServices::openUrl(url);
 }
 
 void MainWindowImpl::HomepageFunc()
 {
-	QUrl url = QUrl(tr(APPHOMEPAGE));
+	QUrl url = QUrl(APPHOMEPAGE);
 	QDesktopServices::openUrl(url);
 }
 
 void MainWindowImpl::OpenHub(QString &adr, int port)
 {
-	m_tabwin->setCurrentIndex(m_tabwin->addTab((new HubWindow(this,tr("adress"))),"Hub"));
+	m_tabwin->setCurrentIndex(m_tabwin->addTab((new HubWindow(this,"adress")),"Hub"));
 }
 
 void MainWindowImpl::SearchFunc()
 {
-	m_tabwin->setCurrentIndex(m_tabwin->addTab((new SearchWindow(this,tr(""))),"search"));
+	m_tabwin->setCurrentIndex(m_tabwin->addTab((new SearchWindow(this,"")),"search"));
 }
 
 void MainWindowImpl::ADLFunc()
@@ -349,19 +380,9 @@ void MainWindowImpl::fQuickConFunc()
 	connect(qcd,SIGNAL(con_pressed(QString, int)),this,SLOT(qcdconFunc(QString, int)));
 }
 
-void MainWindowImpl::transcheck()
-{
-	if (actionTransfers->isChecked()) TransDock->setVisible(true); else TransDock->setVisible(false);
-}
-
 void MainWindowImpl::statusbarcheck()
 {
 	if (actionStatusBar->isChecked()) statusbar->setVisible(true); else statusbar->setVisible(false);
-}
-
-void MainWindowImpl::toolbarcheck()
-{
-	if (actionToolBar->isChecked()) toolBar->setVisible(true); else toolBar->setVisible(false);
 }
 
 void MainWindowImpl::setShareSize(const QString &sz)
@@ -501,6 +522,11 @@ void MainWindowImpl::show_tthFunc()
 {
 	new TthDialog(this,thrdGetTTh.getA(),thrdGetTTh.getB(),thrdGetTTh.getC());
 	actionGet_TTH_for_file->setEnabled(true);
+}
+
+void MainWindowImpl::OpenPM(const QString &name)
+{
+	m_tabwin->setCurrentIndex(m_tabwin->addTab((new PMWindow(this,name)),"PM"));
 }
 
 void MainWindowImpl::openfilelistFunc()

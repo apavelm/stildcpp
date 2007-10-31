@@ -14,5 +14,9 @@
 		<file>images/tth_file.png</file>
 		<file>images/tth_tth.png</file>
 		<file>images/cross.png</file>
+		<file>images/cross2.png</file>
+		<file>images/cross_black.png</file>
+		<file>images/tab_down.png</file>
+		<file>images/tab_up.png</file>
 	</qresource>
 </RCC>

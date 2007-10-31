@@ -34,13 +34,19 @@ class TabWidget : public QTabWidget
 public:
 	TabWidget(QWidget *parent);
 	~TabWidget();
+	void setOpt(int k);
+	int getOpt() { return tb; }
 protected:
 	bool eventFilter(QObject *obj, QEvent *event);
 private:
+	int tb;
 	bool swapTabs(int index1, int index2);
 	QToolButton *crossButton;
 	QMenu *menu;
 	void setCrossButton(bool activate);
+private slots:
+	void tabdown();
+	void tabup();
 public slots:
 	void slotCloseTab();
 	void slotCloseTab(int n);

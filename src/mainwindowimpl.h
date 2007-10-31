@@ -136,16 +136,16 @@ private slots:
 	void PreferencesFunc();
 	void FavHubListFunc();
 	void fQuickConFunc();
-	void OpenHub(QString &adr, int port);
-	void transcheck(); // if TransferWindow Checked in menu @View@
+	void OpenHub(QString &adr, int port);	
 	void statusbarcheck(); // if StatusBar Checked in menu @View@
-	void toolbarcheck(); // if ToolBar Checked in menu @View@	
+	
 	
 private:
 	void createActions();
 	void createTrayIcon();
 	void createToolBars();
 	void OpenList(const QString &);
+	void OpenPM(const QString &);
 	void setShareSize(const QString &sz);
 	
 	int FindWinByType(int type);

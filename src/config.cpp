@@ -25,13 +25,13 @@ namespace AppSettings
 
 const char * AppSettingsMgr::settingTags[] = 
 {
-	"HideOnClose", "ShowSplash", "UseTray", "StartHidden", "PromptOnClose"
+	"HideOnClose", "ShowSplash", "UseTray", "StartHidden", "PromptOnClose", "TabPosition"
 	,"LAST" // DO NOT DELETE
 };
 
 const int AppSettingsMgr::settingsDefaults[] =
 {
-	1, 1, 1, 0, 1
+	1, 1, 1, 0, 1, 0
 	, 0 //DO NOT DELETE
 };
 
