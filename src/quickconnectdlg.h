@@ -35,7 +35,7 @@ public:
 	TQuickConnectDialog(QWidget *);
 
 signals:
-	void con_pressed(QString, int);
+	void con_pressed(QString);
 };
 
 #endif // __QUICKCONNECTDLG_H__

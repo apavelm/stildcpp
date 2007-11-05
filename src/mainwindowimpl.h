@@ -37,10 +37,9 @@
 #include <QThread>
 #include <sstream>
 
-#include "ui_mainwindow.h"
+#include "defs.h"
 
 #include "config.h"
-
 #include "frmAbout.h"
 #include "preferencesdialog.h"
 #include "mdi_c.h"
@@ -55,21 +54,46 @@
 #include "dl_queue.h"
 #include "pm_win.h"
 #include "adlsearch.h"
+#include "mdi_filelist.h"
 #include "sspy.h"
 #include "tthdial.h"
 #include "quickconnectdlg.h"
-#include "defs.h"
 #include "tabwidget.h"
 
 //
 #include "client/stdinc.h"
 #include "client/DCPlusPlus.h"
+#include "client/SimpleXML.h"
+#include "client/LogManager.h"
+#include "client/ConnectionManager.h"
+#include "client/StringTokenizer.h"
 #include "client/MerkleTree.h"
 #include "client/Util.h"
 #include "client/Text.h"
 #include "client/File.h"
+
+#include "client/FavoriteManager.h"
+#include "client/QueueManagerListener.h"
+#include "client/version.h"
+#include "client/Client.h"
+#include "client/ShareManager.h"
+#include "client/DownloadManager.h"
+#include "client/SettingsManager.h"
+
+
+//#include "dcpp/ResourceManager.h"
+
+#include "client/DownloadManager.h"
+#include "client/UploadManager.h"
+
+
+#include "client/TimerManager.h"
+#include "client/SearchManager.h"
+#include "client/QueueManager.h"
+#include "client/ClientManager.h"
 //
 
+#include "ui_mainwindow.h"
 
 class ThreadGetTTH : public QThread
 {
@@ -88,7 +112,10 @@ signals:
 	void ready();
 };
 
-class MainWindowImpl : public QMainWindow, public Ui::MainWindow
+class MainWindowImpl : public QMainWindow, public Ui::MainWindow 
+	,private dcpp::TimerManagerListener
+	,private dcpp::QueueManagerListener
+	,private dcpp::LogManagerListener
 {
 Q_OBJECT
 public:
@@ -104,7 +131,6 @@ private slots:
 	void setToolTip(const QString & title);	
 	void iconActivated(QSystemTrayIcon::ActivationReason reason);
 	void showMessage(const QString & title, const QString & message, int type, int millisecondsTimeoutHint = 10000);
-	void messageClicked();
 	void slotCloseWinTypeHub();
 	void slotCloseWinTypePM();
 	void slotCloseWinTypeSearch();
@@ -129,14 +155,14 @@ private slots:
 	void FavUsrFunc();
 	void IgnoredUsrFunc();
 	void SearchFunc();
-	void qcdconFunc(QString , int);
+	void qcdconFunc(QString);
 	void show_tthFunc();
 	void showhideFunc();
 	void GetTTHFunc();
 	void PreferencesFunc();
 	void FavHubListFunc();
 	void fQuickConFunc();
-	void OpenHub(QString &adr, int port);	
+	void OpenHub(const std::string& adr);
 	void statusbarcheck(); // if StatusBar Checked in menu @View@
 	
 	
@@ -144,7 +170,9 @@ private:
 	void createActions();
 	void createTrayIcon();
 	void createToolBars();
-	void OpenList(const QString &);
+	void clientInit();
+	void startSocket();
+	void OpenList(const dcpp::tstring & aFile, const dcpp::UserPtr & aUser, int64_t aSpeed);
 	void OpenPM(const QString &);
 	void setShareSize(const QString &sz);
 	
@@ -159,7 +187,6 @@ private:
 	ThreadGetTTH thrdGetTTh;
 	TabWidget *m_tabwin;
 	int *p_opt;
-	
 };
 
 #endif

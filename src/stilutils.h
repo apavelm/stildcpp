@@ -18,40 +18,26 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "hub_win.h"
+#ifndef STILUTILS_H
+#define STILUTILS_H
 
-HubWindow::HubWindow(QWidget *parent, const std::string& url) : MdiChild(parent)
-{	
-	setupUi(this);
-	type = 1;
-	idText = url.c_str();
-	
-	setWindowTitle(tr("Hub: ")+url.c_str());
-	editor->clear();
-	setupeditor();
-	connect(SendBtn,SIGNAL(pressed()),this,SLOT(send_msg()));
-	
-	//client = ClientManager::getInstance()->getClient(url);
-	client->addListener(this);
-	client->connect();
-	
-}
+#include "client/stdinc.h"
+#include "client/DCPlusPlus.h"
+#include "client/CID.h"
+#include "client/User.h"
+#include "client/ClientManager.h"
 
-void HubWindow::setupeditor()
+using namespace dcpp;
+
+class StilUtils  
 {
-	QFont font;
-	font.setFamily("Tahoma");
-	font.setFixedPitch(true);
-	font.setPointSize(10);
 
-	editor->setFont(font);
+public:
+	//StilUtils();
+	static std::string getNicks(const CID& cid);
+	static std::string getNicks(const UserPtr& user);
+				
+};
 
-	highlighter = new Highlighter(editor->document());
-}
+#endif // of StilUtils
 
-void HubWindow::ReConnect()
-{
-	client->reconnect();
-}
-
-// HubWindow

@@ -23,13 +23,18 @@
 
 #include "mdi_c.h"
 
+#include "client/stdinc.h"
+#include "client/DCPlusPlus.h"
+#include "client/DirectoryListing.h"
+#include "client/ClientManager.h"
+
 #include "ui_filelistdialog.h"
 
 class FileListDlg : public MdiChild, private Ui::DialogFileList
 {
 	Q_OBJECT
 public:
-	FileListDlg(QWidget *parent);
+	FileListDlg(QWidget *parent, const dcpp::UserPtr & aUser, int64_t aSpeed, dcpp::tstring & strFlie);
 };
 
 #endif // __MDI_FILELIST_H__

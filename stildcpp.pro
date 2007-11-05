@@ -39,7 +39,7 @@ HEADERS = src/mainwindowimpl.h \
  src/mdi_filelist.h \
  src/defs.h \
  src/pm_win.h \
-src/tabwidget.h \
+ src/tabwidget.h \
  src/favHubLstWin.h \
  src/SearchWin.h \
  src/dl_queue.h \
@@ -136,7 +136,8 @@ src/tabwidget.h \
  src/client/UserConnectionListener.h \
  src/client/Util.h \
  src/client/version.h \
- src/client/ZUtils.h
+ src/client/ZUtils.h \
+ src/stilutils.h
 SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
  src/frmAbout.cpp \
@@ -150,7 +151,7 @@ SOURCES = src/mainwindowimpl.cpp \
  src/mdi_filelist.cpp \
  src/defs.cpp \
  src/pm_win.cpp \
-src/tabwidget.cpp \
+ src/tabwidget.cpp \
  src/favHubLstWin.cpp \
  src/SearchWin.cpp \
  src/dl_queue.cpp \
@@ -213,8 +214,10 @@ src/tabwidget.cpp \
  src/client/User.cpp \
  src/client/UserConnection.cpp \
  src/client/Util.cpp \
- src/client/ZUtils.cpp
+ src/client/ZUtils.cpp \
+ src/stilutils.cpp
 RESOURCES += src/stildcpp.qrc src/smiles.qrc src/langs.qrc
 VERNUM = 0.11
 LIBS += -lssl -lbz2 -lcrypto
 TRANSLATIONS = lang/stildcpp_ru.ts
+DEFINES = _DEBUG

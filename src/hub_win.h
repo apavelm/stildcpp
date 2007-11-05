@@ -26,19 +26,68 @@
 
 #include "highlighter.h"
 #include "mdi_c.h"
+#include "config.h"
+
+//
+#include "client/stdinc.h"
+#include "client/DCPlusPlus.h"
+#include "client/Client.h"
+#include "client/forward.h"
+#include "client/ClientListener.h"
+#include "client/TaskQueue.h"
+#include "client/User.h"
+#include "client/FavoriteManagerListener.h"
+//
 
 #include "ui_HUBWindow.h"
 
 class HubWindow : public MdiChild, private Ui::mdiHUBwin
+	,private dcpp::ClientListener 
+//	,private dcpp::FavoriteManagerListener
 {
 	Q_OBJECT
 private:
 	Highlighter *highlighter;
+	
+	dcpp::Client* client;
+	
+// FavoriteManagerListener
+//	virtual void on(dcpp::FavoriteManagerListener::UserAdded, const FavoriteUser& /*aUser*/) throw();
+//	virtual void on(dcpp::FavoriteManagerListener::UserRemoved, const FavoriteUser& /*aUser*/) throw();
+//	void resortForFavsFirst(bool justDoIt = false);
+
+// ClientListener
+	//virtual void on(Connecting, dcpp::Client*) throw();
+	//virtual void on(Connected, dcpp::Client*) throw();
+//	virtual void on(UserUpdated, Client*, const OnlineUser&) throw();
+//	virtual void on(UsersUpdated, Client*, const OnlineUserList&) throw();
+//	virtual void on(ClientListener::UserRemoved, Client*, const OnlineUser&) throw();
+	//virtual void on(Redirect, dcpp::Client*, const std::string&) throw();
+	//virtual void on(Failed, dcpp::Client*, const std::string&) throw();
+//	virtual void on(GetPassword, Client*) throw();
+//	virtual void on(HubUpdated, Client*) throw();
+//	virtual void on(Message, Client*, const OnlineUser&, const string&) throw();
+//	virtual void on(StatusMessage, Client*, const string&) throw();
+//	virtual void on(PrivateMessage, Client*, const OnlineUser&, const OnlineUser&, const OnlineUser&, const string&) throw();
+//	virtual void on(NickTaken, Client*) throw();
+//	virtual void on(SearchFlood, Client*, const string&) throw();
 public:
-	HubWindow(QWidget *parent, const QString &hubaddr);
+	HubWindow(QWidget *parent, const std::string& url);
 	void setupeditor();
-private slots:
-	void send_msg();
+	void ReConnect();
+	/*
+	enum Status 
+	{
+		STATUS_STATUS,
+		STATUS_USERS,
+		STATUS_SHARED,
+		STATUS_SHOW_USERS,
+		STATUS_LAST
+	};
+	*/
+
+	//static void closeDisconnected();
+	//static void resortUsers();
 };
 
 #endif // __HUB_WIN_H__

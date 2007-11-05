@@ -24,12 +24,20 @@ using namespace std;
 MainWindowImpl::~MainWindowImpl()
 {
 	thrdGetTTh.stop();
+	
+	dcpp::LogManager::getInstance()->removeListener(this);
+	dcpp::QueueManager::getInstance()->removeListener(this);
+	dcpp::TimerManager::getInstance()->removeListener(this);	
+	
+	//SearchManager::getInstance()->disconnect();
+	//ConnectionManager::getInstance()->disconnect();
 	delete showhide;
 	delete trayIcon;
 	delete trayIconMenu;
 	delete shareStatusLbl;
 	delete m_tabwin;
 	thrdGetTTh.wait();
+	dcpp::shutdown();
 }
 
 void MainWindowImpl::initMain()
@@ -45,7 +53,7 @@ void MainWindowImpl::initMain()
 	createToolBars();
 	createTrayIcon();
 
-	connect(trayIcon, SIGNAL(messageClicked()), this, SLOT(messageClicked()));
+//	connect(trayIcon, SIGNAL(messageClicked()), this, SLOT(messageClicked()));
 	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));	
 	updateWindowMenu();
 	connect(menuWindow, SIGNAL(aboutToShow()), this, SLOT(updateWindowMenu()));
@@ -61,6 +69,8 @@ void MainWindowImpl::initMain()
 	
 	setWindowIcon(QIcon(":/images/icon.png"));
 	
+	clientInit();
+	
 	if (p_opt[AppSettings::s_USETRAY]) 
 		trayIcon->show();
 
@@ -68,6 +78,29 @@ void MainWindowImpl::initMain()
 		this->show();
 	else
 		if (!p_opt[AppSettings::s_USETRAY]) this->show();
+}
+
+void MainWindowImpl::clientInit()
+{
+	dcpp::startup(NULL,NULL);
+	dcpp::QueueManager::getInstance()->addListener(this);
+	dcpp::LogManager::getInstance()->addListener(this);
+	dcpp::TimerManager::getInstance()->addListener(this);
+	
+	//startSocket();
+}
+
+void MainWindowImpl::startSocket() 
+{
+/*	dcpp::SearchManager::getInstance()->disconnect();
+	dcpp::ConnectionManager::getInstance()->disconnect();
+
+	if (dcpp::ClientManager::getInstance()->isActive()) 
+	{
+		dcpp::ConnectionManager::getInstance()->listen();
+		dcpp::SearchManager::getInstance()->listen();
+	}
+*/
 }
 
 MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f) : QMainWindow(parent, f)
@@ -144,12 +177,6 @@ QSystemTrayIcon::MessageIcon icon;
 		default: icon = QSystemTrayIcon::Information;
 	}
 	trayIcon->showMessage(title, message, icon, millisecondsTimeoutHint);
-}
-
-void MainWindowImpl::messageClicked()
-{
-// OnClick on InformationMessages appeared in TrayIcon
-	QMessageBox::information(0, tr("Systray"), tr("Sorry, I already gave what help I could.\nMaybe you should try asking a human?"));
 }
 
 void MainWindowImpl::createActions()
@@ -296,9 +323,9 @@ void MainWindowImpl::HomepageFunc()
 	QDesktopServices::openUrl(url);
 }
 
-void MainWindowImpl::OpenHub(QString &adr, int port)
+void MainWindowImpl::OpenHub(const std::string& adr)
 {
-	m_tabwin->setCurrentIndex(m_tabwin->addTab((new HubWindow(this,"adress")),"Hub"));
+	m_tabwin->setCurrentIndex(m_tabwin->addTab((new HubWindow(this, adr)),"Hub"));
 }
 
 void MainWindowImpl::SearchFunc()
@@ -369,15 +396,15 @@ void MainWindowImpl::DLQueueFunc()
 	else m_tabwin->setCurrentIndex(FindWinByType(6));
 }
 
-void MainWindowImpl::qcdconFunc(QString adr, int port)
+void MainWindowImpl::qcdconFunc(QString adr)
 {
-	OpenHub(adr,port);
+	OpenHub(adr.toStdString());
 }
 
 void MainWindowImpl::fQuickConFunc()
 {
 	TQuickConnectDialog *qcd = new TQuickConnectDialog(this);
-	connect(qcd,SIGNAL(con_pressed(QString, int)),this,SLOT(qcdconFunc(QString, int)));
+	connect(qcd,SIGNAL(con_pressed(QString)),this,SLOT(qcdconFunc(QString)));
 }
 
 void MainWindowImpl::statusbarcheck()
@@ -536,24 +563,35 @@ void MainWindowImpl::openfilelistFunc()
 	QString selectedFilter="";
 	QFileDialog::Options options;
 	//options |= QFileDialog::DontUseNativeDialog;
-	QString fn = QFileDialog::getOpenFileName(this, tr("Select File"),"", tr("All Files (*)"), &selectedFilter, options);
-	if (!fn.isEmpty()) OpenList(fn);
+	QString fn = QFileDialog::getOpenFileName(this, tr("Select File"),"", tr("File lists (*.xml.bz2);;All Files (*)"), &selectedFilter, options);
+	if (!fn.isEmpty()) 
+		{
+		dcpp::tstring strFile = fn.toUtf8().constData();
+		dcpp::UserPtr u = dcpp::DirectoryListing::getUserFromFilename(strFile);
+		if(u) //OpenList(strFile, u, 0);
+			m_tabwin->setCurrentIndex(m_tabwin->addTab((new FileListDlg(this, u, 0, strFile) ), "FileList" ));
+		}
 }
 
 void MainWindowImpl::openownfilelistFunc()
 {
-	// Open Own FileList
-	OpenList("");
+	if(!dcpp::ShareManager::getInstance()->getOwnListFile().empty())
+		{
+		//OpenList(dcpp::Text::toT(dcpp::ShareManager::getInstance()->getOwnListFile()), dcpp::ClientManager::getInstance()->getMe(), 0);
+		}
 }
 
-void MainWindowImpl::OpenList(const QString &filename)
+void MainWindowImpl::OpenList(const dcpp::tstring & aFile, const dcpp::UserPtr & aUser, int64_t aSpeed)
 {
 	// Function to open filelists
+	//m_tabwin->setCurrentIndex(m_tabwin->addTab((new FileListDlg(this, aUser, aSpeed, aFile) ), "FileList" ));
 }
 
 void MainWindowImpl::RefreshOwnFileListFunc()
 {
 	// Refreshes (rehash) own filelist
+	dcpp::ShareManager::getInstance()->setDirty();
+	dcpp::ShareManager::getInstance()->refresh(true);
 }
 
 void MainWindowImpl::OpenDownloadsFolderFunc()
