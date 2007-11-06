@@ -1,6 +1,8 @@
 /***************************************************************************
  *   Copyright (C) 2007 by Pavel Andreev                                   *
  *   Mail: apavelm on gmail dot com (apavelm@gmail.com)                    *
+ *   Copyright (C) 2007 by Yakov Suraev aka BigBiker                       *
+ *   Mail: adminbsd on gmail dot com (adminbsd@gmail.com)                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -26,6 +28,7 @@
 #include "client/CID.h"
 #include "client/User.h"
 #include "client/ClientManager.h"
+#include <QString>
 
 using namespace dcpp;
 
@@ -36,7 +39,9 @@ public:
 	//StilUtils();
 	static std::string getNicks(const CID& cid);
 	static std::string getNicks(const UserPtr& user);
-				
+	
+	static tstring QtoTstr(const QString& qstr);
+	static QString TstrtoQ(const tstring& tstr);
 };
 
 #endif // of StilUtils

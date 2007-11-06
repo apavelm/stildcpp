@@ -1,6 +1,8 @@
 /***************************************************************************
  *   Copyright (C) 2007 by Pavel Andreev                                   *
  *   Mail: apavelm on gmail dot com (apavelm@gmail.com)                    *
+ *   Copyright (C) 2007 by Yakov Suraev aka BigBiker                       *
+ *   Mail: adminbsd on gmail dot com (adminbsd@gmail.com)                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -28,5 +30,23 @@ string StilUtils::getNicks(const CID& cid)
 string StilUtils::getNicks(const UserPtr& user)
 {
 	return getNicks(user->getCID());
+}
+
+tstring StilUtils::QtoTstr(const QString& qstr)
+{
+#ifdef UNICODE
+	return (tstring(qstr.toStdWString()));
+#else
+	return (tstring(qstr.toStdString()));
+#endif	
+}
+
+QString StilUtils::TstrtoQ(const tstring& tstr)
+{
+#ifdef UNICODE
+	return QString::fromStdWString(tstr);
+#else
+	return QString::fromStdString(tstr);
+#endif
 }
 // of stilutils
