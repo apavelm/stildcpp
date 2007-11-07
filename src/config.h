@@ -24,42 +24,73 @@
 #include "defs.h"
 #include <QDir>
 #include "xml/tinyxml.h"
+#include "stilutils.h"
+
+//
+#include "client/stdinc.h"
+#include "client/DCPlusPlus.h"
+#include "client/Speaker.h"
+#include "client/Util.h"
+#include "client/Singleton.h"
+//
 
 namespace AppSettings
 {
 	
 	enum EnumSettings 
 	{ 
-		s_HIDEONCLOSE, s_SHOWSPLASH, s_USETRAY, s_STARTHIDDEN, s_PROMPTONCLOSE, s_TABPOSIOTION
-		,s_LAST };// DO NOT CHANGE THIS LINE
+		i_HIDEONCLOSE, i_SHOWSPLASH, i_USETRAY, i_STARTHIDDEN, i_PROMPTONCLOSE, i_TABPOSIOTION
+		,i_NOTEPADFONTSIZE, i_UPDATEIP
+		,i_LAST };// DO NOT CHANGE THIS LINE
+		
 
-class AppSettingsMgr
+class AppSettingsMgrListener {
+public:
+	virtual ~AppSettingsMgrListener() { }
+	template<int I>	struct X { enum { TYPE = I }; };
+
+	typedef X<0> load;
+	typedef X<1> save;
+	typedef X<2> get;
+	typedef X<3> getDef;
+	typedef X<4> set;
+
+	virtual void on(load, dcpp::tstring) throw() { }
+	virtual void on(save, dcpp::tstring) throw() { }
+	virtual void on(get, int) throw() { }
+	virtual void on(getDef, int) throw() { }
+	virtual void on(set, int, int) throw() { }
+};
+
+class AppSettingsMgr: public dcpp::Singleton<AppSettingsMgr>, public dcpp::Speaker<AppSettingsMgrListener>
 {
 public:
 
 	int load();
 	void save();
-	int load(const char *);
-	void save(const char *);
+	int load(dcpp::tstring);
+	void save(dcpp::tstring);
 	
 	void setDefaults();
-	int getValue(int numname) { if ((numname<s_LAST)&&(numname>-1)) return intSettings[numname];else return -32000; }
-	int getDefValue(int numname) { if ((numname<s_LAST)&&(numname>-1)) return settingsDefaults[numname];else return -32000; }
-	int *getValueArray() { return intSettings; }
-	
-	AppSettingsMgr();
-
+	int get(int numname) { if ((numname<i_LAST)&&(numname>-1)) return intSettings[numname];else return -32000; }
+	int getDef(int numname) { if ((numname<i_LAST)&&(numname>-1)) return settingsDefaults[numname];else return -32000; }
+	void set(int numname, int value) { intSettings[numname]=value; }
 private:
+	friend class dcpp::Singleton<AppSettingsMgr>;
+	AppSettingsMgr();
+	virtual ~AppSettingsMgr() throw() {}
 	
 	TiXmlDocument xml;
 	
-	static const char * settingTags[s_LAST+1];
-	static const int settingsDefaults[s_LAST+1];
-	int intSettings[s_LAST+1];
+	static const char * settingTags[i_LAST+1];
+	static const int settingsDefaults[i_LAST+1];
+	int intSettings[i_LAST+1];
 };
 
-static AppSettingsMgr *CfgMgr;
-
 };
+
+// Shorthand accessor macros
+#define APPSETTING(k) (AppSettings::AppSettingsMgr::getInstance()->get(AppSettings::k))
+#define SETAPPSETTING(k,v) (AppSettings::AppSettingsMgr::getInstance()->set(AppSettings::k,v))
 
 #endif

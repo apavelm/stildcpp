@@ -135,7 +135,11 @@ namespace Text {
 	
 	template<typename T>
 	tstring tformat(const tstring& src, T t) {
-		tstring ret(src.size() + 64, /*_T('\0')*/'\0');
+#ifdef UNICODE
+		tstring ret(src.size() + 64, L'\0');
+#else
+		tstring ret(src.size() + 64, '\0');
+#endif
 		int n = _sntprintf(&ret[0], ret.size(), src.c_str(), t);
 		if(n != -1 && n < static_cast<int>(ret.size())) {
 			ret.resize(n);
@@ -144,7 +148,11 @@ namespace Text {
 	}
 	template<typename T, typename T2, typename T3>
 	tstring tformat(const tstring& src, T t, T2 t2, T3 t3) {
-		tstring ret(src.size() + 128, /*_T('\0')*/'\0');
+#ifdef UNICODE
+		tstring ret(src.size() + 128, L'\0');
+#else
+		tstring ret(src.size() + 128, '\0');
+#endif
 		int n = _sntprintf(&ret[0], ret.size(), src.c_str(), t, t2, t3);
 		if(n != -1 && n < static_cast<int>(ret.size())) {
 			ret.resize(n);

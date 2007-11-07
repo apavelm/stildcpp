@@ -34,16 +34,18 @@
 #include "client/Client.h"
 #include "client/forward.h"
 #include "client/ClientListener.h"
+#include "client/ClientManager.h"
 #include "client/TaskQueue.h"
 #include "client/User.h"
 #include "client/FavoriteManagerListener.h"
+#include "client/FavoriteManager.h"
 //
 
 #include "ui_HUBWindow.h"
 
 class HubWindow : public MdiChild, private Ui::mdiHUBwin
 	,private dcpp::ClientListener 
-//	,private dcpp::FavoriteManagerListener
+	,private dcpp::FavoriteManagerListener
 {
 	Q_OBJECT
 private:
@@ -66,15 +68,17 @@ private:
 	//virtual void on(Failed, dcpp::Client*, const std::string&) throw();
 //	virtual void on(GetPassword, Client*) throw();
 //	virtual void on(HubUpdated, Client*) throw();
-//	virtual void on(Message, Client*, const OnlineUser&, const string&) throw();
+//	virtual void on(Message, dcpp::Client*, const OnlineUser&, const string&) throw();
 //	virtual void on(StatusMessage, Client*, const string&) throw();
 //	virtual void on(PrivateMessage, Client*, const OnlineUser&, const OnlineUser&, const OnlineUser&, const string&) throw();
 //	virtual void on(NickTaken, Client*) throw();
 //	virtual void on(SearchFlood, Client*, const string&) throw();
 public:
-	HubWindow(QWidget *parent, const std::string& url);
+	HubWindow(QWidget *parent, const dcpp::tstring& url);
+	~HubWindow();
 	void setupeditor();
-	void ReConnect();
+	void ReConnect() { client->reconnect(); }
+	bool isConnected() { return client->isConnected(); }
 	/*
 	enum Status 
 	{

@@ -34,7 +34,7 @@ class FileListDlg : public MdiChild, private Ui::DialogFileList
 {
 	Q_OBJECT
 public:
-	FileListDlg(QWidget *parent, const dcpp::UserPtr & aUser, int64_t aSpeed, dcpp::tstring & strFlie);
+	FileListDlg(QWidget *parent, const dcpp::UserPtr & aUser, int64_t aSpeed, dcpp::tstring & strFile);
 };
 
 #endif // __MDI_FILELIST_H__

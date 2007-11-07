@@ -50,6 +50,7 @@
 #include "FavUsr.h"
 #include "IgnUsr.h"
 #include "ulfin.h"
+#include "mdi_notepad.h"
 #include "dlfin.h"
 #include "dl_queue.h"
 #include "pm_win.h"
@@ -59,6 +60,8 @@
 #include "tthdial.h"
 #include "quickconnectdlg.h"
 #include "tabwidget.h"
+
+#include "stilutils.h"
 
 //
 #include "client/stdinc.h"
@@ -121,7 +124,6 @@ Q_OBJECT
 public:
 	void initMain();
 	MainWindowImpl( QWidget * parent = 0, Qt::WFlags f = 0 );
-	MainWindowImpl(int *a, QWidget * parent = 0, Qt::WFlags f = 0 );
 	~MainWindowImpl();
 
 protected:
@@ -136,6 +138,9 @@ private slots:
 	void slotCloseWinTypeSearch();
 	void slotCloseWinTypeFL();
 	void slotCloseWinType(int type);
+	void slotCloseDisconnectedHubs();
+	void slotCloseOfflineLists();
+	void slotCloseOfflineChat();
 	void slotCurrentTabChanged(int index);
 	void statusMessage(const QString & mes);
 	void About();
@@ -146,6 +151,7 @@ private slots:
 	void openownfilelistFunc();
 	void DonateFunc();
 	void DLQueueFunc();
+	void notepadFunc();
 	void ADLFunc();
 	void SSFunc();
 	void ULFinFunc();
@@ -162,18 +168,19 @@ private slots:
 	void PreferencesFunc();
 	void FavHubListFunc();
 	void fQuickConFunc();
-	void OpenHub(const std::string& adr);
 	void statusbarcheck(); // if StatusBar Checked in menu @View@
 	
-	
+public slots:
+	void OpenList(QWidget *parent, const dcpp::tstring & aFile, const dcpp::UserPtr & aUser, int64_t aSpeed);
+	void OpenPM(QWidget *parent, const QString &);
+	void OpenHub(QWidget *parent, const dcpp::tstring& adr);
+
 private:
 	void createActions();
 	void createTrayIcon();
 	void createToolBars();
 	void clientInit();
 	void startSocket();
-	void OpenList(const dcpp::tstring & aFile, const dcpp::UserPtr & aUser, int64_t aSpeed);
-	void OpenPM(const QString &);
 	void setShareSize(const QString &sz);
 	
 	int FindWinByType(int type);
@@ -186,7 +193,6 @@ private:
 	
 	ThreadGetTTH thrdGetTTh;
 	TabWidget *m_tabwin;
-	int *p_opt;
 };
 
 #endif

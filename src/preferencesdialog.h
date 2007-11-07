@@ -21,7 +21,7 @@
 #ifndef PREFERENCESDIALOG_H
 #define PREFERENCESDIALOG_H
 
-#include "ui_preferencesdialog.h"
+#include <QtGui>
 #include <QDialog>
 #include <QDir>
 #include <QFontDialog>
@@ -29,6 +29,20 @@
 #include <QItemDelegate>
 #include <QKeyEvent>
 #include <QLocale>
+
+#include "config.h"
+#include "stilutils.h"
+
+//
+#include "client/stdinc.h"
+#include "client/DCPlusPlus.h"
+#include "client/SettingsManager.h"
+#include "client/FavoriteManager.h"
+#include "client/Text.h"
+//
+
+#include "ui_preferencesdialog.h"
+
 
 class PreferencesDialogPrivate;
 
@@ -39,11 +53,26 @@ class PreferencesDialog : public QDialog, private Ui::PreferencesDialog
 private:
 	void accept();
 	void initCategoryList();
-	void initLookNFeelPage();
+	void initGeneralPage();
+	void initConnectionPage();
+	void initDownloadsPage();
+	void initDownloadsFavPage();
+	
+	void applyGeneralPage();
+	void applyConnectionPage();
+	void applyDownloadsPage();
+	
 	
 private slots:
 	void on_okBtn_clicked();
 	void on_categoryList_currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *);
+	void ConnectionPageUpdate();
+	void DownloadsFavPageRename();
+	void DownloadsFavPageRemove();
+	void DownloadsFavPageAdd();
+	void DownloadsPageBrowse1();
+	void DownloadsPageBrowse2();
+	void DownloadsPageConfPublic();
 	
 public:
 	PreferencesDialog(QWidget *);

@@ -20,18 +20,22 @@
 
 #include "config.h"
 
+using namespace std;
+using namespace dcpp;
+
 namespace AppSettings
 {
 
 const char * AppSettingsMgr::settingTags[] = 
 {
 	"HideOnClose", "ShowSplash", "UseTray", "StartHidden", "PromptOnClose", "TabPosition"
+	,"NotePadFontSize", "UpdateIPonStartup"
 	,"LAST" // DO NOT DELETE
 };
 
 const int AppSettingsMgr::settingsDefaults[] =
 {
-	1, 1, 1, 0, 1, 0
+	1, 1, 1, 0, 1, 0, 10, 0
 	, 0 //DO NOT DELETE
 };
 
@@ -51,7 +55,7 @@ void AppSettingsMgr::setDefaults()
 	TiXmlElement * glob = new TiXmlElement( "global" );
 	root->LinkEndChild( glob );
 	
-	for (int i=0; i<s_LAST; i++) 
+	for (int i=0; i<i_LAST; i++) 
 	{
 	intSettings[i] = settingsDefaults[i];
 	TiXmlElement * looknfeel;
@@ -64,14 +68,14 @@ void AppSettingsMgr::setDefaults()
 
 AppSettingsMgr::AppSettingsMgr()
 {
-	for (int i=0;i<s_LAST;i++) intSettings[i]=0;
+	for (int i=0;i<i_LAST;i++) intSettings[i]=0;
 	setDefaults();
 }
 
-int AppSettingsMgr::load(const char *aFileName)
+int AppSettingsMgr::load(dcpp::tstring aFileName)
 {
 	xml.Clear();
-	if (!xml.LoadFile(aFileName))  return 1;
+	if (!xml.LoadFile(dcpp::Text::fromT(aFileName)))  return 1;
 	
 	TiXmlHandle hDoc(&xml);
 	TiXmlHandle hRoot(0);
@@ -83,7 +87,7 @@ int AppSettingsMgr::load(const char *aFileName)
 	
 	
 	TiXmlElement* pNode = hRoot.FirstChild( "global" ).FirstChild().Element();
-	for( int i=0; i<s_LAST; i++)
+	for( int i=0; i<i_LAST; i++)
 	{
 		if ( TIXML_SUCCESS != pNode->QueryIntAttribute("value", &intSettings[i])) return 2;
 		pNode = pNode->NextSiblingElement();
@@ -92,20 +96,24 @@ int AppSettingsMgr::load(const char *aFileName)
 	return 0;
 }
 
-void AppSettingsMgr::save(const char * aFileName) 
+void AppSettingsMgr::save(dcpp::tstring aFileName) 
 {
-	bool b=QDir(".").mkpath((QDir::homePath()+"/.stildcpp/settings/"));
-	if ((!xml.SaveFile(aFileName))||(!b)) fprintf(stderr,"Unable to save configuration file!");
+	bool b=QDir(".").mkpath(QString::fromStdString(dcpp::Util::getConfigPath()));
+	if ((!xml.SaveFile(dcpp::Text::fromT(aFileName)))||(!b)) fprintf(stderr,"Unable to save configuration file!");
 }
 
 void AppSettingsMgr::save() 
 {
-	save((QDir::homePath()+"/.stildcpp/settings/stildcpp.xml").toLocal8Bit());
+	QString tmp(QString::fromStdString(dcpp::Util::getConfigPath()));
+	tmp+="stildcpp.xml";
+	save(StilUtils::QtoTstr(tmp));
 }
 
 int AppSettingsMgr::load()
 {
-	return load((QDir::homePath()+"/.stildcpp/settings/stildcpp.xml").toLocal8Bit());
+	QString tmp(QString::fromStdString(dcpp::Util::getConfigPath()));
+	tmp+="stildcpp.xml";
+	return load(StilUtils::QtoTstr(tmp));
 }
 
 } //of namespace

@@ -31,27 +31,31 @@
 #include "config.h"
 
 //
+#include "client/stdinc.h"
+#include "client/DCPlusPlus.h"
 
+using namespace std;
+using namespace dcpp;
 //
 
 int main(int argc, char ** argv)
 {
 	QApplication app( argc, argv );
 	
-
-	AppSettings::CfgMgr = new AppSettings::AppSettingsMgr;
-	if (AppSettings::CfgMgr->load()!=0) 
+	AppSettings::AppSettingsMgr::newInstance();
+	dcpp::startup(NULL,NULL);
+	
+	if (AppSettings::AppSettingsMgr::getInstance()->load()!=0) 
 	{
 		fprintf(stdout, "\nConfiguration file not found.\nUsing default values...\n");
-		AppSettings::CfgMgr->setDefaults();
-		AppSettings::CfgMgr->save();
+		AppSettings::AppSettingsMgr::getInstance()->setDefaults();
+		AppSettings::AppSettingsMgr::getInstance()->save();
 	}
-	int *pm = AppSettings::CfgMgr->getValueArray();
 	
 	QSplashScreen *splash;
 	Qt::Alignment alignBC = Qt::AlignBottom | Qt::AlignHCenter;
 	
-	if (pm[AppSettings::s_SHOWSPLASH])
+	if (APPSETTING(i_SHOWSPLASH))
 	{
 		splash = new QSplashScreen(QPixmap(":/images/splash.png"));
 		splash->show();
@@ -69,9 +73,9 @@ int main(int argc, char ** argv)
 	app.installTranslator(translator); 
 	
 	
-	if (pm[AppSettings::s_USETRAY])
+	if (APPSETTING(i_USETRAY))
 	{
-		if (pm[AppSettings::s_SHOWSPLASH]) splash->showMessage(QObject::tr("Creating tray icon..."), alignBC, Qt::black);
+		if (APPSETTING(i_SHOWSPLASH)) splash->showMessage(QObject::tr("Creating tray icon..."), alignBC, Qt::black);
 		if (!QSystemTrayIcon::isSystemTrayAvailable()) 
 			{
 			QMessageBox::critical(0, QObject::tr("Systray"), QObject::tr("I couldn't detect any system tray on this system."));
@@ -80,10 +84,13 @@ int main(int argc, char ** argv)
 			}
 	}
 	
-	MainWindowImpl win(pm);
+	MainWindowImpl win;
 
 	app.connect( &app, SIGNAL( lastWindowClosed() ), &app, SLOT( quit() ) ); 
-	if (pm[AppSettings::s_SHOWSPLASH]) splash->finish(&win);
-	if (pm[AppSettings::s_SHOWSPLASH]) delete splash;
+	if (APPSETTING(i_SHOWSPLASH)) 
+		{
+			splash->finish(&win);
+			delete splash;
+		}
 	return app.exec();
 }

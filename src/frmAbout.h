@@ -24,6 +24,7 @@
 #include <QDialog>
 
 #include "defs.h"
+#include "client/version.h"
 
 #include "ui_about.h"
 

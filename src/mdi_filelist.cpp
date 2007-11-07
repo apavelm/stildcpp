@@ -20,7 +20,7 @@
 
 #include "mdi_filelist.h"
 
-FileListDlg::FileListDlg(QWidget *parent, const dcpp::UserPtr & aUser, int64_t aSpeed, dcpp::tstring & strFlie) : MdiChild(parent)
+FileListDlg::FileListDlg(QWidget *parent, const dcpp::UserPtr & aUser, int64_t aSpeed, dcpp::tstring & strFile) : MdiChild(parent)
 {	
 	setupUi(this);
 //	setWindowTitle(tr("")); // set window title in format: "FileList - John" to ./filelist/john.tar.bz2

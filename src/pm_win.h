@@ -26,6 +26,16 @@
 #include "highlighter.h"
 #include "mdi_c.h"
 
+//
+#include "client/stdinc.h"
+#include "client/DCPlusPlus.h"
+#include "client/Client.h"
+#include "client/forward.h"
+#include "client/ClientListener.h"
+#include "client/ClientManager.h"
+#include "client/User.h"
+//
+
 #include "ui_PMWindow.h"
 
 class PMWindow : public MdiChild, private Ui::mdiPMwin

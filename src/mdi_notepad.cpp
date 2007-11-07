@@ -18,36 +18,44 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "pm_win.h"
+#include "mdi_notepad.h"
 
-PMWindow::PMWindow(QWidget *parent, const QString &nick) : MdiChild(parent)
+using namespace std;
+using namespace dcpp;
+
+NotePad::~NotePad()
 {
+	save();
+}
+
+NotePad::NotePad(QWidget *parent) : MdiChild(parent)
+{	
 	setupUi(this);
-	type = 2;
-	idText  = nick;
-	setWindowTitle(tr("Private Chat with: ")+nick);
-	editor->clear();
-	setupeditor();
-	connect(SendBtn,SIGNAL(pressed()),this,SLOT(send_pm_msg()));
+	type = 14;
+	idText = tr("NotePad");
+	setWindowTitle(idText);
+	setAttribute(Qt::WA_DeleteOnClose);
+	
+	QFont f = textEdit->font();
+	f.setPointSize(APPSETTING(i_NOTEPADFONTSIZE));
+	textEdit->setFont(f);
+
+	QString tmp(QString::fromStdString(dcpp::Util::getNotepadFile()));
+
+	QFile file(tmp);
+	file.open(QFile::ReadOnly | QFile::Text);
+
+	QTextStream in(&file);
+	textEdit->setPlainText(in.readAll());
+	
+	curFile= tmp;
 }
 
-void PMWindow::setupeditor()
+void NotePad::save()
 {
-	QFont font;
-	font.setFamily("Tahoma");
-	font.setFixedPitch(true);
-	font.setPointSize(10);
+	QFile file(curFile);
+	file.open(QFile::WriteOnly | QFile::Text);
 
-	editor->setFont(font);
-
-	highlighter = new Highlighter(editor->document());
+	QTextStream out(&file);
+	out << textEdit->toPlainText();
 }
-
-void PMWindow::send_pm_msg()
-{
-//	QFile file("/home/irq/stildcpp/src/main.cpp");
-//	if (file.open(QFile::ReadOnly | QFile::Text))
-//	editor->setPlainText(file.readAll());
-}
-
-// PRIVATE MESSAGE WINDOW

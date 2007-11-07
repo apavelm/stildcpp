@@ -58,6 +58,7 @@
     <addaction name="actionSearch_Spy" />
     <addaction name="separator" />
     <addaction name="actionIndexing_Progress" />
+    <addaction name="actionNotePad" />
     <addaction name="separator" />
     <addaction name="actionStatusBar" />
    </widget>
@@ -75,8 +76,11 @@
      <string>Window</string>
     </property>
     <addaction name="actionClose_All_Hub_Windows" />
+    <addaction name="actionClose_Disconnected_Hub_Windows" />
     <addaction name="actionClose_All_FileList_Windows" />
+    <addaction name="actionClose_FileLists_Offline_Users" />
     <addaction name="actionClose_All_Private_Chat_Windows" />
+    <addaction name="actionClose_Private_Chat_with_Offline_Users" />
     <addaction name="actionClose_All_Search_Windows" />
     <addaction name="actionClose_All" />
    </widget>
@@ -334,6 +338,29 @@
   <action name="actionClose_All_FileList_Windows" >
    <property name="text" >
     <string>Close All FileList Windows</string>
+   </property>
+  </action>
+  <action name="actionClose_Disconnected_Hub_Windows" >
+   <property name="text" >
+    <string>Close Disconnected Hub Windows</string>
+   </property>
+  </action>
+  <action name="actionClose_Private_Chat_with_Offline_Users" >
+   <property name="text" >
+    <string>Close Private Chat with Offline Users</string>
+   </property>
+  </action>
+  <action name="actionClose_FileLists_Offline_Users" >
+   <property name="text" >
+    <string>Close FileLists Offline Users</string>
+   </property>
+  </action>
+  <action name="actionNotePad" >
+   <property name="text" >
+    <string>NotePad</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+N</string>
    </property>
   </action>
  </widget>

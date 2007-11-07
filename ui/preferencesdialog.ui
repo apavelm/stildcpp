@@ -8,8 +8,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>634</width>
-    <height>445</height>
+    <width>774</width>
+    <height>610</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -105,32 +105,796 @@
             <enum>QFrame::Plain</enum>
            </property>
            <property name="currentIndex" >
-            <number>6</number>
+            <number>1</number>
            </property>
-           <widget class="QWidget" name="LookNFeelPage" >
-            <widget class="QCheckBox" name="chkHiddenStart" >
-             <property name="geometry" >
-              <rect>
-               <x>10</x>
-               <y>30</y>
-               <width>251</width>
-               <height>24</height>
-              </rect>
-             </property>
-             <property name="sizePolicy" >
-              <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text" >
-              <string>Hidden Start</string>
-             </property>
-            </widget>
+           <widget class="QWidget" name="General" >
+            <layout class="QGridLayout" >
+             <item row="0" column="0" >
+              <layout class="QVBoxLayout" >
+               <item>
+                <layout class="QVBoxLayout" >
+                 <item>
+                  <layout class="QHBoxLayout" >
+                   <item>
+                    <widget class="QLabel" name="label_3" >
+                     <property name="minimumSize" >
+                      <size>
+                       <width>80</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="text" >
+                      <string>Nick</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLineEdit" name="NickEdit" >
+                     <property name="maxLength" >
+                      <number>35</number>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" >
+                   <item>
+                    <widget class="QLabel" name="label_4" >
+                     <property name="minimumSize" >
+                      <size>
+                       <width>80</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="text" >
+                      <string>EMail</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLineEdit" name="EmailEdit" >
+                     <property name="maxLength" >
+                      <number>35</number>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" >
+                   <item>
+                    <widget class="QLabel" name="label_5" >
+                     <property name="minimumSize" >
+                      <size>
+                       <width>80</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="text" >
+                      <string>Description</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLineEdit" name="DescEdit" >
+                     <property name="maxLength" >
+                      <number>35</number>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" >
+                   <item>
+                    <widget class="QLabel" name="label" >
+                     <property name="text" >
+                      <string>Line Speed (Upload)</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QComboBox" name="connections" />
+                   </item>
+                   <item>
+                    <widget class="QLabel" name="label_2" >
+                     <property name="text" >
+                      <string>MiB/s</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <spacer>
+                 <property name="orientation" >
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" >
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+            </layout>
            </widget>
-           <widget class="QWidget" name="page" />
-           <widget class="QWidget" name="page_2" />
-           <widget class="QWidget" name="page_3" />
+           <widget class="QWidget" name="page" >
+            <layout class="QGridLayout" >
+             <item row="0" column="0" >
+              <widget class="QGroupBox" name="groupICS" >
+               <property name="title" >
+                <string>Incoming Connection Settings</string>
+               </property>
+               <layout class="QHBoxLayout" >
+                <item>
+                 <layout class="QVBoxLayout" >
+                  <item>
+                   <widget class="QRadioButton" name="radio_ICS_active" >
+                    <property name="text" >
+                     <string>Active</string>
+                    </property>
+                    <property name="checked" >
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QRadioButton" name="radio_ICS_manual" >
+                    <property name="text" >
+                     <string>Firewall with manual port forward</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <layout class="QVBoxLayout" >
+                    <item>
+                     <layout class="QVBoxLayout" >
+                      <item>
+                       <widget class="QLabel" name="label_14" >
+                        <property name="sizePolicy" >
+                         <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="text" >
+                         <string>External / WAN IP</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <layout class="QHBoxLayout" >
+                        <item>
+                         <widget class="QLineEdit" name="WANIP_Edit" >
+                          <property name="inputMask" >
+                           <string/>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QToolButton" name="GetIPbtn" >
+                          <property name="text" >
+                           <string>Get IP address</string>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="check_notoverride" >
+                      <property name="text" >
+                       <string>Don't allow hub/UPnP to override</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="check_UpdateIPstartup" >
+                      <property name="text" >
+                       <string>Update IP on startup</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <widget class="QRadioButton" name="radio_ICS_passive" >
+                    <property name="text" >
+                     <string>Firewall (passive, last resort)</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QVBoxLayout" >
+                  <item>
+                   <widget class="QLabel" name="label_10" >
+                    <property name="text" >
+                     <string>Ports</string>
+                    </property>
+                    <property name="alignment" >
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" >
+                    <item>
+                     <widget class="QLabel" name="label_11" >
+                      <property name="minimumSize" >
+                       <size>
+                        <width>25</width>
+                        <height>0</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize" >
+                       <size>
+                        <width>50</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="text" >
+                       <string>TCP</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="TCPport_Edit" >
+                      <property name="sizePolicy" >
+                       <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize" >
+                       <size>
+                        <width>80</width>
+                        <height>0</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize" >
+                       <size>
+                        <width>150</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" >
+                    <item>
+                     <widget class="QLabel" name="label_12" >
+                      <property name="minimumSize" >
+                       <size>
+                        <width>25</width>
+                        <height>0</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize" >
+                       <size>
+                        <width>50</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="text" >
+                       <string>UDP</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="UDPport_Edit" >
+                      <property name="sizePolicy" >
+                       <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize" >
+                       <size>
+                        <width>80</width>
+                        <height>0</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize" >
+                       <size>
+                        <width>150</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" >
+                    <item>
+                     <widget class="QLabel" name="label_13" >
+                      <property name="minimumSize" >
+                       <size>
+                        <width>25</width>
+                        <height>0</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize" >
+                       <size>
+                        <width>50</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="text" >
+                       <string>TLS</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="TLSport_Edit" >
+                      <property name="sizePolicy" >
+                       <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize" >
+                       <size>
+                        <width>80</width>
+                        <height>0</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize" >
+                       <size>
+                        <width>150</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <spacer>
+                    <property name="orientation" >
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeHint" >
+                     <size>
+                      <width>20</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="1" column="0" >
+              <widget class="QGroupBox" name="groupOCS" >
+               <property name="title" >
+                <string>Outgoing Connection Settings</string>
+               </property>
+               <layout class="QGridLayout" >
+                <item row="0" column="0" >
+                 <layout class="QVBoxLayout" >
+                  <item>
+                   <layout class="QVBoxLayout" >
+                    <item>
+                     <widget class="QRadioButton" name="radio_OCS_direct" >
+                      <property name="text" >
+                       <string>Direct connection</string>
+                      </property>
+                      <property name="checked" >
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QRadioButton" name="radio_OCS_socks" >
+                      <property name="text" >
+                       <string>SOCKS5</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QVBoxLayout" >
+                    <item>
+                     <layout class="QHBoxLayout" >
+                      <item>
+                       <layout class="QVBoxLayout" >
+                        <item>
+                         <widget class="QLabel" name="label_9" >
+                          <property name="text" >
+                           <string>Socks IP</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QLineEdit" name="SocksIP_Edit" />
+                        </item>
+                       </layout>
+                      </item>
+                      <item>
+                       <layout class="QVBoxLayout" >
+                        <item>
+                         <widget class="QLabel" name="label_6" >
+                          <property name="text" >
+                           <string>Port</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QLineEdit" name="SocksPort_Edit" >
+                          <property name="inputMask" >
+                           <string>00000; </string>
+                          </property>
+                          <property name="maxLength" >
+                           <number>5</number>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" >
+                      <item>
+                       <layout class="QVBoxLayout" >
+                        <item>
+                         <widget class="QLabel" name="label_8" >
+                          <property name="text" >
+                           <string>Username</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QLineEdit" name="SocksUsername_Edit" />
+                        </item>
+                       </layout>
+                      </item>
+                      <item>
+                       <layout class="QVBoxLayout" >
+                        <item>
+                         <widget class="QLabel" name="label_7" >
+                          <property name="text" >
+                           <string>Password</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QLineEdit" name="SocksPassword_Edit" />
+                        </item>
+                       </layout>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="check_SocksResolve" >
+                      <property name="text" >
+                       <string>Use SOCKS5 server to resolve hostnames</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="page_2" >
+            <layout class="QGridLayout" >
+             <item row="0" column="0" >
+              <widget class="QGroupBox" name="groupDirs" >
+               <property name="title" >
+                <string>Directories</string>
+               </property>
+               <layout class="QGridLayout" >
+                <item row="0" column="0" >
+                 <layout class="QVBoxLayout" >
+                  <item>
+                   <widget class="QLabel" name="label_15" >
+                    <property name="text" >
+                     <string>Default Download Directory</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" >
+                    <item>
+                     <widget class="QLineEdit" name="DefDL_Edit" />
+                    </item>
+                    <item>
+                     <widget class="QToolButton" name="DLPath_btn" >
+                      <property name="text" >
+                       <string>Browse...</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </item>
+                <item row="1" column="0" >
+                 <layout class="QVBoxLayout" >
+                  <item>
+                   <widget class="QLabel" name="label_16" >
+                    <property name="text" >
+                     <string>Unfinished Download Directory</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" >
+                    <item>
+                     <widget class="QLineEdit" name="unfinishedDL_Edit" />
+                    </item>
+                    <item>
+                     <widget class="QToolButton" name="unfinishedDL_btn" >
+                      <property name="text" >
+                       <string>Browse...</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="1" column="0" >
+              <widget class="QGroupBox" name="groupLimits" >
+               <property name="title" >
+                <string>Limits</string>
+               </property>
+               <layout class="QGridLayout" >
+                <item row="0" column="0" >
+                 <layout class="QVBoxLayout" >
+                  <item>
+                   <layout class="QHBoxLayout" >
+                    <item>
+                     <widget class="QSpinBox" name="lim1_spin" >
+                      <property name="minimumSize" >
+                       <size>
+                        <width>80</width>
+                        <height>0</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize" >
+                       <size>
+                        <width>100</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="maximum" >
+                       <number>100</number>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="label_18" >
+                      <property name="text" >
+                       <string>Maximum Simultanious downloads (0 = infinite)</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" >
+                    <item>
+                     <widget class="QSpinBox" name="lim2_spin" >
+                      <property name="minimumSize" >
+                       <size>
+                        <width>80</width>
+                        <height>0</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize" >
+                       <size>
+                        <width>100</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="maximum" >
+                       <number>10000</number>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="label_19" >
+                      <property name="text" >
+                       <string>No new downloads if speed exceed s (KiB/s, 0 = infinite)</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_17" >
+                    <property name="text" >
+                     <string>Note, because of changing download speeds, this is not 100% accurate...</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="2" column="0" >
+              <widget class="QGroupBox" name="groupPubHub" >
+               <property name="title" >
+                <string>Public Hubs List</string>
+               </property>
+               <layout class="QGridLayout" >
+                <item row="0" column="0" >
+                 <layout class="QVBoxLayout" >
+                  <item>
+                   <layout class="QVBoxLayout" >
+                    <item>
+                     <widget class="QLabel" name="label_20" >
+                      <property name="text" >
+                       <string>Public Hubs List URL</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" >
+                      <item>
+                       <widget class="QPushButton" name="ConfPubHubLists_btn" >
+                        <property name="text" >
+                         <string>Configure Public Hub Lists</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <spacer>
+                        <property name="orientation" >
+                         <enum>Qt::Horizontal</enum>
+                        </property>
+                        <property name="sizeHint" >
+                         <size>
+                          <width>40</width>
+                          <height>20</height>
+                         </size>
+                        </property>
+                       </spacer>
+                      </item>
+                     </layout>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QVBoxLayout" >
+                    <item>
+                     <widget class="QLabel" name="label_21" >
+                      <property name="text" >
+                       <string>HTTP Proxy (for hublist only)</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="httpproxy_Edit" />
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="page_3" >
+            <layout class="QGridLayout" >
+             <item row="0" column="0" >
+              <widget class="QGroupBox" name="groupFavDownLoadDir" >
+               <property name="title" >
+                <string>Favorite download directory</string>
+               </property>
+               <property name="flat" >
+                <bool>false</bool>
+               </property>
+               <layout class="QGridLayout" >
+                <item row="0" column="0" >
+                 <layout class="QVBoxLayout" >
+                  <item>
+                   <widget class="QTreeWidget" name="FavDLDir_tree" >
+                    <property name="editTriggers" >
+                     <set>QAbstractItemView::NoEditTriggers</set>
+                    </property>
+                    <property name="alternatingRowColors" >
+                     <bool>true</bool>
+                    </property>
+                    <property name="rootIsDecorated" >
+                     <bool>false</bool>
+                    </property>
+                    <property name="uniformRowHeights" >
+                     <bool>true</bool>
+                    </property>
+                    <property name="itemsExpandable" >
+                     <bool>false</bool>
+                    </property>
+                    <property name="sortingEnabled" >
+                     <bool>true</bool>
+                    </property>
+                    <property name="allColumnsShowFocus" >
+                     <bool>true</bool>
+                    </property>
+                    <column>
+                     <property name="text" >
+                      <string>Name</string>
+                     </property>
+                    </column>
+                    <column>
+                     <property name="text" >
+                      <string>Folder</string>
+                     </property>
+                    </column>
+                   </widget>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" >
+                    <item>
+                     <widget class="QToolButton" name="RenameFavFolder_Btn" >
+                      <property name="text" >
+                       <string>Rename</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <spacer>
+                      <property name="orientation" >
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" >
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
+                     <widget class="QToolButton" name="favFolderAdd_btn" >
+                      <property name="text" >
+                       <string>Add Folder</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QToolButton" name="RemoveFavFolder_btn" >
+                      <property name="text" >
+                       <string>Remove</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </widget>
            <widget class="QWidget" name="page_4" />
            <widget class="QWidget" name="page_5" />
            <widget class="QWidget" name="page_6" />

@@ -26,7 +26,8 @@ FORMS = ui/mainwindow.ui \
  ui/ul_finished.ui \
  ui/dl_finished.ui \
  ui/adl.ui \
- ui/searchspy.ui
+ ui/searchspy.ui \
+ ui/notepad.ui
 HEADERS = src/mainwindowimpl.h \
  src/frmAbout.h \
  src/mdi_c.h \
@@ -137,7 +138,9 @@ HEADERS = src/mainwindowimpl.h \
  src/client/Util.h \
  src/client/version.h \
  src/client/ZUtils.h \
- src/stilutils.h
+ src/stilutils.h \
+ src/mdi_notepad.h \
+ src/UserInfoBase.h
 SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
  src/frmAbout.cpp \
@@ -215,9 +218,15 @@ SOURCES = src/mainwindowimpl.cpp \
  src/client/UserConnection.cpp \
  src/client/Util.cpp \
  src/client/ZUtils.cpp \
- src/stilutils.cpp
+ src/stilutils.cpp \
+ src/mdi_notepad.cpp \
+ src/UserInfoBase.cpp
 RESOURCES += src/stildcpp.qrc src/smiles.qrc src/langs.qrc
-VERNUM = 0.11
 LIBS += -lssl -lbz2 -lcrypto
 TRANSLATIONS = lang/stildcpp_ru.ts
-DEFINES = _DEBUG
+DEFINES = _DEBUG \
+ BOOST_HAS_GCC \
+ TIXML_USE_STL \
+ USE_SYS_STL \
+ UNICODE \
+ _UNICODE

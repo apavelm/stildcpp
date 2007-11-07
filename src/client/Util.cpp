@@ -92,7 +92,7 @@ void Util::initialize() {
 #else
 	systemPath = "/etc/";
 	char* home = getenv("HOME");
-	configPath = home ? Text::toUtf8(home) + "/.dc++/" : "/tmp/";
+	configPath = home ? Text::toUtf8(home) + "/.stildcpp/settings/" : "/tmp/";
 	dataPath = configPath; // dataPath in linux is usually prefix + /share/app_name, so we can't represent it here
 #endif
 

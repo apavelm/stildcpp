@@ -18,47 +18,64 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "hub_win.h"
+#include "UserInfoBase.h"
 
 using namespace std;
 using namespace dcpp;
 
-HubWindow::~HubWindow()
-{
-	FavoriteManager::getInstance()->removeListener(this);
-	client->removeListener(this);
-	client->disconnect(true);
-	ClientManager::getInstance()->putClient(client);
+void UserInfoBase::matchQueue() {
+	try {
+		QueueManager::getInstance()->addList(user, QueueItem::FLAG_MATCH_QUEUE);
+	} catch(const Exception& e) {
+		LogManager::getInstance()->message(e.getError());
+	}
+}
+void UserInfoBase::getList() {
+	try {
+		QueueManager::getInstance()->addList(user, QueueItem::FLAG_CLIENT_VIEW);
+	} catch(const Exception& e) {
+		LogManager::getInstance()->message(e.getError());
+	}
+}
+void UserInfoBase::browseList() {
+	if(user->getCID().isZero())
+		return;
+	try {
+		QueueManager::getInstance()->addPfs(user, "");
+	} catch(const Exception& e) {
+		LogManager::getInstance()->message(e.getError());
+	}
 }
 
-HubWindow::HubWindow(QWidget *parent, const dcpp::tstring& url) : MdiChild(parent)
-{	
-	setupUi(this);
-	type = 1;
-	idText = dcpp::Text::fromT(url).c_str();
-	
-	setWindowTitle(tr("Hub: ")+dcpp::Text::fromT(url).c_str());
-	editor->clear();
-	setupeditor();
-	
-	client = ClientManager::getInstance()->getClient(dcpp::Text::fromT(url));
-	client->addListener(this);
-	client->connect();
-	
-	FavoriteManager::getInstance()->addListener(this);
-	
+void UserInfoBase::addFav() {
+	FavoriteManager::getInstance()->addFavoriteUser(user);
 }
 
-void HubWindow::setupeditor()
-{
-	QFont font;
-	font.setFamily("Tahoma");
-	font.setFixedPitch(true);
-	font.setPointSize(10);
-
-	editor->setFont(font);
-
-	highlighter = new Highlighter(editor->document());
+void UserInfoBase::pm(QWidget* mdiParent) {
+	//OpenPM(mdiParent, user);
 }
 
-// HubWindow
+void UserInfoBase::grant() {
+	UploadManager::getInstance()->reserveSlot(user);
+}
+
+void UserInfoBase::removeAll() {
+	QueueManager::getInstance()->removeSource(user, QueueItem::Source::FLAG_REMOVED);
+}
+
+void UserInfoBase::UserTraits::operator()(UserInfoBase* ui) { 
+	if(ui->getUser()->isSet(User::NMDC)) 
+		adcOnly = false;
+	bool fav = FavoriteManager::getInstance()->isFavoriteUser(ui->getUser());
+	if(fav)
+		nonFavOnly = false;
+	if(!fav)
+		favOnly = false;
+}
+
+void UserInfoBase::connectFav(QWidget* mdiParent) {
+	dcpp::tstring url = dcpp::Text::toT(FavoriteManager::getInstance()->getUserURL(user));
+	if(!url.empty()) {
+		//OpenHub(mdiParent, url);
+	}
+}

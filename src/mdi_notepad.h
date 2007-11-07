@@ -18,36 +18,32 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "pm_win.h"
 
-PMWindow::PMWindow(QWidget *parent, const QString &nick) : MdiChild(parent)
+#ifndef __MDI_NOTEPAD_H__
+#define __MDI_NOTEPAD_H__
+
+#include "config.h"
+#include "mdi_c.h"
+
+#include <QTextStream>
+
+//
+#include "client/stdinc.h"
+#include "client/DCPlusPlus.h"
+#include "client/Util.h"
+//
+
+#include "ui_notepad.h"
+
+class NotePad : public MdiChild, private Ui::mdiNotePad
 {
-	setupUi(this);
-	type = 2;
-	idText  = nick;
-	setWindowTitle(tr("Private Chat with: ")+nick);
-	editor->clear();
-	setupeditor();
-	connect(SendBtn,SIGNAL(pressed()),this,SLOT(send_pm_msg()));
-}
+	Q_OBJECT
+public:
+	NotePad(QWidget *parent);
+	~NotePad();
+	void save();
+private:
+	QString curFile;
+};
 
-void PMWindow::setupeditor()
-{
-	QFont font;
-	font.setFamily("Tahoma");
-	font.setFixedPitch(true);
-	font.setPointSize(10);
-
-	editor->setFont(font);
-
-	highlighter = new Highlighter(editor->document());
-}
-
-void PMWindow::send_pm_msg()
-{
-//	QFile file("/home/irq/stildcpp/src/main.cpp");
-//	if (file.open(QFile::ReadOnly | QFile::Text))
-//	editor->setPlainText(file.readAll());
-}
-
-// PRIVATE MESSAGE WINDOW
+#endif // __MDI_NOTEPAD_H__

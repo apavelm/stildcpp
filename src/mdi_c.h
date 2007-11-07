@@ -52,6 +52,7 @@ public:
 		11 - Finished UL
 		12 - ADL Search
 		13 - Search Spy
+		14 - NotePad
 	*/
 	QString idText;
 signals:

@@ -27,9 +27,16 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent)
 	setupUi(this);
 	setAttribute(Qt::WA_DeleteOnClose, true);
 
-	VerLabel->setText(tr(APPVER_FULL));
-	thxlabel->setText(tr(SPECIALTHX));
+	VerLabel->setText(APPVER);
+	VerLabel_2->setText(VERSIONSTRING);
+	label_4->setText(APPNAME);
+	thxlabel->setText(SPECIALTHX);
+	#ifndef _WIN32
 	label_2->setPixmap(QPixmap(":/images/icon_linux.png"));
+	#else
+	label_2->setPixmap(QPixmap(":/images/icon.png"));
+	#endif
+	label_3->setPixmap(QPixmap(":/images/DCPlusPlus.png"));
 
 	connect(Button, SIGNAL(clicked()), this, SLOT(accept()));
 	show();
