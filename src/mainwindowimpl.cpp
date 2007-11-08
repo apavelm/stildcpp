@@ -250,6 +250,8 @@ void MainWindowImpl::createActions()
 	connect(actionFinished_downloads, SIGNAL(triggered()), this, SLOT(DLFinFunc()));
 	connect(actionFinished_Uploads, SIGNAL(triggered()), this, SLOT(ULFinFunc()));
 	connect(actionNotePad, SIGNAL(triggered()), this, SLOT(notepadFunc()));
+	connect(actionIndexing_Progress, SIGNAL(triggered()), this, SLOT(indexingFunc()));
+	
 	
 	connect(actionADL_Search, SIGNAL(triggered()), this, SLOT(ADLFunc()));
 	connect(actionSearch_Spy, SIGNAL(triggered()), this, SLOT(SSFunc()));
@@ -449,6 +451,13 @@ void MainWindowImpl::notepadFunc()
 	if (FindWinByType(14)==-1)
 		m_tabwin->setCurrentIndex(m_tabwin->addTab((new NotePad(this)),"NotePad"));
 	else m_tabwin->setCurrentIndex(FindWinByType(14));
+}
+
+void MainWindowImpl::indexingFunc()
+{
+	HashDlg *hd = new HashDlg(this);
+	hd->show();
+	//connect(qcd,SIGNAL(con_pressed(QString)),this,SLOT(qcdconFunc(QString)));
 }
 
 void MainWindowImpl::qcdconFunc(QString adr)

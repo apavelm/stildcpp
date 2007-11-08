@@ -36,6 +36,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent)
 	initConnectionPage();
 	initDownloadsPage();
 	initDownloadsFavPage();
+	initSharingPage();
 	
 	categoryList->setCurrentItem(categoryList->topLevelItem(0));
 	show();
@@ -47,22 +48,6 @@ void PreferencesDialog::on_categoryList_currentItemChanged(QTreeWidgetItem *c, Q
 	widgetStack->setCurrentIndex(c->data(0, Qt::UserRole).toInt());
 	currentLabel->setText("<h3>" + c->text(0) + "</h3>");
 }
-
-/*
-
-void PreferencesDialog::setFontString(const QFont &newfont) {
-	QString font = newfont.family();
-	if (newfont.bold())
-		font += QString(", %1").arg(tr("bold"));
-	if (newfont.italic())
-		font += QString(", %1").arg(tr("italic"));
-	font += QString(", %1").arg(newfont.pointSize());
-	fontLine->setText(font);
-	fontLine->setFont(newfont);
-}
-
-
-*/
 
 void PreferencesDialog::on_okBtn_clicked() 
 {
@@ -360,12 +345,126 @@ void PreferencesDialog::DownloadsFavPageAdd()
 	}
 }
 
+void PreferencesDialog::initSharingPage()
+{
+	connect(RenameShare_btn, SIGNAL(clicked()), this, SLOT(SharingPageRename()));
+	connect(RemoveShare_btn, SIGNAL(clicked()), this, SLOT(SharingPageRemove()));
+	connect(AddShare_btn, SIGNAL(clicked()), this, SLOT(SharingPageAdd()));
+	connect(check_SharedHidden, SIGNAL(stateChanged(int)), this, SLOT(SharingPageHidden(int)));
+	
+	StringPairList dirs = ShareManager::getInstance()->getDirectories();
+	for(StringPairIter j = dirs.begin(); j != dirs.end(); j++) 
+	{
+		QStringList row;
+		row << StilUtils::TstrtoQ(Text::toT(j->first)) << StilUtils::TstrtoQ(Text::toT(j->second)) << StilUtils::TstrtoQ(Text::toT(Util::formatBytes(ShareManager::getInstance()->getShareSize(j->second))));
+		QTreeWidgetItem *fItm = new QTreeWidgetItem(SharedDir_tree, row);
+	}
+	
+	lbl_TotalSize->setText(tr("Total Size: ")+StilUtils::TstrtoQ(Text::toT(Util::formatBytes(ShareManager::getInstance()->getShareSize()))));
+	
+	extraSlots_spin->setValue( SETTING(MIN_UPLOAD_SPEED) );
+	UploadSlots_spin->setValue( SETTING(SLOTS) );
+	check_SharedHidden->setChecked( SETTING(SHARE_HIDDEN) ); 
+	
+}
+
+void PreferencesDialog::SharingPageRename()
+{
+	QTreeWidgetItem *it = SharedDir_tree->currentItem();
+	if (it)
+	{
+		bool ok;
+		QString text = QInputDialog::getText(this, tr("Rename Shared Directory"), tr("New Folder Name:"), QLineEdit::Normal, it->text(0) , &ok);
+		if (ok && !text.isEmpty()) 
+		{
+			ShareManager::getInstance()->renameDirectory( Text::fromT(StilUtils::QtoTstr(it->text(0)) ), Text::fromT(StilUtils::QtoTstr(text) ) );
+			it->setText(0, text);
+		}
+	ShareManager::getInstance()->setDirty();
+	}
+}
+
+void PreferencesDialog::SharingPageRemove()
+{
+	QTreeWidgetItem *it = SharedDir_tree->currentItem();
+	if (it) 
+		{
+			ShareManager::getInstance()->removeDirectory(Text::fromT(StilUtils::QtoTstr( it->text(0) )));
+			delete it;
+		}
+	ShareManager::getInstance()->setDirty();
+	lbl_TotalSize->setText(StilUtils::TstrtoQ(Text::toT(Util::formatBytes(ShareManager::getInstance()->getShareSize()))));
+}
+
+void PreferencesDialog::SharingPageAdd()
+{
+	QFileDialog::Options options = QFileDialog::DontResolveSymlinks | QFileDialog::ShowDirsOnly;
+	//options |= QFileDialog::DontUseNativeDialog;
+	QString directory;
+	directory.clear();
+	directory = QFileDialog::getExistingDirectory(this, tr("Select Folder"), "", options);
+	if (!directory.isEmpty()) 
+	{
+		bool ok;
+		QString text = QInputDialog::getText(this, tr("Add Shared Directory"), tr("Folder Name:"), QLineEdit::Normal, directory, &ok);
+		if (ok && !text.isEmpty())
+		{
+			ShareManager::getInstance()->addDirectory(Text::fromT(StilUtils::QtoTstr(directory) ), Text::fromT(StilUtils::QtoTstr(text)));
+			QStringList lt;
+			lt << text << directory << StilUtils::TstrtoQ(Text::toT(Util::formatBytes(ShareManager::getInstance()->getShareSize(Text::fromT(StilUtils::QtoTstr(directory))))));
+			QTreeWidgetItem *fItm = new QTreeWidgetItem(SharedDir_tree, lt);
+			
+			ShareManager::getInstance()->setDirty();
+			lbl_TotalSize->setText(StilUtils::TstrtoQ(Text::toT(Util::formatBytes(ShareManager::getInstance()->getShareSize()))));
+		}
+	}
+}
+
+void PreferencesDialog::SharingPageHidden(int state)
+{
+	// Save the checkbox state so that ShareManager knows to include/exclude hidden files
+//	Item i = items[1]; // The checkbox. Explicit index used - bad!
+//	SettingsManager::getInstance()->set((SettingsManager::IntSetting)i.setting, state);
+
+	// Refresh the share. This is a blocking refresh. Might cause problems?
+	// Hopefully people won't click the checkbox enough for it to be an issue. :-)
+	ShareManager::getInstance()->setDirty();
+	ShareManager::getInstance()->refresh(true, false, true);
+
+	// Clear the GUI list, for insertion of updated shares
+	SharedDir_tree->clear();
+	StringPairList dirs = ShareManager::getInstance()->getDirectories();
+	for(StringPairIter j = dirs.begin(); j != dirs.end(); j++)
+	{
+		QStringList row;
+		row << StilUtils::TstrtoQ(Text::toT(j->first)) << StilUtils::TstrtoQ(Text::toT(j->second)) << StilUtils::TstrtoQ(Text::toT(Util::formatBytes(ShareManager::getInstance()->getShareSize(j->second))));
+		QTreeWidgetItem *fItm = new QTreeWidgetItem(SharedDir_tree, row);
+	}
+
+	// Display the new total share size
+	lbl_TotalSize->setText(tr("Total Size: ")+StilUtils::TstrtoQ(Text::toT(Util::formatBytes(ShareManager::getInstance()->getShareSize()))));
+}
+
+void PreferencesDialog::applySharingPage()
+{
+	SettingsManager::getInstance()->set(SettingsManager::MIN_UPLOAD_SPEED, extraSlots_spin->value() );
+	SettingsManager::getInstance()->set(SettingsManager::SLOTS, UploadSlots_spin->value() );
+	
+	SettingsManager::getInstance()->set(SettingsManager::SHARE_HIDDEN, check_SharedHidden->isChecked() );
+
+	if(SETTING(SLOTS) < 1)
+		SettingsManager::getInstance()->set(SettingsManager::SLOTS, 1);
+	ShareManager::getInstance()->refresh();
+}
+
 void PreferencesDialog::accept() 
 {
 	// insert below wrapper 'interface options to settings'
 		applyGeneralPage();
 		applyConnectionPage();
 		applyDownloadsPage();
+		applySharingPage();
+		
 	//
 	AppSettings::AppSettingsMgr::getInstance()->save();
 	dcpp::SettingsManager::getInstance()->save();

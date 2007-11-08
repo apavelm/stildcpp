@@ -46,6 +46,7 @@
 #include "favHubLstWin.h"
 #include "SearchWin.h"
 #include "hub_win.h"
+#include "indexing.h"
 #include "publichubs.h"
 #include "FavUsr.h"
 #include "IgnUsr.h"
@@ -152,6 +153,7 @@ private slots:
 	void DonateFunc();
 	void DLQueueFunc();
 	void notepadFunc();
+	void indexingFunc();
 	void ADLFunc();
 	void SSFunc();
 	void ULFinFunc();

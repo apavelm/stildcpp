@@ -1,6 +1,8 @@
 /***************************************************************************
  *   Copyright (C) 2007 by Pavel Andreev                                   *
  *   Mail: apavelm on gmail dot com (apavelm@gmail.com)                    *
+ *   Copyright (C) 2007 by Yakov Suraev aka BigBiker                       *
+ *   Mail: adminbsd on gmail dot com (adminbsd@gmail.com)                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,17 +20,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef PREFERENCESDIALOG_H
-#define PREFERENCESDIALOG_H
 
-#include <QtGui>
-#include <QDialog>
-#include <QDir>
-#include <QFontDialog>
-#include <QHeaderView>
-#include <QItemDelegate>
-#include <QKeyEvent>
-#include <QLocale>
+#ifndef __INDEXING_H__
+#define __INDEXING_H__
+
 
 #include "config.h"
 #include "stilutils.h"
@@ -36,55 +31,32 @@
 //
 #include "client/stdinc.h"
 #include "client/DCPlusPlus.h"
-#include "client/SettingsManager.h"
-#include "client/FavoriteManager.h"
-#include "client/ShareManager.h"
-#include "client/Text.h"
+#include "client/TimerManager.h"
+#include "client/HashManager.h"
 //
 
-#include "ui_preferencesdialog.h"
+#include "ui_hashman.h"
 
-
-class PreferencesDialogPrivate;
-
-class PreferencesDialog : public QDialog, private Ui::PreferencesDialog 
+class HashDlg: public QDialog, private Ui::dlgIndexing 
+	,public TimerManagerListener
 {
 	Q_OBJECT
-	
-private:
-	void accept();
-	void initCategoryList();
-	void initGeneralPage();
-	void initConnectionPage();
-	void initDownloadsPage();
-	void initDownloadsFavPage();
-	
-	void initSharingPage();
-	//////////////////////////////////////
-	
-	void applyGeneralPage();
-	void applyConnectionPage();
-	void applyDownloadsPage();
-	
-	void applySharingPage();
-	
-private slots:
-	void on_okBtn_clicked();
-	void on_categoryList_currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *);
-	void ConnectionPageUpdate();
-	void DownloadsFavPageRename();
-	void DownloadsFavPageRemove();
-	void DownloadsFavPageAdd();
-	void DownloadsPageBrowse1();
-	void DownloadsPageBrowse2();
-	void DownloadsPageConfPublic();
-	void SharingPageRename();
-	void SharingPageRemove();
-	void SharingPageAdd();
-	void SharingPageHidden(int);
-	
 public:
-	PreferencesDialog(QWidget *);
+	HashDlg(QWidget *parent);
+	~HashDlg();
+
+private:
+	// GUI functions
+	void updateStats_gui(std::string file, int64_t bytes, size_t files, uint32_t tick);
+
+	// Client callbacks
+	virtual void on(TimerManagerListener::Second, uint32_t tics) throw();
+
+	int64_t startBytes;
+	size_t startFiles;
+	uint32_t startTime;
 };
 
-#endif
+
+
+#endif // __INDEXING_H__

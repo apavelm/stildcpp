@@ -8,7 +8,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>774</width>
+    <width>721</width>
     <height>610</height>
    </rect>
   </property>
@@ -105,7 +105,7 @@
             <enum>QFrame::Plain</enum>
            </property>
            <property name="currentIndex" >
-            <number>1</number>
+            <number>6</number>
            </property>
            <widget class="QWidget" name="General" >
             <layout class="QGridLayout" >
@@ -225,7 +225,7 @@
              </item>
             </layout>
            </widget>
-           <widget class="QWidget" name="page" >
+           <widget class="QWidget" name="ConnectionSettings" >
             <layout class="QGridLayout" >
              <item row="0" column="0" >
               <widget class="QGroupBox" name="groupICS" >
@@ -597,7 +597,7 @@
              </item>
             </layout>
            </widget>
-           <widget class="QWidget" name="page_2" >
+           <widget class="QWidget" name="Downloads" >
             <layout class="QGridLayout" >
              <item row="0" column="0" >
               <widget class="QGroupBox" name="groupDirs" >
@@ -802,7 +802,7 @@
              </item>
             </layout>
            </widget>
-           <widget class="QWidget" name="page_3" >
+           <widget class="QWidget" name="FavoriteDownloads" >
             <layout class="QGridLayout" >
              <item row="0" column="0" >
               <widget class="QGroupBox" name="groupFavDownLoadDir" >
@@ -895,9 +895,184 @@
              </item>
             </layout>
            </widget>
-           <widget class="QWidget" name="page_4" />
-           <widget class="QWidget" name="page_5" />
-           <widget class="QWidget" name="page_6" />
+           <widget class="QWidget" name="DownloadsPreview" />
+           <widget class="QWidget" name="DownloadsQueue" />
+           <widget class="QWidget" name="Sharing" >
+            <layout class="QVBoxLayout" >
+             <item>
+              <widget class="QGroupBox" name="groupSharedDirs" >
+               <property name="title" >
+                <string>Shared Directories</string>
+               </property>
+               <layout class="QVBoxLayout" >
+                <item>
+                 <widget class="QTreeWidget" name="SharedDir_tree" >
+                  <property name="editTriggers" >
+                   <set>QAbstractItemView::NoEditTriggers</set>
+                  </property>
+                  <property name="alternatingRowColors" >
+                   <bool>true</bool>
+                  </property>
+                  <property name="rootIsDecorated" >
+                   <bool>false</bool>
+                  </property>
+                  <property name="uniformRowHeights" >
+                   <bool>true</bool>
+                  </property>
+                  <property name="itemsExpandable" >
+                   <bool>false</bool>
+                  </property>
+                  <property name="sortingEnabled" >
+                   <bool>true</bool>
+                  </property>
+                  <column>
+                   <property name="text" >
+                    <string>Virtual name</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text" >
+                    <string>Directory</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text" >
+                    <string>Size</string>
+                   </property>
+                  </column>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label_22" >
+                  <property name="text" >
+                   <string>Note; Files appear in the share only after they've been hashed</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="check_SharedHidden" >
+                  <property name="text" >
+                   <string>Shared Hidden Files</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" >
+                  <item>
+                   <widget class="QLabel" name="lbl_TotalSize" >
+                    <property name="text" >
+                     <string>Total Size: 0b</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer>
+                    <property name="orientation" >
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" >
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <widget class="QToolButton" name="AddShare_btn" >
+                    <property name="text" >
+                     <string>Add Folder</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QToolButton" name="RenameShare_btn" >
+                    <property name="text" >
+                     <string>Rename</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QToolButton" name="RemoveShare_btn" >
+                    <property name="text" >
+                     <string>Remove</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" >
+               <item>
+                <widget class="QLabel" name="label_23" >
+                 <property name="text" >
+                  <string>Automatically open an extra slot if speed is below (0 = disable)</string>
+                 </property>
+                 <property name="alignment" >
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QSpinBox" name="extraSlots_spin" >
+                 <property name="maximumSize" >
+                  <size>
+                   <width>150</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lbl_extraslotspeed" >
+                 <property name="text" >
+                  <string>KiB/s</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" >
+               <item>
+                <widget class="QLabel" name="label_24" >
+                 <property name="text" >
+                  <string>Upload Slots</string>
+                 </property>
+                 <property name="alignment" >
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QSpinBox" name="UploadSlots_spin" >
+                 <property name="maximumSize" >
+                  <size>
+                   <width>150</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="minimum" >
+                  <number>1</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="Messages" />
+           <widget class="QWidget" name="LookNFeel" />
+           <widget class="QWidget" name="ColorsNFonts" />
+           <widget class="QWidget" name="Popups" />
+           <widget class="QWidget" name="Sounds" />
+           <widget class="QWidget" name="Additional" />
+           <widget class="QWidget" name="Logs" />
+           <widget class="QWidget" name="UserCommands" />
+           <widget class="QWidget" name="Misc" />
           </widget>
          </item>
         </layout>
