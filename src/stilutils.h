@@ -42,6 +42,8 @@ public:
 	
 	static tstring QtoTstr(const QString& qstr);
 	static QString TstrtoQ(const tstring& tstr);
+	
+	static QString fmtBytes(int64_t aBytes);
 };
 
 #endif // of StilUtils

@@ -49,4 +49,34 @@ QString StilUtils::TstrtoQ(const tstring& tstr)
 	return QString::fromStdString(tstr);
 #endif
 }
+
+QString StilUtils::fmtBytes(int64_t aBytes)
+{
+	float res = aBytes;
+	
+	int s = 0;
+	while (res > 1024)
+	{
+		res /= 1024;
+		s++;
+	}
+	
+	QString suffix = " B";
+	if (s == 1) suffix = " KiB";
+	if (s == 2) suffix = " MiB";
+	if (s == 3) suffix = " GiB";
+	if (s == 4) suffix = " TiB";
+	if (s == 5) suffix = " PiB";
+	if (s == 6) suffix = " EiB";
+	if (s == 7) suffix = " ZiB";
+	if (s == 8) suffix = " YiB";
+	
+	res = floor(res*100)/100;
+	
+	QString t;
+	t.setNum(res,'G',4);
+	t += suffix;
+	return t;
+}
+
 // of stilutils

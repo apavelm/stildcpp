@@ -25,7 +25,7 @@
 using namespace std;
 using namespace dcpp;
 
-HashDlg::HashDlg(QWidget *parent) : QDialog(parent)
+HashDlg::HashDlg(QWidget *parent, bool aAutoClose) : QDialog(parent), autoClose(aAutoClose)
 {
 	setupUi(this);
 	//setAttribute(Qt::WA_DeleteOnClose, true);
@@ -35,7 +35,7 @@ HashDlg::HashDlg(QWidget *parent) : QDialog(parent)
 	startTime = GET_TICK();
 	HashManager::getInstance()->getStats(tmp, startBytes, startFiles);
 	HashManager::getInstance()->setPriority(Thread::NORMAL);
-	updateStats_gui("", 0, 0, 0);
+	updateStats("", 0, 0, 0);
 
 	TimerManager::getInstance()->addListener(this);
 }
@@ -46,7 +46,7 @@ HashDlg::~HashDlg()
 	TimerManager::getInstance()->removeListener(this);
 }
 
-void HashDlg::updateStats_gui(string file, int64_t bytes, size_t files, uint32_t tick)
+void HashDlg::updateStats(string file, int64_t bytes, size_t files, uint32_t tick)
 {
 	if (bytes > startBytes) startBytes = bytes;
 	if (files > startFiles) startFiles = files;
@@ -54,7 +54,7 @@ void HashDlg::updateStats_gui(string file, int64_t bytes, size_t files, uint32_t
 	double diff = tick - startTime;
 	if (diff < 1000 || files == 0 || bytes == 0)
 	{
-		lbl_stat1->setText(string("-.-- B/s, " + Util::formatBytes(bytes) + " left").c_str());
+		lbl_stat1->setText("-.-- B/s, " + StilUtils::fmtBytes(bytes) + " left");
 		lbl_stat1->setText("-:--:-- left");
 		progress->setValue(0);
 	}
@@ -62,7 +62,7 @@ void HashDlg::updateStats_gui(string file, int64_t bytes, size_t files, uint32_t
 	{
 		double speedStat = (((double)(startBytes - bytes)) * 1000) / diff;
 
-		lbl_stat1->setText( string(Util::formatBytes((int64_t)speedStat) + "/s, " + Util::formatBytes(bytes) + " left").c_str() );
+		lbl_stat1->setText( StilUtils::fmtBytes((int64_t)speedStat) + "/s, " + StilUtils::fmtBytes(bytes) + " left") ;
 		if (speedStat == 0)
 			lbl_stat1->setText("-:--:-- left");
 		else

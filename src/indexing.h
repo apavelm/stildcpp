@@ -42,16 +42,18 @@ class HashDlg: public QDialog, private Ui::dlgIndexing
 {
 	Q_OBJECT
 public:
-	HashDlg(QWidget *parent);
+	HashDlg(QWidget *parent, bool aAutoClose);
 	~HashDlg();
 
+	//int run() { return createDialog(IDD_HASH_PROGRESS); }
 private:
 	// GUI functions
-	void updateStats_gui(std::string file, int64_t bytes, size_t files, uint32_t tick);
+	void updateStats(std::string file, int64_t bytes, size_t files, uint32_t tick);
 
 	// Client callbacks
 	virtual void on(TimerManagerListener::Second, uint32_t tics) throw();
-
+	
+	bool autoClose;
 	int64_t startBytes;
 	size_t startFiles;
 	uint32_t startTime;

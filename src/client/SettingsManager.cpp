@@ -58,8 +58,7 @@ const string SettingsManager::settingTags[] =
 	"MainWindowSizeX", "MainWindowSizeY", "MainWindowPosX", "MainWindowPosY", "AutoAway",
 	"SocksPort", "SocksResolve", "KeepLists", "AutoKick", "QueueFrameShowTree",
 	"CompressTransfers", "ShowProgressBars", "SFVCheck", 
-	"MaxCompression", "AntiFrag", "NoAwayMsgToBots",
-	"SkipZeroByte", "AdlsBreakOnFirst",
+	"MaxCompression", "AntiFrag", "NoAwayMsgToBots", "SkipZeroByte", "AdlsBreakOnFirst",
 	"HubUserCommands", "AutoSearchAutoMatch", "DownloadBarColor", "UploadBarColor", "LogSystem",
 	"LogFilelistTransfers", "SendUnknownCommands", "MaxHashSpeed", "OpenUserCmdHelp",
 	"GetUserCountry", "FavShowJoins", "LogStatusMessages", "ShowStatusbar",
@@ -77,7 +76,7 @@ const string SettingsManager::settingTags[] =
 	"OpenWaitingUsers", "BoldWaitingUsers", "OpenSystemLog", "BoldSystemLog", "AutoRefreshTime",
 	"UseTLS", "AutoSearchLimit", "AltSortOrder", "AutoKickNoFavs", "PromptPassword", "SpyFrameIgnoreTthSearches",
 	"DontDlAlreadyQueued", "MaxCommandLength", "AllowUntrustedHubs", "AllowUntrustedClients",
-	"TLSPort", "FastHash", "SortFavUsersFirst", "ShowShellMenu",
+	"TLSPort", "FastHash", "SortFavUsersFirst", "ShowShellMenu", "MinSegmentSize",
 	"SENTRY",
 	// Int64
 	"TotalUpload", "TotalDownload",
@@ -136,7 +135,7 @@ SettingsManager::SettingsManager()
 	setDefault(IGNORE_BOT_PMS, false);
 	setDefault(LIST_DUPES, true);
 	setDefault(BUFFER_SIZE, 64);
-	setDefault(HUBLIST_SERVERS, "http://hublist.hubtracker.com/hublist.xml.bz2;http://dchublist.com/hublist.xml.bz2;http://adchublist.com/hublist.xml.bz2;http://www.hublist.org/PublicHubList.xml.bz2;http://dclist.eu/hublist.xml.bz2;http://download.hublist.cz/hublist.xml.bz2;http://hublist.awenet.info/PublicHubList.xml.bz2");
+	setDefault(HUBLIST_SERVERS, "http://hublist.hubtracker.com/hublist.xml.bz2;http://dchublist.com/hublist.xml.bz2;http://adchublist.com/hublist.xml.bz2;http://www.hublist.org/PublicHubList.xml.bz2;http://dclist.eu/hublist.xml.bz2;http://download.hublist.cz/hublist.xml.bz2;http://hublist.awenet.info/PublicHubList.xml.bz2;http://hublist.hubtracker.com.nyud.net/hublist.xml.bz2;http://dchublist.com.nyud.net/hublist.xml.bz2;http://adchublist.com.nyud.net/hublist.xml.bz2;http://www.hublist.org.nyud.net/PublicHubList.xml.bz2;http://dclist.eu.nyud.net/hublist.xml.bz2;http://download.hublist.cz.nyud.net/hublist.xml.bz2;http://hublist.awenet.info.nyud.net/PublicHubList.xml.bz2");
 	setDefault(DOWNLOAD_SLOTS, 3);
 	setDefault(MAX_DOWNLOAD_SPEED, 0);
 	setDefault(LOG_DIRECTORY, Util::getConfigPath() + "Logs" PATH_SEPARATOR_STR);
@@ -270,6 +269,7 @@ SettingsManager::SettingsManager()
 	setDefault(FAST_HASH, true);
 	setDefault(SORT_FAVUSERS_FIRST, false);
 	setDefault(SHOW_SHELL_MENU, false);
+	setDefault(MIN_SEGMENT_SIZE, 1024);
 
 #ifdef _WIN32
 	setDefault(MAIN_WINDOW_STATE, SW_SHOWNORMAL);

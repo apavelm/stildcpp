@@ -455,7 +455,7 @@ void MainWindowImpl::notepadFunc()
 
 void MainWindowImpl::indexingFunc()
 {
-	HashDlg *hd = new HashDlg(this);
+	HashDlg *hd = new HashDlg(this, false);
 	hd->show();
 	//connect(qcd,SIGNAL(con_pressed(QString)),this,SLOT(qcdconFunc(QString)));
 }

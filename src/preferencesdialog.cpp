@@ -356,11 +356,11 @@ void PreferencesDialog::initSharingPage()
 	for(StringPairIter j = dirs.begin(); j != dirs.end(); j++) 
 	{
 		QStringList row;
-		row << StilUtils::TstrtoQ(Text::toT(j->first)) << StilUtils::TstrtoQ(Text::toT(j->second)) << StilUtils::TstrtoQ(Text::toT(Util::formatBytes(ShareManager::getInstance()->getShareSize(j->second))));
+		row << StilUtils::TstrtoQ(Text::toT(j->first)) << StilUtils::TstrtoQ(Text::toT(j->second)) << StilUtils::fmtBytes(ShareManager::getInstance()->getShareSize(j->second));
 		QTreeWidgetItem *fItm = new QTreeWidgetItem(SharedDir_tree, row);
 	}
 	
-	lbl_TotalSize->setText(tr("Total Size: ")+StilUtils::TstrtoQ(Text::toT(Util::formatBytes(ShareManager::getInstance()->getShareSize()))));
+	lbl_TotalSize->setText(tr("Total Size: ")+StilUtils::fmtBytes(ShareManager::getInstance()->getShareSize()));
 	
 	extraSlots_spin->setValue( SETTING(MIN_UPLOAD_SPEED) );
 	UploadSlots_spin->setValue( SETTING(SLOTS) );
@@ -393,7 +393,7 @@ void PreferencesDialog::SharingPageRemove()
 			delete it;
 		}
 	ShareManager::getInstance()->setDirty();
-	lbl_TotalSize->setText(StilUtils::TstrtoQ(Text::toT(Util::formatBytes(ShareManager::getInstance()->getShareSize()))));
+	lbl_TotalSize->setText(StilUtils::fmtBytes(ShareManager::getInstance()->getShareSize()));
 }
 
 void PreferencesDialog::SharingPageAdd()
@@ -411,11 +411,11 @@ void PreferencesDialog::SharingPageAdd()
 		{
 			ShareManager::getInstance()->addDirectory(Text::fromT(StilUtils::QtoTstr(directory) ), Text::fromT(StilUtils::QtoTstr(text)));
 			QStringList lt;
-			lt << text << directory << StilUtils::TstrtoQ(Text::toT(Util::formatBytes(ShareManager::getInstance()->getShareSize(Text::fromT(StilUtils::QtoTstr(directory))))));
+			lt << text << directory << StilUtils::fmtBytes(ShareManager::getInstance()->getShareSize(Text::fromT(StilUtils::QtoTstr(directory))));
 			QTreeWidgetItem *fItm = new QTreeWidgetItem(SharedDir_tree, lt);
 			
 			ShareManager::getInstance()->setDirty();
-			lbl_TotalSize->setText(StilUtils::TstrtoQ(Text::toT(Util::formatBytes(ShareManager::getInstance()->getShareSize()))));
+			lbl_TotalSize->setText(StilUtils::fmtBytes(ShareManager::getInstance()->getShareSize() ));
 		}
 	}
 }
@@ -437,12 +437,12 @@ void PreferencesDialog::SharingPageHidden(int state)
 	for(StringPairIter j = dirs.begin(); j != dirs.end(); j++)
 	{
 		QStringList row;
-		row << StilUtils::TstrtoQ(Text::toT(j->first)) << StilUtils::TstrtoQ(Text::toT(j->second)) << StilUtils::TstrtoQ(Text::toT(Util::formatBytes(ShareManager::getInstance()->getShareSize(j->second))));
+		row << StilUtils::TstrtoQ(Text::toT(j->first)) << StilUtils::TstrtoQ(Text::toT(j->second)) << StilUtils::fmtBytes(ShareManager::getInstance()->getShareSize(j->second));
 		QTreeWidgetItem *fItm = new QTreeWidgetItem(SharedDir_tree, row);
 	}
 
 	// Display the new total share size
-	lbl_TotalSize->setText(tr("Total Size: ")+StilUtils::TstrtoQ(Text::toT(Util::formatBytes(ShareManager::getInstance()->getShareSize()))));
+	lbl_TotalSize->setText(tr("Total Size: ")+StilUtils::fmtBytes(ShareManager::getInstance()->getShareSize()));
 }
 
 void PreferencesDialog::applySharingPage()
