@@ -98,6 +98,7 @@
 //
 
 #include "ui_mainwindow.h"
+#include "stilutils.h"
 
 class ThreadGetTTH : public QThread
 {

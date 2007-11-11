@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>645</width>
-    <height>423</height>
+    <width>660</width>
+    <height>351</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -18,8 +18,26 @@
      <property name="orientation" >
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QTreeView" name="vDir" />
-     <widget class="QColumnView" name="vItem" />
+     <widget class="QTreeWidget" name="vDir" >
+      <column>
+       <property name="text" >
+        <string>1</string>
+       </property>
+      </column>
+     </widget>
+     <widget class="QTreeWidget" name="contentTree" >
+      <property name="alternatingRowColors" >
+       <bool>true</bool>
+      </property>
+      <property name="rootIsDecorated" >
+       <bool>false</bool>
+      </property>
+      <column>
+       <property name="text" >
+        <string>1</string>
+       </property>
+      </column>
+     </widget>
     </widget>
    </item>
   </layout>

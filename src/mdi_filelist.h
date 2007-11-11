@@ -1,6 +1,8 @@
 /***************************************************************************
  *   Copyright (C) 2007 by Pavel Andreev                                   *
  *   Mail: apavelm on gmail dot com (apavelm@gmail.com)                    *
+ *   Copyright (C) 2007 by Yakov Suraev aka BigBiker                       *
+ *   Mail: adminbsd on gmail dot com (adminbsd@gmail.com)                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -27,14 +29,45 @@
 #include "client/DCPlusPlus.h"
 #include "client/DirectoryListing.h"
 #include "client/ClientManager.h"
-
+#include "client/User.h"
+#include "stilutils.h"
 #include "ui_filelistdialog.h"
+#include <QTextCodec>
+#include <QTreeWidgetItem>
+#include <QTreeWidget>
+#include <QHeaderView>
+#include <QList>
+#include <QtDebug>
+
+#include <iostream> // delete it
+using namespace dcpp;
 
 class FileListDlg : public MdiChild, private Ui::DialogFileList
 {
 	Q_OBJECT
 public:
-	FileListDlg(QWidget *parent, const dcpp::UserPtr & aUser, int64_t aSpeed, dcpp::tstring & strFile);
+	FileListDlg(QWidget *parent, const UserPtr &aUser, int64_t aSpeed, tstring &strFlie);
+	int type;
+	QString idText;
+	void loadFile(const UserPtr &aUser, int64_t aSpeed);
+	
+private slots:
+	void dirSelected();
+//	void dirSelectedOnContentTree();
+	void dirDoubleClickedOnContentTree(QTreeWidgetItem * item);
+private:
+	void buildDir(DirectoryListing::Directory::Ptr dirPtr, QTreeWidgetItem* parent = NULL);
+	void openContent(DirectoryListing::Directory::Ptr contDirPtr);
+	void getPath(QTreeWidgetItem* item);
+	QTreeWidgetItem* findItemFromRightPanel(QTreeWidgetItem* item);
+	DirectoryListing::Directory* getSelectedDir(void);
+	//QList<QTreeWidgetItem *> dirList; 
+	int shareItems;
+	int64_t shareSize;
+	QIcon folderIcon;
+	QIcon fileIcon;
+	DirectoryListing listing;
+	QList<QTreeWidgetItem *> pathList;
 };
 
 #endif // __MDI_FILELIST_H__
