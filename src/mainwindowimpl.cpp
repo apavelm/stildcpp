@@ -674,9 +674,13 @@ void MainWindowImpl::openfilelistFunc()
 	//options |= QFileDialog::DontUseNativeDialog;
 	QString fn = QFileDialog::getOpenFileName(this, tr("Select File"),"", tr("File lists (*.xml.bz2);;All Files (*)"), &selectedFilter, options);
 	if (!fn.isEmpty()) 
-		{
+	{
 		dcpp::tstring strFile(StilUtils::QtoTstr(fn));
+		
+		if (Text::fromT(strFile) == ShareManager::getInstance()->getOwnListFile()) openownfilelistFunc();
+		
 		dcpp::UserPtr u = dcpp::DirectoryListing::getUserFromFilename(dcpp::Text::fromT(strFile));
+		
 		if(u) 
 		{
 			const string nick = FileListDlg::getNickFromFilename(Text::fromT(strFile));
@@ -684,13 +688,15 @@ void MainWindowImpl::openfilelistFunc()
 			OpenList(this, strFile, u, 0, NickName);
 		}
 			
-		}
+	}
 }
 
 void MainWindowImpl::openownfilelistFunc()
 {
-	if(!dcpp::ShareManager::getInstance()->getOwnListFile().empty())
-		OpenList(this, dcpp::Text::toT(dcpp::ShareManager::getInstance()->getOwnListFile()), dcpp::ClientManager::getInstance()->getMe(), 0, StilUtils::TstrtoQ(Text::toT(SETTING(NICK))) );
+	const string ownFileList = dcpp::ShareManager::getInstance()->getOwnListFile();
+	
+	if(!ownFileList.empty())
+		OpenList(this, dcpp::Text::toT(ownFileList), dcpp::ClientManager::getInstance()->getMe(), 0, StilUtils::TstrtoQ(Text::toT(SETTING(NICK))) );
 }
 
 void MainWindowImpl::RefreshOwnFileListFunc()

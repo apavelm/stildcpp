@@ -29,6 +29,7 @@
 #include "client/DCPlusPlus.h"
 #include "client/DirectoryListing.h"
 #include "client/ClientManager.h"
+#include "client/ShareManager.h"
 #include "client/User.h"
 #include "stilutils.h"
 #include "ui_filelistdialog.h"

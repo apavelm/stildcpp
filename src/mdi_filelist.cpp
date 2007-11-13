@@ -51,9 +51,15 @@ FileListDlg::FileListDlg(QWidget *parent, const UserPtr &aUser, int64_t aSpeed, 
 						QIcon::Normal, QIcon::On);
 	fileIcon.addPixmap(style()->standardPixmap(QStyle::SP_FileIcon));
 
-	string nick = getNickFromFilename(Text::fromT(strFile));
+	string nick;
 	
-	if (nick.empty()) nick = SETTING(NICK);
+	if (strFile == Text::toT(dcpp::ShareManager::getInstance()->getOwnListFile()) && 
+			aUser == ClientManager::getInstance()->getMe())
+	{
+		nick = SETTING(NICK);
+	}
+	else
+		nick = getNickFromFilename(Text::fromT(strFile));
 	
 	listing.loadFile(Text::fromT(strFile));
 	listing.getRoot()->setName(nick);
@@ -247,8 +253,6 @@ void FileListDlg::downloadClicked()
 string FileListDlg::getNickFromFilename(const string& fileName)
 {
 	string name = Util::getFileName(fileName);
-	
-	if (name == "files.xml.bz2") return "";
 	
 	// Strip off any extensions
 	if(Util::stricmp(name.c_str() + name.length() - 6, ".DcLst") == 0) {
