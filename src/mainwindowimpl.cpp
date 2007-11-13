@@ -365,10 +365,13 @@ void MainWindowImpl::HomepageFunc()
 	QDesktopServices::openUrl(url);
 }
 
-void MainWindowImpl::OpenList(QWidget *parent, const dcpp::tstring & aFile, const dcpp::UserPtr & aUser, int64_t aSpeed, QString aTitle)
+void MainWindowImpl::OpenList(QWidget *parent, const dcpp::tstring & aFile, const dcpp::UserPtr & aUser, int64_t aSpeed, const QString aTitle)
 {
 	// Function to open filelists
-	//m_tabwin->setCurrentIndex(m_tabwin->addTab((new FileListDlg(this, aUser, aSpeed, aFile) ), aTitle ));
+	tstring t = aFile;
+	dcpp::UserPtr u = aUser;
+		
+	m_tabwin->setCurrentIndex( m_tabwin->addTab( (new FileListDlg(parent, u, aSpeed, t) ), aTitle ) );
 }
 
 void MainWindowImpl::OpenHub(QWidget *parent, const dcpp::tstring& adr)
@@ -615,7 +618,6 @@ void ThreadGetTTH::run()
 	b="";
 	c="";
 	if (!a.isEmpty()) {
-		using namespace dcpp;
 		AutoArray<char> buf(512*1024);
 
 		try {
@@ -641,7 +643,6 @@ void ThreadGetTTH::run()
 			f.close();
 			if (_stp) return;
 		} catch(...) { }
-	using namespace std;
 	emit ready();
 	}
 	return ;
@@ -676,11 +677,11 @@ void MainWindowImpl::openfilelistFunc()
 		{
 		dcpp::tstring strFile(StilUtils::QtoTstr(fn));
 		dcpp::UserPtr u = dcpp::DirectoryListing::getUserFromFilename(dcpp::Text::fromT(strFile));
-		if(u) //OpenList(strFile, u, 0);
+		if(u) 
 		{
 			const string nick = FileListDlg::getNickFromFilename(Text::fromT(strFile));
 			QString NickName = QString::fromStdString(nick);
-			m_tabwin->setCurrentIndex(m_tabwin->addTab((new FileListDlg(this, u, 0, strFile) ), "FileList - " + NickName));
+			OpenList(this, strFile, u, 0, NickName);
 		}
 			
 		}
@@ -689,14 +690,7 @@ void MainWindowImpl::openfilelistFunc()
 void MainWindowImpl::openownfilelistFunc()
 {
 	if(!dcpp::ShareManager::getInstance()->getOwnListFile().empty())
-		{
-			tstring t = Text::toT(dcpp::ShareManager::getInstance()->getOwnListFile());
-			qDebug() << StilUtils::TstrtoQ(t) << "\n";
-			dcpp::UserPtr u = ClientManager::getInstance()->getMe();
-			qDebug() << u << "\n";
-		m_tabwin->setCurrentIndex(m_tabwin->addTab((	new FileListDlg(this, u, 0, t ) ), "FileList"));
-		//OpenList(dcpp::Text::toT(dcpp::ShareManager::getInstance()->getOwnListFile()), dcpp::ClientManager::getInstance()->getMe(), 0);
-		}
+		OpenList(this, dcpp::Text::toT(dcpp::ShareManager::getInstance()->getOwnListFile()), dcpp::ClientManager::getInstance()->getMe(), 0, StilUtils::TstrtoQ(Text::toT(SETTING(NICK))) );
 }
 
 void MainWindowImpl::RefreshOwnFileListFunc()
