@@ -28,7 +28,6 @@ FileListDlg::FileListDlg(QWidget *parent, const UserPtr &aUser, int64_t aSpeed, 
 	setupUi(this);
 	
 	type = 5;
-	idText = "user";
 
 	pathList.clear();
 	
@@ -52,9 +51,13 @@ FileListDlg::FileListDlg(QWidget *parent, const UserPtr &aUser, int64_t aSpeed, 
 						QIcon::Normal, QIcon::On);
 	fileIcon.addPixmap(style()->standardPixmap(QStyle::SP_FileIcon));
 
-	const string nick = getNickFromFilename(Text::fromT(strFile));
+	string nick = getNickFromFilename(Text::fromT(strFile));
+	
+	if (nick.empty()) nick = SETTING(NICK);
+	
 	listing.loadFile(Text::fromT(strFile));
 	listing.getRoot()->setName(nick);
+	idText = QString::fromStdString(nick);
 	
 	buildDir(listing.getRoot());
 	
@@ -62,7 +65,7 @@ FileListDlg::FileListDlg(QWidget *parent, const UserPtr &aUser, int64_t aSpeed, 
 	shareSize = listing.getTotalSize();
 	
 	dcdebug("ShareItems: %d\nSharedSize: %lld\n", shareItems, shareSize);
-	dcdebug("UserName: %s\n",StilUtils::getNicks(aUser).c_str());
+	dcdebug("UserName: %s\n",nick.c_str());
 	
 	openContent(listing.getRoot());
 
@@ -245,6 +248,8 @@ string FileListDlg::getNickFromFilename(const string& fileName)
 {
 	string name = Util::getFileName(fileName);
 	
+	if (name == "files.xml.bz2") return "";
+	
 	// Strip off any extensions
 	if(Util::stricmp(name.c_str() + name.length() - 6, ".DcLst") == 0) {
 		name.erase(name.length() - 6);
@@ -261,17 +266,17 @@ string FileListDlg::getNickFromFilename(const string& fileName)
 	// Find CID
 	string::size_type i = name.rfind('.');
 	if(i == string::npos) {
-		return NULL;
+		return "";
 	}
 
 	size_t n = name.length() - (i + 1);
 	// CID's always 39 chars long...
 	if(n != 39)
-		return NULL;
+		return "";
 
 	CID cid(name.substr(i + 1));
 	if(cid.isZero())
-		return NULL;
+		return "";
 	
 	return name.substr(0, i);
 }
