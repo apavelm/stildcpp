@@ -50,15 +50,19 @@ public:
 	int type;
 	QString idText;
 	void loadFile(const UserPtr &aUser, int64_t aSpeed);
+	static string getNickFromFilename(const string& fileName);
 	
 private slots:
 	void dirSelected();
 //	void dirSelectedOnContentTree();
 	void dirDoubleClickedOnContentTree(QTreeWidgetItem * item);
+	void downloadClicked();
+	
 private:
 	void buildDir(DirectoryListing::Directory::Ptr dirPtr, QTreeWidgetItem* parent = NULL);
 	void openContent(DirectoryListing::Directory::Ptr contDirPtr);
 	void getPath(QTreeWidgetItem* item);
+	void createActions();
 	QTreeWidgetItem* findItemFromRightPanel(QTreeWidgetItem* item);
 	DirectoryListing::Directory* getSelectedDir(void);
 	//QList<QTreeWidgetItem *> dirList; 
@@ -68,6 +72,7 @@ private:
 	QIcon fileIcon;
 	DirectoryListing listing;
 	QList<QTreeWidgetItem *> pathList;
+	
 };
 
 #endif // __MDI_FILELIST_H__

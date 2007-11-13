@@ -33,6 +33,9 @@ FileListDlg::FileListDlg(QWidget *parent, const UserPtr &aUser, int64_t aSpeed, 
 	pathList.clear();
 	
 	vDir->header()->hide();
+	
+	createActions();
+	
 	connect(vDir, SIGNAL(itemSelectionChanged()), this, SLOT(dirSelected()));
 	//connect(contentTree, SIGNAL(itemSelectionChanged()), this, SLOT(dirSelectedOnContentTree()));
 	connect(contentTree, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)), this, 
@@ -49,8 +52,9 @@ FileListDlg::FileListDlg(QWidget *parent, const UserPtr &aUser, int64_t aSpeed, 
 						QIcon::Normal, QIcon::On);
 	fileIcon.addPixmap(style()->standardPixmap(QStyle::SP_FileIcon));
 
+	const string nick = getNickFromFilename(Text::fromT(strFile));
 	listing.loadFile(Text::fromT(strFile));
-	listing.getRoot()->setName(StilUtils::getNicks(aUser));
+	listing.getRoot()->setName(nick);
 	
 	buildDir(listing.getRoot());
 	
@@ -62,7 +66,15 @@ FileListDlg::FileListDlg(QWidget *parent, const UserPtr &aUser, int64_t aSpeed, 
 	
 	openContent(listing.getRoot());
 
-	setWindowTitle("Testtitle"); // set window title in format: "FileList - John" to ./filelist/john.tar.bz2
+	//parent -> setWindowTitle("Testtitle"); // set window title in format: "FileList - John" to ./filelist/john.tar.bz2
+}
+
+void FileListDlg::createActions()
+{
+	QAction *downloadAction = new QAction(tr("Download"), contentTree);
+	contentTree -> addAction(downloadAction);
+	contentTree -> setContextMenuPolicy(Qt::ActionsContextMenu);
+	connect(downloadAction, SIGNAL(triggered()), SLOT(downloadClicked()));
 }
 
 void FileListDlg::buildDir(DirectoryListing::Directory::Ptr dirPtr, QTreeWidgetItem* parent)
@@ -220,4 +232,46 @@ QTreeWidgetItem* FileListDlg::findItemFromRightPanel(QTreeWidgetItem* item)
 	{
 		if (parent->child(i)->text(0) == item->text(0)) return parent->child(i);
 	}
+}
+
+void FileListDlg::downloadClicked()
+{
+	QTreeWidgetItem *curItem = contentTree->currentItem();
+	
+	qDebug() << "Item" << curItem->text(0) << "right clicked";
+}
+
+string FileListDlg::getNickFromFilename(const string& fileName)
+{
+	string name = Util::getFileName(fileName);
+	
+	// Strip off any extensions
+	if(Util::stricmp(name.c_str() + name.length() - 6, ".DcLst") == 0) {
+		name.erase(name.length() - 6);
+	}
+
+	if(Util::stricmp(name.c_str() + name.length() - 4, ".bz2") == 0) {
+		name.erase(name.length() - 4);
+	}
+
+	if(Util::stricmp(name.c_str() + name.length() - 4, ".xml") == 0) {
+		name.erase(name.length() - 4);
+	}
+
+	// Find CID
+	string::size_type i = name.rfind('.');
+	if(i == string::npos) {
+		return NULL;
+	}
+
+	size_t n = name.length() - (i + 1);
+	// CID's always 39 chars long...
+	if(n != 39)
+		return NULL;
+
+	CID cid(name.substr(i + 1));
+	if(cid.isZero())
+		return NULL;
+	
+	return name.substr(0, i);
 }

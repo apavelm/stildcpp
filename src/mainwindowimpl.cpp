@@ -675,7 +675,12 @@ void MainWindowImpl::openfilelistFunc()
 		dcpp::tstring strFile(StilUtils::QtoTstr(fn));
 		dcpp::UserPtr u = dcpp::DirectoryListing::getUserFromFilename(dcpp::Text::fromT(strFile));
 		if(u) //OpenList(strFile, u, 0);
-			m_tabwin->setCurrentIndex(m_tabwin->addTab((new FileListDlg(this, u, 0, strFile) ), "FileList" ));
+		{
+			const string nick = FileListDlg::getNickFromFilename(Text::fromT(strFile));
+			QString NickName = QString::fromStdString(nick);
+			m_tabwin->setCurrentIndex(m_tabwin->addTab((new FileListDlg(this, u, 0, strFile) ), "FileList - " + NickName));
+		}
+			
 		}
 }
 
