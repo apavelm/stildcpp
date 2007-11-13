@@ -19,6 +19,9 @@
  ***************************************************************************/
 
 #include "mainwindowimpl.h"
+
+#include <QtDebug>
+
 using namespace std;
 using namespace dcpp;
 //
@@ -118,7 +121,7 @@ void MainWindowImpl::clientInit()
 	if(BOOLSETTING(OPEN_FINISHED_UPLOADS)) ULFinFunc();
 	if(BOOLSETTING(OPEN_SEARCH_SPY)) SSFunc();
 	//if(BOOLSETTING(OPEN_NETWORK_STATISTICS)) postMessage(WM_COMMAND, IDC_NET_STATS);
-	//if(BOOLSETTING(OPEN_NOTEPAD)) postMessage(WM_COMMAND, IDC_NOTEPAD);
+	if(BOOLSETTING(OPEN_NOTEPAD)) notepadFunc();
 	if(BOOLSETTING(OPEN_PUBLIC)) PubHubFunc();
 	if(BOOLSETTING(OPEN_FAVORITE_HUBS)) FavHubListFunc();
 	
@@ -457,7 +460,6 @@ void MainWindowImpl::indexingFunc()
 {
 	HashDlg *hd = new HashDlg(this, false);
 	hd->show();
-	//connect(qcd,SIGNAL(con_pressed(QString)),this,SLOT(qcdconFunc(QString)));
 }
 
 void MainWindowImpl::qcdconFunc(QString adr)
@@ -688,6 +690,11 @@ void MainWindowImpl::openownfilelistFunc()
 {
 	if(!dcpp::ShareManager::getInstance()->getOwnListFile().empty())
 		{
+			tstring t = Text::toT(dcpp::ShareManager::getInstance()->getOwnListFile());
+			qDebug() << StilUtils::TstrtoQ(t) << "\n";
+			dcpp::UserPtr u = ClientManager::getInstance()->getMe();
+			qDebug() << u << "\n";
+		m_tabwin->setCurrentIndex(m_tabwin->addTab((	new FileListDlg(this, u, 0, t ) ), "FileList"));
 		//OpenList(dcpp::Text::toT(dcpp::ShareManager::getInstance()->getOwnListFile()), dcpp::ClientManager::getInstance()->getMe(), 0);
 		}
 }
@@ -701,7 +708,7 @@ void MainWindowImpl::RefreshOwnFileListFunc()
 
 void MainWindowImpl::OpenDownloadsFolderFunc()
 {
-	QUrl url = QUrl("/home/").toLocalFile(); // FIXME : Change to downloadDIR variable.
+	QUrl url = QUrl(StilUtils::TstrtoQ(Text::toT(SETTING(DOWNLOAD_DIRECTORY)))).toLocalFile();
 	QDesktopServices::openUrl(url);
 }
 

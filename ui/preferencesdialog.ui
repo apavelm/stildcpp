@@ -907,6 +907,9 @@
                <layout class="QVBoxLayout" >
                 <item>
                  <widget class="QTreeWidget" name="SharedDir_tree" >
+                  <property name="autoScroll" >
+                   <bool>false</bool>
+                  </property>
                   <property name="editTriggers" >
                    <set>QAbstractItemView::NoEditTriggers</set>
                   </property>
