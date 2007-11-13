@@ -61,7 +61,7 @@ FileListDlg::FileListDlg(QWidget *parent, const UserPtr &aUser, int64_t aSpeed, 
 	shareItems = listing.getTotalFileCount();
 	shareSize = listing.getTotalSize();
 	
-	dcdebug("ShareItems: %d\nSharedSize: %d\n", shareItems, shareSize);
+	dcdebug("ShareItems: %d\nSharedSize: %lld\n", shareItems, shareSize);
 	dcdebug("UserName: %s\n",StilUtils::getNicks(aUser).c_str());
 	
 	openContent(listing.getRoot());

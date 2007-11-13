@@ -318,7 +318,7 @@ void PreferencesDialog::DownloadsFavPageRemove()
 {
 	QTreeWidgetItem *it = FavDLDir_tree->currentItem();
 	if (it) 
-	if (dcpp::FavoriteManager::getInstance()->removeFavoriteDir( Text::fromT( StilUtils::QtoTstr( it->text(0) ) ) ))
+	if (dcpp::FavoriteManager::getInstance()->removeFavoriteDir( Text::fromT( StilUtils::QtoTstr( it->text(1) ) ) ))
 		{
 			delete it;
 		}
@@ -334,7 +334,8 @@ void PreferencesDialog::DownloadsFavPageAdd()
 	if (!directory.isEmpty()) 
 	{
 		bool ok;
-		QString text = QInputDialog::getText(this, tr("Add Favorite Directory"), tr("Folder Name:"), QLineEdit::Normal, directory, &ok);
+		QDir ddd(directory);
+		QString text = QInputDialog::getText(this, tr("Add Favorite Directory"), tr("Folder Name:"), QLineEdit::Normal, ddd.dirName(), &ok);
 		if (ok && !text.isEmpty())
 		if	(dcpp::FavoriteManager::getInstance()->addFavoriteDir( dcpp::Text::fromT( StilUtils::QtoTstr(directory) ) , dcpp::Text::fromT( StilUtils::QtoTstr(text) ) ) )
 		{
@@ -388,10 +389,10 @@ void PreferencesDialog::SharingPageRemove()
 {
 	QTreeWidgetItem *it = SharedDir_tree->currentItem();
 	if (it) 
-		{
-			ShareManager::getInstance()->removeDirectory(Text::fromT(StilUtils::QtoTstr( it->text(0) )));
-			delete it;
-		}
+	{
+		ShareManager::getInstance()->removeDirectory(Text::fromT(StilUtils::QtoTstr( it->text(1) ))) ;
+		delete it;
+	}
 	ShareManager::getInstance()->setDirty();
 	lbl_TotalSize->setText(StilUtils::fmtBytes(ShareManager::getInstance()->getShareSize()));
 }
@@ -406,7 +407,8 @@ void PreferencesDialog::SharingPageAdd()
 	if (!directory.isEmpty()) 
 	{
 		bool ok;
-		QString text = QInputDialog::getText(this, tr("Add Shared Directory"), tr("Folder Name:"), QLineEdit::Normal, directory, &ok);
+		QDir ddd(directory);
+		QString text = QInputDialog::getText(this, tr("Add Shared Directory"), tr("Folder Name:"), QLineEdit::Normal, ddd.dirName(), &ok);
 		if (ok && !text.isEmpty())
 		{
 			ShareManager::getInstance()->addDirectory(Text::fromT(StilUtils::QtoTstr(directory) ), Text::fromT(StilUtils::QtoTstr(text)));

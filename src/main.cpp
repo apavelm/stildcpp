@@ -29,7 +29,7 @@
 #include "mdi_c.h"
 #include "defs.h"
 #include "config.h"
-
+//#include <QtDebug>
 //
 #include "client/stdinc.h"
 #include "client/DCPlusPlus.h"
@@ -66,7 +66,7 @@ int main(int argc, char ** argv)
 	QTranslator *qtTranslator = new QTranslator(&app);
 	QString ql = QLocale::system().name();
 	qtTranslator->load("qt_" + ql, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-	app.installTranslator(qtTranslator);	
+	app.installTranslator(qtTranslator);
 	
 	QTranslator *translator = new QTranslator(&app);
 	translator->load(QString("stildcpp_") + ql, ":/lang/", QString(), ".qm");

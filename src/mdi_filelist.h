@@ -46,7 +46,7 @@ class FileListDlg : public MdiChild, private Ui::DialogFileList
 {
 	Q_OBJECT
 public:
-	FileListDlg(QWidget *parent, const UserPtr &aUser, int64_t aSpeed, tstring &strFlie);
+	FileListDlg(QWidget *parent, const UserPtr &, int64_t, tstring &);
 	int type;
 	QString idText;
 	void loadFile(const UserPtr &aUser, int64_t aSpeed);

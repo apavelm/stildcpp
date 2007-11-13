@@ -174,7 +174,7 @@ private slots:
 	void statusbarcheck(); // if StatusBar Checked in menu @View@
 	
 public slots:
-	void OpenList(QWidget *parent, const dcpp::tstring & aFile, const dcpp::UserPtr & aUser, int64_t aSpeed);
+	void OpenList(QWidget *, const dcpp::tstring & , const dcpp::UserPtr & , int64_t, QString );
 	void OpenPM(QWidget *parent, const QString &);
 	void OpenHub(QWidget *parent, const dcpp::tstring& adr);
 

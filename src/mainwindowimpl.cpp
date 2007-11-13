@@ -362,10 +362,10 @@ void MainWindowImpl::HomepageFunc()
 	QDesktopServices::openUrl(url);
 }
 
-void MainWindowImpl::OpenList(QWidget *parent, const dcpp::tstring & aFile, const dcpp::UserPtr & aUser, int64_t aSpeed)
+void MainWindowImpl::OpenList(QWidget *parent, const dcpp::tstring & aFile, const dcpp::UserPtr & aUser, int64_t aSpeed, QString aTitle)
 {
 	// Function to open filelists
-	//m_tabwin->setCurrentIndex(m_tabwin->addTab((new FileListDlg(this, aUser, aSpeed, aFile) ), "FileList" ));
+	//m_tabwin->setCurrentIndex(m_tabwin->addTab((new FileListDlg(this, aUser, aSpeed, aFile) ), aTitle ));
 }
 
 void MainWindowImpl::OpenHub(QWidget *parent, const dcpp::tstring& adr)
