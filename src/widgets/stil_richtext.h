@@ -18,29 +18,16 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "quickconnectdlg.h"
+#include <QTextDocument>
+#include <QTextCursor>
 
-TQuickConnectDialog::TQuickConnectDialog(QWidget *parent) : QDialog(parent) 
+class StilRichText
 {
-	setupUi(this);
-	setAttribute(Qt::WA_DeleteOnClose, true);
-
-	AdrLabel->setText(tr("Input Hub Address below:"));
-	IconLabel->setPixmap(QPixmap(":/images/QuickCon.png"));	
-	
-	#ifdef _DEBUG
-		adrline->setText("localhost:4111");
-	#else
-		adrline->setText("");
-	#endif
-	
-	connect(this,SIGNAL(accepted()),this,SLOT(okFunc()));
-	
-	show();
-}
-
-void TQuickConnectDialog::okFunc()
-{
-	QString a=adrline->text();
-	emit con_pressed(a);
-}
+public:
+	static void install(QTextDocument *doc);
+	static void ensureTextLayouted(QTextDocument *doc, int documentWidth, Qt::Alignment align = Qt::AlignLeft, Qt::LayoutDirection layoutDirection = Qt::LeftToRight, bool textWordWrap = true);
+	static void setText(QTextDocument *doc, const QString &text);
+	static void insertIcon(QTextCursor &cursor, const QString &iconName, const QString &iconText);
+	static void appendText(QTextDocument *doc, QTextCursor &cursor, const QString &text);
+	static QString convertToPlainText(const QTextDocument *doc);
+};

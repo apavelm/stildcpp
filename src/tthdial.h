@@ -27,6 +27,7 @@
 
 class TthDialog : public QDialog, private Ui::tthdlg
 { 
+	//Q_OBJECT
 public:
 	TthDialog(QWidget *parent,const QString &,const QString &,const QString &);
 };

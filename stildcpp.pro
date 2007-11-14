@@ -142,7 +142,9 @@ HEADERS = src/mainwindowimpl.h \
  src/stilutils.h \
  src/mdi_notepad.h \
  src/UserInfoBase.h \
- src/indexing.h
+ src/indexing.h \
+ src/widgets/stil_textview.h \
+ src/widgets/stil_chatctrls.h
 SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
  src/frmAbout.cpp \
@@ -223,7 +225,9 @@ SOURCES = src/mainwindowimpl.cpp \
  src/stilutils.cpp \
  src/mdi_notepad.cpp \
  src/UserInfoBase.cpp \
- src/indexing.cpp
+ src/indexing.cpp \
+ src/widgets/stil_textview.cpp \
+ src/widgets/stil_chatctrls.cpp
 RESOURCES += src/stildcpp.qrc src/smiles.qrc src/langs.qrc
 LIBS += -lssl -lbz2 -lcrypto
 TRANSLATIONS = lang/stildcpp_ru.ts

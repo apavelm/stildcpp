@@ -29,9 +29,12 @@ TthDialog::TthDialog(QWidget *parent,const QString &a,const QString &b,const QSt
 	icolabel_file->setPixmap(QPixmap(":/images/tth_file.png"));
 	icolabel_TTH->setPixmap(QPixmap(":/images/tth_tth.png"));
 	icolabel_magnet->setPixmap(QPixmap(":/images/magnet.png"));
-	connect(cp_file,SIGNAL(pressed()),filebox,SLOT(copy()));
-	connect(cp_tth,SIGNAL(pressed()),tthbox,SLOT(copy()));
-	connect(cp_magnet,SIGNAL(pressed()),magnetbox,SLOT(copy()));
+	connect(cp_file,SIGNAL(clicked()),filebox,SLOT(selectAll()));
+	connect(cp_tth,SIGNAL(clicked()),tthbox,SLOT(selectAll()));
+	connect(cp_magnet,SIGNAL(clicked()),magnetbox,SLOT(selectAll()));
+	connect(cp_file,SIGNAL(clicked()),filebox,SLOT(copy()));
+	connect(cp_tth,SIGNAL(clicked()),tthbox,SLOT(copy()));
+	connect(cp_magnet,SIGNAL(clicked()),magnetbox,SLOT(copy()));
 	filebox->setText(a);
 	tthbox->setText(b);
 	magnetbox->setText(c);

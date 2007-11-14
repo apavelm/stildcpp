@@ -237,6 +237,8 @@ void MainWindowImpl::createActions()
 
 	
 	connect(actionSettings, SIGNAL(triggered()), this, SLOT(PreferencesFunc()));
+	connect(actionReconnect, SIGNAL(triggered()), this, SLOT(reconnectFunc()));
+	
 
 	connect(actionDonate, SIGNAL(triggered()), this, SLOT(DonateFunc()));
 	connect(actionHomepage, SIGNAL(triggered()), this, SLOT(HomepageFunc()));
@@ -663,6 +665,20 @@ void MainWindowImpl::show_tthFunc()
 {
 	new TthDialog(this,thrdGetTTh.getA(),thrdGetTTh.getB(),thrdGetTTh.getC());
 	actionGet_TTH_for_file->setEnabled(true);
+}
+
+void MainWindowImpl::reconnectFunc()
+{
+	int i = m_tabwin->currentIndex();
+	if ( (i>-1)&&(m_tabwin->count()>0) )
+	{
+		MdiChild *p = static_cast<MdiChild *>(m_tabwin->widget(i));
+		if (p->type==1)
+		{
+			HubWindow *v = static_cast<HubWindow *>(p);
+			v->ReConnect();
+		}
+	}
 }
 
 void MainWindowImpl::openfilelistFunc()

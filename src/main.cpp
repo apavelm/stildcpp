@@ -29,7 +29,7 @@
 #include "mdi_c.h"
 #include "defs.h"
 #include "config.h"
-//#include <QtDebug>
+#include <QtDebug>
 //
 #include "client/stdinc.h"
 #include "client/DCPlusPlus.h"

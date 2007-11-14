@@ -18,29 +18,58 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "quickconnectdlg.h"
+#ifndef STIL_TEXTVIEW
+#define STIL_TEXTVIEW
 
-TQuickConnectDialog::TQuickConnectDialog(QWidget *parent) : QDialog(parent) 
+#include <QTextEdit>
+#include <QMimeData>
+#include <QTextCursor>
+
+class StilTextView : public QTextEdit
 {
-	setupUi(this);
-	setAttribute(Qt::WA_DeleteOnClose, true);
+	Q_OBJECT
+public:
+	StilTextView(QWidget *parent = 0);
 
-	AdrLabel->setText(tr("Input Hub Address below:"));
-	IconLabel->setPixmap(QPixmap(":/images/QuickCon.png"));	
-	
-	#ifdef _DEBUG
-		adrline->setText("localhost:4111");
-	#else
-		adrline->setText("");
-	#endif
-	
-	connect(this,SIGNAL(accepted()),this,SLOT(okFunc()));
-	
-	show();
-}
+	bool atBottom();
 
-void TQuickConnectDialog::okFunc()
-{
-	QString a=adrline->text();
-	emit con_pressed(a);
-}
+	virtual void appendText(const QString &text);	
+
+	QString getHtml() const;
+	
+	struct Selection {
+		int start, end;
+	};
+	Selection saveSelection(QTextCursor &cursor);
+	void restoreSelection(QTextCursor &cursor, Selection selection);
+	
+public slots:
+	void scrollToBottom();
+	void scrollToTop();
+	
+protected:
+	// make these functions unusable, because they modify
+	// document structure and we can't override them to
+	// handle Icons correctly
+	void append(const QString &) { }
+	void toHtml() const { }
+	void toPlainText() const { }
+	void insertHtml(const QString &) { }
+	void insertPlainText(const QString &) { }
+	void setHtml(const QString &) { }
+	void setPlainText(const QString &) { }
+
+	// reimplemented
+	void contextMenuEvent(QContextMenuEvent *e);
+	void mouseMoveEvent(QMouseEvent *e);
+	void mousePressEvent(QMouseEvent *e);
+	void mouseReleaseEvent(QMouseEvent *e);
+	QMimeData *createMimeDataFromSelection() const;
+	void resizeEvent(QResizeEvent *);
+
+	//class Private;
+//private:
+//	Private *d;
+};
+
+#endif

@@ -170,6 +170,7 @@ private slots:
 	void GetTTHFunc();
 	void PreferencesFunc();
 	void FavHubListFunc();
+	void reconnectFunc();
 	void fQuickConFunc();
 	void statusbarcheck(); // if StatusBar Checked in menu @View@
 	

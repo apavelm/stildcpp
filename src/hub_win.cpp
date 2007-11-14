@@ -35,9 +35,19 @@ HubWindow::HubWindow(QWidget *parent, const dcpp::tstring& url) : MdiChild(paren
 {	
 	setupUi(this);
 	type = 1;
-	idText = dcpp::Text::fromT(url).c_str();
+	idText = StilUtils::TstrtoQ(url);
 	
-	setWindowTitle(tr("Hub: ")+dcpp::Text::fromT(url).c_str());
+	// UserList in LeftSide
+	/*
+	if (_option_left_side) 
+		{
+			QWidget *w1 = splitter->widget(0);
+			splitter->addWidget(w1);
+		}
+	*/
+	
+	
+	setWindowTitle(tr("Hub: ")+StilUtils::TstrtoQ(url));
 	editor->clear();
 	setupeditor();
 	

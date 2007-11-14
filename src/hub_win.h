@@ -23,6 +23,7 @@
 
 #include <QFile>
 #include <QUrl>
+#include <QtDebug>
 
 #include "highlighter.h"
 #include "mdi_c.h"
