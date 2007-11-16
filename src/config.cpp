@@ -37,23 +37,29 @@ const char * AppSettingsMgr::strTags[] =
 	"TestValue"
 };
 
+void AppSettingsMgr::writeDefs()
+{
+	intDefaults << 1 << 1 << 1 << 0 << 1 << 0 << 10 << 0;
+	strDefaults << "bra-bra-bra";
+}
+
 AppSettingsMgr::AppSettingsMgr()
+{
+	setDefaults();
+}
+
+void AppSettingsMgr::setDefaults()
 {
 	intSettings.clear();
 	intDefaults.clear();
 	strSettings.clear();
 	strDefaults.clear();
 	
-	intDefaults << 1 << 1 << 1 << 0 << 1 << 0 << 10 << 0;
-	strDefaults << "bra-bra-bra";
+	writeDefs();
 	
 	intSettings = intDefaults;
 	strSettings = strDefaults;
-	setDefaults();
-}
-
-void AppSettingsMgr::setDefaults()
-{
+	
 	xml.Clear();
 	TiXmlDeclaration * decl = new TiXmlDeclaration( "1.0", "utf-8", "" );
 	xml.LinkEndChild( decl );
@@ -99,9 +105,15 @@ void AppSettingsMgr::setDefaults()
 	
 }
 
-int AppSettingsMgr::load(const QString &aFileName)
+const int AppSettingsMgr::load(const QString &aFileName)
 {
-	bool sv = false;
+	bool sv = true;
+	bool sv2 = true;
+	bool fv[i_LAST];
+	bool fv2[s_LAST];
+	for (int i=0; i<i_LAST;i++) fv[i] = true;
+	for (int i=0; i<s_LAST;i++) fv2[i] = true;
+	
 	xml.Clear();
 	if (!xml.LoadFile(aFileName.toStdString()))  
 		{
@@ -136,6 +148,7 @@ int AppSettingsMgr::load(const QString &aFileName)
 	{
 		if (!strcmp(child->Value(),"int"))
 		{
+			sv = false;
 			pNode = child->FirstChildElement();
 			while (pNode)
 			{
@@ -147,11 +160,12 @@ int AppSettingsMgr::load(const QString &aFileName)
 				for( int i=0; i<i_LAST; i++)
 				if ( !strcmp(tag, intTags[i]) ) 
 				{
+					fv[i]=false;
 					if ( TIXML_SUCCESS != pm->QueryIntAttribute("value", &intSettings[i])) 
 					{
 						fprintf(stderr, "unable to load '%s' setting. Using default value instead\n", intTags[i]);
 						intSettings[i]=intDefaults[i];
-						sv = true;
+						return 4;
 					}
 					break;
 				}
@@ -163,6 +177,7 @@ int AppSettingsMgr::load(const QString &aFileName)
 		else
 		if (!strcmp(child->Value(),"str"))
 		{
+			sv2 = false;
 			pNode = child->FirstChildElement();
 			const char * tst ="";
 			while (pNode)
@@ -173,6 +188,7 @@ int AppSettingsMgr::load(const QString &aFileName)
 				for( int i=0; i<s_LAST; i++)
 				if ( !strcmp(tag,strTags[i]) )
 				{
+					fv2[i] = false;
 					strSettings[i] = tst;
 					break;
 				}
@@ -182,7 +198,19 @@ int AppSettingsMgr::load(const QString &aFileName)
 			}
 		}
 	}
-	if (sv) { setDefaults(); save(); }
+	if ((sv)||(sv2)) return 4;
+	bool g = false;
+	for (int i=0;i<i_LAST;i++)
+		if (fv[i])
+		{
+			g = true; break;
+		}
+	if (!g)
+		for (int i=0;i<s_LAST;i++)
+		{
+			g = true; break;
+		}
+	if (g) return 4;
 	return 0;
 }
 
@@ -199,11 +227,14 @@ void AppSettingsMgr::save()
 	save(tmp);
 }
 
-int AppSettingsMgr::load()
+const int AppSettingsMgr::load()
 {
 	QString tmp(QString::fromStdString(dcpp::Util::getConfigPath()));
 	tmp+="stildcpp.xml";
-	return load(tmp);
+	const int r = load(tmp);
+	setDefaults();
+	save();
+	return r;
 }
 
 } //of namespace

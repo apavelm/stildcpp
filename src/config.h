@@ -50,15 +50,16 @@ class AppSettingsMgr: public dcpp::Singleton<AppSettingsMgr>
 {
 public:
 
-	int load();
+	const int load();
 	void save();
-	int load(const QString &);
+	const int load(const QString &);
 	void save(const QString &);
 	
 	void setDefaults();
-	int get(int numname) { if ((numname<i_LAST)&&(numname>-1)) return intSettings[numname];else return -32000; }
+	void writeDefs();
+	const int get(int numname) { if ((numname<i_LAST)&&(numname>-1)) return intSettings[numname];else return -32000; }
 	const QString gets(int numname) { if ((numname<s_LAST)&&(numname>-1)) return strSettings[numname];else return ""; }
-	int getDef(int numname) { if ((numname<i_LAST)&&(numname>-1)) return intDefaults[numname];else return -32000; }
+	const int getDef(int numname) { if ((numname<i_LAST)&&(numname>-1)) return intDefaults[numname];else return -32000; }
 	const QString getDefs(int numname) { if ((numname<s_LAST)&&(numname>-1)) return strDefaults[numname];else return ""; }
 	void set(int numname, int value) { intSettings[numname]=value; }
 	void sets(int numname, QString &c) { strSettings[numname]=c; }
