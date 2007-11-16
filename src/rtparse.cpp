@@ -18,30 +18,77 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <QTextDocument>
-#include <QTextCursor>
-#include <QApplication>
-#include <QTextDocumentFragment>
-#include <QTextCharFormat>
-#include <QAbstractTextDocumentLayout> // for QTextObjectInterface
-#include <QPainter>
-#include <QRegExp>
-#include <QVariant>
-#include <QFont>
-#include <QList>
-#include <QQueue>
-#include <QTextFrame>
-#include <QtDebug>
+#include "rtparse.h"
+#include "textutil.h"
 
-#include "iconset.h"
+#include <QTextDocument> // for Qt::escape()
 
-class StilRichText
+RTParse::RTParse(const QString &_in)
 {
-public:
-	static void install(QTextDocument *doc);
-	static void ensureTextLayouted(QTextDocument *doc, int documentWidth, Qt::Alignment align = Qt::AlignLeft, Qt::LayoutDirection layoutDirection = Qt::LeftToRight, bool textWordWrap = true);
-	static void setText(QTextDocument *doc, const QString &text);
-	static void insertIcon(QTextCursor &cursor, const QString &iconName, const QString &iconText);
-	static void appendText(QTextDocument *doc, QTextCursor &cursor, const QString &text);
-	static QString convertToPlainText(const QTextDocument *doc);
-};
+	in = _in;
+	v_atEnd = in.length() == 0;
+	v_at = 0;
+	//printf("rtparse:\n");
+}
+
+const QString &RTParse::output() const
+{
+	//printf("final: [%s]\n", out.latin1());
+	return out;
+}
+
+QString RTParse::next()
+{
+	if(v_atEnd)
+		return "";
+
+	// if we're at a tag, append it to the output
+	if(in.at(v_at) == '<') {
+		QString s;
+		int n = in.indexOf('>', v_at);
+		if(n == -1) {
+			s = in.mid(v_at);
+		}
+		else {
+			++n;
+			s = in.mid(v_at, n-v_at);
+		}
+		v_at += s.length();
+		out += s;
+	}
+
+	// now find the next tag, and grab the text in between
+	QString s;
+	int x = in.indexOf('<', v_at);
+	if(x == -1) {
+		s = in.mid(v_at);
+		v_atEnd = true;
+	}
+	else {
+		s = in.mid(v_at, x-v_at);
+	}
+	v_at += s.length();
+	//printf("chunk = '%s'\n", s.latin1());
+	s = TextUtil::resolveEntities(s);
+	//printf("resolved = '%s'\n", s.latin1());
+	return s;
+}
+
+bool RTParse::atEnd() const
+{
+	return v_atEnd;
+}
+
+void RTParse::putPlain(const QString &s)
+{
+	//printf("got this: [%s]\n", s.latin1());
+	out += Qt::escape(s);
+	//printf("changed to this: [%s]\n", expandEntities(s).latin1());
+}
+
+void RTParse::putRich(const QString &s)
+{
+	out += s;
+	//printf("+ '%s'\n", s.latin1());
+}
+

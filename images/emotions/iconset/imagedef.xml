@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<stil_smile_pack>
+    <meta>
+        <name>NoNaMe</name>
+        <version>1.0</version>
+        <description>Desc</description>
+        <author>Ya</author>
+	<homeurl>http://url.com</homeurl>
+    </meta>
+    <emo>
+	<smile>icon1</smile>
+	<text>:)</text>
+	<text>=)</text>
+        <icon>grin.png</icon>
+    </emo>
+</stil_smile_pack>

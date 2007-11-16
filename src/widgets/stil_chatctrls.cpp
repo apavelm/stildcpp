@@ -373,7 +373,7 @@ QSize LineEdit::minimumSizeHint() const
 QSize LineEdit::sizeHint() const
 {
 	QSize sh = QTextEdit::sizeHint();
-	sh.setHeight(int(document()->documentLayout()->documentSize().height()));
+	sh.setHeight(int(document()->documentLayout()->documentSize().height())+6); //FIXME: "6" - Magic Number
 	sh += QSize(0, QFrame::lineWidth() * 2);
 	((QTextEdit*)this)->setMaximumHeight(sh.height());
 	return sh;
@@ -382,13 +382,11 @@ QSize LineEdit::sizeHint() const
 void LineEdit::resizeEvent(QResizeEvent* e)
 {
 	ChatEdit::resizeEvent(e);
-	QTimer::singleShot(0, this, SLOT(updateScrollBar()));
 }
  
 void LineEdit::recalculateSize()
 {
 	updateGeometry();
-	QTimer::singleShot(0, this, SLOT(updateScrollBar()));
 }
 
 void LineEdit::updateScrollBar()

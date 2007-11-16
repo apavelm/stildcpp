@@ -18,30 +18,27 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <QTextDocument>
-#include <QTextCursor>
-#include <QApplication>
-#include <QTextDocumentFragment>
-#include <QTextCharFormat>
-#include <QAbstractTextDocumentLayout> // for QTextObjectInterface
-#include <QPainter>
-#include <QRegExp>
-#include <QVariant>
-#include <QFont>
-#include <QList>
-#include <QQueue>
-#include <QTextFrame>
-#include <QtDebug>
+#ifndef RTPARSE_H
+#define RTPARSE_H
 
-#include "iconset.h"
+#include <QString>
 
-class StilRichText
+class RTParse
 {
 public:
-	static void install(QTextDocument *doc);
-	static void ensureTextLayouted(QTextDocument *doc, int documentWidth, Qt::Alignment align = Qt::AlignLeft, Qt::LayoutDirection layoutDirection = Qt::LeftToRight, bool textWordWrap = true);
-	static void setText(QTextDocument *doc, const QString &text);
-	static void insertIcon(QTextCursor &cursor, const QString &iconName, const QString &iconText);
-	static void appendText(QTextDocument *doc, QTextCursor &cursor, const QString &text);
-	static QString convertToPlainText(const QTextDocument *doc);
+	RTParse(const QString &);
+
+	const QString &output() const;
+
+	QString next();
+	bool atEnd() const;
+	void putPlain(const QString &);
+	void putRich(const QString &);
+
+private:
+	QString in, out;
+	int v_at;
+	bool v_atEnd;
 };
+
+#endif

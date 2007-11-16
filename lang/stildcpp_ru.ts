@@ -7,6 +7,11 @@
         <source>ADL Search</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../src/adlsearch.cpp" line="28"/>
+        <source></source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DialogFileList</name>
@@ -28,17 +33,17 @@
         <source>DL Queue</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="../src/dl_queue.cpp" line="27"/>
-        <source></source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>DownloadFinishedWindow</name>
     <message>
         <location filename="../src/dlfin.cpp" line="28"/>
         <source>DL Fin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/dlfin.cpp" line="27"/>
+        <source></source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -49,17 +54,17 @@
         <source>Favorite Hubs</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../src/favHubLstWin.cpp" line="29"/>
+        <source></source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FavoriteUsersWindow</name>
     <message>
         <location filename="../src/FavUsr.cpp" line="28"/>
         <source>Fav_Usr</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/FavUsr.cpp" line="27"/>
-        <source></source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -92,7 +97,7 @@
 <context>
     <name>HubWindow</name>
     <message>
-        <location filename="../src/hub_win.cpp" line="40"/>
+        <location filename="../src/hub_win.cpp" line="50"/>
         <source>Hub: </source>
         <translation type="unfinished"></translation>
     </message>
@@ -102,11 +107,6 @@
     <message>
         <location filename="../src/IgnUsr.cpp" line="28"/>
         <source>Ign_Usr</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/IgnUsr.cpp" line="27"/>
-        <source></source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -416,28 +416,36 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindowimpl.cpp" line="675"/>
+        <location filename="../src/mainwindowimpl.cpp" line="691"/>
         <source>Select File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindowimpl.cpp" line="657"/>
+        <location filename="../src/mainwindowimpl.cpp" line="659"/>
         <source>All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindowimpl.cpp" line="298"/>
+        <location filename="../src/mainwindowimpl.cpp" line="300"/>
         <source>Ctrl+2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindowimpl.cpp" line="301"/>
+        <location filename="../src/mainwindowimpl.cpp" line="303"/>
         <source>Ctrl+3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindowimpl.cpp" line="675"/>
+        <location filename="../src/mainwindowimpl.cpp" line="691"/>
         <source>File lists (*.xml.bz2);;All Files (*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>MdiChild</name>
+    <message>
+        <location filename="../src/mdi_c.cpp" line="27"/>
+        <source></source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -872,31 +880,26 @@
         <source>Public Hubs</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="../src/publichubs.cpp" line="29"/>
-        <source></source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/main.cpp" line="62"/>
+        <location filename="../src/main.cpp" line="57"/>
         <source>Starting...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="78"/>
+        <location filename="../src/main.cpp" line="73"/>
         <source>Creating tray icon...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="81"/>
+        <location filename="../src/main.cpp" line="76"/>
         <source>Systray</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="81"/>
+        <location filename="../src/main.cpp" line="76"/>
         <source>I couldn&apos;t detect any system tray on this system.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -931,6 +934,11 @@
     <message>
         <location filename="../src/sspy.cpp" line="29"/>
         <source>SearchSpy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/sspy.cpp" line="28"/>
+        <source></source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -984,10 +992,43 @@
     </message>
 </context>
 <context>
+    <name>URLObject</name>
+    <message>
+        <location filename="../src/widgets/stil_textview.cpp" line="57"/>
+        <source>Open mail composer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/stil_textview.cpp" line="59"/>
+        <source>Open web browser</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/stil_textview.cpp" line="61"/>
+        <source>Send massage to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/stil_textview.cpp" line="63"/>
+        <source>Open Magnet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/stil_textview.cpp" line="65"/>
+        <source>Copy link</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>UploadFinishedWindow</name>
     <message>
         <location filename="../src/ulfin.cpp" line="28"/>
         <source>UL Fin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/ulfin.cpp" line="27"/>
+        <source></source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1073,8 +1114,28 @@
 <context>
     <name>mdiHUBwin</name>
     <message>
-        <location filename="../ui/HUBWindow.ui" line="29"/>
+        <location filename="../ui/HUBWindow.ui" line="85"/>
         <source>Send</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/HUBWindow.ui" line="49"/>
+        <source>Nick</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/HUBWindow.ui" line="54"/>
+        <source>Share</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/HUBWindow.ui" line="59"/>
+        <source>Description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/HUBWindow.ui" line="64"/>
+        <source>Email</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1094,7 +1155,7 @@
 <context>
     <name>mdiPMwin</name>
     <message>
-        <location filename="../ui/PMWindow.ui" line="13"/>
+        <location filename="../ui/PMWindow.ui" line="28"/>
         <source>Send</source>
         <translation type="unfinished"></translation>
     </message>

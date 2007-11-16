@@ -20,17 +20,7 @@
 
 #include "stil_richtext.h"
 
-#include <QApplication>
-#include <QTextDocumentFragment>
-#include <QTextCharFormat>
-#include <QAbstractTextDocumentLayout> // for QTextObjectInterface
-#include <QPainter>
-#include <QRegExp>
-#include <QVariant>
-#include <QFont>
-#include <QList>
-#include <QQueue>
-#include <QTextFrame>
+static const int IconFormatType = 0x1000;
 
 
 //----------------------------------------------------------------------------
@@ -53,7 +43,7 @@ TextIconFormat::TextIconFormat(const QString &iconName, const QString &text)
 {
 	Q_UNUSED(text);
 
-	//setObjectType(IconFormatType);
+	setObjectType(IconFormatType);
 	QTextFormat::setProperty(IconName, iconName);
 	QTextFormat::setProperty(IconText, text);
 
@@ -66,7 +56,7 @@ TextIconFormat::TextIconFormat(const QString &iconName, const QString &text)
 
 class TextIconHandler : public QObject, public QTextObjectInterface
 {
-	Q_OBJECT
+	//Q_OBJECT
 	Q_INTERFACES(QTextObjectInterface)
 public:
 	TextIconHandler(QObject *parent = 0);
@@ -85,7 +75,7 @@ QSizeF TextIconHandler::intrinsicSize(QTextDocument *doc, int posInDocument, con
 	Q_UNUSED(posInDocument)
 	const QTextCharFormat charFormat = format.toCharFormat();
 
-	//return IconsetFactory::iconPixmap(charFormat.stringProperty(TextIconFormat::IconName)).size();
+	return IconsetFactory::iconPixmap(charFormat.stringProperty(TextIconFormat::IconName)).size();
 }
 
 void TextIconHandler::drawObject(QPainter *painter, const QRectF &rect, QTextDocument *doc, int posInDocument, const QTextFormat &format)
@@ -93,9 +83,9 @@ void TextIconHandler::drawObject(QPainter *painter, const QRectF &rect, QTextDoc
 	Q_UNUSED(doc);
 	Q_UNUSED(posInDocument);
 	const QTextCharFormat charFormat = format.toCharFormat();
-	const QPixmap pixmap ;//= IconsetFactory::iconPixmap(charFormat.stringProperty(TextIconFormat::IconName));
+	const QPixmap pixmap = IconsetFactory::iconPixmap(charFormat.stringProperty(TextIconFormat::IconName));
 
-	painter->drawPixmap(rect, pixmap, pixmap.rect());	
+	painter->drawPixmap(rect, pixmap, pixmap.rect());
 }
 
 //----------------------------------------------------------------------------
@@ -113,7 +103,7 @@ void StilRichText::install(QTextDocument *doc)
 	if (!handler)
 		handler = new TextIconHandler(qApp);
 	
-	//doc->documentLayout()->registerHandler(IconFormatType, handler);
+	doc->documentLayout()->registerHandler(IconFormatType, handler);
 }
 
 /**
@@ -218,7 +208,8 @@ static QString convertIconsToObjectReplacementCharacters(QString text, TextIconF
 		Q_ASSERT(end != -1);
 		
 		QString fragment = work.mid(start, end - start);
-		if (rxName.indexIn(fragment) != -1) {
+		if (rxName.indexIn(fragment) != -1) 
+		{
 			QString iconName = unescape(rxName.capturedTexts()[1]);
 			QString iconText;
 			if (rxText.indexIn(fragment) != -1)
@@ -230,7 +221,6 @@ static QString convertIconsToObjectReplacementCharacters(QString text, TextIconF
 		
 		work = work.mid(end + 1);
 	}
-	
 	return result + preserveOriginalObjectReplacementCharacters(work, queue);
 }
 
@@ -345,7 +335,7 @@ QString StilRichText::convertToPlainText(const QTextDocument *doc)
 	for (int i = 1; i < parts.size(); ++i) {
 		if (!queue.isEmpty()) {
 			QTextCharFormat format = queue.dequeue();
-//			if ((format).objectType() == IconFormatType) 
+			if ((format).objectType() == IconFormatType) 
 			{
 				result += format.stringProperty(TextIconFormat::IconText);
 			}

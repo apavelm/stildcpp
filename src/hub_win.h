@@ -28,6 +28,7 @@
 #include "highlighter.h"
 #include "mdi_c.h"
 #include "config.h"
+#include "widgets/iconset.h"
 
 //
 #include "client/stdinc.h"
@@ -93,6 +94,8 @@ public:
 
 	//static void closeDisconnected();
 	//static void resortUsers();
+private slots:
+	void sendFunc();
 };
 
 #endif // __HUB_WIN_H__

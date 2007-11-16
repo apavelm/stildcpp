@@ -23,7 +23,79 @@
 
 #include <QTextEdit>
 #include <QMimeData>
+#include <QClipboard>
 #include <QTextCursor>
+#include <QMenu>
+#include <QScrollBar>
+#include <QAbstractTextDocumentLayout>
+#include <QTextDocumentFragment>
+#include <QTextFragment>
+#include <QTextEdit>
+
+#include "stil_richtext.h"
+
+
+
+// TODO: This class should be further refactored into more modular system.
+// It should allow registering/unregistering of QRegExps corresponding to
+// different actions. Also class's base API should be made public.
+//
+// Examples of future use:
+// URLObject::getInstance()::registerAction(QRegExp("^http:\/\/"), act_open_browser);
+
+class URLObject : public QObject
+{
+	Q_OBJECT
+protected:
+	URLObject();
+public:
+	static URLObject *getInstance();
+	
+	QMenu *createPopupMenu(const QString &lnk);
+
+public slots:
+
+	void popupAction() { emit openURL(_link); }
+	void popupAction(QString lnk) { emit openURL(lnk); }
+
+	void popupCopy(QString lnk)
+	{
+		QApplication::clipboard()->setText( copyString(lnk), QClipboard::Clipboard );
+		if(QApplication::clipboard()->supportsSelection())
+			QApplication::clipboard()->setText( copyString(lnk), QClipboard::Selection );
+	
+	}
+
+	void popupCopy() { popupCopy(_link); }
+signals:
+	void openURL(QString);
+private:
+	QString _link;
+	QAction *_act_mailto, *_act_magnet, *_act_send_message, *_act_browser, *_act_copy;
+	
+	QString copyString(QString from)
+	{
+		QString l = from;
+
+		int colon = l.indexOf(':');
+		if ( colon == -1 )
+			colon = 0;
+		QString service = l.left( colon );
+
+		if ( service == "mailto" || service == "jabber" || service == "jid" || service == "xmpp" || service == "atstyle") {
+			if ( colon > -1 )
+				l = l.mid( colon + 1 );
+
+			while ( l[0] == '/' )
+				l = l.mid( 1 );
+		}
+
+		return l;
+	}
+	
+};
+
+///////////////////////////////////////////////////////
 
 class StilTextView : public QTextEdit
 {
@@ -32,8 +104,10 @@ public:
 	StilTextView(QWidget *parent = 0);
 
 	bool atBottom();
+	QString anchorOnMousePress;
+	bool hadSelectionOnMousePress;
 
-	virtual void appendText(const QString &text);	
+	virtual void appendText(const QString &text);
 
 	QString getHtml() const;
 	
@@ -42,6 +116,10 @@ public:
 	};
 	Selection saveSelection(QTextCursor &cursor);
 	void restoreSelection(QTextCursor &cursor, Selection selection);
+	
+	//QString fragmentToPlainText(const QTextFragment &fragment);
+	//QString blockToPlainText(const QTextBlock &block);
+	//QString documentFragmentToPlainText(const QTextDocument &doc, QTextFrame::Iterator frameIt);
 	
 public slots:
 	void scrollToBottom();
@@ -59,6 +137,8 @@ protected:
 	void setHtml(const QString &) { }
 	void setPlainText(const QString &) { }
 
+	void insertFromMimeData( const QMimeData *source );
+
 	// reimplemented
 	void contextMenuEvent(QContextMenuEvent *e);
 	void mouseMoveEvent(QMouseEvent *e);
@@ -66,10 +146,6 @@ protected:
 	void mouseReleaseEvent(QMouseEvent *e);
 	QMimeData *createMimeDataFromSelection() const;
 	void resizeEvent(QResizeEvent *);
-
-	//class Private;
-//private:
-//	Private *d;
 };
 
 #endif
