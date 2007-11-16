@@ -207,6 +207,7 @@ const int AppSettingsMgr::load(const QString &aFileName)
 		}
 	if (!g)
 		for (int i=0;i<s_LAST;i++)
+		if (fv2[i])
 		{
 			g = true; break;
 		}
