@@ -29,7 +29,6 @@
 #include "mdi_c.h"
 #include "defs.h"
 #include "config.h"
-#include <QtDebug>
 //
 #include "client/stdinc.h"
 #include "client/DCPlusPlus.h"
@@ -45,12 +44,8 @@ int main(int argc, char ** argv)
 	AppSettings::AppSettingsMgr::newInstance();
 	dcpp::startup(NULL,NULL);
 	
-	if (AppSettings::AppSettingsMgr::getInstance()->load()!=0) 
-	{
-		fprintf(stdout, "\nConfiguration file not found.\nUsing default values...\n");
-		AppSettings::AppSettingsMgr::getInstance()->setDefaults();
-		AppSettings::AppSettingsMgr::getInstance()->save();
-	}
+	if (AppSettings::AppSettingsMgr::getInstance()->load()!=0) fprintf(stdout, "\nConfiguration file not found.\nUsing default values...\n");
+
 	
 	QSplashScreen *splash;
 	Qt::Alignment alignBC = Qt::AlignBottom | Qt::AlignHCenter;

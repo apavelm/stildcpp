@@ -144,7 +144,11 @@ HEADERS = src/mainwindowimpl.h \
  src/UserInfoBase.h \
  src/indexing.h \
  src/widgets/stil_textview.h \
- src/widgets/stil_chatctrls.h
+ src/widgets/stil_chatctrls.h \
+ src/widgets/stil_richtext.h \
+ src/widgets/iconset.h \
+ src/textutil.h \
+ src/rtparse.h
 SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
  src/frmAbout.cpp \
@@ -227,8 +231,12 @@ SOURCES = src/mainwindowimpl.cpp \
  src/UserInfoBase.cpp \
  src/indexing.cpp \
  src/widgets/stil_textview.cpp \
- src/widgets/stil_chatctrls.cpp
-RESOURCES += src/stildcpp.qrc src/smiles.qrc src/langs.qrc
+ src/widgets/stil_chatctrls.cpp \
+ src/widgets/stil_richtext.cpp \
+ src/widgets/iconset.cpp \
+ src/textutil.cpp \
+ src/rtparse.cpp
+RESOURCES += src/stildcpp.qrc src/langs.qrc
 LIBS += -lssl -lbz2 -lcrypto
 TRANSLATIONS = lang/stildcpp_ru.ts
 DEFINES = _DEBUG \

@@ -27,9 +27,17 @@
 
 class TthDialog : public QDialog, private Ui::tthdlg
 { 
-	//Q_OBJECT
+	Q_OBJECT
 public:
 	TthDialog(QWidget *parent,const QString &,const QString &,const QString &);
+private:
+	struct Selection { int start, length; };
+	Selection saveSelection(QLineEdit &t);
+	void restoreSelection(QLineEdit &t, Selection selection);
+private slots:
+	void fcp1();
+	void fcp2();
+	void fcp3();
 };
 
 #endif // __TTHDIAL_H__
