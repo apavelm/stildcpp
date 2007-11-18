@@ -44,7 +44,7 @@ int main(int argc, char ** argv)
 	AppSettings::AppSettingsMgr::newInstance();
 	dcpp::startup(NULL,NULL);
 	
-	if (AppSettings::AppSettingsMgr::getInstance()->load()!=0) fprintf(stdout, "\nConfiguration file not found.\nUsing default values...\n");
+	if (AppSettings::AppSettingsMgr::getInstance()->load()!=0) fprintf(stdout, "Error during loading configuration file!.\nUsing default values instead...\n");
 
 	
 	QSplashScreen *splash;

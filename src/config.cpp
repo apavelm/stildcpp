@@ -41,6 +41,8 @@ void AppSettingsMgr::writeDefs()
 {
 	intDefaults << 1 << 1 << 1 << 0 << 1 << 0 << 10 << 0;
 	strDefaults << "bra-bra-bra";
+	intSettings = intDefaults;
+	strSettings = strDefaults;
 }
 
 AppSettingsMgr::AppSettingsMgr()
@@ -54,11 +56,7 @@ void AppSettingsMgr::setDefaults()
 	intDefaults.clear();
 	strSettings.clear();
 	strDefaults.clear();
-	
 	writeDefs();
-	
-	intSettings = intDefaults;
-	strSettings = strDefaults;
 	
 	xml.Clear();
 	TiXmlDeclaration * decl = new TiXmlDeclaration( "1.0", "utf-8", "" );
@@ -115,13 +113,8 @@ const int AppSettingsMgr::load(const QString &aFileName)
 	for (int i=0; i<s_LAST;i++) fv2[i] = true;
 	
 	xml.Clear();
-	if (!xml.LoadFile(aFileName.toStdString()))  
-		{
-			setDefaults();
-			save();
-			return 1;
-		}
-	
+	if (!xml.LoadFile(aFileName.toStdString())) return 1;
+
 	TiXmlHandle hDoc(&xml);
 	TiXmlHandle hRoot(0);
 	TiXmlElement* pElem;
@@ -131,13 +124,7 @@ const int AppSettingsMgr::load(const QString &aFileName)
 	TiXmlElement* pm;
 	
 	pElem=hDoc.FirstChildElement().Element();
-	if (!pElem) 
-		{
-			setDefaults();
-			save();
-			return 2;
-		}
-	
+	if (!pElem) return 2;
 
 	hRoot=TiXmlHandle(pElem);
 	parent = hRoot.Node();
@@ -156,7 +143,6 @@ const int AppSettingsMgr::load(const QString &aFileName)
 				while (pm)
 				{
 					const char * tag = pm->Value();
-
 				for( int i=0; i<i_LAST; i++)
 				if ( !strcmp(tag, intTags[i]) ) 
 				{
@@ -211,8 +197,7 @@ const int AppSettingsMgr::load(const QString &aFileName)
 		{
 			g = true; break;
 		}
-	if (g) return 4;
-	return 0;
+	if (g) return 4; else return 0;
 }
 
 void AppSettingsMgr::save(const QString &aFileName) 
@@ -233,8 +218,11 @@ const int AppSettingsMgr::load()
 	QString tmp(QString::fromStdString(dcpp::Util::getConfigPath()));
 	tmp+="stildcpp.xml";
 	const int r = load(tmp);
-	setDefaults();
-	save();
+	if (r)
+	{
+		setDefaults();
+		save();
+	}
 	return r;
 }
 
