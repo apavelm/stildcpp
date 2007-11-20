@@ -130,7 +130,8 @@ void FileListDlg::openContent(DirectoryListing::Directory::Ptr contDirPtr)
 		
 		size = (*dirIter)->getTotalSize(false);
 		contentItem = new QTreeWidgetItem(contentTree, QStringList(dirName));
-		contentItem -> setText(1, StilUtils::fmtBytes(size));
+		//contentItem -> setText(1, StilUtils::fmtBytes(size));
+		contentItem -> setText(1, QString::fromStdString(Util::formatBytes(size)));
 		contentItem -> setText(2, tr("Dir"));
 		contentItem -> setText(4, QString::fromStdString(Util::formatExactSize(size)));
 		contentItem -> setIcon(0, folderIcon);
@@ -143,7 +144,8 @@ void FileListDlg::openContent(DirectoryListing::Directory::Ptr contDirPtr)
 		size = (*fileIter)->getSize();
 		
 		contentItem = new QTreeWidgetItem(contentTree, QStringList(fileName));
-		contentItem -> setText(1, StilUtils::fmtBytes(size));
+		//contentItem -> setText(1, StilUtils::fmtBytes(size));
+		contentItem -> setText(1, QString::fromStdString(Util::formatBytes(size)));
 		contentItem -> setText(2, tr("File"));
 		contentItem -> setText(3, QString::fromStdString((*fileIter)->getTTH().toBase32()));
 		contentItem -> setText(4, QString::fromStdString(Util::formatExactSize(size)));
