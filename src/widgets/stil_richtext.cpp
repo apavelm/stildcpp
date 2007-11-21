@@ -18,52 +18,26 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+
 #include "stil_richtext.h"
 
-static const int IconFormatType = 0x1000;
+static const int IconFormatType = QTextFormat::UserObject + 1;
 
 
 //----------------------------------------------------------------------------
 // TextIconFormat
 //----------------------------------------------------------------------------
 
-class TextIconFormat : public QTextCharFormat
+TextIconFormat::TextIconFormat(const QString &iconName, const QString &text) : QTextCharFormat()
 {
-public:
-	TextIconFormat(const QString &iconName, const QString &text);
-
-	enum Property {
-		IconName = QTextFormat::UserProperty + 1,
-		IconText = QTextFormat::UserProperty + 2
-	};
-};
-
-TextIconFormat::TextIconFormat(const QString &iconName, const QString &text)
-	: QTextCharFormat()
-{
-	Q_UNUSED(text);
-
 	setObjectType(IconFormatType);
 	QTextFormat::setProperty(IconName, iconName);
 	QTextFormat::setProperty(IconText, text);
-
-	// TODO: handle animations
 }
 
 //----------------------------------------------------------------------------
 // IconTextObjectInterface
 //----------------------------------------------------------------------------
-
-class TextIconHandler : public QObject, public QTextObjectInterface
-{
-	//Q_OBJECT
-	Q_INTERFACES(QTextObjectInterface)
-public:
-	TextIconHandler(QObject *parent = 0);
-
-	virtual QSizeF intrinsicSize(QTextDocument *doc, int posInDocument, const QTextFormat &format);
-	virtual void drawObject(QPainter *painter, const QRectF &rect, QTextDocument *doc, int posInDocument, const QTextFormat &format);
-};
 
 TextIconHandler::TextIconHandler(QObject *parent) : QObject(parent)
 {
@@ -74,8 +48,7 @@ QSizeF TextIconHandler::intrinsicSize(QTextDocument *doc, int posInDocument, con
 	Q_UNUSED(doc);
 	Q_UNUSED(posInDocument)
 	const QTextCharFormat charFormat = format.toCharFormat();
-
-	return IconsetFactory::iconPixmap(charFormat.stringProperty(TextIconFormat::IconName)).size();
+	return IconsetFactory::instance()->iconPixmap(charFormat.stringProperty(TextIconFormat::IconName)).size();
 }
 
 void TextIconHandler::drawObject(QPainter *painter, const QRectF &rect, QTextDocument *doc, int posInDocument, const QTextFormat &format)
@@ -83,8 +56,7 @@ void TextIconHandler::drawObject(QPainter *painter, const QRectF &rect, QTextDoc
 	Q_UNUSED(doc);
 	Q_UNUSED(posInDocument);
 	const QTextCharFormat charFormat = format.toCharFormat();
-	const QPixmap pixmap = IconsetFactory::iconPixmap(charFormat.stringProperty(TextIconFormat::IconName));
-
+	const QPixmap pixmap = IconsetFactory::instance()->iconPixmap(charFormat.stringProperty(TextIconFormat::IconName));
 	painter->drawPixmap(rect, pixmap, pixmap.rect());
 }
 
@@ -92,42 +64,21 @@ void TextIconHandler::drawObject(QPainter *painter, const QRectF &rect, QTextDoc
 // StilRichText
 //----------------------------------------------------------------------------
 
-/**
- * You need to call this function on your QTextDocument to make it 
- * capable of displaying inline Icons. Uninstaller ships separately.
- */
 void StilRichText::install(QTextDocument *doc)
 {
 	Q_ASSERT(doc);
 	static TextIconHandler *handler = 0;
-	if (!handler)
-		handler = new TextIconHandler(qApp);
-	
+	if (!handler) handler = new TextIconHandler(qApp);
 	doc->documentLayout()->registerHandler(IconFormatType, handler);
 }
 
-/**
- * Make sure that QTextDocument has correctly layouted its text.
- */
+
+// Make sure that QTextDocument has correctly layouted its text.
 void StilRichText::ensureTextLayouted(QTextDocument *doc, int documentWidth, Qt::Alignment align, Qt::LayoutDirection layoutDirection, bool textWordWrap)
 {
-	// from QLabelPrivate::ensureTextLayouted
-
 	Q_UNUSED(textWordWrap);
 	Q_UNUSED(layoutDirection);
 	Q_UNUSED(align);
-	// bah, QTextDocumentLayout is private :-/
-	// QTextDocumentLayout *lout = qobject_cast<QTextDocumentLayout *>(doc->documentLayout());
-	// Q_ASSERT(lout);
-	// 
-	// int flags = (textWordWrap ? 0 : Qt::TextSingleLine) | align;
-	// flags |= (layoutDirection == Qt::RightToLeft) ? QTextDocumentLayout::RTL : QTextDocumentLayout::LTR;
-	// lout->setBlockTextFlags(flags);
-	// 
-	// if (textWordWrap) {
-	// 	// ensure that we break at words and not just about anywhere
-	// 	lout->setWordWrapMode(QTextOption::WordWrap);
-	// }
 
 	QTextFrameFormat fmt = doc->rootFrame()->frameFormat();
 	fmt.setMargin(0);
@@ -135,7 +86,6 @@ void StilRichText::ensureTextLayouted(QTextDocument *doc, int documentWidth, Qt:
 	doc->setTextWidth(documentWidth);
 }
 
-// TODO: FIXME: put this to common.h?
 static QString unescape(const QString& escaped)
 {
 	QString plain = escaped;
@@ -145,49 +95,20 @@ static QString unescape(const QString& escaped)
 	return plain;
 }
 
-/**
- * Inserts an StilIcon into document.
- * \param cursor this cursor is used to insert icon
- * \param iconName icon's name, by which it could be found in IconsetFactory
- * \param iconText icon's text, used when copy operation is performed
- */
-void StilRichText::insertIcon(QTextCursor &cursor, const QString &iconName, const QString &iconText)
-{
-	QTextCharFormat format = cursor.charFormat();
-	
-	TextIconFormat icon(iconName, iconText);
-	cursor.insertText(QString(QChar::ObjectReplacementCharacter), icon);
-	
-	cursor.setCharFormat(format);
-}
-
 typedef QQueue<TextIconFormat *> TextIconFormatQueue;
 
-/**
- * Adds null format to queue for all ObjectReplacementCharacters that were
- * already in the text. Returns passed \param text to save some code.
- */
+// Adds null format to queue for all ObjectReplacementCharacters that were already in the text. Returns passed \param text to save some code.
 static QString preserveOriginalObjectReplacementCharacters(QString text, TextIconFormatQueue *queue)
 {
 	int objReplChars = 0;
 	objReplChars += text.count(QChar::ObjectReplacementCharacter);
-	// <img> tags are replaced to ObjectReplacementCharacters
-	// internally by Qt functions.
-	// But we must be careful if some other character instead of
-	// 0x20 is used immediately after tag opening, this could
-	// create a hole. ejabberd protects us from it though.
 	objReplChars += text.count("<img ");
 	for (int i = objReplChars; i; i--)
 		queue->enqueue(0);
-
 	return text;
 }
 
-/**
- * Replaces all <icon> tags with handy ObjectReplacementCharacters, and
- * adds appropriate format to the \param queue. Returns processed 
- * \param text.
- */
+// Replaces all <icon> tags with handy ObjectReplacementCharacters, and adds appropriate format to the \param queue. Returns processed \param text.
 static QString convertIconsToObjectReplacementCharacters(QString text, TextIconFormatQueue *queue)
 {
 	// Format: <icon name="" text="">
@@ -214,7 +135,7 @@ static QString convertIconsToObjectReplacementCharacters(QString text, TextIconF
 			QString iconText;
 			if (rxText.indexIn(fragment) != -1)
 				iconText = unescape(rxText.capturedTexts()[1]);
-			
+				
 			queue->enqueue(new TextIconFormat(iconName, iconText));
 			result += QChar::ObjectReplacementCharacter;
 		}
@@ -224,54 +145,28 @@ static QString convertIconsToObjectReplacementCharacters(QString text, TextIconF
 	return result + preserveOriginalObjectReplacementCharacters(work, queue);
 }
 
-/**
- * Applies text formats from \param queue to all ObjectReplacementCharacters
- * in \param doc, starting from \param cursor's position.
- */
+// Applies text formats from \param queue to all ObjectReplacementCharacters in \param doc, starting from \param cursor's position.
 static void applyFormatToIcons(QTextDocument *doc, TextIconFormatQueue *queue, QTextCursor &cursor)
 {
 	QTextCursor searchCursor = cursor;
-	forever {
+	forever 
+	{
 		searchCursor = doc->find(QString(QChar::ObjectReplacementCharacter), searchCursor);
-		if (searchCursor.isNull())
-			break;
+		if (searchCursor.isNull()) break;
 		
 		Q_ASSERT(!queue->isEmpty());
 		TextIconFormat *format = queue->dequeue();
-		if (format) { 
+		if (format) 
+		{ 
 			searchCursor.setCharFormat(*format);
 			delete format;
 		}
 	}
-	
-	// if it's not true, there's a memleak
-	Q_ASSERT(queue->isEmpty());
-	
 	// clear the selection that's left after successful QTextDocument::find()
 	cursor.clearSelection();
 }
 
-/**
- * Groups some related function calls together.
- */
-static void appendTextHelper(QTextDocument *doc, QString text, QTextCursor &cursor)
-{
-	TextIconFormatQueue queue;
-	
-	// we need to save this to start searching from 
-	// here when applying format to icons
-	int initialpos = cursor.position();
-	cursor.insertFragment(QTextDocumentFragment::fromHtml(convertIconsToObjectReplacementCharacters(text, &queue)));
-	cursor.setPosition(initialpos);
-	
-	applyFormatToIcons(doc, &queue, cursor);
-}
-
-/**
- * Sets entire contents of specified QTextDocument to text.
- * \param text text to append to the QTextDocument. Please note that if you
- *             insert any <icon>s, attributes' values MUST be Qt::escaped.
- */
+// Sets entire contents of specified QTextDocument to text. \param text text to append to the QTextDocument. Please note that if you insert any <icon>s, attributes' values MUST be Qt::escaped.
 void StilRichText::setText(QTextDocument *doc, const QString &text)
 {
 	QFont font = doc->defaultFont();
@@ -283,17 +178,14 @@ void StilRichText::setText(QTextDocument *doc, const QString &text)
 	appendText(doc, cursor, text);
 }
 
-/**
- * Appends a new paragraph with text to the end of the document.
- * \param text text to append to the QTextDocument. Please note that if you
- *             insert any <icon>s, attributes' values MUST be Qt::escaped.
- */
+// Appends a new paragraph with text to the end of the document. \param text text to append to the QTextDocument. Please note that if you             insert any <icon>s, attributes' values MUST be Qt::escaped.
 void StilRichText::appendText(QTextDocument *doc, QTextCursor &cursor, const QString &text)
 {
 	cursor.beginEditBlock();
 	cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
 	cursor.clearSelection();
-	if (!cursor.atBlockStart()) {
+	if (!cursor.atBlockStart()) 
+	{
 		cursor.insertBlock();
 		
 		// clear trackbar for new blocks
@@ -302,16 +194,18 @@ void StilRichText::appendText(QTextDocument *doc, QTextCursor &cursor, const QSt
 		cursor.setBlockFormat(blockFormat);
 	}
 	
-	appendTextHelper(doc, text, cursor);
+	TextIconFormatQueue queue;
+	// we need to save this to start searching from here when applying format to icons
+	int initialpos = cursor.position();
+	cursor.insertFragment(QTextDocumentFragment::fromHtml(convertIconsToObjectReplacementCharacters(text, &queue)));
+	cursor.setPosition(initialpos);
+	applyFormatToIcons(doc, &queue, cursor);
 	
 	cursor.endEditBlock();
 }
 
-/**
- * Call this function on your QTextDocument to get plain text
- * representation, and all Icons will be replaced by their
- * initial text.
- */
+
+// Call this function on your QTextDocument to get plain text representation, and all Icons will be replaced by their initial text.
 QString StilRichText::convertToPlainText(const QTextDocument *doc)
 {
 	QString obrepl = QString(QChar::ObjectReplacementCharacter);
@@ -327,9 +221,7 @@ QString StilRichText::convertToPlainText(const QTextDocument *doc)
 	}
 
 	QString raw = doc->toPlainText();
-
 	QStringList parts = raw.split(obrepl);
-
 	QString result = parts.at(0);
 
 	for (int i = 1; i < parts.size(); ++i) {

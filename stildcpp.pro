@@ -1,5 +1,5 @@
 TEMPLATE = app
-QT = gui core
+QT = gui core xml
 CONFIG += qt \
  warn_on \
  console \
@@ -148,7 +148,8 @@ HEADERS = src/mainwindowimpl.h \
  src/widgets/stil_richtext.h \
  src/widgets/iconset.h \
  src/textutil.h \
- src/rtparse.h
+ src/rtparse.h \
+ src/widgets/zstream.h
 SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
  src/frmAbout.cpp \
@@ -235,11 +236,12 @@ SOURCES = src/mainwindowimpl.cpp \
  src/widgets/stil_richtext.cpp \
  src/widgets/iconset.cpp \
  src/textutil.cpp \
- src/rtparse.cpp
+ src/rtparse.cpp \
+ src/widgets/zstream.cpp
 RESOURCES += src/stildcpp.qrc src/langs.qrc
 LIBS += -lssl -lbz2 -lcrypto
 TRANSLATIONS = lang/stildcpp_ru.ts
-DEFINES = _DEBUG \
+DEFINES += _DEBUG \
  BOOST_HAS_GCC \
  TIXML_USE_STL \
  USE_SYS_STL \

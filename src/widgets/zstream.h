@@ -18,27 +18,44 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#ifndef __ZSTREAM_H__
+#define __ZSTREAM_H__
 
-#ifndef TEXTUTIL_H
-#define TEXTUTIL_H
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <assert.h>
+#include <zlib.h>
+#include <QtCore>
 
-#include <QString>
-#include <QRegExp>
-#include <QTextDocument> // for escape()
-#include <QList>
+namespace zstream {
 
-#include "widgets/iconset.h"
-#include "rtparse.h"
 
-namespace TextUtil 
+#define CHUNK 524288
+
+struct z_header
 {
-	QString quote(const QString &, int width=60, bool quoteEmpty=false);
-	QString plain2rich(const QString &);
-	QString rich2plain(const QString &);
-	QString resolveEntities(const QString &);
-	QString linkify(const QString &);
-	QString legacyFormat(const QString &);
-	QString emoticonify(const QString &in);
+	char filename[40];
+	long int	offset;
+	size_t	size;
 };
 
-#endif
+typedef QList<z_header> HeaderList;
+
+	// Internal functions
+	int def(FILE *source, FILE *dest, int level);
+	int readZfile(FILE *source, const z_header &head, FILE *dest);
+	void zerr(int ret);
+	// User Functions
+	int compressdir(const QString &dir, const QString &filename);
+	int compressdir(QString &dir, QString &filename);
+	HeaderList * GetZList(const QString &filename);
+	HeaderList * GetZList(QString &filename);
+	int unpack2dir(const QString &filename, const QString &dir);
+	int unpack2dir(QString &filename, QString &dir);
+	QByteArray getFileData(const QString &archive_filename, const QString &filename);
+	QByteArray getFileData(QString &archive_filename, QString &filename);
+
+}; // of namespace
+
+#endif // __ZSTREAM_H__

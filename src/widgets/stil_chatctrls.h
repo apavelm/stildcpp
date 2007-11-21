@@ -26,7 +26,7 @@
 
 #include "stil_textview.h"
 
-class ChatEdit;
+class LineEdit;
 class QEvent;
 class QKeyEvent;
 class QResizeEvent;
@@ -37,62 +37,27 @@ class ChatView : public StilTextView
 	Q_OBJECT
 public:
 	ChatView(QWidget* parent);
-	~ChatView();
-
-	void setDialog(QWidget* dialog);
+	~ChatView() {  }
 
 	// reimplemented
-	QSize sizeHint() const;
 
 	void appendText(const QString &text);
-	bool handleCopyEvent(QObject *object, QEvent *event, ChatEdit *chatEdit);
+	//bool handleCopyEvent(QObject *object, QEvent *event, LineEdit *lineEdit);
 
 	QString formatTimeStamp(const QDateTime &time);
+	void SetTimeFormatString(const QString &);
 
 protected:
-	// override the tab/esc behavior
-	bool focusNextPrevChild(bool next);
 	void keyPressEvent(QKeyEvent *);
 
 protected slots:
-	void autoCopy();
+	void autoCopy() { if (isReadOnly()) copy(); }
 
 private:
-	QWidget* dialog_;
+	QString _timefmt;
 };
 
-class ChatEdit : public QTextEdit
-{
-	Q_OBJECT
-
-public:
-	ChatEdit(QWidget* parent);
-	~ChatEdit();
-
-	void setDialog(QWidget* dialog);
-
-	// reimplemented
-	QSize sizeHint() const;
-
-protected slots:
- 	void applySuggestion();
- 	void addToDictionary();
-	void optionsChanged();
-
-protected:
-	// override the tab/esc behavior
-	bool focusNextPrevChild(bool next);
-	void keyPressEvent(QKeyEvent *);
-	void contextMenuEvent(QContextMenuEvent *e);
-
-private:
-	QWidget	*dialog_;
-	QPoint last_click_;
-	int previous_position_;
-};
-
-
-class LineEdit : public ChatEdit
+class LineEdit : public QTextEdit
 {
 	Q_OBJECT
 public:
@@ -102,14 +67,20 @@ public:
 	// reimplemented
 	QSize minimumSizeHint() const;
 	QSize sizeHint() const;
+	
+	void keyPressEvent(QKeyEvent *);
 
 protected:
 	// reimplemented
 	void resizeEvent(QResizeEvent*);
+	bool focusNextPrevChild(bool next);
 
 private slots:
 	void recalculateSize();
 	void updateScrollBar();
+	
+signals:
+	void SendText(const QString &);
 };
 
 #endif

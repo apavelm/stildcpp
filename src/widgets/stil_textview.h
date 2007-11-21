@@ -21,16 +21,7 @@
 #ifndef STIL_TEXTVIEW
 #define STIL_TEXTVIEW
 
-#include <QTextEdit>
-#include <QMimeData>
-#include <QClipboard>
-#include <QTextCursor>
-#include <QMenu>
-#include <QScrollBar>
-#include <QAbstractTextDocumentLayout>
-#include <QTextDocumentFragment>
-#include <QTextFragment>
-#include <QTextEdit>
+#include <QtGui>
 
 #include "stil_richtext.h"
 
@@ -47,17 +38,26 @@ class URLObject : public QObject
 {
 	Q_OBJECT
 protected:
-	URLObject();
+	URLObject() : QObject(qApp)
+	{
+		_act_magnet = new QAction(tr("Open Magnet"), this );
+		connect(_act_magnet, SIGNAL(activated()), SLOT(domag()));
+		
+		_act_mailto = new QAction(tr("Open mail composer"), this );
+		connect(_act_mailto, SIGNAL(activated()), SLOT(popupAction()));
+		_act_browser = new QAction(tr("Open web browser"), this );
+		connect(_act_browser, SIGNAL(activated()), SLOT(popupAction()));
+		_act_copy = new QAction(tr("Copy URL"), this );
+		connect(_act_copy, SIGNAL(activated()), this, SLOT(popupCopy()));
+	}
+
 public:
 	static URLObject *getInstance();
 	
 	QMenu *createPopupMenu(const QString &lnk);
 
 public slots:
-
-	void popupAction() { emit openURL(_link); }
 	void popupAction(QString lnk) { emit openURL(lnk); }
-
 	void popupCopy(QString lnk)
 	{
 		QApplication::clipboard()->setText( copyString(lnk), QClipboard::Clipboard );
@@ -69,30 +69,28 @@ public slots:
 	void popupCopy() { popupCopy(_link); }
 signals:
 	void openURL(QString);
+	void openmagnet(QString);
 private:
 	QString _link;
-	QAction *_act_mailto, *_act_magnet, *_act_send_message, *_act_browser, *_act_copy;
+	QAction *_act_mailto, *_act_browser, *_act_copy, *_act_magnet, *_act_savelog, *_act_clear;
 	
 	QString copyString(QString from)
 	{
 		QString l = from;
-
 		int colon = l.indexOf(':');
-		if ( colon == -1 )
-			colon = 0;
+		if ( colon == -1 ) colon = 0;
 		QString service = l.left( colon );
-
-		if ( service == "mailto" || service == "jabber" || service == "jid" || service == "xmpp" || service == "atstyle") {
-			if ( colon > -1 )
-				l = l.mid( colon + 1 );
-
-			while ( l[0] == '/' )
-				l = l.mid( 1 );
+		
+		if ( service == "mailto" || service == "magnet") 
+		{
+			if ( colon > -1 ) l = l.mid( colon + 1 );
+			while ( l[0] == '/' ) l = l.mid( 1 );
 		}
-
 		return l;
 	}
-	
+private slots:
+	void popupAction() { emit openURL(_link); }
+	void domag() { emit openmagnet(_link); }
 };
 
 ///////////////////////////////////////////////////////
@@ -117,9 +115,9 @@ public:
 	Selection saveSelection(QTextCursor &cursor);
 	void restoreSelection(QTextCursor &cursor, Selection selection);
 	
-	//QString fragmentToPlainText(const QTextFragment &fragment);
-	//QString blockToPlainText(const QTextBlock &block);
-	//QString documentFragmentToPlainText(const QTextDocument &doc, QTextFrame::Iterator frameIt);
+	QString fragmentToPlainText(const QTextFragment &fragment);
+	QString blockToPlainText(const QTextBlock &block);
+	QString documentFragmentToPlainText(const QTextDocument &doc, QTextFrame::Iterator frameIt);
 	
 public slots:
 	void scrollToBottom();
@@ -136,9 +134,7 @@ protected:
 	void insertPlainText(const QString &) { }
 	void setHtml(const QString &) { }
 	void setPlainText(const QString &) { }
-
-	void insertFromMimeData( const QMimeData *source );
-
+	
 	// reimplemented
 	void contextMenuEvent(QContextMenuEvent *e);
 	void mouseMoveEvent(QMouseEvent *e);
@@ -146,6 +142,9 @@ protected:
 	void mouseReleaseEvent(QMouseEvent *e);
 	QMimeData *createMimeDataFromSelection() const;
 	void resizeEvent(QResizeEvent *);
+private:
+	QPoint last_click_;
 };
 
 #endif
+

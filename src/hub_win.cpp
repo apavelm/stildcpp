@@ -64,9 +64,9 @@ HubWindow::HubWindow(QWidget *parent, const dcpp::tstring& url) : MdiChild(paren
 void HubWindow::sendFunc()
 {
 	Iconset *ic = new Iconset();
-	ic->load("/home/irq/stildcpp/src/images/emotions/iconset");
+	ic->load("/home/irq/stildcpp/src/images/emotions/default.icp");
 	ic->addToFactory();
-	
+
 	QString txt = "Testing smile :'( sequence $) ;) just do it! :) =) http://www.google.com rifjriofj/me gfgergergij";
 	txt = TextUtil::plain2rich(txt);
 	txt = TextUtil::linkify(txt);

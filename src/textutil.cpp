@@ -324,6 +324,11 @@ QString TextUtil::linkify(const QString &in)
 			isUrl = TRUE;
 			href = "";
 		}
+		else if (linkify_pmatch(out, n, "magnet:")) {
+			n += 7;
+			isUrl = TRUE;
+			href = "magnet:";
+		}
 		else if(linkify_pmatch(out, n, "www.")) {
 			isUrl = TRUE;
 			href = "http://";
@@ -413,7 +418,6 @@ QString TextUtil::linkify(const QString &in)
 QString TextUtil::emoticonify(const QString &in)
 {
 	RTParse p(in);
-
 	while ( !p.atEnd() ) {
 		// returns us the first chunk as a plaintext string
 		QString str = p.next();
@@ -426,7 +430,7 @@ QString TextUtil::emoticonify(const QString &in)
 
 			int foundPos = -1, foundLen = -1;
 
-			Iconset *iconset = IconsetFactoryPrivate::instance()->GetIconset();
+			Iconset *iconset = IconsetFactory::instance()->GetIconset();
 			if ( iconset ) 
 			{
 				QListIterator<SmileIcon*> it = iconset->iterator();
@@ -490,14 +494,6 @@ QString TextUtil::emoticonify(const QString &in)
 
 QString TextUtil::legacyFormat(const QString& in)
 {
-
-
-	//enable *bold* stuff
-	// //old code
-	//out=out.replace(QRegExp("(^[^<>\\s]*|\\s[^<>\\s]*)\\*(\\S+)\\*([^<>\\s]*\\s|[^<>\\s]*$)"),"\\1<b>*\\2*</b>\\3");
-	//out=out.replace(QRegExp("(^[^<>\\s\\/]*|\\s[^<>\\s\\/]*)\\/([^\\/\\s]+)\\/([^<>\\s\\/]*\\s|[^<>\\s\\/]*$)"),"\\1<i>/\\2/</i>\\3");
-	//out=out.replace(QRegExp("(^[^<>\\s]*|\\s[^<>\\s]*)_(\\S+)_([^<>\\s]*\\s|[^<>\\s]*$)"),"\\1<u>_\\2_</u>\\3");
-
 	QString out=in;
 	out=out.replace(QRegExp("(^|\\s|>)_(\\S+)_(<|\\s|$)"),"\\1<u>_\\2_</u>\\3");
 	out=out.replace(QRegExp("(^|\\s|>)\\*(\\S+)\\*(<|\\s|$)"),"\\1<b>*\\2*</b>\\3");

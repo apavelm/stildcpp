@@ -27,6 +27,12 @@
         <bool>false</bool>
        </property>
        <widget class="ChatView" name="editor" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+          <horstretch>2</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="undoRedoEnabled" >
          <bool>false</bool>
         </property>
@@ -38,6 +44,12 @@
         </property>
        </widget>
        <widget class="QTreeWidget" name="userlist" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Expanding" hsizetype="Preferred" >
+          <horstretch>1</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="rootIsDecorated" >
          <bool>true</bool>
         </property>

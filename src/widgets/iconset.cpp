@@ -21,82 +21,19 @@
 
 #include "iconset.h"
 
-IconsetFactoryPrivate* IconsetFactoryPrivate::instance_ = NULL;
+IconsetFactory* IconsetFactory::instance_ = NULL;
 
 //----------------------------------------------------------------------------
 // SmileIcon
 //----------------------------------------------------------------------------
 
-SmileIcon::SmileIcon() 
-{
-	
-}
-
-SmileIcon::~SmileIcon()
-{
-	
-}
-
-SmileIcon::SmileIcon(SmileIcon &from)
+SmileIcon::SmileIcon(SmileIcon &from) :QObject(0)
 {
 	_icon = from.GetIcon();
-	_text = from.GetText();
 	_name = from.GetName();
 	_regExp = from.GetRegExp();
-}
-
-void SmileIcon::setIcon(const QByteArray &ba)
-{
-	_icon.loadFromData(ba);
-}
-
-void SmileIcon::setName(const QString &nm)
-{
-	_name = nm;
-}
-
-void SmileIcon::setRegExp(QRegExp rx)
-{
-	_regExp = rx;
-}
-
-void SmileIcon::setText(const QList<IconText> &txt)
-{
-	_text = txt;
-}
-
-void SmileIcon::setIcon(QPixmap &icn)
-{
-	_icon = icn;
-}
-
-//----------------------------------------------------------------------------
-// IconsetFactory
-//----------------------------------------------------------------------------
-
-SmileIcon *IconsetFactory::iconPtr(const QString &name)
-{
-	SmileIcon *i = IconsetFactoryPrivate::instance()->icon(name);
-	if ( !i ) qDebug("WARNING: IconsetFactory::icon(\"%s\"): icon not found", name.toStdString().c_str());
-
-	return i;
-}
-
-SmileIcon IconsetFactory::icon(const QString &name)
-{
-	SmileIcon *i = iconPtr(name);
-	if ( i ) return *i; 
-}
-
-const QPixmap &IconsetFactory::iconPixmap(const QString &name)
-{
-	SmileIcon *i = iconPtr(name);
-	return i->GetIcon();
-}
-
-const QStringList IconsetFactory::icons()
-{
-	return IconsetFactoryPrivate::instance()->icons();
+	_text.clear();
+	_text = from.GetText(); 
 }
 
 //----------------------------------------------------------------------------
@@ -105,10 +42,13 @@ const QStringList IconsetFactory::icons()
 
 Iconset::Iconset()
 {
-	_name = "Unnamed";
+	_name = QString::null;
 	_version = QString::null;
 	_description = QString::null;
 	_homeUrl = QString::null;
+	_filename = QString::null;
+	_list.empty();
+	_dict.empty();
 }
 
 Iconset::Iconset(const Iconset &from)
@@ -125,14 +65,14 @@ Iconset::Iconset(const Iconset &from)
 
 Iconset::~Iconset()
 {
-	IconsetFactoryPrivate::instance()->unregisterIconset(this);
+	IconsetFactory::instance()->unregisterIconset(this);
 	_clear();
 }
 
 void Iconset::_append(QString n, SmileIcon *icon)
 {
 	if ( _dict.contains(n) )
-		_remove(n);
+		removeIcon(n);
 		
 	_dict[n] = icon;
 	_list.append(icon);
@@ -143,16 +83,6 @@ void Iconset::_clear()
 	_dict.clear();
 	while ( !_list.isEmpty() )
 		delete _list.takeFirst();
-}
-
-void Iconset::_remove(QString name)
-{
-	if ( _dict.contains(name) ) {
-		SmileIcon *i = _dict[name];
-		_dict.erase( _dict.find(name) );
-		_list.removeAll(i);
-		delete i;
-	}
 }
 
 Iconset &Iconset::operator+=(const Iconset &i)
@@ -170,123 +100,62 @@ int Iconset::count() const
 	return _list.count();
 }
 
-QByteArray Iconset::loadData(const QString &fileName, const QString &dir)
+bool Iconset::load(const QString &filename)
 {
-	QByteArray ba;
-	QFileInfo fi(dir);
-	if ( fi.isDir() ) 
+	QByteArray data(zstream::getFileData(filename,"imagedef.xml"));
+	if (data.isNull()) return false;
+
+	QDomDocument doc;
+	if (!doc.setContent(data)) return false;
+
+	QDomElement icondef = doc.documentElement();
+	if (icondef.tagName() != "stil_smile_pack") return false;
+
+	// load meta info
+	QDomElement meta = icondef.firstChildElement("meta");
 	{
-		QFile file ( dir + "/" + fileName );
-		if (!file.open(QIODevice::ReadOnly)) return ba;
-		ba = file.readAll();
-	}
-	return ba;
-}
-
-bool Iconset::load(const QString &dir)
-{
-	//dir+"/icondef.xml"
-	
-	//////////////////////////////////////
-	TiXmlDocument xml;
-	xml.Clear();
-	if ( !xml.LoadFile( (dir+"/imagedef.xml").toStdString() ) ) return false;
-	
-	TiXmlHandle hDoc(&xml);
-	TiXmlHandle hRoot(0);
-	TiXmlElement* pElem;
-	TiXmlNode * child;
-	TiXmlElement* pNode;
-	TiXmlNode * parent;
-	
-	SmileIcon icon;
-	QList<IconText> text;
-	QString nm;
-	
-	const char * tst="";
-	
-	pElem=hDoc.FirstChildElement().Element();
-	if (!pElem) return false;
-	
-
-	hRoot=TiXmlHandle(pElem);
-	parent = hRoot.Node();
-	child = 0;
-	if (!strcmp(parent->Value(),"stil_smile_pack"))
-	while( child = parent->IterateChildren( child ) )
-	{
-		if (!strcmp(child->Value(),"meta"))
-		{
-			pNode = child->FirstChildElement();
-			while (pNode)
-			{
-				if (pNode) tst = pNode->GetText(); else break;
-				
-				const char * tag = pNode->Value();
-				if ( !strcmp(tag,"name") ) _name = tst;
-				else if ( !strcmp(tag,"version") ) _version = tst;
-				else if ( !strcmp(tag,"description") ) _description = tst;
-				else if ( !strcmp(tag,"author") ) _authors += tst;
-				else if ( !strcmp(tag,"homeurl")  ) _homeUrl = tst;
-
-				if (pNode->NoChildren()) break; 
-					else pNode = pNode->NextSiblingElement();
-			}
-		}
-		else
-		if (!strcmp(child->Value(),"emo"))
-		{
-			pNode = child->FirstChildElement();
-
-			while (pNode)
-			{
-				if (pNode) tst = pNode->GetText(); else break;
-				
-				const char * tag = pNode->Value();
-				if ( !strcmp(tag,"smile") ) 
-				{
-					nm = tst;
-				} else
-				if ( !strcmp(tag,"text") ) 
-				{
-					QString lang = "";//e.attribute("xml:lang");
-					//if ( lang.isEmpty() ) lang = ""; // otherwise there would be many warnings :-(
-					text.append(IconText(lang, tst));
-				} else
-				if ( !strcmp(tag,"icon") ) 
-				{
-					QPixmap px;
-					px.load(dir+"/"+tst);
-					icon.setIcon(px);
-				}
-
-				icon.setText(text);
-				icon.setName(nm);
-				
-				if (!pNode->NoChildren()) pNode = pNode->NextSiblingElement();
-			}
-				{
-					// construct RegExp
-					if ( text.count() ) 
-					{
-						QStringList regexp;
-						foreach(IconText t, text) 
-						{
-							regexp += QRegExp::escape(t.text);
-						}
-					// make sure there is some form of whitespace on at least one side of the text string
-					//regexp = QString("(\\b(%1))|((%2)\\b)").arg(regexp).arg(regexp);
-					//
-					// WAS: 
-					icon.setRegExp( QRegExp(regexp.join("|") ));
-					//icon.setRegExp ( QRegExp( "(\\b" + regexp.join(")|(") + "\\b)" ) );
-					}
-					_append( nm, new SmileIcon(icon) );
-				}
-		}
+		_name = meta.firstChildElement("name").text();
+		_version = meta.firstChildElement("version").text();
+		_description = meta.firstChildElement("description").text();
+		_homeUrl = meta.firstChildElement("homeurl").text();
 		
-	} 
-	return true;
+		_authors.clear();
+		QDomElement e = meta.firstChildElement("author");
+		for (; !e.isNull(); e = e.nextSiblingElement("author")) _authors += e.text();
+	}
+	// load icon info
+	QDomElement icn = icondef.firstChildElement("emo");
+	for (; !icn.isNull(); icn = icn.nextSiblingElement("emo"))
+	{
+		
+		QStringList texts;
+		QStringList regexp;
+		SmileIcon *c = new SmileIcon();
+		QString nm;
+		
+		QDomElement ee = icn.firstChildElement("smile");
+		nm = ee.text();
+
+		ee = icn.firstChildElement("text");
+		for (; !ee.isNull(); ee = ee.nextSiblingElement("text")) texts+=ee.text();
+		if (texts.isEmpty()) return false;
+	
+		ee = icn.firstChildElement("icon");
+		const QString &a1 = ee.text();
+		QPixmap pix;
+		pix.loadFromData(zstream::getFileData(filename,a1));
+		if (pix.isNull()) return false;
+	
+		c->setName(nm);
+		c->setText(texts);
+		c->setIcon(pix);
+		foreach(QString t, texts) regexp += QRegExp::escape(t);
+		c->setRegExp( QRegExp(regexp.join("|") ));
+		
+		addIcon(nm,*c);
+	}
+	_filename = filename;
+	return !_list.isEmpty();
 }
 
 SmileIcon *Iconset::icon(const QString &name)
@@ -294,17 +163,22 @@ SmileIcon *Iconset::icon(const QString &name)
 	if ( _dict.isEmpty() ) return 0; else return _dict[name];
 }
 
-void Iconset::setIcon(const QString &name, SmileIcon &icon)
+void Iconset::addIcon(const QString &name, SmileIcon &icon)
 {
 	SmileIcon *newIcon = new SmileIcon(icon);
-	
-	_remove( name );
+	removeIcon( name );
 	_append( name, newIcon );
 }
 
 void Iconset::removeIcon(const QString &name)
 { 
-	_remove(name);
+	if ( _dict.contains(name) ) 
+	{
+		SmileIcon *i = _dict[name];
+		_dict.erase( _dict.find(name) );
+		_list.removeAll(i);
+		delete i;
+	}
 }
 
 QListIterator<SmileIcon *> Iconset::iterator()
@@ -321,15 +195,14 @@ void Iconset::setInformation(const Iconset &from)
 	_homeUrl = from.homeUrl();
 	_filename = from.filename();
 	_authors = from.authors();
-	_info = from.info();
 }
 
 void Iconset::addToFactory() const 
 {
-	IconsetFactoryPrivate::instance()->registerIconset(this); 
+	IconsetFactory::instance()->registerIconset(this); 
 }
 
 void Iconset::removeFromFactory() const 
 {
-	IconsetFactoryPrivate::instance()->unregisterIconset(this); 
+	IconsetFactory::instance()->unregisterIconset(this); 
 }

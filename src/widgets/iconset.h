@@ -24,48 +24,38 @@
 
 #include <QObject>
 #include <QHash>
-#include <QList>
 #include <QStringList>
 #include <QtCore>
 #include <QIcon>
 #include <QRegExp>
-#include <QTextCodec>
-#include <QtDebug>
+#include <QtXml>
 
-#include "../xml/tinyxml.h"
-#include "../stilutils.h"
-#include <string.h>
-
-struct IconText 
-{
-	IconText(QString _lang, QString _text) : lang(_lang), text(_text) {}
-	QString lang;
-	QString text;
-};
+#include "zstream.h"
 
 class SmileIcon : public QObject
 {
 	Q_OBJECT
 public:
-	SmileIcon();
-	SmileIcon(SmileIcon &);
-	~SmileIcon();
+	SmileIcon(QObject * parent = 0): QObject(parent), _name(""), _regExp(""), _icon(0) { _text.clear(); }
+	SmileIcon(SmileIcon &from);
+	
+	~SmileIcon() { }
 
 	const QPixmap &GetIcon() { return _icon; }
-	QList<IconText> GetText() { return _text; }
+	QStringList &GetText() { return _text; }
 	const QRegExp &GetRegExp() { return _regExp; }
 	QString GetName() { return _name; }
 	
-	void setName(const QString &);
-	void setRegExp(QRegExp);
-	void setText(const QList<IconText> &);
-	void setIcon(QPixmap &);
-	void setIcon(const QByteArray &ba);
+	void setName(const QString &nm) { _name = nm; }
+	void setRegExp(QRegExp rx) { _regExp = rx; }
+	void setText(const QStringList &txt) { _text = txt; }
+	void setIcon(QPixmap &icn) { _icon = icn; }
+	void setIcon(const QByteArray &ba) { _icon.loadFromData(ba); }
 	
 private:
 	QString _name;
 	QRegExp _regExp;
-	QList<IconText> _text;
+	QStringList _text;
 	QPixmap _icon;
 };
 
@@ -81,11 +71,10 @@ public:
 
 	int count() const;
 
-	bool load(const QString &dir);
-	QByteArray loadData(const QString &fileName, const QString &dir);
+	bool load(const QString &filename);
 
 	SmileIcon *icon(const QString &);
-	void setIcon(const QString &, SmileIcon &);
+	void addIcon(const QString &, SmileIcon &);
 	void removeIcon(const QString &);
 
 	const QString &name() const { return _name; };
@@ -96,40 +85,36 @@ public:
 	const QString &filename() const { return _filename; };
 	
 	///////////////////////////////
-	void _remove(QString name);
 	void _clear();
 	void _append(QString n, SmileIcon *icon);
 	////////////////////////
 
-	const QString &fileName() const { return _filename; };
-	void setFileName(const QString &f) { _filename = f; };
 
+	void setFileName(const QString &f) { _filename = f; };
 	void setInformation(const Iconset &from);
 
-	const QHash<QString, QString> info() const { return _info; };
-	void setInfo(const QHash<QString, QString> &i) { _info = i; };
 
 	QListIterator<SmileIcon *> iterator();
-
 	void addToFactory() const;
 	void removeFromFactory() const;
 
+private:
 	QString _name, _version, _description, _homeUrl, _filename;
 	QStringList _authors;
-	QHash<QString, SmileIcon *> _dict; // unsorted hash for fast search
-	QList<SmileIcon *> _list;          // sorted list
-	QHash<QString, QString> _info;
+	QHash<QString, SmileIcon *> _dict;	// unsorted hash for fast search
+	QList<SmileIcon *> _list;		// sorted list
 };
 
-
-class IconsetFactoryPrivate : public QObject
+class IconsetFactory : public QObject
 {
+	Q_OBJECT
 private:
-	IconsetFactoryPrivate() : QObject(0) , iconsets_(0) { }
+	IconsetFactory() : QObject(0) , iconsets_(0) { }
 
-	~IconsetFactoryPrivate()
+	~IconsetFactory()
 	{
-		if (iconsets_) {
+		if (iconsets_) 
+		{
 			while (!iconsets_->empty())
 				delete iconsets_->takeFirst();
 			delete iconsets_;
@@ -137,24 +122,12 @@ private:
 		}
 	}
 	
-	static IconsetFactoryPrivate* instance_;
+	static IconsetFactory* instance_;
 	QList<Iconset*>* iconsets_;
+	
 public:
 	Iconset * GetIconset() { return iconsets_->first(); }
-	const QStringList icons() const
-	{
-		QStringList list;
-
-		Iconset* iconset;
-		foreach(iconset, *iconsets_) {
-			QListIterator<SmileIcon*> it = iconset->iterator();
-			while (it.hasNext())
-				list << it.next()->GetName();
-		}
-
-		return list;
-	}
-
+	
 	void registerIconset(const Iconset *i)
 	{
 		if (!iconsets_)
@@ -168,16 +141,15 @@ public:
 	{
 		if (iconsets_ && iconsets_->contains((Iconset*)i)) iconsets_->removeAll((Iconset*)i);
 	}
-
-public:
-	static IconsetFactoryPrivate* instance()
+	
+	static IconsetFactory* instance()
 	{
 		if (!instance_) {
-			instance_ = new IconsetFactoryPrivate();
+			instance_ = new IconsetFactory();
 		}
 		return instance_;
 	}
-	
+
 	SmileIcon *icon(const QString &name)
 	{
 		if (!iconsets_)
@@ -194,17 +166,23 @@ public:
 		}
 		return i;
 	}
-};
+	
+	const QPixmap &iconPixmap(const QString &name) { return icon(name)->GetIcon(); }
 
+	const QStringList icons() const
+	{
+		QStringList list;
 
-class IconsetFactory
-{
-public:
-	static SmileIcon icon(const QString &name);
-	static const QPixmap &iconPixmap(const QString &name);
+		Iconset* iconset;
+		foreach(iconset, *iconsets_) {
+			QListIterator<SmileIcon*> it = iconset->iterator();
+			while (it.hasNext())
+				list << it.next()->GetName();
+		}
 
-	static SmileIcon *iconPtr(const QString &name);
-	static const QStringList icons();
+		return list;
+	}
+	
 };
 
 #endif

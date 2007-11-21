@@ -28,6 +28,7 @@
 #include "highlighter.h"
 #include "mdi_c.h"
 #include "config.h"
+#include "stilutils.h"
 #include "widgets/iconset.h"
 
 //

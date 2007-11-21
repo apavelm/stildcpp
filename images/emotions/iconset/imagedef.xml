@@ -4,13 +4,18 @@
         <name>NoNaMe</name>
         <version>1.0</version>
         <description>Desc</description>
-        <author>Ya</author>
 	<homeurl>http://url.com</homeurl>
+        <author>Ya</author>	
     </meta>
     <emo>
 	<smile>icon1</smile>
 	<text>:)</text>
 	<text>=)</text>
+        <icon>grin.png</icon>
+    </emo>
+    <emo>
+	<smile>icon2</smile>
+	<text>&amp;)</text>
         <icon>grin.png</icon>
     </emo>
 </stil_smile_pack>

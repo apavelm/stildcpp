@@ -18,29 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+
 #include "stil_textview.h"
 
 
-/**
- * Default constructor.
- */
-URLObject::URLObject() : QObject(qApp)
-{
-	_act_mailto = new QAction(tr("Open mail composer"), this);
-	connect(_act_mailto, SIGNAL(activated()), SLOT(popupAction()));
-	_act_browser = new QAction(tr("Open web browser"), this);
-	connect(_act_browser, SIGNAL(activated()), SLOT(popupAction()));
-	_act_send_message = new QAction(tr("Send massage to"), this);
-	connect(_act_send_message, SIGNAL(activated()), SLOT(popupAction()));
-	_act_magnet = new QAction(tr("Open Magnet"), this);
-	connect(_act_magnet, SIGNAL(activated()), SLOT(popupAction()));
-	_act_copy = new QAction(tr("Copy link"), this);
-	connect(_act_copy, SIGNAL(activated()), SLOT(popupCopy()));
-}
 
-/**
- * Returns instance of the class, and creates it if necessary.
- */
 URLObject *URLObject::getInstance()
 {
 	static URLObject *urlObject = 0;
@@ -49,10 +31,6 @@ URLObject *URLObject::getInstance()
 	return urlObject;
 }
 
-/**
- * Creates QMenu with actions corresponding to link's type.
- * @param lnk link in service:url format
- */
 QMenu *URLObject::createPopupMenu(const QString &lnk)
 {
 	_link = lnk;
@@ -66,26 +44,28 @@ QMenu *URLObject::createPopupMenu(const QString &lnk)
 
 	QMenu *m = new QMenu;
 	
-	if ( service == "mailto" || service == "atstyle") {
+	if ( service == "mailto") 
+	{
 		m->addAction(_act_mailto);
 	}
-	else if ( service == "jabber" || service == "jid" || service == "xmpp" || service == "atstyle") {
-		// TODO: need more actions to jabber item. Ex: "add to roster", "send message"
-		m->addAction(_act_send_message);
+	else if (service == "magnet")
+	{
 		m->addAction(_act_magnet);
 	}
-	else { //if ( service == "http" || service == "https" || service.isEmpty() ) {
+	else //if ( service == "http" || service == "https" || service.isEmpty() ) 
+	{
 		m->addAction(_act_browser);
 	}
-
+	
+	m->addSeparator();
 	m->addAction(_act_copy);
+	
 	return m;
 }
 
 //----------------------------------------------------------------------------
 // StilTextView
 //----------------------------------------------------------------------------
-
 
 StilTextView::StilTextView(QWidget *parent) : QTextEdit(parent)
 {
@@ -99,36 +79,24 @@ StilTextView::StilTextView(QWidget *parent) : QTextEdit(parent)
 	viewport()->setMouseTracking(true); // we want to get all mouseMoveEvents
 }
 
-/**
- * This function returns true if vertical scroll bar is 
- * at its maximum position.
- */
+// This function returns true if vertical scroll bar is  at its maximum position.
 bool StilTextView::atBottom()
 {
-	// '32' is 32 pixels margin, which was used in the old code
-	return (verticalScrollBar()->maximum() - verticalScrollBar()->value()) <= 32;
+	// If errors is occured incrise 'diff' constant
+	const int diff = fontMetrics().height() + 1;
+	return (verticalScrollBar()->maximum() - verticalScrollBar()->value()) <= diff;
 }
 
-/**
- * Scrolls the vertical scroll bar to its maximum position i.e. to the bottom.
- */
 void StilTextView::scrollToBottom()
 {
 	verticalScrollBar()->setValue(verticalScrollBar()->maximum());
 }
 
-/**
- * Scrolls the vertical scroll bar to its minimum position i.e. to the top.
- */
 void StilTextView::scrollToTop()
 {
 	verticalScrollBar()->setValue(verticalScrollBar()->minimum());
 }
 
-/**
- * This function is provided for convenience. Please see 
- * StilRichText::appendText() documentation for usage details.
- */
 void StilTextView::appendText(const QString &text)
 {
 	QTextCursor cursor = textCursor();
@@ -140,15 +108,13 @@ void StilTextView::appendText(const QString &text)
 	setTextCursor(cursor);
 }
 
-/**
- * Saves current Selection in a structure, so it could be restored at later time.
- */
 StilTextView::Selection StilTextView::saveSelection(QTextCursor &cursor)
 {
 	Selection selection;
 	selection.start = selection.end = -1;
 
-	if (cursor.hasSelection()) {
+	if (cursor.hasSelection())
+	{
 		selection.start = cursor.selectionStart();
 		selection.end   = cursor.selectionEnd();
 	}
@@ -156,26 +122,21 @@ StilTextView::Selection StilTextView::saveSelection(QTextCursor &cursor)
 	return selection;
 }
 
-/**
- * Restores a Selection that was previously saved by call to saveSelection().
- */
 void StilTextView::restoreSelection(QTextCursor &cursor, Selection selection)
 {
-	if (selection.start != -1 && selection.end != -1) {
+	if (selection.start != -1 && selection.end != -1) 
+	{
 		cursor.setPosition(selection.start, QTextCursor::MoveAnchor);
 		cursor.setPosition(selection.end,   QTextCursor::KeepAnchor);
 	}
 }
 
-/**
- * Returns HTML markup for selected text. If no text is selected, returns
- * HTML markup for all text.
- */
+// Returns HTML markup for selected text. If no text is selected, returns HTML markup for all text.
 QString StilTextView::getHtml() const
 {
 	StilTextView *tv = (StilTextView *)this;
 	QTextCursor cursor = tv->textCursor();
-	int position = tv->verticalScrollBar()->value();
+	int position = verticalScrollBar()->value();
 	
 	bool unselectAll = false;
 	
@@ -201,7 +162,21 @@ void StilTextView::contextMenuEvent(QContextMenuEvent *e)
 	if (!anchorAt(e->pos()).isEmpty())
 		menu = URLObject::getInstance()->createPopupMenu(anchorAt(e->pos()));
 	else
-		menu = createStandardContextMenu();
+	{
+		QTextCursor tu = textCursor();
+		Selection s = saveSelection(tu);
+		QTextCursor tc = cursorForPosition(last_click_);
+		int current_position = textCursor().position();
+		tc.select(QTextCursor::WordUnderCursor);
+		QString txt = tc.selectedText();
+		
+		// TODO: if ( isUserOnline(txt) && isUser(txt) ) specialMenu; else
+			menu = createStandardContextMenu(); 
+		
+		tc.setPosition(current_position);
+		restoreSelection(tc, s);
+		setTextCursor(tc);
+	}
 	menu->exec(e->globalPos());
 	e->accept();
 	delete menu;
@@ -219,15 +194,15 @@ void StilTextView::mouseMoveEvent(QMouseEvent *e)
 // Copied (with modifications) from QTextBrowser
 void StilTextView::mousePressEvent(QMouseEvent *e)
 {
+	last_click_=e->pos();
 	anchorOnMousePress = anchorAt(e->pos());
 	if (!textCursor().hasSelection() && !anchorOnMousePress.isEmpty()) 
 	{
 		QTextCursor cursor = textCursor();
-		QPoint mapped = QPoint(e->pos().x() + horizontalScrollBar()->value(), 
-		                       e->pos().y() + verticalScrollBar()->value()); // from QTextEditPrivate::mapToContents
+		QPoint mapped = QPoint(e->pos().x() + horizontalScrollBar()->value(), e->pos().y() + verticalScrollBar()->value());
 		const int cursorPos = document()->documentLayout()->hitTest(mapped, Qt::FuzzyHit);
 		if (cursorPos != -1)
-			cursor.setPosition(cursorPos);	   
+			cursor.setPosition(cursorPos);
 		setTextCursor(cursor);
 	}
 
@@ -240,24 +215,17 @@ void StilTextView::mousePressEvent(QMouseEvent *e)
 void StilTextView::mouseReleaseEvent(QMouseEvent *e)
 {
 	QTextEdit::mouseReleaseEvent(e);
-
-	if (!(e->button() & Qt::LeftButton))
-		return;
+	
+	if (!(e->button() & Qt::LeftButton)) return;
 
 	const QString anchor = anchorAt(e->pos());
-
-	if (anchor.isEmpty())
-		return;
-
-	if (!textCursor().hasSelection()
-		|| (anchor == anchorOnMousePress && hadSelectionOnMousePress))
+	if (anchor.isEmpty()) return;
+	
+	if (!textCursor().hasSelection() || (anchor == anchorOnMousePress && hadSelectionOnMousePress))
 		URLObject::getInstance()->popupAction(anchor);
 }
 
-/**
- * This is overridden in order to properly convert Icons back
- * to their original text.
- */
+// This is overridden in order to properly convert Icons back to their original text.
 QMimeData *StilTextView::createMimeDataFromSelection() const
 {
 	QTextDocument *doc = new QTextDocument();
@@ -272,38 +240,21 @@ QMimeData *StilTextView::createMimeDataFromSelection() const
 	return data;
 }
 
-void StilTextView::insertFromMimeData( const QMimeData *source )
-{
-	if (source->hasImage())
-	{
-		QImage image = qvariant_cast<QImage>(source->imageData());
-		QTextCursor cursor = this->textCursor();
-		QTextDocument *document = this->document();
-		document->addResource(QTextDocument::ImageResource, QUrl("image"), image);
-		cursor.insertImage("image");
-	}
-}
-
-
-/**
- * Ensures that if StilTextView was scrolled to bottom when resize
- * operation happened, it will still be scrolled to bottom after the fact.
- */
+// Scrolling to bottom, if resized
 void StilTextView::resizeEvent(QResizeEvent *e)
 {
-	bool atEnd = verticalScrollBar()->value() ==
-	             verticalScrollBar()->maximum();
-	bool atStart = verticalScrollBar()->value() ==
-	               verticalScrollBar()->minimum();
+	bool atEnd = verticalScrollBar()->value() == verticalScrollBar()->maximum();
+	bool atStart = verticalScrollBar()->value() == verticalScrollBar()->minimum();
 	double value = 0;
 	if (!atEnd && !atStart)
-		value = (double)verticalScrollBar()->maximum() /
-		        (double)verticalScrollBar()->value();
+		value = (double)verticalScrollBar()->maximum() / (double)verticalScrollBar()->value();
 
 	QTextEdit::resizeEvent(e);
 
 	if (atEnd)
 		verticalScrollBar()->setValue(verticalScrollBar()->maximum());
-	else if (value != 0)
-		verticalScrollBar()->setValue((int) ((double)verticalScrollBar()->maximum() / value));
+	else 
+		if (value != 0)
+			verticalScrollBar()->setValue((int) ((double)verticalScrollBar()->maximum() / value));
 }
+
