@@ -1,0 +1,10 @@
+<!DOCTYPE RCC><RCC version="1.0">
+	<qresource>
+		<file>images/splash.png</file>
+		<file>images/cross.png</file>
+		<file>images/cross2.png</file>
+		<file>images/cross_black.png</file>
+		<file>images/tab_down.png</file>
+		<file>images/tab_up.png</file>
+	</qresource>
+</RCC>
