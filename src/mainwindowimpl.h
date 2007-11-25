@@ -60,7 +60,7 @@
 #include "sspy.h"
 #include "tthdial.h"
 #include "quickconnectdlg.h"
-#include "tabwidget.h"
+#include "widgets/tabwidget.h"
 
 #include "stilutils.h"
 

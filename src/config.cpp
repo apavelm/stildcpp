@@ -57,153 +57,83 @@ void AppSettingsMgr::setDefaults()
 	strSettings.clear();
 	strDefaults.clear();
 	writeDefs();
-	
-	xml.Clear();
-	TiXmlDeclaration * decl = new TiXmlDeclaration( "1.0", "utf-8", "" );
-	xml.LinkEndChild( decl );
-	
-	TiXmlElement * root = new TiXmlElement( "config" );
-	xml.LinkEndChild( root );
-	
-	TiXmlComment * comment = new TiXmlComment();
-	comment->SetValue(" Settings for StilDC++ " );
-	root->LinkEndChild( comment );
-	
-	TiXmlElement * _int = new TiXmlElement( "int" );
-	root->LinkEndChild( _int );
-	
-	for( int i=0; i<i_LAST; i++)
-	{
-	TiXmlElement * looknfeel;
-	looknfeel = new TiXmlElement( intTags[i] );  
-	_int->LinkEndChild( looknfeel );
-	looknfeel->SetAttribute("value", intSettings[i]);
-	}
-	
-	TiXmlElement * _str = new TiXmlElement( "str" );
-	root->LinkEndChild( _str );
-	
-	for( int i=0; i<s_LAST; i++)
-	{
-
-	TiXmlElement * tm;
-	tm = new TiXmlElement( strTags[i] );
-	_str->LinkEndChild( tm );
-	
-	std::string temp = strSettings[i].toStdString();
-		if ( tm->NoChildren() ) tm->LinkEndChild( new TiXmlText( temp ) ) ;
-		else
-		{
-			if ( 0 == _str->GetText() )
-				tm->InsertBeforeChild( tm->FirstChild(), TiXmlText( temp ) );
-			else tm->FirstChild()->SetValue( temp ); // There already is text, so change it
-		}
-	
-	}
-	
 }
 
 const int AppSettingsMgr::load(const QString &aFileName)
 {
-	bool sv = true;
-	bool sv2 = true;
-	bool fv[i_LAST];
-	bool fv2[s_LAST];
-	for (int i=0; i<i_LAST;i++) fv[i] = true;
-	for (int i=0; i<s_LAST;i++) fv2[i] = true;
-	
-	xml.Clear();
-	if (!xml.LoadFile(aFileName.toStdString())) return 1;
+QFileInfo fi(aFileName);
+if (fi.exists() && fi.isReadable())
+{
+	QFile file(aFileName);
+	if (!file.open(QIODevice::ReadOnly)) return 4;
+	QByteArray data = file.readAll();
+	file.close();
+	if (data.isNull()) return 4;
 
-	TiXmlHandle hDoc(&xml);
-	TiXmlHandle hRoot(0);
-	TiXmlElement* pElem;
-	TiXmlNode * child;
-	TiXmlElement* pNode;
-	TiXmlNode * parent;
-	TiXmlElement* pm;
-	
-	pElem=hDoc.FirstChildElement().Element();
-	if (!pElem) return 2;
+	if (!xml.setContent(data)) return 3;
 
-	hRoot=TiXmlHandle(pElem);
-	parent = hRoot.Node();
-	child = 0;
-	
-	if (!strcmp(parent->Value(),"config"))
-	while( child = parent->IterateChildren( child ) )
+	QDomElement x_config = xml.documentElement();
+	if (x_config.tagName() != "config") return 2;
+
+	// load int vars
+	QDomElement x_int = x_config.firstChildElement("int");
+		for( int i=0; i<i_LAST; i++)
+			intSettings[i] = (x_int.firstChildElement(intTags[i]).attribute("value",QString::number(intDefaults[i]))).toLong();
+
+	// load str vars
+	QDomElement x_str = x_config.firstChildElement("str");
+	for( int i=0; i<s_LAST; i++)
 	{
-		if (!strcmp(child->Value(),"int"))
-		{
-			sv = false;
-			pNode = child->FirstChildElement();
-			while (pNode)
-			{
-				pm = pNode;
-				while (pm)
-				{
-					const char * tag = pm->Value();
-				for( int i=0; i<i_LAST; i++)
-				if ( !strcmp(tag, intTags[i]) ) 
-				{
-					fv[i]=false;
-					if ( TIXML_SUCCESS != pm->QueryIntAttribute("value", &intSettings[i])) 
-					{
-						fprintf(stderr, "unable to load '%s' setting. Using default value instead\n", intTags[i]);
-						intSettings[i]=intDefaults[i];
-						return 4;
-					}
-					break;
-				}
-				pm = pm->NextSiblingElement();
-				}
-				if (pNode->NoChildren()) break; else pNode = pNode->NextSiblingElement();
-			}
-		}
-		else
-		if (!strcmp(child->Value(),"str"))
-		{
-			sv2 = false;
-			pNode = child->FirstChildElement();
-			const char * tst ="";
-			while (pNode)
-			{
-				if (pNode) tst = pNode->GetText(); else break;
-				const char * tag = pNode->Value();
-				
-				for( int i=0; i<s_LAST; i++)
-				if ( !strcmp(tag,strTags[i]) )
-				{
-					fv2[i] = false;
-					strSettings[i] = tst;
-					break;
-				}
-
-				if (pNode->NoChildren()) break; 
-					else pNode = pNode->NextSiblingElement();
-			}
-		}
+		strSettings[i] = x_str.firstChildElement(strTags[i]).text();
+		if (strSettings[i]=="") strSettings[i]=strDefaults[i];
 	}
-	if ((sv)||(sv2)) return 4;
-	bool g = false;
-	for (int i=0;i<i_LAST;i++)
-		if (fv[i])
-		{
-			g = true; break;
-		}
-	if (!g)
-		for (int i=0;i<s_LAST;i++)
-		if (fv2[i])
-		{
-			g = true; break;
-		}
-	if (g) return 4; else return 0;
+	
+	return 0;
+}
+	else return 4;
 }
 
 void AppSettingsMgr::save(const QString &aFileName) 
 {
-	bool b=QDir(".").mkpath(QString::fromStdString(dcpp::Util::getConfigPath()));
-	if ((!xml.SaveFile(aFileName.toStdString()))||(!b)) fprintf(stderr,"Unable to save configuration file!");
+	QDir(".").mkpath(QString::fromStdString(dcpp::Util::getConfigPath()));
+	
+	// Creating structure of XML file
+	xml.clear();
+	
+	QDomNode decl = xml.createProcessingInstruction("xml","version=\"1.0\" encoding=\"UTF-8\"");
+	xml.appendChild(decl);
+	
+	QDomNode x_config = xml.createElement("config");
+	
+	QDomElement x_int = xml.createElement("int");
+	for( int i=0; i<i_LAST; i++)
+	{
+		QDomElement x_i = xml.createElement(intTags[i]);
+		x_i.setAttribute("value",intSettings[i]);
+		x_int.appendChild(x_i);
+	}
+	x_config.appendChild(x_int);
+	
+	QDomElement x_str = xml.createElement("str");
+	for( int i=0; i<s_LAST; i++)
+	{
+		QDomElement x_s = xml.createElement(strTags[i]);
+		QDomText newTitleText = xml.createTextNode(strSettings[i]);
+		x_s.appendChild(newTitleText);
+		x_str.appendChild(x_s);
+	}
+	x_config.appendChild(x_str);
+	
+	xml.appendChild(x_config);
+	
+	// Saving XML File
+	
+	QFile file(aFileName);
+	if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) 
+	{
+		file.write(xml.toByteArray());
+		file.close();
+	}
 }
 
 void AppSettingsMgr::save() 
@@ -218,11 +148,7 @@ const int AppSettingsMgr::load()
 	QString tmp(QString::fromStdString(dcpp::Util::getConfigPath()));
 	tmp+="stildcpp.xml";
 	const int r = load(tmp);
-	if (r)
-	{
-		setDefaults();
-		save();
-	}
+	if (r) save();
 	return r;
 }
 

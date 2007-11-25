@@ -27,7 +27,7 @@
 #include <QTextDocument> // for escape()
 #include <QList>
 
-#include "widgets/iconset.h"
+#include "iconset.h"
 #include "rtparse.h"
 
 namespace TextUtil 

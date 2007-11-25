@@ -23,7 +23,7 @@
 
 #include <QtGui>
 
-#include "iconset.h"
+#include "../iconset.h"
 
 class TextIconFormat : public QTextCharFormat
 {

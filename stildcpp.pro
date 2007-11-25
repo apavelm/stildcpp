@@ -41,7 +41,7 @@ HEADERS = src/mainwindowimpl.h \
  src/mdi_filelist.h \
  src/defs.h \
  src/pm_win.h \
- src/tabwidget.h \
+ src/widgets/tabwidget.h \
  src/favHubLstWin.h \
  src/SearchWin.h \
  src/dl_queue.h \
@@ -52,8 +52,6 @@ HEADERS = src/mainwindowimpl.h \
  src/ulfin.h \
  src/adlsearch.h \
  src/sspy.h \
- src/xml/tinyxml.h \
- src/xml/tinystr.h \
  src/client/AdcCommand.h \
  src/client/AdcHub.h \
  src/client/ADLSearch.h \
@@ -146,10 +144,10 @@ HEADERS = src/mainwindowimpl.h \
  src/widgets/stil_textview.h \
  src/widgets/stil_chatctrls.h \
  src/widgets/stil_richtext.h \
- src/widgets/iconset.h \
+ src/iconset.h \
  src/textutil.h \
  src/rtparse.h \
- src/widgets/zstream.h
+ src/zstream.h
 SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
  src/frmAbout.cpp \
@@ -163,7 +161,7 @@ SOURCES = src/mainwindowimpl.cpp \
  src/mdi_filelist.cpp \
  src/defs.cpp \
  src/pm_win.cpp \
- src/tabwidget.cpp \
+ src/widgets/tabwidget.cpp \
  src/favHubLstWin.cpp \
  src/SearchWin.cpp \
  src/dl_queue.cpp \
@@ -174,10 +172,6 @@ SOURCES = src/mainwindowimpl.cpp \
  src/ulfin.cpp \
  src/adlsearch.cpp \
  src/sspy.cpp \
- src/xml/tinyxml.cpp \
- src/xml/tinyxmlparser.cpp \
- src/xml/tinystr.cpp \
- src/xml/tinyxmlerror.cpp \
  src/client/AdcCommand.cpp \
  src/client/AdcHub.cpp \
  src/client/ADLSearch.cpp \
@@ -234,16 +228,15 @@ SOURCES = src/mainwindowimpl.cpp \
  src/widgets/stil_textview.cpp \
  src/widgets/stil_chatctrls.cpp \
  src/widgets/stil_richtext.cpp \
- src/widgets/iconset.cpp \
+ src/iconset.cpp \
  src/textutil.cpp \
  src/rtparse.cpp \
- src/widgets/zstream.cpp
+ src/zstream.cpp
 RESOURCES += src/stildcpp.qrc src/langs.qrc
 LIBS += -lssl -lbz2 -lcrypto
 TRANSLATIONS = lang/stildcpp_ru.ts
 DEFINES += _DEBUG \
  BOOST_HAS_GCC \
- TIXML_USE_STL \
  USE_SYS_STL \
  UNICODE \
  _UNICODE

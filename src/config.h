@@ -23,7 +23,7 @@
 
 #include "defs.h"
 #include <QDir>
-#include "xml/tinyxml.h"
+#include <QtXml>
 
 //
 #include "client/stdinc.h"
@@ -68,7 +68,7 @@ private:
 	AppSettingsMgr();
 	virtual ~AppSettingsMgr() throw() {}
 	
-	TiXmlDocument xml;
+	QDomDocument xml;
 	
 	static const char * intTags[i_LAST];
 	static const char * strTags[s_LAST];
