@@ -40,6 +40,8 @@ struct z_header
 	size_t	size;
 };
 
+#define Z_FILE_NOT_FOUND 16
+
 typedef QList<z_header> HeaderList;
 
 	// Internal functions

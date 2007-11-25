@@ -206,6 +206,7 @@ int compressdir(QString &dir, QString &filename)
 
 HeaderList * GetZList(const QString &filename)
 {
+	if (!QFile::exists(filename)) return NULL;
 	FILE *in = fopen(filename.toStdString().c_str(),"r+b");
 	int N = 0;
 	fread(&N,sizeof(int),1,in);
@@ -231,6 +232,7 @@ HeaderList * GetZList(QString &filename)
 
 int unpack2dir(const QString &filename, const QString &dir)
 {
+	if (!QFile::exists(filename)) return Z_FILE_NOT_FOUND;
 	QDir(".").mkpath(dir);
 	int ret = Z_OK;
 	HeaderList * lst = GetZList(filename);
@@ -240,6 +242,7 @@ int unpack2dir(const QString &filename, const QString &dir)
 	// Unpacking files writing to directory
 	FILE *out;
 	z_header head;
+	if (lst)
 	for (int i=0;i<lst->count();i++)
 	{
 		head = lst->at(i);
@@ -264,6 +267,8 @@ int unpack2dir(QString &filename, QString &dir)
 
 QByteArray getFileData(const QString &archive_filename, const QString &filename)
 {
+	if (!QFile::exists(archive_filename)) return NULL;
+	
 	QByteArray ret;
 	ret.clear();
 	if (filename.isEmpty() || (filename.length()>40)) return ret;
@@ -271,13 +276,16 @@ QByteArray getFileData(const QString &archive_filename, const QString &filename)
 	HeaderList * lst = GetZList(archive_filename);
 	int index = -1;
 	
+	if (lst)
+	{
+	
  	for (int i = 0; i< lst->count(); i++) 
  		if (!strncmp(filename.toStdString().c_str(), lst->at(i).filename, 40))
  		{
  			index = i;
  			break;
 		}
-	if (index == -1) return ret; // FILE NOT FOUND
+	if (index == -1) return ret; // FILE NOT FOUND IN ARCHIVE
 		
 	FILE *in = fopen(archive_filename.toStdString().c_str(),"r+b");
 	// Unpacking file
@@ -291,6 +299,8 @@ QByteArray getFileData(const QString &archive_filename, const QString &filename)
 	free(buf);
 	fclose(out);
 	fclose(in);
+	}
+	
 	return ret;
 }
 QByteArray getFileData(QString &archive_filename, QString &filename)

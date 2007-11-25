@@ -56,31 +56,6 @@ void ChatView::keyPressEvent(QKeyEvent *e)
 	e->ignore();
 }
 
-/**
- * Handle KeyPress events that happen in LineEdit widget. This is used
- * to 'fix' the copy shortcut.
- * \param object object that should receive the event
- * \param event received event
- * \param chatEdit pointer to the dialog's ChatEdit widget that receives user input
- */
- /*
-bool ChatView::handleCopyEvent(QObject *object, QEvent *event, LineEdit *lineEdit)
-{
-	if (object == lineEdit && event->type() == QEvent::KeyPress) 
-	{
-		QKeyEvent *e = (QKeyEvent *)event;
-		if ((e->key() == Qt::Key_C && (e->modifiers() & Qt::ControlModifier)) || (e->key() == Qt::Key_Insert && (e->modifiers() & Qt::ControlModifier)))
-		{
-			if (!lineEdit->textCursor().hasSelection() && this->textCursor().hasSelection()) 
-			{
-				this->copy();
-				return true;
-			}
-		}
-	}
-	return false;
-}
-*/
 void ChatView::appendText(const QString &text)
 {
 	bool doScrollToBottom = atBottom();
@@ -175,7 +150,7 @@ void LineEdit::resizeEvent(QResizeEvent* e)
 {
 	QTextEdit::resizeEvent(e);
 }
- 
+
 void LineEdit::recalculateSize()
 {
 	updateGeometry();

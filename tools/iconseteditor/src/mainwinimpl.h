@@ -23,8 +23,8 @@
 
 #include <QDialog>
 #include <QtGui>
-#include "zstream.h"
-#include "tabwidget.h"
+#include "../../src/widgets/zstream.h"
+#include "../../src/tabwidget.h"
 
 #include "compose_dlg.h"
 

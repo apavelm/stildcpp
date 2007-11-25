@@ -42,7 +42,6 @@ public:
 	// reimplemented
 
 	void appendText(const QString &text);
-	//bool handleCopyEvent(QObject *object, QEvent *event, LineEdit *lineEdit);
 
 	QString formatTimeStamp(const QDateTime &time);
 	void SetTimeFormatString(const QString &);

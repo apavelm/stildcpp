@@ -141,18 +141,18 @@ bool Iconset::load(const QString &filename)
 		if (texts.isEmpty()) return false;
 	
 		ee = icn.firstChildElement("icon");
-		const QString &a1 = ee.text();
 		QPixmap pix;
-		pix.loadFromData(zstream::getFileData(filename,a1));
-		if (pix.isNull()) return false;
-	
-		c->setName(nm);
-		c->setText(texts);
-		c->setIcon(pix);
-		foreach(QString t, texts) regexp += QRegExp::escape(t);
-		c->setRegExp( QRegExp(regexp.join("|") ));
+		pix.loadFromData(zstream::getFileData(filename,ee.text()));
+		if (!pix.isNull())
+		{
+			c->setName(nm);
+			c->setText(texts);
+			c->setIcon(pix);
+			foreach(QString t, texts) regexp += QRegExp::escape(t);
+			c->setRegExp( QRegExp(regexp.join("|") ));
 		
-		addIcon(nm,*c);
+			addIcon(nm,*c);
+		}
 	}
 	_filename = filename;
 	return !_list.isEmpty();
