@@ -38,13 +38,12 @@ HubWindow::HubWindow(QWidget *parent, const dcpp::tstring& url) : MdiChild(paren
 	idText = StilUtils::TstrtoQ(url);
 	
 	// UserList in LeftSide
-	/*
-	if (_option_left_side) 
+	if (APPSETTING(i_HUBLEFTSIDE)) 
 		{
 			QWidget *w1 = splitter->widget(0);
 			splitter->addWidget(w1);
 		}
-	*/
+	
 	
 	
 	setWindowTitle(tr("Hub: ")+StilUtils::TstrtoQ(url));
@@ -72,7 +71,6 @@ void HubWindow::sendFunc()
 	txt = TextUtil::linkify(txt);
 	txt = TextUtil::emoticonify(txt);
 	txt = TextUtil::legacyFormat(txt);
-	txt = "["+editor->formatTimeStamp(QDateTime::currentDateTime())+"] " + txt;
 	editor->appendText(txt);
 }
 

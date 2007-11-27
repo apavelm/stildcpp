@@ -60,6 +60,8 @@ private:
 	void initDownloadsFavPage();
 	
 	void initSharingPage();
+	void initMessagesPage();
+	void initLNFPage();
 	//////////////////////////////////////
 	
 	void applyGeneralPage();
@@ -67,6 +69,8 @@ private:
 	void applyDownloadsPage();
 	
 	void applySharingPage();
+	void applyMessagesPage();
+	void applyLNFPage();
 	
 private slots:
 	void on_okBtn_clicked();
@@ -82,6 +86,8 @@ private slots:
 	void SharingPageRemove();
 	void SharingPageAdd();
 	void SharingPageHidden(int);
+	void MessagesPageHelp();
+	void MessagesPageBrowse();
 	
 public:
 	PreferencesDialog(QWidget *);

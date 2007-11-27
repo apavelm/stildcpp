@@ -105,7 +105,7 @@
             <enum>QFrame::Plain</enum>
            </property>
            <property name="currentIndex" >
-            <number>6</number>
+            <number>8</number>
            </property>
            <widget class="QWidget" name="General" >
             <layout class="QGridLayout" >
@@ -1067,8 +1067,110 @@
              </item>
             </layout>
            </widget>
-           <widget class="QWidget" name="Messages" />
-           <widget class="QWidget" name="LookNFeel" />
+           <widget class="QWidget" name="Messages" >
+            <widget class="QCheckBox" name="chk_smiles" >
+             <property name="geometry" >
+              <rect>
+               <x>10</x>
+               <y>0</y>
+               <width>151</width>
+               <height>22</height>
+              </rect>
+             </property>
+             <property name="text" >
+              <string>Show emotion icons</string>
+             </property>
+            </widget>
+            <widget class="QCheckBox" name="chk_timestamp" >
+             <property name="geometry" >
+              <rect>
+               <x>80</x>
+               <y>70</y>
+               <width>151</width>
+               <height>22</height>
+              </rect>
+             </property>
+             <property name="text" >
+              <string>Show timestamp</string>
+             </property>
+            </widget>
+            <widget class="QCheckBox" name="chk_joins" >
+             <property name="geometry" >
+              <rect>
+               <x>80</x>
+               <y>90</y>
+               <width>171</width>
+               <height>22</height>
+              </rect>
+             </property>
+             <property name="text" >
+              <string>Show join/part</string>
+             </property>
+            </widget>
+            <widget class="QWidget" name="" >
+             <property name="geometry" >
+              <rect>
+               <x>80</x>
+               <y>120</y>
+               <width>181</width>
+               <height>29</height>
+              </rect>
+             </property>
+             <layout class="QHBoxLayout" >
+              <item>
+               <widget class="QLineEdit" name="edt_timestampfmt" />
+              </item>
+              <item>
+               <widget class="QToolButton" name="btn_edt_timestampfmt" >
+                <property name="text" >
+                 <string> ? </string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="" >
+             <property name="geometry" >
+              <rect>
+               <x>10</x>
+               <y>20</y>
+               <width>401</width>
+               <height>29</height>
+              </rect>
+             </property>
+             <layout class="QHBoxLayout" >
+              <item>
+               <widget class="QLineEdit" name="edit_icp_path" >
+                <property name="readOnly" >
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="btn_edit_icp_path" >
+                <property name="text" >
+                 <string>...</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </widget>
+           <widget class="QWidget" name="LookNFeel" >
+            <widget class="QCheckBox" name="chk_swpUserList" >
+             <property name="geometry" >
+              <rect>
+               <x>90</x>
+               <y>160</y>
+               <width>291</width>
+               <height>22</height>
+              </rect>
+             </property>
+             <property name="text" >
+              <string>Swap ChatLog and UserList in HubFrame</string>
+             </property>
+            </widget>
+           </widget>
            <widget class="QWidget" name="ColorsNFonts" />
            <widget class="QWidget" name="Popups" />
            <widget class="QWidget" name="Sounds" />

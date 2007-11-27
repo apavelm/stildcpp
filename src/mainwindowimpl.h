@@ -40,6 +40,7 @@
 #include "defs.h"
 
 #include "config.h"
+#include "iconset.h"
 #include "frmAbout.h"
 #include "preferencesdialog.h"
 #include "mdi_c.h"

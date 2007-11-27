@@ -29,18 +29,18 @@ namespace AppSettings
 const char * AppSettingsMgr::intTags[] = 
 {
 	"HideOnClose", "ShowSplash", "UseTray", "StartHidden", "PromptOnClose", "TabPosition"
-	,"NotePadFontSize", "UpdateIPonStartup"
+	,"NotePadFontSize", "UpdateIPonStartup", "ShowSmiles", "SwapUserListHub"
 };
 
 const char * AppSettingsMgr::strTags[] = 
 {
-	"TestValue"
+	"IconSetPath"
 };
 
 void AppSettingsMgr::writeDefs()
 {
-	intDefaults << 1 << 1 << 1 << 0 << 1 << 0 << 10 << 0;
-	strDefaults << "bra-bra-bra";
+	intDefaults << 1 << 1 << 1 << 0 << 1 << 0 << 10 << 0 << 1 << 0;
+	strDefaults << "/home/irq/stildcpp/images/emotions/default.icp";
 	intSettings = intDefaults;
 	strSettings = strDefaults;
 }

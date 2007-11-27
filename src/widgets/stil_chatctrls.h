@@ -40,20 +40,12 @@ public:
 	~ChatView() {  }
 
 	// reimplemented
-
 	void appendText(const QString &text);
-
-	QString formatTimeStamp(const QDateTime &time);
-	void SetTimeFormatString(const QString &);
-
 protected:
 	void keyPressEvent(QKeyEvent *);
 
 protected slots:
 	void autoCopy() { if (isReadOnly()) copy(); }
-
-private:
-	QString _timefmt;
 };
 
 class LineEdit : public QTextEdit

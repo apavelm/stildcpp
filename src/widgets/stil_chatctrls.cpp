@@ -39,7 +39,6 @@
 //----------------------------------------------------------------------------
 ChatView::ChatView(QWidget *parent) : StilTextView(parent)
 {
-	_timefmt = "hh:mm:ss";
 	setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
 
 	setReadOnly(true);
@@ -70,16 +69,6 @@ void ChatView::appendText(const QString &text)
 		scrollToBottom();
 	else
 		verticalScrollBar()->setValue(scrollbarValue);
-}
-
-void ChatView::SetTimeFormatString(const QString &a)
-{
-	_timefmt=a;
-}
-
-QString ChatView::formatTimeStamp(const QDateTime &time)
-{
-	return time.toString(_timefmt);
 }
 
 //----------------------------------------------------------------------------

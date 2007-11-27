@@ -38,12 +38,12 @@ namespace AppSettings
 	enum EnumSettings 
 	{ 
 		i_HIDEONCLOSE, i_SHOWSPLASH, i_USETRAY, i_STARTHIDDEN, i_PROMPTONCLOSE, i_TABPOSIOTION
-		,i_NOTEPADFONTSIZE, i_UPDATEIP
+		,i_NOTEPADFONTSIZE, i_UPDATEIP, i_SHOWSMILES, i_HUBLEFTSIDE
 		,i_LAST };// DO NOT CHANGE THIS LINE
 		
 		enum EnumSettings2 
 	{ 
-		s_TEST
+		s_ICONSETPATH
 		,s_LAST };// DO NOT CHANGE THIS LINE
 		
 class AppSettingsMgr: public dcpp::Singleton<AppSettingsMgr>
@@ -57,12 +57,12 @@ public:
 	
 	void setDefaults();
 	void writeDefs();
-	const int get(int numname) { if ((numname<i_LAST)&&(numname>-1)) return intSettings[numname];else return -32000; }
-	const QString gets(int numname) { if ((numname<s_LAST)&&(numname>-1)) return strSettings[numname];else return ""; }
-	const int getDef(int numname) { if ((numname<i_LAST)&&(numname>-1)) return intDefaults[numname];else return -32000; }
-	const QString getDefs(int numname) { if ((numname<s_LAST)&&(numname>-1)) return strDefaults[numname];else return ""; }
-	void set(int numname, int value) { intSettings[numname]=value; }
-	void sets(int numname, QString &c) { strSettings[numname]=c; }
+	const int get(AppSettings::EnumSettings numname) { if ((numname<i_LAST)&&(numname>-1)) return intSettings[numname];else return -32000; }
+	const QString gets(AppSettings::EnumSettings2 numname) { if ((numname<s_LAST)&&(numname>-1)) return strSettings[numname];else return ""; }
+	const int getDef(AppSettings::EnumSettings numname) { if ((numname<i_LAST)&&(numname>-1)) return intDefaults[numname];else return -32000; }
+	const QString getDefs(AppSettings::EnumSettings2 numname) { if ((numname<s_LAST)&&(numname>-1)) return strDefaults[numname];else return ""; }
+	void set(AppSettings::EnumSettings numname, int value) { intSettings[numname]=value; }
+	void sets(AppSettings::EnumSettings2 numname, QString c) { strSettings[numname]=c; }
 private:
 	friend class dcpp::Singleton<AppSettingsMgr>;
 	AppSettingsMgr();

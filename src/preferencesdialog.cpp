@@ -36,7 +36,10 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent)
 	initConnectionPage();
 	initDownloadsPage();
 	initDownloadsFavPage();
+	
 	initSharingPage();
+	initMessagesPage();
+	initLNFPage();
 	
 	categoryList->setCurrentItem(categoryList->topLevelItem(0));
 	show();
@@ -459,15 +462,84 @@ void PreferencesDialog::applySharingPage()
 	ShareManager::getInstance()->refresh();
 }
 
+void PreferencesDialog::initMessagesPage()
+{
+	connect(btn_edt_timestampfmt, SIGNAL(clicked()), this, SLOT(MessagesPageHelp()));
+	connect(btn_edit_icp_path, SIGNAL(clicked()), this, SLOT(MessagesPageBrowse()));
+	chk_smiles->setChecked( APPSETTING(i_SHOWSMILES) );
+	chk_timestamp->setChecked( BOOLSETTING(TIME_STAMPS) );
+	chk_joins->setChecked( BOOLSETTING(SHOW_JOINS) );
+	edt_timestampfmt->setText(StilUtils::TstrtoQ(Text::toT(SETTING(TIME_STAMPS_FORMAT))));
+	edit_icp_path->setText(APPSTRING(s_ICONSETPATH));
+}
+
+void PreferencesDialog::MessagesPageBrowse()
+{
+	QString icp;
+	icp.clear();
+	icp = QFileDialog::getOpenFileName(this, tr("Select Folder"), "", tr("IconSet Pack (*.icp)"));
+	if (!icp.isEmpty()) edit_icp_path->setText( icp );
+}
+
+void PreferencesDialog::MessagesPageHelp()
+{
+QMessageBox::information(this, tr("Timestamps Help"), tr(
+"\n- %a - Abbreviated weekday name\n \
+- %A - Full weakday name\n \
+- %b - Abbreviated month name\n \
+- %B - Full month name\n \
+- %c - Date and time represention appropriate to locale\n \
+- %d - Day of month as decimal number (01-31)\n \
+- %H - Hour in 24-hour format (00-23)\n \
+- %I - Hour in 12-hour format (00-12)\n \
+- %j - Day of year as decimal number (001-366)\n \
+- %m - Month as decimal format (00-12)\n \
+- %M - Minute as decimal format (00-59)\n \
+- %p - Current locale AM/PM indicator for 12-hour clock\n \
+- %S - Second as decimal number (00-59)\n \
+- %U - Week of the year as decimal number. With Sunday as first day of week (00-53)\n \
+- %w - Weekday as decimal number (0-6, Sunday is 0)\n \
+- %W - Week of the year as decimal number. With Monday as first day of week (00-53)\n \
+- %x - Day representation for current locale\n \
+- %X - Time representation for current locale\n \
+- %y - Year without century as decimal number (00-99)\n \
+- %Y - Year with century as decimal number\n \
+\nDefault: %H:%M"
+));
+}
+
+void PreferencesDialog::applyMessagesPage()
+{
+	SETAPPSETTING(i_SHOWSMILES, chk_smiles->isChecked());
+
+	SettingsManager::getInstance()->set(SettingsManager::TIME_STAMPS, chk_timestamp->isChecked() );
+	SettingsManager::getInstance()->set(SettingsManager::SHOW_JOINS, chk_joins->isChecked() );
+
+	SettingsManager::getInstance()->set(SettingsManager::TIME_STAMPS_FORMAT, dcpp::Text::fromT(StilUtils::QtoTstr(edt_timestampfmt->text()) ) );
+	SETAPPSTRING(s_ICONSETPATH, edit_icp_path->text());
+}
+
+void PreferencesDialog::initLNFPage()
+{
+	chk_swpUserList->setChecked( APPSETTING(i_HUBLEFTSIDE) );
+}
+
+void PreferencesDialog::applyLNFPage()
+{
+	SETAPPSETTING(i_HUBLEFTSIDE, chk_swpUserList->isChecked());
+}
+
 void PreferencesDialog::accept() 
 {
-	// insert below wrapper 'interface options to settings'
 		applyGeneralPage();
 		applyConnectionPage();
 		applyDownloadsPage();
-		applySharingPage();
 		
-	//
+		applySharingPage();
+		applyMessagesPage();
+		applyLNFPage();
+		
+
 	AppSettings::AppSettingsMgr::getInstance()->save();
 	dcpp::SettingsManager::getInstance()->save();
 }
