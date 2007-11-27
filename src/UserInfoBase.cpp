@@ -17,8 +17,17 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-
+ 
 #include "UserInfoBase.h"
+
+#include "client/QueueManager.h"
+#include "client/LogManager.h"
+#include "client/FavoriteManager.h"
+#include "client/UploadManager.h"
+#include "client/User.h"
+
+//#include "PrivateFrame.h"
+//#include "hub_win.h"
 
 using namespace std;
 using namespace dcpp;

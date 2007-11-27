@@ -19,5 +19,13 @@
 		<file>images/cross_black.png</file>
 		<file>images/tab_down.png</file>
 		<file>images/tab_up.png</file>
+		<file>images/status/green_16.png</file>
+		<file>images/status/green-star_16.png</file>
+		<file>images/status/red_16.png</file>
+		<file>images/status/red-star_16.png</file>
+		<file>images/status/yellow-green_16.png</file>
+		<file>images/status/yellow-green-star_16.png</file>
+		<file>images/status/yellow-red_16.png</file>
+		<file>images/status/yellow-red-star_16.png</file>
 	</qresource>
 </RCC>

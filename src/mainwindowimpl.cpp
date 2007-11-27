@@ -109,6 +109,9 @@ void MainWindowImpl::clientInit()
 
 	dcpp::QueueManager::getInstance()->addListener(this);
 	dcpp::LogManager::getInstance()->addListener(this);
+	
+	TimerManager::getInstance()->start();
+	
 	dcpp::TimerManager::getInstance()->addListener(this);
 	
 	startSocket();
