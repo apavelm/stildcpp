@@ -62,12 +62,33 @@
 
 using namespace dcpp;
 
+class HoldRedraw
+{
+public:
+	HoldRedraw(QWidget *w_, bool reallyHold = true) : w(w_)
+	{
+		if(reallyHold)
+			w -> setUpdatesEnabled(false);	 
+		else
+			w = 0;
+	}
+	
+	~HoldRedraw()
+	{
+		if(w) w -> setUpdatesEnabled(true);
+	}
+	
+private:
+	QWidget* w;
+};
+
 class HubWindow : public MdiChild, private Ui::mdiHUBwin
 	,private dcpp::ClientListener 
 	,private dcpp::FavoriteManagerListener
 {
 	Q_OBJECT
 private:
+
 	Highlighter *highlighter;
 	
 	dcpp::Client* client;
@@ -185,8 +206,20 @@ private:
 	void addChat(const tstring& aLine);
 	void addStatus(const tstring& aLine, bool inChat = true);
 	
+			
+	struct CountAvailable {
+		CountAvailable() : available(0) { }
+		int64_t available;
+		void operator()(UserInfo *ui) {
+			available += ui->getIdentity().getBytesShared();
+		}
+		void operator()(UserMap::const_reference ui) {
+			available += ui.second->getIdentity().getBytesShared();
+		}
+	};
+	
 	//FIXME - delete, it's hack 
-	void setStatus(int s, const tstring& text) { dcdebug("Set status for %d with text: %s\n", s, Text::fromT(text).c_str());}
+	void setStatus(int s, const tstring& text);
 	void updateStatus();
 	void setDirty(SettingsManager::IntSetting setting) {}
 	void setText( const tstring & txt ) {dcdebug("Set text: %s\n", Text::fromT(txt).c_str());}
@@ -221,8 +254,12 @@ private:
 	
 	// Probably is hack, to remove in future
 	QMap<int, QString> userIconsMap;
+	QTextCodec *codec;
+	void initUserList();
 	void initUserListIcons();
 	void initIconset();
+	void initCodec();
+	QString toEncoded(QString* string);
 public:
 	HubWindow(QWidget *parent, const dcpp::tstring& url);
 	virtual ~HubWindow();
@@ -239,9 +276,10 @@ public:
 		STATUS_LAST
 	};
 
-	void insertUser(UserInfo *ui, bool isHidden = false);
+	void insertUser(UserInfo *ui);
 	void eraseUser(UserInfo *ui);
 	int  findUser(UserInfo *ui);
+	void updateSingleUser(int pos, UserInfo *ui);
 	void clearUser();
 	//static void closeDisconnected();
 	//static void resortUsers();

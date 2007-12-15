@@ -28,6 +28,9 @@
 using namespace std;
 using namespace dcpp;
 
+static ResourceManager::Strings columnNames[] = { ResourceManager::NICK, ResourceManager::SHARED,
+ResourceManager::DESCRIPTION, ResourceManager::TAG, ResourceManager::CONNECTION, ResourceManager::IP_BARE, ResourceManager::EMAIL, ResourceManager::CID };
+
 HubWindow::~HubWindow()
 {
 	FavoriteManager::getInstance()->removeListener(this);
@@ -53,12 +56,13 @@ HubWindow::HubWindow(QWidget *parent, const dcpp::tstring& url) : MdiChild(paren
 			QWidget *w1 = splitter->widget(0);
 			splitter->addWidget(w1);
 		}
+		
 	initUserListIcons();
+	initUserList();
 	initIconset();
+	initCodec();
 	connect(this, SIGNAL(speakerSignal()), this, SLOT(handleSpeaker()),Qt::QueuedConnection);
 	initSecond();
-	
-	
 	
 	setWindowTitle(tr("Hub: ")+StilUtils::TstrtoQ(url));
 	editor->clear();
@@ -99,7 +103,7 @@ void HubWindow::setupeditor()
 
 	editor->setFont(font);
 
-	//highlighter = new Highlighter(editor->document());
+	highlighter = new Highlighter(editor->document());
 }
 
 void HubWindow::initSecond() {
@@ -123,14 +127,23 @@ bool HubWindow::eachSecond() {
 // Probably is hack, to remove in future
 void HubWindow::initUserListIcons()
 {
-	userIconsMap[0]="images/status/green_16.png";
-	userIconsMap[1]="images/status/yellow-green_16.png";
-	userIconsMap[2]="images/status/green-star_16.png";
-	userIconsMap[3]="images/status/yellow-green-star_16.png";
-	userIconsMap[4]="images/status/red_16.png";
-	userIconsMap[5]="images/status/yellow-red_16.png";
-	userIconsMap[6]="images/status/red-star_16.png";
-	userIconsMap[7]="images/status/yellow-red-star_16.png";
+	userIconsMap[0]=":/images/status/green_16.png";
+	userIconsMap[1]=":/images/status/yellow-green_16.png";
+	userIconsMap[2]=":/images/status/green-star_16.png";
+	userIconsMap[3]=":/images/status/yellow-green-star_16.png";
+	userIconsMap[4]=":/images/status/red_16.png";
+	userIconsMap[5]=":/images/status/yellow-red_16.png";
+	userIconsMap[6]=":/images/status/red-star_16.png";
+	userIconsMap[7]=":/images/status/yellow-red-star_16.png";
+}
+
+void HubWindow::initUserList()
+{
+	QStringList columns;
+	foreach(tstring name, ResourceManager::getInstance()->getStrings(columnNames))
+		columns << StilUtils::TstrtoQ(name);
+	
+	userlist -> setHeaderLabels(columns);
 }
 
 void HubWindow::initIconset()
@@ -141,22 +154,24 @@ void HubWindow::initIconset()
 	ic->addToFactory();
 }
 
+void HubWindow::initCodec()
+{
+	codec = QTextCodec::codecForName("CP1251");
+}
+
 tstring HubWindow::getStatusShared() const {
-	/*
+	
 	int64_t available;
-	if (users->getSelectedCount() > 1) {
+	/*if (users->getSelectedCount() > 1) {
 		available = users->forEachSelectedT(CountAvailable()).available;
-	} else {
+	} else {*/
 		available = std::for_each(userMap.begin(), userMap.end(), CountAvailable()).available;
-	}
+	//}
 	return Text::toT(Util::formatBytes(available));
-	*/
-	tstring out = Text::toT("getStatusShared runned");
-	return out;
 }
 
 tstring HubWindow::getStatusUsers() const {
-	/*
+	
 	size_t userCount = 0;
 	for(UserMap::const_iterator i = userMap.begin(); i != userMap.end(); ++i){
 		UserInfo* ui = i->second;
@@ -165,14 +180,12 @@ tstring HubWindow::getStatusUsers() const {
 	}
 
 	tstring textForUsers;
-	if (users->getSelectedCount() > 1)
+/*	if (users->getSelectedCount() > 1)
 		textForUsers += Text::toT(Util::toString(users->getSelectedCount()) + "/");
 	if (showUsers->getChecked() && users->size() < userCount)
 		textForUsers += Text::toT(Util::toString(users->size()) + "/");
+*/
 	return textForUsers + Text::toT(Util::toString(userCount) + " " + STRING(HUB_USERS));
-	*/
-	tstring out = Text::toT("getStatusUsers runned");
-	return out;
 }
 
 void HubWindow::updateStatus() {
@@ -220,7 +233,7 @@ void HubWindow::updateUserList(UserInfo* ui)
 			}
 		}
 	} else {
-		//HoldRedraw hold(users);
+		//HoldRedraw hold(userlist);
 		clearUser();
 		//users->clear(); // -ported
 
@@ -358,13 +371,11 @@ void HubWindow::on(Connected, Client*) throw() {
 }
 
 void HubWindow::on(UserUpdated, Client*, const OnlineUser& user) throw() {
-	dcdebug("User updated\n");
 	CID cid = user.getUser()->getCID();
 	speak(UPDATE_USER_JOIN, user);
 }
 
 void HubWindow::on(UsersUpdated, Client*, const OnlineUserList& aList) throw() {
-	dcdebug("Users updated\n");
 	for(OnlineUserList::const_iterator i = aList.begin(); i != aList.end(); ++i) {
 		tasks.add(UPDATE_USER, new UserTask(*(*i)));
 	}
@@ -482,8 +493,6 @@ bool HubWindow::updateUser(const UserTask& u) {
 		{
 			insertUser(ui);
 		}
-		//else
-		//	insertUser(ui, true);
 
 		if(!filterString.empty())
 			updateUserList(ui);
@@ -500,10 +509,13 @@ bool HubWindow::updateUser(const UserTask& u) {
 		resort = ui->update(u.identity, -1) || resort;
 		if(true){
 		//if(showUsers->getChecked()) {
-			int pos = -1;
+			int pos = findUser(ui);
+			//ported
 			//int pos = users->find(ui);
 			if(pos != -1) {
+				//ported and extended
 				//users->update(pos);
+				updateSingleUser(pos, ui);
 			}
 			updateUserList(ui);
 		}
@@ -592,9 +604,10 @@ void HubWindow::addChat(const tstring& aLine) {
 		LOG(LogManager::CHAT, params);
 	}
 	//chat->addText(line); //ported
-	
+
 	QString chatLine(StilUtils::TstrtoQ(line));
 	
+	chatLine = toEncoded(&chatLine);
 #ifndef Q_OS_WIN
 	chatLine.replace(QString("\r\n"),QString("\n"));
 #endif
@@ -676,8 +689,8 @@ void HubWindow::handleSpeaker()//Tasks s, const OnlineUser& u)
 	TaskQueue::List t;
 	tasks.get(t);
 
-//	HoldRedraw hold(users);
-
+	//HoldRedraw hold(userlist);
+	
 	for(TaskQueue::Iter i = t.begin(); i != t.end(); ++i) {
 		if(i->first == UPDATE_USER) {
 			updateUser(*static_cast<UserTask*>(i->second));
@@ -850,23 +863,23 @@ int HubWindow::UserInfo::compareItems(const HubWindow::UserInfo* a, const HubWin
 	return wcscmp(a->columns[col].c_str(), b->columns[col].c_str());
 }
 
-void HubWindow::insertUser(UserInfo *ui, bool isHidden)
+void HubWindow::insertUser(UserInfo *ui)
 {
 	//QString newUser = QString::fromStdString(ui->getNick());
 	QTreeWidgetItem *userItem;
 	
 	//userItem = new QTreeWidgetItem(userlist, QStringList(newUser));
-	userItem = new QTreeWidgetItem(userlist, QStringList(StilUtils::TstrtoQ(ui->getText(0))));
+	userItem = new QTreeWidgetItem(userlist, QStringList(toEncoded(&StilUtils::TstrtoQ(ui->getText(COLUMN_NICK)))));
 	
-	for (int i=1;i<8;i++) 
+	userItem -> setText(1, StilUtils::TstrtoQ(ui->getText(COLUMN_SHARED)));
+	userItem -> setText(2, toEncoded(&StilUtils::TstrtoQ(ui->getText(COLUMN_DESCRIPTION))));
+	
+	for (int i=3;i<8;i++) 
 	{
 		userItem -> setText(i, StilUtils::TstrtoQ(ui->getText(i)));
 	}
 	
 	userItem -> setIcon(0, QIcon(userIconsMap.value(ui->getImage())));
-	
-	qDebug() << "User" << StilUtils::TstrtoQ(ui->getText(0)) << "inserted with image" << ui->getImage() 
-	<< "(is op: " << ui->getIdentity().isOp();
 }
 
 void HubWindow::eraseUser(UserInfo *ui)
@@ -902,5 +915,41 @@ int HubWindow::findUser(UserInfo *ui)
 void HubWindow::clearUser()
 {	
 	userlist -> clear();
+}
+
+void HubWindow::updateSingleUser(int pos, UserInfo *ui)
+{
+	QTreeWidgetItem *item = userlist->topLevelItem(pos);
+
+	item -> setIcon(0, QIcon(userIconsMap.value(ui->getImage())));
+	
+	for (int i=0;i<8;i++) 
+	{
+		item -> setText(i, StilUtils::TstrtoQ(ui->getText(i)));
+	}
+}
+
+QString HubWindow::toEncoded(QString* string)
+{
+	QString encodedString = codec->toUnicode(string->toLocal8Bit());
+	return encodedString;
+}
+
+void HubWindow::setStatus(int s, const tstring& text)
+{
+	switch(s)
+	{
+		case STATUS_STATUS:
+			chatStatusLabel -> setText(StilUtils::TstrtoQ(text));
+			break;
+		case STATUS_USERS:
+			usersStatusLabel -> setText(StilUtils::TstrtoQ(text));
+			break;
+		case STATUS_SHARED:
+			sharedStatusLabel -> setText(StilUtils::TstrtoQ(text));
+			break;
+		default:
+			dcdebug("Set status for %d with text: %s\n", s, Text::fromT(text).c_str());
+	}
 }
 // HubWindow

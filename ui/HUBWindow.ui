@@ -5,123 +5,158 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>519</width>
-    <height>273</height>
+    <width>816</width>
+    <height>530</height>
    </rect>
   </property>
   <layout class="QGridLayout" >
    <item row="0" column="0" >
-    <layout class="QVBoxLayout" >
+    <widget class="QSplitter" name="splitter" >
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="childrenCollapsible" >
+      <bool>false</bool>
+     </property>
+     <widget class="ChatView" name="editor" >
+      <property name="sizePolicy" >
+       <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+        <horstretch>2</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="undoRedoEnabled" >
+       <bool>false</bool>
+      </property>
+      <property name="readOnly" >
+       <bool>true</bool>
+      </property>
+      <property name="textInteractionFlags" >
+       <set>Qt::LinksAccessibleByMouse|Qt::NoTextInteraction|Qt::TextSelectableByMouse</set>
+      </property>
+     </widget>
+     <widget class="QTreeWidget" name="userlist" >
+      <property name="sizePolicy" >
+       <sizepolicy vsizetype="Expanding" hsizetype="Preferred" >
+        <horstretch>1</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="alternatingRowColors" >
+       <bool>true</bool>
+      </property>
+      <property name="rootIsDecorated" >
+       <bool>false</bool>
+      </property>
+      <property name="itemsExpandable" >
+       <bool>false</bool>
+      </property>
+     </widget>
+    </widget>
+   </item>
+   <item row="1" column="0" >
+    <layout class="QHBoxLayout" >
      <item>
-      <widget class="QSplitter" name="splitter" >
-       <property name="sizePolicy" >
-        <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
+      <widget class="LineEdit" name="lineEdit" >
+       <property name="verticalScrollBarPolicy" >
+        <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
-       <property name="orientation" >
-        <enum>Qt::Horizontal</enum>
+       <property name="horizontalScrollBarPolicy" >
+        <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
-       <property name="childrenCollapsible" >
-        <bool>false</bool>
-       </property>
-       <widget class="ChatView" name="editor" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
-          <horstretch>2</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="undoRedoEnabled" >
-         <bool>false</bool>
-        </property>
-        <property name="readOnly" >
-         <bool>true</bool>
-        </property>
-        <property name="textInteractionFlags" >
-         <set>Qt::LinksAccessibleByMouse|Qt::NoTextInteraction|Qt::TextSelectableByMouse</set>
-        </property>
-       </widget>
-       <widget class="QTreeWidget" name="userlist" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Expanding" hsizetype="Preferred" >
-          <horstretch>1</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="alternatingRowColors" >
-         <bool>true</bool>
-        </property>
-        <property name="rootIsDecorated" >
-         <bool>false</bool>
-        </property>
-        <property name="itemsExpandable" >
-         <bool>false</bool>
-        </property>
-        <column>
-         <property name="text" >
-          <string>Nick</string>
-         </property>
-        </column>
-        <column>
-         <property name="text" >
-          <string>Shared</string>
-         </property>
-        </column>
-        <column>
-         <property name="text" >
-          <string>Description</string>
-         </property>
-        </column>
-        <column>
-         <property name="text" >
-          <string>Tag</string>
-         </property>
-        </column>
-        <column>
-         <property name="text" >
-          <string>Connection</string>
-         </property>
-        </column>
-        <column>
-         <property name="text" >
-          <string>IP</string>
-         </property>
-        </column>
-        <column>
-         <property name="text" >
-          <string>E-Mail</string>
-         </property>
-        </column>
-        <column>
-         <property name="text" >
-          <string>CID</string>
-         </property>
-        </column>
-       </widget>
       </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" >
-       <item>
-        <widget class="LineEdit" name="lineEdit" >
-         <property name="verticalScrollBarPolicy" >
-          <enum>Qt::ScrollBarAlwaysOff</enum>
-         </property>
-         <property name="horizontalScrollBarPolicy" >
-          <enum>Qt::ScrollBarAlwaysOff</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="SendBtn" >
-         <property name="text" >
-          <string>Send</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
+      <widget class="QToolButton" name="SendBtn" >
+       <property name="text" >
+        <string>Send</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="2" column="0" >
+    <layout class="QHBoxLayout" >
+     <item>
+      <widget class="QLabel" name="chatStatusLabel" >
+       <property name="text" >
+        <string/>
+       </property>
+       <property name="scaledContents" >
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" >
+        <size>
+         <width>711</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="usersStatusLabel" >
+       <property name="text" >
+        <string/>
+       </property>
+       <property name="scaledContents" >
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType" >
+        <enum>QSizePolicy::Minimum</enum>
+       </property>
+       <property name="sizeHint" >
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="sharedStatusLabel" >
+       <property name="text" >
+        <string/>
+       </property>
+       <property name="scaledContents" >
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType" >
+        <enum>QSizePolicy::Minimum</enum>
+       </property>
+       <property name="sizeHint" >
+        <size>
+         <width>16</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
     </layout>
    </item>
