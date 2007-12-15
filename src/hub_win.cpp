@@ -923,7 +923,11 @@ void HubWindow::updateSingleUser(int pos, UserInfo *ui)
 
 	item -> setIcon(0, QIcon(userIconsMap.value(ui->getImage())));
 	
-	for (int i=0;i<8;i++) 
+	item -> setText(0, toEncoded(&StilUtils::TstrtoQ(ui->getText(COLUMN_NICK))));
+	item -> setText(1, StilUtils::TstrtoQ(ui->getText(COLUMN_SHARED)));
+	item -> setText(2, toEncoded(&StilUtils::TstrtoQ(ui->getText(COLUMN_DESCRIPTION))));
+	
+	for (int i=3;i<8;i++) 
 	{
 		item -> setText(i, StilUtils::TstrtoQ(ui->getText(i)));
 	}
