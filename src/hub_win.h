@@ -259,8 +259,6 @@ private:
 	void initUserList();
 	void initUserListIcons();
 	void initIconset();
-	void initCodec();
-	QString toEncoded(QString* string);
 public:
 	HubWindow(QWidget *parent, const dcpp::tstring& url);
 	virtual ~HubWindow();

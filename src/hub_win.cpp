@@ -60,7 +60,6 @@ HubWindow::HubWindow(QWidget *parent, const dcpp::tstring& url) : MdiChild(paren
 	initUserListIcons();
 	initUserList();
 	initIconset();
-	initCodec();
 	connect(this, SIGNAL(speakerSignal()), this, SLOT(handleSpeaker()),Qt::QueuedConnection);
 	initSecond();
 	
@@ -70,7 +69,12 @@ HubWindow::HubWindow(QWidget *parent, const dcpp::tstring& url) : MdiChild(paren
 	
 	client = ClientManager::getInstance()->getClient(dcpp::Text::fromT(url));
 	client->addListener(this);
+	
+	if (APPSTRING(s_DEFCHARSET) != "System")
+		client->setEncoding(APPSTRING(s_DEFCHARSET).toStdString());
+	
 	client->connect();
+	
 	connect(lineEdit, SIGNAL( SendText(const QString &) ), this, SLOT(sendFunc(const QString &)) );
 	
 	FavoriteManager::getInstance()->addListener(this);
@@ -78,8 +82,8 @@ HubWindow::HubWindow(QWidget *parent, const dcpp::tstring& url) : MdiChild(paren
 
 void HubWindow::sendFunc(const QString &txt)
 {
-	if ( (client) && (!txt.isEmpty()) ) 
-		client->hubMessage(txt.toStdString()); // FIXME: Codec need to install before sending text
+	if ( (client) && (!txt.isEmpty()) )
+		client->hubMessage(Text::fromT(StilUtils::QtoTstr(txt)));
 }
 
 void HubWindow::setupeditor()
@@ -142,13 +146,6 @@ void HubWindow::initIconset()
 
 	ic->load("/home/irq/stildcpp/images/emotions/default.icp");
 	ic->addToFactory();
-}
-
-void HubWindow::initCodec()
-{
-	codec = QTextCodec::codecForName(APPSTRING(s_DEFCHARSET).toLatin1());
-	//QTextCodec::setCodecForCStrings(codec); // Not Sure, it just may be a hack....
-	Q_ASSERT(codec);
 }
 
 tstring HubWindow::getStatusShared() const {
@@ -599,7 +596,6 @@ void HubWindow::addChat(const tstring& aLine) {
 
 	QString chatLine(StilUtils::TstrtoQ(line));
 	
-	chatLine = toEncoded(&chatLine);
 #ifndef Q_OS_WIN
 	chatLine.replace(QString("\r\n"),QString("\n"));
 #endif
@@ -861,12 +857,9 @@ void HubWindow::insertUser(UserInfo *ui)
 	QTreeWidgetItem *userItem;
 	
 	//userItem = new QTreeWidgetItem(userlist, QStringList(newUser));
-	userItem = new QTreeWidgetItem(userlist, QStringList(toEncoded(&StilUtils::TstrtoQ(ui->getText(COLUMN_NICK)))));
+	userItem = new QTreeWidgetItem(userlist, QStringList(StilUtils::TstrtoQ(ui->getText(COLUMN_NICK))));
 	
-	userItem -> setText(1, StilUtils::TstrtoQ(ui->getText(COLUMN_SHARED)));
-	userItem -> setText(2, toEncoded(&StilUtils::TstrtoQ(ui->getText(COLUMN_DESCRIPTION))));
-	
-	for (int i=3;i<8;i++) 
+	for (int i=1;i<8;i++) 
 	{
 		userItem -> setText(i, StilUtils::TstrtoQ(ui->getText(i)));
 	}
@@ -915,20 +908,10 @@ void HubWindow::updateSingleUser(int pos, UserInfo *ui)
 
 	item -> setIcon(0, QIcon(userIconsMap.value(ui->getImage())));
 	
-	item -> setText(0, toEncoded(&StilUtils::TstrtoQ(ui->getText(COLUMN_NICK))));
-	item -> setText(1, StilUtils::TstrtoQ(ui->getText(COLUMN_SHARED)));
-	item -> setText(2, toEncoded(&StilUtils::TstrtoQ(ui->getText(COLUMN_DESCRIPTION))));
-	
-	for (int i=3;i<8;i++) 
+	for (int i=0;i<8;i++) 
 	{
 		item -> setText(i, StilUtils::TstrtoQ(ui->getText(i)));
 	}
-}
-
-QString HubWindow::toEncoded(QString* string)
-{
-	QString encodedString = codec->toUnicode(string->toLocal8Bit());
-	return encodedString;
 }
 
 void HubWindow::setStatus(int s, const tstring& text)
