@@ -344,7 +344,7 @@ int MainWindowImpl::FindWinByType(int type)
 {
 	for (int i=0; i<m_tabwin->count(); i++)
 	{
-		MdiChild *p = static_cast<MdiChild *>(m_tabwin->widget(i));
+		MdiChild *p = qobject_cast<MdiChild *>(m_tabwin->widget(i));
 		if (p->type==type)
 		{
 			return i;
@@ -381,86 +381,86 @@ void MainWindowImpl::OpenList(QWidget *parent, const dcpp::tstring & aFile, cons
 
 void MainWindowImpl::OpenHub(QWidget *parent, const dcpp::tstring& adr)
 {
-	m_tabwin->setCurrentIndex(m_tabwin->addTab((new HubWindow(this, adr)),"Hub"));
+	m_tabwin->setCurrentIndex(m_tabwin->addTab((new HubWindow(m_tabwin, adr)),"Hub"));
 }
 
 void MainWindowImpl::OpenPM(QWidget *parent, const QString &name)
 {
-	m_tabwin->setCurrentIndex(m_tabwin->addTab((new PMWindow(this,name)),"PM"));
+	m_tabwin->setCurrentIndex(m_tabwin->addTab((new PMWindow(m_tabwin,name)),"PM"));
 }
 
 void MainWindowImpl::SearchFunc()
 {
-	m_tabwin->setCurrentIndex(m_tabwin->addTab((new SearchWindow(this,"")),"search"));
+	m_tabwin->setCurrentIndex(m_tabwin->addTab((new SearchWindow(m_tabwin,"")),"search"));
 }
 
 void MainWindowImpl::ADLFunc()
 {
 	if (FindWinByType(12)==-1)
-		m_tabwin->setCurrentIndex(m_tabwin->addTab((new ADLSearchWindow(this)),"ADL Search"));
+		m_tabwin->setCurrentIndex(m_tabwin->addTab((new ADLSearchWindow(m_tabwin)),"ADL Search"));
 	else m_tabwin->setCurrentIndex(FindWinByType(12));
 }
 
 void MainWindowImpl::SSFunc()
 {
 	if (FindWinByType(13)==-1)
-		m_tabwin->setCurrentIndex(m_tabwin->addTab((new SearchSpyWindow(this)),"Search Spy"));
+		m_tabwin->setCurrentIndex(m_tabwin->addTab((new SearchSpyWindow(m_tabwin)),"Search Spy"));
 	else m_tabwin->setCurrentIndex(FindWinByType(13));
 }
 
 void MainWindowImpl::ULFinFunc()
 {
 	if (FindWinByType(11)==-1)
-		m_tabwin->setCurrentIndex(m_tabwin->addTab((new UploadFinishedWindow(this)),"UL_Fin"));
+		m_tabwin->setCurrentIndex(m_tabwin->addTab((new UploadFinishedWindow(m_tabwin)),"UL_Fin"));
 	else m_tabwin->setCurrentIndex(FindWinByType(11));
 }
 
 void MainWindowImpl::DLFinFunc()
 {
 	if (FindWinByType(10)==-1)
-		m_tabwin->setCurrentIndex(m_tabwin->addTab((new DownloadFinishedWindow(this)),"DL_Fin"));
+		m_tabwin->setCurrentIndex(m_tabwin->addTab((new DownloadFinishedWindow(m_tabwin)),"DL_Fin"));
 	else m_tabwin->setCurrentIndex(FindWinByType(10));
 }
 
 void MainWindowImpl::IgnoredUsrFunc()
 {
 	if (FindWinByType(8)==-1)
-		m_tabwin->setCurrentIndex(m_tabwin->addTab((new IgnoredUsersWindow(this)),"Ign_Usr"));
+		m_tabwin->setCurrentIndex(m_tabwin->addTab((new IgnoredUsersWindow(m_tabwin)),"Ign_Usr"));
 	else m_tabwin->setCurrentIndex(FindWinByType(8));
 }
 
 void MainWindowImpl::FavUsrFunc()
 {
 	if (FindWinByType(7)==-1)
-		m_tabwin->setCurrentIndex(m_tabwin->addTab((new FavoriteUsersWindow(this)),"Fav_Usr"));
+		m_tabwin->setCurrentIndex(m_tabwin->addTab((new FavoriteUsersWindow(m_tabwin)),"Fav_Usr"));
 	else m_tabwin->setCurrentIndex(FindWinByType(7));
 }
 
 void MainWindowImpl::FavHubListFunc()
 {
 	if (FindWinByType(4)==-1)
-		m_tabwin->setCurrentIndex(m_tabwin->addTab((new FavoriteHubListWindow(this)),"Fav_Hub"));
+		m_tabwin->setCurrentIndex(m_tabwin->addTab((new FavoriteHubListWindow(m_tabwin)),"Fav_Hub"));
 	else m_tabwin->setCurrentIndex(FindWinByType(4));
 }
 
 void MainWindowImpl::PubHubFunc()
 {
 	if (FindWinByType(9)==-1)
-		m_tabwin->setCurrentIndex(m_tabwin->addTab((new PublicHubWindow(this)),"Pub Hub"));
+		m_tabwin->setCurrentIndex(m_tabwin->addTab((new PublicHubWindow(m_tabwin)),"Pub Hub"));
 	else m_tabwin->setCurrentIndex(FindWinByType(9));
 }
 
 void MainWindowImpl::DLQueueFunc()
 {
 	if (FindWinByType(6)==-1)
-		m_tabwin->setCurrentIndex(m_tabwin->addTab((new DownLoadQueueWindow(this)),"DL Queue"));
+		m_tabwin->setCurrentIndex(m_tabwin->addTab((new DownLoadQueueWindow(m_tabwin)),"DL Queue"));
 	else m_tabwin->setCurrentIndex(FindWinByType(6));
 }
 
 void MainWindowImpl::notepadFunc()
 {
 	if (FindWinByType(14)==-1)
-		m_tabwin->setCurrentIndex(m_tabwin->addTab((new NotePad(this)),"NotePad"));
+		m_tabwin->setCurrentIndex(m_tabwin->addTab((new NotePad(m_tabwin)),"NotePad"));
 	else m_tabwin->setCurrentIndex(FindWinByType(14));
 }
 
@@ -507,7 +507,7 @@ void MainWindowImpl::updateWindowMenu()
 	
 	for (int i=0; i<m_tabwin->count(); i++)
 	{
-		MdiChild *p = static_cast<MdiChild *>(m_tabwin->widget(i));
+		MdiChild *p = qobject_cast<MdiChild *>(m_tabwin->widget(i));
 		tst[p->type]++;
 	}
 	
@@ -527,10 +527,10 @@ void MainWindowImpl::slotCloseOfflineLists()
 {
 	for (int i=0; i<m_tabwin->count(); i++)
 	{
-		MdiChild *p = static_cast<MdiChild *>(m_tabwin->widget(i));
+		MdiChild *p = qobject_cast<MdiChild *>(m_tabwin->widget(i));
 		if (p->type==5)
 		{
-			FileListDlg *v = static_cast<FileListDlg *>(p);
+			FileListDlg *v = qobject_cast<FileListDlg *>(p);
 			//if (!v->isConnected()) delete m_tabwin->widget(i);
 		}
 	}
@@ -540,10 +540,10 @@ void MainWindowImpl::slotCloseOfflineChat()
 {
 	for (int i=0; i<m_tabwin->count(); i++)
 	{
-		MdiChild *p = static_cast<MdiChild *>(m_tabwin->widget(i));
+		MdiChild *p = qobject_cast<MdiChild *>(m_tabwin->widget(i));
 		if (p->type==2)
 		{
-			PMWindow *v = static_cast<PMWindow *>(p);
+			PMWindow *v = qobject_cast<PMWindow *>(p);
 			//if (!v->isOnline()) delete m_tabwin->widget(i);
 		}
 	}
@@ -553,10 +553,10 @@ void MainWindowImpl::slotCloseDisconnectedHubs()
 {
 	for (int i=0; i<m_tabwin->count(); i++)
 	{
-		MdiChild *p = static_cast<MdiChild *>(m_tabwin->widget(i));
+		MdiChild *p = qobject_cast<MdiChild *>(m_tabwin->widget(i));
 		if (p->type==1)
 		{
-			HubWindow *v = static_cast<HubWindow *>(p);
+			HubWindow *v = qobject_cast<HubWindow *>(p);
 			if (!v->isConnected()) delete m_tabwin->widget(i);
 		}
 	}
@@ -567,7 +567,7 @@ void MainWindowImpl::slotCloseWinType(int type)
 	for (int j=0; j<5; j++)
 	for (int i=0; i<m_tabwin->count(); i++)
 	{
-		MdiChild *p = static_cast<MdiChild *>(m_tabwin->widget(i));
+		MdiChild *p = qobject_cast<MdiChild *>(m_tabwin->widget(i));
 		if (p->type==type) delete m_tabwin->widget(i);
 	}
 }
@@ -675,10 +675,10 @@ void MainWindowImpl::reconnectFunc()
 	int i = m_tabwin->currentIndex();
 	if ( (i>-1)&&(m_tabwin->count()>0) )
 	{
-		MdiChild *p = static_cast<MdiChild *>(m_tabwin->widget(i));
+		MdiChild *p = qobject_cast<MdiChild *>(m_tabwin->widget(i));
 		if (p->type==1)
 		{
-			HubWindow *v = static_cast<HubWindow *>(p);
+			HubWindow *v = qobject_cast<HubWindow *>(p);
 			v->ReConnect();
 		}
 	}

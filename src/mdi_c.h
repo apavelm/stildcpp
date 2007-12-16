@@ -26,16 +26,18 @@
 #include <QAction>
 #include <QWidget>
 
+#include "widgets/tabwidget.h"
 
 //
 
 class MdiChild : public QDialog
 {
 	Q_OBJECT
+protected:
+	TabWidget *prnt;
 public:
 	MdiChild(QWidget *parent);
 	~MdiChild();
-	QAction *action;
 	
 	int type;
 	/*  0 - MdiChild (NONE)
@@ -55,8 +57,9 @@ public:
 		14 - NotePad
 	*/
 	QString idText;
-signals:
-	void actionReleased(QAction *action);
+	void setTabText(const QString &);
+public slots:
+	void slot_setTabText(const QString &);
 };
 
 #endif // __MDI_C_H__

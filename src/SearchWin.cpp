@@ -37,8 +37,7 @@ void SearchWindow::SearchBtn()
 	if (searchCombo->currentIndex()>=0)
 	{
 		idText  = searchCombo->itemText(searchCombo->currentIndex());	
-		action->setText(tr("Search for: ")+idText);
-		setWindowTitle(tr("Search for: ")+idText);		
+		setTabText(tr("Search for: ")+idText);
 		//SEARCH
 	}
 }

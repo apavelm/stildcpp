@@ -36,6 +36,10 @@ public:
 	~TabWidget();
 	void setOpt(int k);
 	int getOpt() { return tb; }
+	void TextChange(int, const QString &);
+	void TextColor(int, QColor &);
+	void TabToolTip(int, const QString &);
+	void TabIcon(int, const QIcon &);
 protected:
 	bool eventFilter(QObject *obj, QEvent *event);
 private:
@@ -52,6 +56,10 @@ public slots:
 	void slotCloseTab(int n);
 	void slotCloseOtherTab();
 	void slotCloseAllTab();
+	void slotTextChange(int, const QString &);
+	void slotTextColor(int, QColor &);
+	void slotTabToolTip(int, const QString &);
+	void slotTabIcon(int, const QIcon &);
 };
 
 #endif

@@ -25,11 +25,23 @@ MdiChild::MdiChild(QWidget *parent)
 	setAttribute(Qt::WA_DeleteOnClose, true);
 	type=0;
 	idText=tr("");
+	prnt = (TabWidget*) parent;
 }
 
 MdiChild::~MdiChild()
 {
-	emit actionReleased(action);
+	prnt =0;
+}
+
+void MdiChild::setTabText(const QString &txt)
+{
+	int idx = prnt->indexOf(this);
+	prnt->TextChange(idx, txt);
+}
+
+void MdiChild::slot_setTabText(const QString &txt)
+{
+	setTabText(txt);
 }
 
 //

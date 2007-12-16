@@ -133,6 +133,7 @@ void PreferencesDialog::initGeneralPage()
 	DescEdit->setText(StilUtils::TstrtoQ(Text::toT(SETTING(DESCRIPTION))));
 	
 	int selected = 0, j = 0;
+	connections->clear();
 	for(StringIter i = dcpp::SettingsManager::connectionSpeeds.begin(); i != dcpp::SettingsManager::connectionSpeeds.end(); ++i, ++j) 
 	{
 		connections->addItem(QString::fromStdString(*i));
@@ -145,6 +146,7 @@ void PreferencesDialog::initGeneralPage()
 	// Adding charset encoding list to combobox
 	QString t;
 	int sel = -1;
+	cmb_Encoding->clear();
 	QList<QByteArray> lst = QTextCodec::availableCodecs();
 	for(int i=0;i< lst.size(); i++) 
 	{
@@ -154,7 +156,6 @@ void PreferencesDialog::initGeneralPage()
 	}
 	if (sel == -1) sel = 0;
 	cmb_Encoding->setCurrentIndex(sel);
-	
 }
 
 void PreferencesDialog::applyGeneralPage()
@@ -546,7 +547,7 @@ void PreferencesDialog::applyLNFPage()
 	SETAPPSETTING(i_HUBLEFTSIDE, chk_swpUserList->isChecked());
 }
 
-void PreferencesDialog::accept() 
+void PreferencesDialog::accept()
 {
 		applyGeneralPage();
 		applyConnectionPage();

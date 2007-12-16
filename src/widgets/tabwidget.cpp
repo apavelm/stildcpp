@@ -196,4 +196,50 @@ void TabWidget::setCrossButton(bool activate)
 	else crossButton->show();
 }
 
+void TabWidget::TextChange(int index, const QString & txt)
+{
+	if ( (index<0)||(index>=tabBar()->count())||(txt.isEmpty()) ) return;
+	int ix = currentIndex();
+	QWidget *tab1 = widget(index);
+
+	removeTab(index);
+	insertTab(index,tab1,txt);
+	setCurrentIndex(ix);
+}
+
+void TabWidget::slotTextChange(int index, const QString & txt)
+{
+	TextChange(index, txt);
+}
+
+void TabWidget::TextColor(int index, QColor & c)
+{
+	tabBar()->setTabTextColor(index, c);
+}
+
+void TabWidget::TabToolTip(int index, const QString & txt)
+{
+	tabBar()->setTabToolTip(index, txt);
+}
+	
+void TabWidget::slotTextColor(int index, QColor & c)
+{
+	TextColor(index, c);
+}
+
+void TabWidget::slotTabToolTip(int index, const QString & txt)
+{
+	TabToolTip(index, txt);
+}
+
+void TabWidget::TabIcon(int index, const QIcon & icn)
+{
+	tabBar()->setTabIcon(index, icn);
+}
+
+void TabWidget::slotTabIcon(int index, const QIcon & icn)
+{
+	TabIcon(index, icn);
+}
+
 //
