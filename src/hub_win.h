@@ -36,6 +36,7 @@
 #include "config.h"
 #include "stilutils.h"
 #include "iconset.h"
+#include "textutil.h"
 #include "UserInfoBase.h"
 #include "stilutils.h"
 //
@@ -286,7 +287,7 @@ public:
 signals:
 	void speakerSignal();
 private slots:
-	void sendFunc();
+	void sendFunc(const QString &);
 	bool eachSecond();
 	void handleSpeaker();
 };

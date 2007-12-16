@@ -29,6 +29,7 @@
 #include <QItemDelegate>
 #include <QKeyEvent>
 #include <QLocale>
+#include <QTextCodec>
 
 #include "config.h"
 #include "stilutils.h"

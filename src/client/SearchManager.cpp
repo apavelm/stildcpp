@@ -126,7 +126,7 @@ void SearchManager::listen() throw(SocketException) {
 
 	socket = new Socket();
 	socket->create(Socket::TYPE_UDP);
-	port = socket->bind(static_cast<uint16_t>(SETTING(UDP_PORT)));
+	port = socket->bind(static_cast<uint16_t>(SETTING(UDP_PORT)), SETTING(BIND_ADDRESS));
 
 	start();
 }
@@ -166,7 +166,7 @@ int SearchManager::run() {
 		try {
 			socket->disconnect();
 			socket->create(Socket::TYPE_UDP);
-			socket->bind(port);
+			socket->bind(port, SETTING(BIND_ADDRESS));
 		} catch(const SocketException& e) {
 			// Oops, fatal this time...
 			dcdebug("SearchManager::run Stopped listening: %s\n", e.getError().c_str());
@@ -234,7 +234,7 @@ void SearchManager::onData(const uint8_t* buf, size_t aLen, const string& remote
 		if( (j = x.find((char)5, i)) == string::npos) {
 			return;
 		}
-		int slots = Util::toInt(x.substr(i, j-i));
+		int Slots = Util::toInt(x.substr(i, j-i));
 		i = j + 1;
 		if( (j = x.rfind(" (")) == string::npos) {
 			return;
@@ -273,7 +273,7 @@ void SearchManager::onData(const uint8_t* buf, size_t aLen, const string& remote
 		}
 
 
-		SearchResult* sr = new SearchResult(user, type, slots, freeSlots, size,
+		SearchResult* sr = new SearchResult(user, type, Slots, freeSlots, size,
 			file, hubName, url, remoteIp, TTHValue(tth), Util::emptyString);
 		fire(SearchManagerListener::SR(), sr);
 		sr->decRef();

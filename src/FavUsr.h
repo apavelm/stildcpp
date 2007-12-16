@@ -21,15 +21,50 @@
 #ifndef __FAV_USR_H__
 #define __FAV_USR_H__
 
+//
+#include "client/stdinc.h"
+#include "client/DCPlusPlus.h"
+#include "client/User.h"
+#include "client/FavoriteManagerListener.h"
+#include "client/FavoriteManager.h"
+#include "client/FavoriteUser.h"
+
+//
+#include "UserInfoBase.h"
 #include "mdi_c.h"
+#include "stilutils.h"
 
 #include "ui_fav_users.h"
 
-class FavoriteUsersWindow : public MdiChild, private Ui::mdi_FavUsers
+#include <QtDebug>
+#include <QtGui>
+
+class FavoriteUsersWindow : public MdiChild, private Ui::mdi_FavUsers, private dcpp::FavoriteManagerListener
 {
 	Q_OBJECT
 public:
 	FavoriteUsersWindow(QWidget *parent);
+	~FavoriteUsersWindow();
+private:
+	
+	enum { USER_UPDATED };
+
+	void addUser(const dcpp::FavoriteUser& aUser);
+	void updateUser(const dcpp::UserPtr& aUser);
+	void removeUser(const dcpp::FavoriteUser& aUser);
+	
+	// hack
+	void speak(int, const UserPtr& aUser);
+	
+	// FavoriteManagerListener
+	virtual void on(UserAdded, const FavoriteUser& aUser) throw();
+	virtual void on(UserRemoved, const FavoriteUser& aUser) throw();
+	virtual void on(StatusChanged, const UserPtr& aUser) throw();
+private slots:
+	void onAutoGrant(int);
+	void slotSpeak(int, const UserPtr&);
+signals:
+	void sigSpeak(int, const UserPtr&);
 };
 
 #endif // __FAV_USR_H__

@@ -44,6 +44,8 @@ public:
 	static QString TstrtoQ(const tstring& tstr);
 	
 	static QString fmtBytes(int64_t aBytes);
+	
+	pair<tstring, bool> getHubNames(const CID& cid);
 };
 
 #endif // of StilUtils

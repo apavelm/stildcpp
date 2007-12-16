@@ -4,7 +4,8 @@ CONFIG += qt \
  warn_on \
  console \
  build_all \
- debug
+ debug \
+ silent
 DESTDIR = bin
 OBJECTS_DIR = build
 MOC_DIR = build

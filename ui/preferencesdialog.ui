@@ -105,106 +105,116 @@
             <enum>QFrame::Plain</enum>
            </property>
            <property name="currentIndex" >
-            <number>8</number>
+            <number>0</number>
            </property>
            <widget class="QWidget" name="General" >
             <layout class="QGridLayout" >
              <item row="0" column="0" >
               <layout class="QVBoxLayout" >
                <item>
-                <layout class="QVBoxLayout" >
+                <layout class="QHBoxLayout" >
                  <item>
-                  <layout class="QHBoxLayout" >
-                   <item>
-                    <widget class="QLabel" name="label_3" >
-                     <property name="minimumSize" >
-                      <size>
-                       <width>80</width>
-                       <height>0</height>
-                      </size>
-                     </property>
-                     <property name="text" >
-                      <string>Nick</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLineEdit" name="NickEdit" >
-                     <property name="maxLength" >
-                      <number>35</number>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
+                  <widget class="QLabel" name="label_3" >
+                   <property name="minimumSize" >
+                    <size>
+                     <width>80</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="text" >
+                    <string>Nick</string>
+                   </property>
+                  </widget>
                  </item>
                  <item>
-                  <layout class="QHBoxLayout" >
-                   <item>
-                    <widget class="QLabel" name="label_4" >
-                     <property name="minimumSize" >
-                      <size>
-                       <width>80</width>
-                       <height>0</height>
-                      </size>
-                     </property>
-                     <property name="text" >
-                      <string>EMail</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLineEdit" name="EmailEdit" >
-                     <property name="maxLength" >
-                      <number>35</number>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
+                  <widget class="QLineEdit" name="NickEdit" >
+                   <property name="maxLength" >
+                    <number>35</number>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" >
+                 <item>
+                  <widget class="QLabel" name="label_4" >
+                   <property name="minimumSize" >
+                    <size>
+                     <width>80</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="text" >
+                    <string>EMail</string>
+                   </property>
+                  </widget>
                  </item>
                  <item>
-                  <layout class="QHBoxLayout" >
-                   <item>
-                    <widget class="QLabel" name="label_5" >
-                     <property name="minimumSize" >
-                      <size>
-                       <width>80</width>
-                       <height>0</height>
-                      </size>
-                     </property>
-                     <property name="text" >
-                      <string>Description</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLineEdit" name="DescEdit" >
-                     <property name="maxLength" >
-                      <number>35</number>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
+                  <widget class="QLineEdit" name="EmailEdit" >
+                   <property name="maxLength" >
+                    <number>35</number>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" >
+                 <item>
+                  <widget class="QLabel" name="label_5" >
+                   <property name="minimumSize" >
+                    <size>
+                     <width>80</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="text" >
+                    <string>Description</string>
+                   </property>
+                  </widget>
                  </item>
                  <item>
-                  <layout class="QHBoxLayout" >
-                   <item>
-                    <widget class="QLabel" name="label" >
-                     <property name="text" >
-                      <string>Line Speed (Upload)</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QComboBox" name="connections" />
-                   </item>
-                   <item>
-                    <widget class="QLabel" name="label_2" >
-                     <property name="text" >
-                      <string>MiB/s</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
+                  <widget class="QLineEdit" name="DescEdit" >
+                   <property name="maxLength" >
+                    <number>35</number>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" >
+                 <item>
+                  <widget class="QLabel" name="label" >
+                   <property name="text" >
+                    <string>Line Speed (Upload)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QComboBox" name="connections" />
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_2" >
+                   <property name="text" >
+                    <string>MiB/s</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" >
+                 <item>
+                  <widget class="QLabel" name="label_25" >
+                   <property name="text" >
+                    <string>Default Hub Encoding</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QComboBox" name="cmb_Encoding" />
                  </item>
                 </layout>
                </item>
@@ -215,8 +225,8 @@
                  </property>
                  <property name="sizeHint" >
                   <size>
-                   <width>20</width>
-                   <height>40</height>
+                   <width>428</width>
+                   <height>291</height>
                   </size>
                  </property>
                 </spacer>
@@ -1107,12 +1117,12 @@
               <string>Show join/part</string>
              </property>
             </widget>
-            <widget class="QWidget" name="" >
+            <widget class="QWidget" name="layoutWidget89" >
              <property name="geometry" >
               <rect>
-               <x>80</x>
-               <y>120</y>
-               <width>181</width>
+               <x>60</x>
+               <y>150</y>
+               <width>321</width>
                <height>29</height>
               </rect>
              </property>
@@ -1129,7 +1139,7 @@
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="" >
+            <widget class="QWidget" name="layoutWidget34" >
              <property name="geometry" >
               <rect>
                <x>10</x>
@@ -1154,6 +1164,19 @@
                </widget>
               </item>
              </layout>
+            </widget>
+            <widget class="QCheckBox" name="chk_joins_fav" >
+             <property name="geometry" >
+              <rect>
+               <x>80</x>
+               <y>110</y>
+               <width>321</width>
+               <height>22</height>
+              </rect>
+             </property>
+             <property name="text" >
+              <string>Only show join/part for favorite users</string>
+             </property>
             </widget>
            </widget>
            <widget class="QWidget" name="LookNFeel" >

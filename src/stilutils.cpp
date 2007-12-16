@@ -22,6 +22,9 @@
 
 #include "stilutils.h"
 
+using namespace std;
+using namespace dcpp;
+
 string StilUtils::getNicks(const CID& cid)
 {
 	return Util::toString(ClientManager::getInstance()->getNicks(cid));
@@ -77,6 +80,17 @@ QString StilUtils::fmtBytes(int64_t aBytes)
 	t.setNum(res,'G',4);
 	t += suffix;
 	return t;
+}
+
+pair<tstring, bool> StilUtils::getHubNames(const CID& cid)
+{
+	StringList hubs = ClientManager::getInstance()->getHubNames(cid);
+	if(hubs.empty()) 
+	{
+		return make_pair(Text::toT("Offline"), false);
+	} else {
+		return make_pair(Text::toT(Util::toString(hubs)), true);
+	}
 }
 
 // of stilutils

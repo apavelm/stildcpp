@@ -34,13 +34,14 @@ const char * AppSettingsMgr::intTags[] =
 
 const char * AppSettingsMgr::strTags[] = 
 {
-	"IconSetPath"
+	"IconSetPath", "DefaultHubEncoding"
 };
 
 void AppSettingsMgr::writeDefs()
 {
 	intDefaults << 1 << 1 << 1 << 0 << 1 << 0 << 10 << 0 << 1 << 0;
 	strDefaults << "/home/irq/stildcpp/images/emotions/default.icp";
+	strDefaults << "CP1251";
 	intSettings = intDefaults;
 	strSettings = strDefaults;
 }

@@ -141,6 +141,20 @@ void PreferencesDialog::initGeneralPage()
 		}
 	}
 	connections->setCurrentIndex(selected);
+	
+	// Adding charset encoding list to combobox
+	QString t;
+	int sel = -1;
+	QList<QByteArray> lst = QTextCodec::availableCodecs();
+	for(int i=0;i< lst.size(); i++) 
+	{
+		t = lst.at(i);
+		cmb_Encoding->addItem(t);
+		if(sel == -1 && APPSTRING(s_DEFCHARSET) == t) sel = i;
+	}
+	if (sel == -1) sel = 0;
+	cmb_Encoding->setCurrentIndex(sel);
+	
 }
 
 void PreferencesDialog::applyGeneralPage()
@@ -149,6 +163,7 @@ void PreferencesDialog::applyGeneralPage()
 	SettingsManager::getInstance()->set(SettingsManager::EMAIL, dcpp::Text::fromT(StilUtils::QtoTstr(EmailEdit->text()) ) );
 	SettingsManager::getInstance()->set(SettingsManager::DESCRIPTION, dcpp::Text::fromT(StilUtils::QtoTstr(DescEdit->text()) ) );
 	SettingsManager::getInstance()->set(SettingsManager::UPLOAD_SPEED, dcpp::Text::fromT(StilUtils::QtoTstr(connections->currentText()) ) );
+	SETAPPSTRING(s_DEFCHARSET, cmb_Encoding->currentText());
 }
 
 void PreferencesDialog::initConnectionPage() 
@@ -469,6 +484,7 @@ void PreferencesDialog::initMessagesPage()
 	chk_smiles->setChecked( APPSETTING(i_SHOWSMILES) );
 	chk_timestamp->setChecked( BOOLSETTING(TIME_STAMPS) );
 	chk_joins->setChecked( BOOLSETTING(SHOW_JOINS) );
+	chk_joins_fav->setChecked( BOOLSETTING(FAV_SHOW_JOINS) );
 	edt_timestampfmt->setText(StilUtils::TstrtoQ(Text::toT(SETTING(TIME_STAMPS_FORMAT))));
 	edit_icp_path->setText(APPSTRING(s_ICONSETPATH));
 }
@@ -514,6 +530,7 @@ void PreferencesDialog::applyMessagesPage()
 
 	SettingsManager::getInstance()->set(SettingsManager::TIME_STAMPS, chk_timestamp->isChecked() );
 	SettingsManager::getInstance()->set(SettingsManager::SHOW_JOINS, chk_joins->isChecked() );
+	SettingsManager::getInstance()->set(SettingsManager::FAV_SHOW_JOINS, chk_joins_fav->isChecked() );
 
 	SettingsManager::getInstance()->set(SettingsManager::TIME_STAMPS_FORMAT, dcpp::Text::fromT(StilUtils::QtoTstr(edt_timestampfmt->text()) ) );
 	SETAPPSTRING(s_ICONSETPATH, edit_icp_path->text());

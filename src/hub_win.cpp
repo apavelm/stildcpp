@@ -71,27 +71,15 @@ HubWindow::HubWindow(QWidget *parent, const dcpp::tstring& url) : MdiChild(paren
 	client = ClientManager::getInstance()->getClient(dcpp::Text::fromT(url));
 	client->addListener(this);
 	client->connect();
-	connect(SendBtn, SIGNAL(clicked()), this, SLOT( sendFunc() ) );
+	connect(lineEdit, SIGNAL( SendText(const QString &) ), this, SLOT(sendFunc(const QString &)) );
 	
 	FavoriteManager::getInstance()->addListener(this);
-	
 }
 
-#include "textutil.h" //DELTE ME AFTER DEBUGING FUNCTION BELOW
-void HubWindow::sendFunc()
+void HubWindow::sendFunc(const QString &txt)
 {
-	/* moved to  initIconset()
-	Iconset *ic = new Iconset();
-
-	ic->load("/home/bigbiker/Projects/DirectConnect/SVN/WorkCopy/stildcpp/images/emotions/default.icp");
-	ic->addToFactory();
-	*/
-	QString txt = "Testing smile :'( sequence $) ;) just do it! :) =) http://www.google.com rifjriofj/me gfgergergij";
-	txt = TextUtil::plain2rich(txt);
-	txt = TextUtil::linkify(txt);
-	txt = TextUtil::emoticonify(txt);
-	txt = TextUtil::legacyFormat(txt);
-	editor->appendText(txt);
+	if ( (client) && (!txt.isEmpty()) ) 
+		client->hubMessage(txt.toStdString()); // FIXME: Codec need to install before sending text
 }
 
 void HubWindow::setupeditor()
@@ -106,14 +94,16 @@ void HubWindow::setupeditor()
 	highlighter = new Highlighter(editor->document());
 }
 
-void HubWindow::initSecond() {
+void HubWindow::initSecond()
+{
 	//createTimer(std::tr1::bind(&HubFrame::eachSecond, this), 1000);
 	QTimer *timer = new QTimer(this);
 	connect(timer, SIGNAL(timeout()), this, SLOT(eachSecond()));
 	timer->start(1000);
 }
 
-bool HubWindow::eachSecond() {
+bool HubWindow::eachSecond()
+{
 
 	if(updateUsers) {
 		updateUsers = false;
@@ -150,13 +140,15 @@ void HubWindow::initIconset()
 {
 	Iconset *ic = new Iconset();
 
-	ic->load("/home/bigbiker/Projects/DirectConnect/SVN/WorkCopy/stildcpp/images/emotions/default.icp");
+	ic->load("/home/irq/stildcpp/images/emotions/default.icp");
 	ic->addToFactory();
 }
 
 void HubWindow::initCodec()
 {
-	codec = QTextCodec::codecForName("CP1251");
+	codec = QTextCodec::codecForName(APPSTRING(s_DEFCHARSET).toLatin1());
+	//QTextCodec::setCodecForCStrings(codec); // Not Sure, it just may be a hack....
+	Q_ASSERT(codec);
 }
 
 tstring HubWindow::getStatusShared() const {

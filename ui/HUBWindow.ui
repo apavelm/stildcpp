@@ -57,6 +57,11 @@
       <property name="itemsExpandable" >
        <bool>false</bool>
       </property>
+      <column>
+       <property name="text" >
+        <string>1</string>
+       </property>
+      </column>
      </widget>
     </widget>
    </item>
@@ -69,13 +74,6 @@
        </property>
        <property name="horizontalScrollBarPolicy" >
         <enum>Qt::ScrollBarAlwaysOff</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QToolButton" name="SendBtn" >
-       <property name="text" >
-        <string>Send</string>
        </property>
       </widget>
      </item>

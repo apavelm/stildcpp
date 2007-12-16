@@ -23,7 +23,6 @@
 
 #include "UserConnection.h"
 #include "QueueItem.h"
-#include "SharedFile.h"
 #include "HashManager.h"
 
 namespace dcpp {
@@ -61,10 +60,10 @@ Download::Download(UserConnection& conn, QueueItem& qi, bool supportsTrees) thro
 		}
 		
 		if(qi.isSet(QueueItem::FLAG_RESUME)) {
+#ifdef PORT_ME
 			const string& target = (getTempTarget().empty() ? getPath() : getTempTarget());
 			int64_t start = File::getSize(target);
 
-#ifdef PORT_ME
 			// Only use antifrag if we don't have a previous non-antifrag part
 			if( BOOLSETTING(ANTI_FRAG) && (start == -1) ) {
 				int64_t aSize = File::getSize(target + Download::ANTI_FRAG_EXT);
@@ -118,10 +117,6 @@ void Download::getParams(const UserConnection& aSource, StringMap& params) {
 	Transfer::getParams(aSource, params);
 	params["target"] = getPath();
 	params["sfv"] = Util::toString(isSet(Download::FLAG_CRC32_OK) ? 1 : 0);
-}
-
-void Download::setSharedFile(SharedFile* f)  { 
-	file = sharedFile = f;
 }
 
 } // namespace dcpp
