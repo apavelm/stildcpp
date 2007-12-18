@@ -39,6 +39,7 @@
 #include "textutil.h"
 #include "UserInfoBase.h"
 #include "stilutils.h"
+#include "useractmenu.h"
 //
 #include "client/stdinc.h"
 #include "client/DCPlusPlus.h"
@@ -89,7 +90,7 @@ class HubWindow : public MdiChild, private Ui::mdiHUBwin
 {
 	Q_OBJECT
 private:
-
+	UserActionMenu * usrActionMenu;
 	Highlighter *highlighter;
 	
 	dcpp::Client* client;
@@ -259,6 +260,8 @@ private:
 	void initUserList();
 	void initUserListIcons();
 	void initIconset();
+	// Create UserActionMenu
+	void initUserActionMenu();
 public:
 	HubWindow(QWidget *parent, const dcpp::tstring& url);
 	virtual ~HubWindow();

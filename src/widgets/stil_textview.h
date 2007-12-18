@@ -24,7 +24,12 @@
 #include <QtGui>
 
 #include "stil_richtext.h"
+#include "../stilutils.h"
+#include "../useractmenu.h"
 
+#include "../client/stdinc.h"
+#include "../client/DCPlusPlus.h"
+#include "../client/Client.h"
 
 
 // TODO: This class should be further refactored into more modular system.
@@ -100,6 +105,7 @@ class StilTextView : public QTextEdit
 	Q_OBJECT
 public:
 	StilTextView(QWidget *parent = 0);
+	~StilTextView();
 
 	bool atBottom();
 	QString anchorOnMousePress;
@@ -118,6 +124,11 @@ public:
 	QString fragmentToPlainText(const QTextFragment &fragment);
 	QString blockToPlainText(const QTextBlock &block);
 	QString documentFragmentToPlainText(const QTextDocument &doc, QTextFrame::Iterator frameIt);
+	
+	void setUserMenu(UserActionMenu * m) { if (m) usrMenu = m; }
+	void setHubAddress(QString & s) { if (!s.isEmpty()) sHubAddress = s; }
+	UserActionMenu * getUserMenu() { return usrMenu; }
+	QString getHubAddress() { return sHubAddress; }
 	
 public slots:
 	void scrollToBottom();
@@ -142,8 +153,13 @@ protected:
 	void mouseReleaseEvent(QMouseEvent *e);
 	QMimeData *createMimeDataFromSelection() const;
 	void resizeEvent(QResizeEvent *);
+
 private:
 	QPoint last_click_;
+	UserActionMenu * usrMenu;
+	QString sHubAddress;
+//signals:
+//	void sigScrollUserListToNick(QString &);
 };
 
 #endif

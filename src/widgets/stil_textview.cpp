@@ -67,9 +67,13 @@ QMenu *URLObject::createPopupMenu(const QString &lnk)
 // StilTextView
 //----------------------------------------------------------------------------
 
-StilTextView::StilTextView(QWidget *parent) : QTextEdit(parent)
+StilTextView::~StilTextView()
 {
 
+}
+
+StilTextView::StilTextView(QWidget *parent) : QTextEdit(parent)
+{
 	setReadOnly(true);
 	StilRichText::install(document());
 	
@@ -170,8 +174,13 @@ void StilTextView::contextMenuEvent(QContextMenuEvent *e)
 		tc.select(QTextCursor::WordUnderCursor);
 		QString txt = tc.selectedText();
 		
-		// TODO: if ( isUserOnline(txt) && isUser(txt) ) specialMenu; else
-			menu = createStandardContextMenu(); 
+		// If UserOnline(); txt == Nick, nad SpecialMenu attached.... else StandartMenu shows
+		dcpp::UserPtr u = dcpp::ClientManager::getInstance()->findUser(dcpp::Text::fromT(StilUtils::QtoTstr(txt)), dcpp::Text::fromT(StilUtils::QtoTstr(sHubAddress)) );
+		if ( (usrMenu) && (u) 
+			//&& (!u->getIdentity()->isHidden()) 
+			)
+			menu = usrMenu->getMenuForUser(txt);
+		else menu = createStandardContextMenu(); 
 		
 		tc.setPosition(current_position);
 		restoreSelection(tc, s);

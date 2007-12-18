@@ -78,6 +78,11 @@ HubWindow::HubWindow(QWidget *parent, const dcpp::tstring& url) : MdiChild(paren
 	connect(lineEdit, SIGNAL( SendText(const QString &) ), this, SLOT(sendFunc(const QString &)) );
 	
 	FavoriteManager::getInstance()->addListener(this);
+	
+	editor->setHubAddress(idText);
+	usrActionMenu = new UserActionMenu;
+	connect(usrActionMenu, SIGNAL(sig_sendPublicMessage(const QString &)), lineEdit, SLOT(append(const QString &)) );
+	editor->setUserMenu(usrActionMenu);
 }
 
 void HubWindow::sendFunc(const QString &txt)

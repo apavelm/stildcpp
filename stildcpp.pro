@@ -109,7 +109,6 @@ HEADERS = src/mainwindowimpl.h \
  src/client/ServerSocket.h \
  src/client/SettingsManager.h \
  src/client/SFVReader.h \
- src/client/SharedFile.h \
  src/client/ShareManager.h \
  src/client/SimpleXML.h \
  src/client/Singleton.h \
@@ -148,7 +147,9 @@ HEADERS = src/mainwindowimpl.h \
  src/iconset.h \
  src/textutil.h \
  src/rtparse.h \
- src/zstream.h
+ src/zstream.h \
+ src/useractmenu.h \
+ src/client/HashBloom.h
 SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
  src/frmAbout.cpp \
@@ -202,7 +203,6 @@ SOURCES = src/mainwindowimpl.cpp \
  src/client/ServerSocket.cpp \
  src/client/SettingsManager.cpp \
  src/client/SFVReader.cpp \
- src/client/SharedFile.cpp \
  src/client/ShareManager.cpp \
  src/client/SimpleXML.cpp \
  src/client/Socket.cpp \
@@ -232,7 +232,9 @@ SOURCES = src/mainwindowimpl.cpp \
  src/iconset.cpp \
  src/textutil.cpp \
  src/rtparse.cpp \
- src/zstream.cpp
+ src/zstream.cpp \
+ src/useractmenu.cpp \
+ src/client/HashBloom.cpp
 RESOURCES += src/stildcpp.qrc src/langs.qrc
 LIBS += -lssl -lbz2 -lcrypto
 TRANSLATIONS = lang/stildcpp_ru.ts

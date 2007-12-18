@@ -18,26 +18,44 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "SearchWin.h"
+#ifndef __USERACTMENU_H__
+#define __USERACTMENU_H__
 
+#include <QMenu>
+#include <QAction>
+#include <QString>
 
-SearchWindow::SearchWindow(QWidget *parent, const QString &what) : MdiChild(parent)
-{	
-	setupUi(this);
-	type = 3;
-	idText  = what;
-	setTabText(tr("Search for: ")+what);
-	connect(searchButton, SIGNAL(pressed()), this, SLOT(SearchBtn()));
-	connect(searchButton, SIGNAL(clicked()), this, SLOT(SearchBtn()));
-}
+#include "stilutils.h"
 
-void SearchWindow::SearchBtn()
-{	
-	searchButton->setDefault(true);
-	if (searchCombo->currentIndex()>=0)
-	{
-		idText  = searchCombo->itemText(searchCombo->currentIndex());	
-		setTabText(tr("Search for: ")+idText);
-		//SEARCH
-	}
-}
+//
+#include "client/stdinc.h"
+#include "client/DCPlusPlus.h"
+#include "client/Client.h"
+#include "client/TaskQueue.h"
+#include "client/User.h"
+#include "client/FavoriteManager.h"
+//
+
+class UserActionMenu: public QMenu
+{
+	Q_OBJECT
+public:
+	QMenu * getMenuForUser(const QString &);
+private:
+	QString s_Nick;
+	
+	QAction * a_getFileList(const QString &);
+	QAction * a_MatchQueue(const QString &);
+	QAction * a_SendPrivateMessage(const QString &);
+	QAction * a_SendPublicMessage(const QString &);
+	QAction * a_AddtoFav(const QString &);
+	QAction * a_GrantExtraSlot(const QString &);
+	QAction * a_RemoveUserFromQueue(const QString &);
+	QAction * a_CopyNickToClipboard(const QString &);
+private slots:
+	void sendPubM();
+signals:
+	void sig_sendPublicMessage(const QString &);
+};
+
+#endif // __USERACTMENU_H__
