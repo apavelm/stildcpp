@@ -239,7 +239,7 @@ RESOURCES += src/stildcpp.qrc src/langs.qrc
 LIBS += -lssl -lbz2 -lcrypto
 TRANSLATIONS = lang/stildcpp_ru.ts
 DEFINES += _DEBUG \
- BOOST_HAS_GCC \
- USE_SYS_STL \
+ BOOST_HAS_GCC_TR1 \
+ USE_SYS_STL=1 \
  UNICODE \
  _UNICODE

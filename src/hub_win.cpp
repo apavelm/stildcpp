@@ -49,7 +49,7 @@ HubWindow::HubWindow(QWidget *parent, const dcpp::tstring& url) : MdiChild(paren
 	setupUi(this);
 	type = 1;
 	idText = StilUtils::TstrtoQ(url);
-	
+
 	// UserList in LeftSide
 	if (APPSETTING(i_HUBLEFTSIDE)) 
 		{
@@ -66,7 +66,7 @@ HubWindow::HubWindow(QWidget *parent, const dcpp::tstring& url) : MdiChild(paren
 	setWindowTitle(tr("Hub: ")+StilUtils::TstrtoQ(url));
 	editor->clear();
 	setupeditor();
-	
+
 	client = ClientManager::getInstance()->getClient(dcpp::Text::fromT(url));
 	client->addListener(this);
 	
@@ -368,7 +368,7 @@ bool HubWindow::parseFilter(FilterModes& mode, int64_t& size) {
 
 void HubWindow::on(Connecting, Client*) throw() {
 	speak(ADD_STATUS_LINE, STRING(CONNECTING_TO) + client->getHubUrl() + "...");
-	speak(SET_WINDOW_TITLE, client->getHubUrl());
+	speak(SET_TAB_AND_WINDOW_TITLE, client->getHubUrl());
 }
 
 void HubWindow::on(Connected, Client*) throw() {
@@ -425,7 +425,8 @@ void HubWindow::on(HubUpdated, Client*) throw() {
 		hubName += " - " + version;
 	}
 #endif
-	speak(SET_WINDOW_TITLE, hubName);
+	speak(SET_TAB_AND_WINDOW_TITLE, hubName);
+	speak(SET_TAB_TOOLTIP, client->getHubDescription());
 }
 
 void HubWindow::on(Message, Client*, const OnlineUser& from, const string& msg) throw() {
@@ -655,7 +656,6 @@ void HubWindow::removeUser(const UserPtr& aUser) {
 void HubWindow::clearUserList() {
 	//users->clear(); //ported
 	clearUser();
-	dcdebug("UserList clear\n");
 	
 	for(UserMapIter i = userMap.begin(); i != userMap.end(); ++i) {
 		delete i->second;
@@ -727,8 +727,10 @@ void HubWindow::handleSpeaker()//Tasks s, const OnlineUser& u)
 			addStatus(Text::toT(static_cast<StringTask*>(i->second)->str));
 		} else if(i->first == ADD_SILENT_STATUS_LINE) {
 			addStatus(Text::toT(static_cast<StringTask*>(i->second)->str), false);
-		} else if(i->first == SET_WINDOW_TITLE) {
-			setText(Text::toT(static_cast<StringTask*>(i->second)->str));
+		} else if(i->first == SET_TAB_AND_WINDOW_TITLE) {
+			setTabText(StilUtils::TstrtoQ(Text::toT(static_cast<StringTask*>(i->second)->str)));
+		} else if(i->first == SET_TAB_TOOLTIP) {
+			setTabToolTip(StilUtils::TstrtoQ(Text::toT(static_cast<StringTask*>(i->second)->str)));
 		} else if(i->first == GET_PASSWORD) {
 			if(client->getPassword().size() > 0) {
 				client->password(client->getPassword());

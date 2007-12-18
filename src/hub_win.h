@@ -129,8 +129,8 @@ private:
 	};
 	
 	enum Tasks { UPDATE_USER_JOIN, UPDATE_USER, REMOVE_USER, ADD_CHAT_LINE,
-		ADD_STATUS_LINE, ADD_SILENT_STATUS_LINE, SET_WINDOW_TITLE, GET_PASSWORD,
-		PRIVATE_MESSAGE, CONNECTED, DISCONNECTED, FOLLOW
+		ADD_STATUS_LINE, ADD_SILENT_STATUS_LINE, SET_TAB_AND_WINDOW_TITLE, SET_TAB_TOOLTIP, 
+		GET_PASSWORD, PRIVATE_MESSAGE, CONNECTED, DISCONNECTED, FOLLOW
 	};
 	
 	struct UserTask : public Task {
@@ -220,11 +220,11 @@ private:
 		}
 	};
 	
-	//FIXME - delete, it's hack 
 	void setStatus(int s, const tstring& text);
 	void updateStatus();
+	//FIXME - delete, it's hack 
 	void setDirty(SettingsManager::IntSetting setting) {}
-	void setText( const tstring & txt ) {dcdebug("Set text: %s\n", Text::fromT(txt).c_str());}
+
 	
 	bool speak();// { return true; }
 	void speak(Tasks s) { tasks.add(s, 0); speak(); }
