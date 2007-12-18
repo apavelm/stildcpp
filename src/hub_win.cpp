@@ -81,8 +81,19 @@ HubWindow::HubWindow(QWidget *parent, const dcpp::tstring& url) : MdiChild(paren
 	
 	editor->setHubAddress(idText);
 	usrActionMenu = new UserActionMenu;
-	connect(usrActionMenu, SIGNAL(sig_sendPublicMessage(const QString &)), lineEdit, SLOT(append(const QString &)) );
+	connect(usrActionMenu, SIGNAL(sig_sendPublicMessage(const QString &)), this, SLOT(addnicktext(const QString &)) );
 	editor->setUserMenu(usrActionMenu);
+}
+
+void HubWindow::addnicktext( const QString & t)
+{
+	QTextCursor cursor(lineEdit->document());
+	int p = cursor.position();
+	cursor.movePosition(QTextCursor::EndOfLine);
+	cursor.beginEditBlock();
+	cursor.insertText(t+": ");
+	cursor.endEditBlock();
+	cursor.setPosition(p);
 }
 
 void HubWindow::sendFunc(const QString &txt)

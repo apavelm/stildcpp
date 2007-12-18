@@ -22,7 +22,7 @@
 
 void UserActionMenu::sendPubM()
 {
-	emit sig_sendPublicMessage(s_Nick+": ");
+	emit sig_sendPublicMessage(s_Nick);
 }
 
 QMenu * UserActionMenu::getMenuForUser(const QString & nick)

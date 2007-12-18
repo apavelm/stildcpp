@@ -289,6 +289,7 @@ signals:
 	void speakerSignal();
 private slots:
 	void sendFunc(const QString &);
+	void addnicktext( const QString & );
 	bool eachSecond();
 	void handleSpeaker();
 };

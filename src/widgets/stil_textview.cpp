@@ -171,9 +171,20 @@ void StilTextView::contextMenuEvent(QContextMenuEvent *e)
 		Selection s = saveSelection(tu);
 		QTextCursor tc = cursorForPosition(last_click_);
 		int current_position = textCursor().position();
-		tc.select(QTextCursor::WordUnderCursor);
-		QString txt = tc.selectedText();
 		
+		tc.select(QTextCursor::LineUnderCursor);
+		QString sLine = tc.selectedText();
+		tc.select(QTextCursor::WordUnderCursor);
+		QString sWord = tc.selectedText();
+		
+		tc.movePosition(QTextCursor::StartOfLine);
+		int lstart = textCursor().position();
+		tc.movePosition(QTextCursor::EndOfLine);
+		int lend = textCursor().position();
+		cursor.setPosition(current_position);
+		
+		QString txt = sWord;
+		 
 		// If UserOnline(); txt == Nick, nad SpecialMenu attached.... else StandartMenu shows
 		dcpp::UserPtr u = dcpp::ClientManager::getInstance()->findUser(dcpp::Text::fromT(StilUtils::QtoTstr(txt)), dcpp::Text::fromT(StilUtils::QtoTstr(sHubAddress)) );
 		if ( (usrMenu) && (u) 
