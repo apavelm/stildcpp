@@ -58,8 +58,15 @@ public:
 	*/
 	QString idText;
 	void setTabText(const QString &);
+	void setTabTextColor(QColor &);
+	void setTabToolTip(const QString &);
+	void setTabIcon(const QIcon &);
+
 public slots:
 	void slot_setTabText(const QString &);
+	void slot_setTabTextColor(QColor &);
+	void slot_setTabToolTip(const QString &);
+	void slot_setTabIcon(const QIcon &);
 };
 
 #endif // __MDI_C_H__

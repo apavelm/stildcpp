@@ -181,7 +181,7 @@ void StilTextView::contextMenuEvent(QContextMenuEvent *e)
 		int lstart = textCursor().position();
 		tc.movePosition(QTextCursor::EndOfLine);
 		int lend = textCursor().position();
-		cursor.setPosition(current_position);
+		tc.setPosition(current_position);
 		
 		QString txt = sWord;
 		 

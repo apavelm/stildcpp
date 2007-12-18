@@ -44,4 +44,37 @@ void MdiChild::slot_setTabText(const QString &txt)
 	setTabText(txt);
 }
 
+void MdiChild::setTabTextColor(QColor & c)
+{
+	int idx = prnt->indexOf(this);
+	prnt->TextColor(idx, c);
+}
+
+void MdiChild::slot_setTabTextColor(QColor & c)
+{
+	setTabTextColor(c);
+}
+
+void MdiChild::setTabToolTip(const QString &txt)
+{
+	int idx = prnt->indexOf(this);
+	prnt->TabToolTip(idx, txt);
+}
+
+void MdiChild::slot_setTabToolTip(const QString &txt)
+{
+	setTabToolTip(txt);
+}
+
+void MdiChild::setTabIcon(const QIcon & icn)
+{
+	int idx = prnt->indexOf(this);
+	prnt->TabIcon(idx, icn);
+}
+
+void MdiChild::slot_setTabIcon(const QIcon & icn)
+{
+	setTabIcon(icn);
+}
+
 //
