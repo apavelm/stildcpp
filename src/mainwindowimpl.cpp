@@ -733,7 +733,9 @@ void MainWindowImpl::OpenDownloadsFolderFunc()
 
 void MainWindowImpl::slotCurrentTabChanged(int index)
 {
-	// Insert Code Here 
+	// On Tab Changed
+	setWindowTitle(tr(APPLICATIONNAME)+" - [" + m_tabwin->tabText(index) + "]");
+	setToolTip(tr(APPLICATIONNAME)+" - [" + m_tabwin->tabToolTip(index) + "]");
 }
 
 //

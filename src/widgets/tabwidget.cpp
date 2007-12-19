@@ -27,6 +27,7 @@ TabWidget::TabWidget(QWidget *parent) : QTabWidget(parent)
 	tabBar()->installEventFilter(this);
 	tb=0;
 	setTabShape(QTabWidget::Rounded);
+	setElideMode(Qt::ElideRight);
 	
 	// Context Menu
 	menu = new QMenu(this);
@@ -196,7 +197,7 @@ void TabWidget::setCrossButton(bool activate)
 	else crossButton->show();
 }
 
-void TabWidget::TextChange(int index, const QString & txt)
+void TabWidget::setTextChange(int index, const QString & txt)
 {
 	if ( (index<0)||(index>=tabBar()->count())||(txt.isEmpty()) ) return;
 	int ix = currentIndex();
@@ -209,37 +210,37 @@ void TabWidget::TextChange(int index, const QString & txt)
 
 void TabWidget::slotTextChange(int index, const QString & txt)
 {
-	TextChange(index, txt);
+	setTextChange(index, txt);
 }
 
-void TabWidget::TextColor(int index, QColor & c)
+void TabWidget::setTextColor(int index, QColor & c)
 {
 	tabBar()->setTabTextColor(index, c);
 }
 
-void TabWidget::TabToolTip(int index, const QString & txt)
+void TabWidget::setTabToolTip(int index, const QString & txt)
 {
 	tabBar()->setTabToolTip(index, txt);
 }
 	
 void TabWidget::slotTextColor(int index, QColor & c)
 {
-	TextColor(index, c);
+	setTextColor(index, c);
 }
 
 void TabWidget::slotTabToolTip(int index, const QString & txt)
 {
-	TabToolTip(index, txt);
+	setTabToolTip(index, txt);
 }
 
-void TabWidget::TabIcon(int index, const QIcon & icn)
+void TabWidget::setTabIcon(int index, const QIcon & icn)
 {
 	tabBar()->setTabIcon(index, icn);
 }
 
 void TabWidget::slotTabIcon(int index, const QIcon & icn)
 {
-	TabIcon(index, icn);
+	setTabIcon(index, icn);
 }
 
 //

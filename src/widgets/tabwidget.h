@@ -36,10 +36,11 @@ public:
 	~TabWidget();
 	void setOpt(int k);
 	int getOpt() { return tb; }
-	void TextChange(int, const QString &);
-	void TextColor(int, QColor &);
-	void TabToolTip(int, const QString &);
-	void TabIcon(int, const QIcon &);
+	void setTextChange(int, const QString &);
+	void setTextColor(int, QColor &);
+	void setTabToolTip(int, const QString &);
+	void setTabIcon(int, const QIcon &);
+	
 protected:
 	bool eventFilter(QObject *obj, QEvent *event);
 private:
