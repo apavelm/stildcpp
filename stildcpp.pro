@@ -149,7 +149,9 @@ HEADERS = src/mainwindowimpl.h \
  src/rtparse.h \
  src/zstream.h \
  src/useractmenu.h \
- src/client/HashBloom.h
+ src/client/HashBloom.h \
+ src/userlist.h \
+ src/userlistsortingmodel.h
 SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
  src/frmAbout.cpp \
@@ -234,7 +236,9 @@ SOURCES = src/mainwindowimpl.cpp \
  src/rtparse.cpp \
  src/zstream.cpp \
  src/useractmenu.cpp \
- src/client/HashBloom.cpp
+ src/client/HashBloom.cpp \
+ src/userlist.cpp \
+ src/userlistsortingmodel.cpp
 RESOURCES += src/stildcpp.qrc src/langs.qrc
 LIBS += -lssl -lbz2 -lcrypto
 TRANSLATIONS = lang/stildcpp_ru.ts

@@ -12,17 +12,8 @@
   <layout class="QGridLayout" >
    <item row="0" column="0" >
     <widget class="QSplitter" name="splitter" >
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
      <property name="orientation" >
       <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="childrenCollapsible" >
-      <bool>false</bool>
      </property>
      <widget class="ChatView" name="editor" >
       <property name="sizePolicy" >
@@ -41,27 +32,29 @@
        <set>Qt::LinksAccessibleByMouse|Qt::NoTextInteraction|Qt::TextSelectableByMouse</set>
       </property>
      </widget>
-     <widget class="QTreeWidget" name="userlist" >
-      <property name="sizePolicy" >
-       <sizepolicy vsizetype="Expanding" hsizetype="Preferred" >
-        <horstretch>1</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="alternatingRowColors" >
-       <bool>true</bool>
-      </property>
-      <property name="rootIsDecorated" >
-       <bool>false</bool>
-      </property>
-      <property name="itemsExpandable" >
-       <bool>false</bool>
-      </property>
-      <column>
-       <property name="text" >
-        <string>1</string>
-       </property>
-      </column>
+     <widget class="QWidget" name="layoutWidget" >
+      <layout class="QVBoxLayout" >
+       <item>
+        <widget class="QTreeView" name="userListView" />
+       </item>
+       <item>
+        <layout class="QHBoxLayout" >
+         <item>
+          <widget class="QLabel" name="label" >
+           <property name="text" >
+            <string>Filter:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="filterLine" />
+         </item>
+         <item>
+          <widget class="QComboBox" name="criteriaSortBox" />
+         </item>
+        </layout>
+       </item>
+      </layout>
      </widget>
     </widget>
    </item>

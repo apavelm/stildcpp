@@ -152,8 +152,19 @@ void HubWindow::initUserList()
 	QStringList columns;
 	foreach(tstring name, ResourceManager::getInstance()->getStrings(columnNames))
 		columns << StilUtils::TstrtoQ(name);
+		
+		
+	userListView->setRootIsDecorated(false);
+	userListView->setAlternatingRowColors(true);
+	userListView->setSortingEnabled(true);
 	
-	userlist -> setHeaderLabels(columns);
+	criteriaSortBox -> addItem("Any");
+	criteriaSortBox -> addItems(columns);
+	criteriaSortBox -> setCurrentIndex(0);
+	
+	columns << "IsOp" << "Total Shared";
+	UList = new HubUserList(userListView, filterLine, criteriaSortBox, columns);
+	//userlist -> setHeaderLabels(columns);
 }
 
 void HubWindow::initIconset()
@@ -238,7 +249,7 @@ void HubWindow::updateUserList(UserInfo* ui)
 			}
 		}
 	} else {
-		//HoldRedraw hold(userlist);
+		HoldRedraw hold(userListView);
 		clearUser();
 		//users->clear(); // -ported
 
@@ -693,7 +704,7 @@ void HubWindow::handleSpeaker()//Tasks s, const OnlineUser& u)
 	TaskQueue::List t;
 	tasks.get(t);
 
-	//HoldRedraw hold(userlist);
+	HoldRedraw hold(userListView);
 	
 	for(TaskQueue::Iter i = t.begin(); i != t.end(); ++i) {
 		if(i->first == UPDATE_USER) {
@@ -870,7 +881,7 @@ int HubWindow::UserInfo::compareItems(const HubWindow::UserInfo* a, const HubWin
 }
 
 void HubWindow::insertUser(UserInfo *ui)
-{
+{/*
 	//QString newUser = QString::fromStdString(ui->getNick());
 	QTreeWidgetItem *userItem;
 	
@@ -882,11 +893,25 @@ void HubWindow::insertUser(UserInfo *ui)
 		userItem -> setText(i, StilUtils::TstrtoQ(ui->getText(i)));
 	}
 	
-	userItem -> setIcon(0, QIcon(userIconsMap.value(ui->getImage())));
+	userItem -> setIcon(0, QIcon(userIconsMap.value(ui->getImage())));*/
+	QStringList userPropertiesList;
+	
+	for (int i=0;i<8;i++)
+		userPropertiesList << StilUtils::TstrtoQ(ui->getText(i));
+		
+	if(ui->getIdentity().isOp())
+		userPropertiesList << "Op";
+	else
+		userPropertiesList << "NotOp";
+		
+	userPropertiesList << QString::number(ui->getIdentity().getBytesShared());
+	
+	QIcon *icon = new QIcon(userIconsMap.value(ui->getImage()));
+	UList->addUser(userPropertiesList, icon);		
 }
 
 void HubWindow::eraseUser(UserInfo *ui)
-{	
+{	/*
 	for (int i=0; i<userlist->topLevelItemCount(); i++)
 	{
 		QTreeWidgetItem *topItem = userlist->topLevelItem(i);
@@ -896,11 +921,12 @@ void HubWindow::eraseUser(UserInfo *ui)
 			userlist -> takeTopLevelItem(i);
 			break;
 		}
-	}
+	}*/
+	UList->removeUser(StilUtils::TstrtoQ(ui->getText(0)));
 }
 
 int HubWindow::findUser(UserInfo *ui)
-{
+{/*
 	for (int i=0; i<userlist->topLevelItemCount(); i++)
 	{
 		QTreeWidgetItem *topItem = userlist->topLevelItem(i);
@@ -911,17 +937,18 @@ int HubWindow::findUser(UserInfo *ui)
 			return i;
 		}
 	}
-	
-	return -1;
+	*/
+	return UList->findUser(StilUtils::TstrtoQ(ui->getText(0)));
 }
 
 void HubWindow::clearUser()
 {	
-	userlist -> clear();
+	//userlist -> clear();
+	UList->clearList();
 }
 
 void HubWindow::updateSingleUser(int pos, UserInfo *ui)
-{
+{/*
 	QTreeWidgetItem *item = userlist->topLevelItem(pos);
 
 	item -> setIcon(0, QIcon(userIconsMap.value(ui->getImage())));
@@ -929,7 +956,21 @@ void HubWindow::updateSingleUser(int pos, UserInfo *ui)
 	for (int i=0;i<8;i++) 
 	{
 		item -> setText(i, StilUtils::TstrtoQ(ui->getText(i)));
-	}
+	}*/
+	QStringList userPropertiesList;
+	
+	for (int i=0;i<8;i++)
+		userPropertiesList << StilUtils::TstrtoQ(ui->getText(i));
+		
+	if(ui->getIdentity().isOp())
+		userPropertiesList << "Op";
+	else
+		userPropertiesList << "NotOp";
+	
+	userPropertiesList << QString::number(ui->getIdentity().getBytesShared());
+	
+	QIcon *icon = new QIcon(userIconsMap.value(ui->getImage()));
+	UList->updateUser(pos, userPropertiesList, icon);
 }
 
 void HubWindow::setStatus(int s, const tstring& text)

@@ -31,6 +31,7 @@
 #include <QtDebug>
 //#include <QEvent>
 
+#include "userlist.h"
 #include "highlighter.h"
 #include "mdi_c.h"
 #include "config.h"
@@ -256,7 +257,7 @@ private:
 	
 	// Probably is hack, to remove in future
 	QMap<int, QString> userIconsMap;
-	QTextCodec *codec;
+	HubUserList *UList;
 	void initUserList();
 	void initUserListIcons();
 	void initIconset();
@@ -283,6 +284,7 @@ public:
 	int  findUser(UserInfo *ui);
 	void updateSingleUser(int pos, UserInfo *ui);
 	void clearUser();
+	//friend class HubUserList;
 	//static void closeDisconnected();
 	//static void resortUsers();
 signals:
