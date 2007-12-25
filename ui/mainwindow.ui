@@ -264,11 +264,17 @@
    </property>
   </action>
   <action name="actionFavorite_Users" >
+   <property name="icon" >
+    <iconset resource="../src/stildcpp.qrc" >:/images/favusers.png</iconset>
+   </property>
    <property name="text" >
     <string>Favorite Users</string>
    </property>
   </action>
   <action name="actionIgnored_Users" >
+   <property name="icon" >
+    <iconset resource="../src/stildcpp.qrc" >:/images/ignoredusers.png</iconset>
+   </property>
    <property name="text" >
     <string>Ignored Users</string>
    </property>

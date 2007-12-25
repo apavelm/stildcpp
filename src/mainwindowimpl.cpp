@@ -298,7 +298,8 @@ void MainWindowImpl::createTrayIcon()
 
 void MainWindowImpl::createToolBars()
 {
-	toolBar->setToolButtonStyle( Qt::ToolButtonIconOnly );
+	toolBar->setToolButtonStyle( Qt::ToolButtonStyle(APPSETTING(i_TOOLBARICONSTYLE)) );
+	toolBar->setIconSize(QSize(APPSETTING(i_TOOLBARICONSIZE), APPSETTING(i_TOOLBARICONSIZE)));
 	QAction *p = toolBar->toggleViewAction();
 	p->setShortcut(QKeySequence(tr("Ctrl+2")));
 	menuView->addAction(p);

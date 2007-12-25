@@ -14,7 +14,10 @@
    sodipodi:docname="trans_UL.svg"
    sodipodi:version="0.32"
    width="163.286"
-   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="/home/irq/stildcpp/images/trans_UL.png"
+   inkscape:export-xdpi="70.551056"
+   inkscape:export-ydpi="70.551056">
   <metadata
      id="metadata42062">
     <rdf:RDF>
@@ -67,15 +70,15 @@
      borderopacity="1.0"
      id="base"
      inkscape:current-layer="svg1"
-     inkscape:cx="65.314398"
-     inkscape:cy="65.314398"
+     inkscape:cx="42.423211"
+     inkscape:cy="89.915806"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:window-height="979"
      inkscape:window-width="1280"
      inkscape:window-x="0"
      inkscape:window-y="45"
-     inkscape:zoom="7.218929"
+     inkscape:zoom="3.6094645"
      pagecolor="#ffffff" />
   <defs
      id="defs2">
@@ -106,16 +109,19 @@
          id="path6" />
     </marker>
   </defs>
-  <path
-     d="M 10.9082,10.892 L 10.9082,152.295 L 152.311,152.295 L 152.311,10.892 L 10.9082,10.892 z "
-     id="path9"
-     style="fill:#ff0000;stroke:none" />
-  <path
-     d="M 15.0999,15.0999 L 15.0999,148.186 L 148.186,148.186 L 148.186,15.0999 L 15.0999,15.0999 z "
-     id="path10"
-     style="fill:#d35f5f;stroke:#ffffff;stroke-width:2.88120008" />
-  <path
-     style="fill:#ffffff;stroke:none"
-     id="path11"
-     d="M 82.0706,139.557 L 68.8558,139.557 L 68.8558,65.5715 L 40.9582,92.0008 L 40.9582,59.6982 L 81.3364,18.5859 L 121.715,59.6982 L 121.715,92.0008 L 93.817,65.5715 L 93.817,139.557 L 80.6023,139.557 L 82.0706,139.557 z " />
+  <g
+     id="g2875">
+    <path
+       style="fill:#000000;stroke:none"
+       id="path9"
+       d="M 10.9082,10.892 L 10.9082,152.295 L 152.311,152.295 L 152.311,10.892 L 10.9082,10.892 z " />
+    <path
+       style="fill:#d35f5f;stroke:#ffffff;stroke-width:2.88120008"
+       id="path10"
+       d="M 15.0999,15.0999 L 15.0999,148.186 L 148.186,148.186 L 148.186,15.0999 L 15.0999,15.0999 z " />
+    <path
+       d="M 82.0706,139.557 L 68.8558,139.557 L 68.8558,65.5715 L 40.9582,92.0008 L 40.9582,59.6982 L 81.3364,18.5859 L 121.715,59.6982 L 121.715,92.0008 L 93.817,65.5715 L 93.817,139.557 L 80.6023,139.557 L 82.0706,139.557 z "
+       id="path11"
+       style="fill:#ffffff;stroke:none" />
+  </g>
 </svg>
