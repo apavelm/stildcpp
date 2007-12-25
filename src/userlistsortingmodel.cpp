@@ -18,8 +18,6 @@ bool UserListSortingModel::lessThan( const QModelIndex &left, const QModelIndex 
 	switch(col)
 	{
 		case 0:
-			leftString = sourceModel()->data(left).toString();
-			rightString = sourceModel()->data(right).toString();
 			leftOp = UserListSortingModel::testOp(left);
 			rightOp = UserListSortingModel::testOp(right);
 			
@@ -47,7 +45,7 @@ bool UserListSortingModel::testOp(const QModelIndex &index) const
 
 int64_t UserListSortingModel::getSize(const QModelIndex &index) const
 {
-	int64_t size = sourceModel()->data(index.sibling(index.row(), sourceModel()->columnCount() - 1)).toInt();
-	return size;
+	QString sizeString = sourceModel()->data(index.sibling(index.row(), sourceModel()->columnCount() - 1)).toString();
+	return sizeString.toULongLong();
 }
 //
