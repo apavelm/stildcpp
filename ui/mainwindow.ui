@@ -22,7 +22,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>30</height>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFiles" >
@@ -151,10 +151,16 @@
    <property name="shortcut" >
     <string>Ctrl+X</string>
    </property>
+   <property name="menuRole" >
+    <enum>QAction::QuitRole</enum>
+   </property>
   </action>
   <action name="actionAbout" >
    <property name="text" >
     <string>About</string>
+   </property>
+   <property name="menuRole" >
+    <enum>QAction::AboutRole</enum>
    </property>
   </action>
   <action name="actionOpen_filelist" >
@@ -190,6 +196,9 @@
    </property>
   </action>
   <action name="actionQuick_Connect" >
+   <property name="icon" >
+    <iconset resource="../src/stildcpp.qrc" >:/images/QuickCon.png</iconset>
+   </property>
    <property name="text" >
     <string>Quick Connect</string>
    </property>
@@ -206,6 +215,9 @@
    </property>
   </action>
   <action name="actionReconnect" >
+   <property name="icon" >
+    <iconset resource="../src/stildcpp.qrc" >:/images/reload.png</iconset>
+   </property>
    <property name="text" >
     <string>Reconnect</string>
    </property>
@@ -217,11 +229,17 @@
    </property>
   </action>
   <action name="actionSettings" >
+   <property name="icon" >
+    <iconset resource="../src/stildcpp.qrc" >:/images/pref_icon.png</iconset>
+   </property>
    <property name="text" >
     <string>Settings</string>
    </property>
    <property name="statusTip" >
     <string>Configure StilDC++ client</string>
+   </property>
+   <property name="menuRole" >
+    <enum>QAction::PreferencesRole</enum>
    </property>
   </action>
   <action name="actionGet_TTH_for_file" >
@@ -238,6 +256,9 @@
    </property>
   </action>
   <action name="actionFavorite_Hubs" >
+   <property name="icon" >
+    <iconset resource="../src/stildcpp.qrc" >:/images/favhubs.png</iconset>
+   </property>
    <property name="text" >
     <string>Favorite Hubs</string>
    </property>
@@ -253,6 +274,9 @@
    </property>
   </action>
   <action name="actionSearch" >
+   <property name="icon" >
+    <iconset resource="../src/stildcpp.qrc" >:/images/search.png</iconset>
+   </property>
    <property name="text" >
     <string>Search</string>
    </property>
@@ -292,16 +316,25 @@
    </property>
   </action>
   <action name="actionDownload_Queue" >
+   <property name="icon" >
+    <iconset resource="../src/stildcpp.qrc" >:/images/DL_queue.png</iconset>
+   </property>
    <property name="text" >
     <string>Download Queue</string>
    </property>
   </action>
   <action name="actionFinished_downloads" >
+   <property name="icon" >
+    <iconset resource="../src/stildcpp.qrc" >:/images/finisheddownloads.png</iconset>
+   </property>
    <property name="text" >
-    <string>Finished downloads</string>
+    <string>Finished Downloads</string>
    </property>
   </action>
   <action name="actionFinished_Uploads" >
+   <property name="icon" >
+    <iconset resource="../src/stildcpp.qrc" >:/images/FinishedUL.png</iconset>
+   </property>
    <property name="text" >
     <string>Finished Uploads</string>
    </property>
@@ -319,6 +352,9 @@
   <action name="aboutqtact" >
    <property name="text" >
     <string>About Qt</string>
+   </property>
+   <property name="menuRole" >
+    <enum>QAction::AboutQtRole</enum>
    </property>
   </action>
   <action name="actionClose_All_Search_Windows" >
@@ -362,6 +398,9 @@
    </property>
   </action>
   <action name="actionNotePad" >
+   <property name="icon" >
+    <iconset resource="../src/stildcpp.qrc" >:/images/note.png</iconset>
+   </property>
    <property name="text" >
     <string>NotePad</string>
    </property>
@@ -370,6 +409,8 @@
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="../src/stildcpp.qrc" />
+ </resources>
  <connections/>
 </ui>

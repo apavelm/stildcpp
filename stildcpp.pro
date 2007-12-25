@@ -29,7 +29,8 @@ FORMS = ui/mainwindow.ui \
  ui/adl.ui \
  ui/searchspy.ui \
  ui/notepad.ui \
- ui/hashman.ui
+ ui/hashman.ui \
+ ui/favhubprop.ui
 HEADERS = src/mainwindowimpl.h \
  src/frmAbout.h \
  src/mdi_c.h \
