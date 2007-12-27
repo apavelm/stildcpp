@@ -93,4 +93,9 @@ pair<tstring, bool> StilUtils::getHubNames(const CID& cid)
 	}
 }
 
+pair<tstring, bool> StilUtils::getHubNames(const UserPtr& u)
+{ 
+	return getHubNames(u->getCID()); 
+}
+
 // of stilutils

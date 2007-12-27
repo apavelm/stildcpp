@@ -45,7 +45,8 @@ public:
 	
 	static QString fmtBytes(int64_t aBytes);
 	
-	pair<tstring, bool> getHubNames(const CID& cid);
+	static pair<tstring, bool> getHubNames(const CID& cid);
+	static pair<tstring, bool> getHubNames(const UserPtr& u);
 };
 
 #endif // of StilUtils
