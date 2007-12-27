@@ -39,6 +39,7 @@ HubWindow::~HubWindow()
 	ClientManager::getInstance()->putClient(client);
 	clearUserList();
 	clearTaskList();
+	delete UList;
 }
 
 HubWindow::HubWindow(QWidget *parent, const dcpp::tstring& url) : MdiChild(parent), updateUsers(false),

@@ -30,7 +30,7 @@ const char * AppSettingsMgr::intTags[] =
 {
 	"HideOnClose", "ShowSplash", "UseTray", "StartHidden", "PromptOnClose", "TabPosition"
 	,"NotePadFontSize", "UpdateIPonStartup", "ShowSmiles", "SwapUserListHub", "MainToolBarIconSize"
-	,"MainToolBarStyle", "OPsGoesFirst"
+	,"MainToolBarStyle", "OPsGoesFirst", "ClassicSort"
 };
 
 const char * AppSettingsMgr::strTags[] = 
@@ -40,7 +40,7 @@ const char * AppSettingsMgr::strTags[] =
 
 void AppSettingsMgr::writeDefs()
 {
-	intDefaults << 1 << 1 << 1 << 0 << 1 << 0 << 10 << 0 << 1 << 0 << 48 << Qt::ToolButtonIconOnly << 1;
+	intDefaults << 1 << 1 << 1 << 0 << 1 << 0 << 10 << 0 << 1 << 0 << 48 << Qt::ToolButtonIconOnly << 1 << 1;
 	strDefaults << "/home/irq/stildcpp/images/emotions/default.icp";
 	strDefaults << "CP1251";
 	strDefaults << "";

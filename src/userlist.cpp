@@ -1,8 +1,30 @@
+/***************************************************************************
+ *   Copyright (C) 2007 by Yakov Suraev aka BigBiker                       *
+ *   Mail: adminbsd on gmail dot com (adminbsd@gmail.com)                  *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 3 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
 #include "userlist.h"
 //
 
 HubUserList::~HubUserList()
 {
+	//saveSettings();
+	
 	if (treeView) treeView = 0;
 	if (filterString) filterString = 0;
 	if (criteriaSortBox) criteriaSortBox = 0;
@@ -18,17 +40,29 @@ HubUserList::HubUserList(QTreeView *&_treeView, QLineEdit *&_filterString,
 
 	for (int i=0;i<totalColumns;i++)
 		model->setHeaderData(i, Qt::Horizontal, columns.at(i));
+
 	
 	QObject::connect(filterString, SIGNAL(textChanged(const QString &)),
 			this, SLOT(filterChanged()));
 	QObject::connect(criteriaSortBox, SIGNAL(currentIndexChanged(int)),
 			this, SLOT(filterColumnChanged()));
-
+			
+	columnMenu = new QMenu(treeView->header());
+	connect(columnMenu, SIGNAL(triggered(QAction*)), this, SLOT(chooseColumn(QAction *)));
+	treeView->header()->setContextMenuPolicy(Qt::CustomContextMenu);
+	connect(treeView->header(), SIGNAL(customContextMenuRequested(const QPoint&)), 
+				this, SLOT(showColumnMenu(const QPoint&)));
+	
+	checkAndReadSettings();
+	
 	proxyModel = new UserListSortingModel();
+	proxyModel -> setSortingSettings(classicSort, topOp);
+	
 	proxyModel -> setDynamicSortFilter(true);
 	treeView   -> setEditTriggers(QAbstractItemView::NoEditTriggers);
-	treeView   -> setModel(proxyModel);
 	proxyModel -> setSourceModel(model);
+	treeView   -> setModel(proxyModel);
+	//proxyModel -> setSortCaseSensitivity(Qt::CaseInsensitive);
 	treeView -> sortByColumn(0, Qt::AscendingOrder);
 	proxyModel->setFilterKeyColumn(-1);
 	
@@ -40,7 +74,8 @@ HubUserList::HubUserList(QTreeView *&_treeView, QLineEdit *&_filterString,
 
 void HubUserList::filterChanged()
 {
-	QRegExp regExp(filterString->text(), Qt::CaseInsensitive, QRegExp::RegExp);
+	//TODO: make user choice for other filtering modes:  QRegExp::Wildcard and QRegExp::RegExp
+	QRegExp regExp(filterString->text(), Qt::CaseInsensitive, QRegExp::FixedString);
 	proxyModel->setFilterRegExp(regExp);
 }
 
@@ -108,4 +143,118 @@ void HubUserList::updateUser(int pos, const QStringList& strList, QIcon *&icon)
 	
 	model->takeRow(pos);
 	model->insertRow(pos, itemList);
+}
+
+void HubUserList::checkAndReadSettings()
+{
+	int read_topOp = APPSETTING(i_SORTUSERLISTOPSFIRST);
+	int read_classicSort = APPSETTING(i_SORTUSERLISTCLASSIC);
+	
+	if //((classicSort==0 && topOp==2) || (classicSort==1 && topOp==1) || 
+		(read_classicSort>1 || read_classicSort<0 || read_topOp>1 || read_topOp<0)//)
+	{
+		classicSort = true;
+		topOp = true;
+		
+		saveSettings();
+	}
+	else
+	{
+		classicSort = static_cast<bool>(read_classicSort);
+		topOp = static_cast<bool>(read_topOp);
+	}
+}
+
+void HubUserList::chooseColumn(QAction *action)
+{
+	int index = action->data().toInt();
+
+	if(index < 0)
+		treeView->hideColumn(-index-1);
+	else
+	{
+		treeView->showColumn(index);
+		//treeView->resizeColumnToContents(index);
+		//treeView->resizeColumnToContents(proxyModel->columnCount());
+	}
+}
+
+void HubUserList::showColumnMenu(const QPoint &point)
+{
+	columnMenu->clear();
+	
+	QAction *action_classicSort = columnMenu->addAction("Classic sort", this, SLOT(set_classicSort()));
+	action_classicSort->setCheckable(true);
+	
+	QAction *action_topOp = columnMenu->addAction("Op on top", this, SLOT(set_topOp()));
+	action_topOp->setCheckable(true);
+	
+	action_classicSort->setChecked(classicSort);
+	action_topOp->setChecked(topOp);
+	action_topOp->setEnabled(!classicSort);
+	
+	columnMenu->addSeparator();
+	
+	for(int i = 0; i < proxyModel->columnCount()-2; i++)
+	{
+		QAction *action = new QAction(columnMenu);
+		action->setText(proxyModel->headerData(i, Qt::Horizontal, Qt::DisplayRole).toString());
+		
+		bool isHidden = treeView->header()->isSectionHidden(i);
+
+		if (!isHidden)
+			action->setData(-i-1);
+		else
+			action->setData(i);
+			
+		action->setCheckable(true);
+		action->setChecked(!isHidden);
+		columnMenu->addAction(action);
+		
+	}
+	
+	columnMenu->exec(treeView->header()->mapToGlobal(point));	
+}
+
+void HubUserList::set_topOp()
+{
+	QAction *action = columnMenu->actions().at(1);
+	
+	bool checked = action->isChecked();
+	
+	if (!checked)
+		topOp = false;
+	else
+		topOp = true;
+	
+	saveSettings();
+	proxyModel -> setSortingSettings(classicSort, topOp);
+	resort();
+}
+
+void HubUserList::set_classicSort()
+{
+	QAction *action = columnMenu->actions().at(0);
+	
+	bool checked = action->isChecked();
+	
+	if (!checked)
+		classicSort = false;
+	else
+		classicSort = true;
+	
+	saveSettings();
+	proxyModel -> setSortingSettings(classicSort, topOp);
+	resort();
+}
+
+void HubUserList::resort()
+{
+	proxyModel->clear();
+}
+
+void HubUserList::saveSettings()
+{
+	SETAPPSETTING(i_SORTUSERLISTOPSFIRST, static_cast<int>(topOp));
+	SETAPPSETTING(i_SORTUSERLISTCLASSIC, static_cast<int>(classicSort));
 }
