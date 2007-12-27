@@ -39,11 +39,12 @@ namespace AppSettings
 	{ 
 		i_HIDEONCLOSE, i_SHOWSPLASH, i_USETRAY, i_STARTHIDDEN, i_PROMPTONCLOSE, i_TABPOSIOTION
 		,i_NOTEPADFONTSIZE, i_UPDATEIP, i_SHOWSMILES, i_HUBLEFTSIDE, i_TOOLBARICONSIZE, i_TOOLBARICONSTYLE
+		,i_SORTUSERLISTOPSFIRST
 		,i_LAST };// DO NOT CHANGE THIS LINE
 		
 		enum EnumSettings2 
 	{ 
-		s_ICONSETPATH, s_DEFCHARSET
+		s_ICONSETPATH, s_DEFCHARSET, s_HUBUSERLISTGEOMETRY
 		,s_LAST };// DO NOT CHANGE THIS LINE
 		
 class AppSettingsMgr: public dcpp::Singleton<AppSettingsMgr>
@@ -59,10 +60,12 @@ public:
 	void writeDefs();
 	const int get(AppSettings::EnumSettings numname) { if ((numname<i_LAST)&&(numname>-1)) return intSettings[numname];else return -32000; }
 	const QString gets(AppSettings::EnumSettings2 numname) { if ((numname<s_LAST)&&(numname>-1)) return strSettings[numname];else return ""; }
+	const QByteArray getsb(AppSettings::EnumSettings2 numname) { if ((numname<s_LAST)&&(numname>-1)) return strSettings[numname];else return ""; }
 	const int getDef(AppSettings::EnumSettings numname) { if ((numname<i_LAST)&&(numname>-1)) return intDefaults[numname];else return -32000; }
 	const QString getDefs(AppSettings::EnumSettings2 numname) { if ((numname<s_LAST)&&(numname>-1)) return strDefaults[numname];else return ""; }
 	void set(AppSettings::EnumSettings numname, int value) { intSettings[numname]=value; }
-	void sets(AppSettings::EnumSettings2 numname, QString c) { strSettings[numname]=c; }
+	void sets(AppSettings::EnumSettings2 numname, QString c) { strSettings[numname]=c.toUtf8(); }
+	void setsb(AppSettings::EnumSettings2 numname, QByteArray c) { strSettings[numname]=c; }
 private:
 	friend class dcpp::Singleton<AppSettingsMgr>;
 	AppSettingsMgr();
@@ -74,7 +77,7 @@ private:
 	static const char * strTags[s_LAST];
 
 	QList<int> intSettings, intDefaults;
-	QStringList strSettings, strDefaults;
+	QList<QByteArray> strSettings, strDefaults;
 };
 
 };
@@ -82,8 +85,10 @@ private:
 // Shorthand accessor macros
 #define APPSETTING(k) (AppSettings::AppSettingsMgr::getInstance()->get(AppSettings::k))
 #define APPSTRING(k) (AppSettings::AppSettingsMgr::getInstance()->gets(AppSettings::k))
+#define APPBYTEARRAY(k) (AppSettings::AppSettingsMgr::getInstance()->getsb(AppSettings::k))
 #define SETAPPSETTING(k,v) (AppSettings::AppSettingsMgr::getInstance()->set(AppSettings::k,v))
 #define SETAPPSTRING(k,v) (AppSettings::AppSettingsMgr::getInstance()->sets(AppSettings::k,v))
+#define SETAPPBYTEARRAY(k,v) (AppSettings::AppSettingsMgr::getInstance()->setsb(AppSettings::k,v))
 #define APPSETTINGDEF(k) (AppSettings::AppSettingsMgr::getInstance()->getDef(AppSettings::k))
 #define APPSTRINGDEF(k) (AppSettings::AppSettingsMgr::getInstance()->getDefs(AppSettings::k))
 

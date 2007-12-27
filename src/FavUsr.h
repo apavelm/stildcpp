@@ -33,6 +33,7 @@
 #include "UserInfoBase.h"
 #include "mdi_c.h"
 #include "stilutils.h"
+#include "hub_win.h"
 
 #include "ui_fav_users.h"
 
@@ -46,6 +47,44 @@ public:
 	FavoriteUsersWindow(QWidget *parent);
 	~FavoriteUsersWindow();
 private:
+	
+	enum {
+		COLUMN_FIRST,
+		COLUMN_NICK = COLUMN_FIRST,
+		COLUMN_HUB,
+		COLUMN_SEEN,
+		COLUMN_DESCRIPTION,
+		COLUMN_CID,
+		COLUMN_LAST
+	};
+	
+	class UserInfo : public UserInfoBase {
+	public:
+		UserInfo(const FavoriteUser& u);
+		
+		const tstring& getText(int col) const {
+			return columns[col];
+		}
+
+		int getImage() const {
+			return 0;
+		}
+
+		static int compareItems(UserInfo* a, UserInfo* b, int col) 
+		{
+			return wcscmp(a->columns[col].c_str(), b->columns[col].c_str());
+		}
+
+		void remove();
+
+		void update(const FavoriteUser& u);
+
+		tstring columns[COLUMN_LAST];
+	};
+	
+	QList<FavoriteUser> datalist;
+	FavoriteUser & GetFavUser(const QString & );
+	int GetFavUserIndex(const QString & );
 	
 	enum { USER_UPDATED };
 
@@ -63,6 +102,10 @@ private:
 private slots:
 	void onAutoGrant(int);
 	void slotSpeak(int, const UserPtr&);
+	void on_list_currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *);
+	void slot_remove_user();
+	void slot_ignore_user();
+	void slot_desc_user();
 signals:
 	void sigSpeak(int, const UserPtr&);
 };

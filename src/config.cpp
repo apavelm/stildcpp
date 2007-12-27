@@ -29,19 +29,21 @@ namespace AppSettings
 const char * AppSettingsMgr::intTags[] = 
 {
 	"HideOnClose", "ShowSplash", "UseTray", "StartHidden", "PromptOnClose", "TabPosition"
-	,"NotePadFontSize", "UpdateIPonStartup", "ShowSmiles", "SwapUserListHub", "MainToolBarIconSize", "MainToolBarStyle"
+	,"NotePadFontSize", "UpdateIPonStartup", "ShowSmiles", "SwapUserListHub", "MainToolBarIconSize"
+	,"MainToolBarStyle", "OPsGoesFirst"
 };
 
 const char * AppSettingsMgr::strTags[] = 
 {
-	"IconSetPath", "DefaultHubEncoding"
+	"IconSetPath", "DefaultHubEncoding", "HubWindowUserListGeometry"
 };
 
 void AppSettingsMgr::writeDefs()
 {
-	intDefaults << 1 << 1 << 1 << 0 << 1 << 0 << 10 << 0 << 1 << 0 << 48 << Qt::ToolButtonIconOnly;
+	intDefaults << 1 << 1 << 1 << 0 << 1 << 0 << 10 << 0 << 1 << 0 << 48 << Qt::ToolButtonIconOnly << 1;
 	strDefaults << "/home/irq/stildcpp/images/emotions/default.icp";
 	strDefaults << "CP1251";
+	strDefaults << "";
 	intSettings = intDefaults;
 	strSettings = strDefaults;
 }
@@ -79,14 +81,14 @@ if (fi.exists() && fi.isReadable())
 	// load int vars
 	QDomElement x_int = x_config.firstChildElement("int");
 		for( int i=0; i<i_LAST; i++)
-			intSettings[i] = (x_int.firstChildElement(intTags[i]).attribute("value",QString::number(intDefaults[i]))).toLong();
+			intSettings[i] = (x_int.firstChildElement(intTags[i]).attribute("value",QByteArray::number(intDefaults[i]))).toLong();
 
 	// load str vars
 	QDomElement x_str = x_config.firstChildElement("str");
 	for( int i=0; i<s_LAST; i++)
 	{
-		strSettings[i] = x_str.firstChildElement(strTags[i]).text();
-		if (strSettings[i]=="") strSettings[i]=strDefaults[i];
+		strSettings[i] = (x_str.firstChildElement(strTags[i]).text()).toUtf8();
+		if (strSettings[i].isEmpty()) strSettings[i]=strDefaults[i];
 	}
 	
 	return 0;
