@@ -22,14 +22,59 @@
 #define __FAVHUBLSTWIN_H__
 
 #include "mdi_c.h"
+#include "stilutils.h"
 
 #include "ui_favhublist.h"
 
-class FavoriteHubListWindow : public MdiChild, private Ui::mdiFAVHUBwin
+//
+#include "client/stdinc.h"
+#include "client/DCPlusPlus.h"
+#include "client/forward.h"
+#include "client/FavoriteManagerListener.h"
+#include "client/FavoriteManager.h"
+//
+
+#include <QtDebug>
+#include <QtGui>
+#include <QList>
+
+
+class FavoriteHubListWindow : public MdiChild
+					, private Ui::mdiFAVHUBwin
+					, private dcpp::FavoriteManagerListener
 {
 	Q_OBJECT
+private:
+	enum
+	{
+		COLUMN_FIRST,
+		COLUMN_NAME = COLUMN_FIRST,
+		COLUMN_DESCRIPTION,
+		COLUMN_NICK,
+		COLUMN_PASSWORD,
+		COLUMN_SERVER,
+		COLUMN_USERDESCRIPTION,
+		COLUMN_LAST
+	};
+	
+	QList<dcpp::FavoriteHubEntryPtr> datalist;
+	
+	void addEntry(const dcpp::FavoriteHubEntryPtr entry, int index = -1);
+	int GetFavHubIndex(const QString & name);
+	dcpp::FavoriteHubEntryPtr GetFavHubPtr(const QString & name);
+	void rebuilddatalist();
+	
+	// Listner
+	virtual void on(FavoriteAdded, const dcpp::FavoriteHubEntryPtr e) throw();
+	virtual void on(FavoriteRemoved, const dcpp::FavoriteHubEntryPtr e) throw();
 public:
 	FavoriteHubListWindow(QWidget *parent);
+	~FavoriteHubListWindow();
+private slots:
+	void on_list_currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *);
+	void slot_Add();
+	void slot_Connect();
+	void slot_Remove();
 };
 
 #endif // __FAVHUBLSTWIN_H__

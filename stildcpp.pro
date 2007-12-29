@@ -29,8 +29,7 @@ FORMS = ui/mainwindow.ui \
  ui/adl.ui \
  ui/searchspy.ui \
  ui/notepad.ui \
- ui/hashman.ui \
- ui/favhubprop.ui
+ ui/hashman.ui
 HEADERS = src/mainwindowimpl.h \
  src/frmAbout.h \
  src/mdi_c.h \
@@ -244,7 +243,7 @@ RESOURCES += src/stildcpp.qrc src/langs.qrc
 LIBS += -lssl -lbz2 -lcrypto
 TRANSLATIONS = lang/stildcpp_ru.ts
 DEFINES += _DEBUG \
- BOOST_HAS_GCC_TR1 \
- USE_SYS_STL=1 \
- UNICODE \
- _UNICODE
+	    BOOST_HAS_GCC_TR1 \
+	    USE_SYS_STL=1 \
+	    UNICODE \
+	     _UNICODE

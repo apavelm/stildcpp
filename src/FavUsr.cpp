@@ -84,6 +84,15 @@ FavoriteUsersWindow::FavoriteUsersWindow(QWidget *parent) : MdiChild(parent)
 	list->setCurrentItem(list->topLevelItem(0));
 }
 
+void FavoriteUsersWindow::rebuilddatalist()
+{
+	datalist.clear();
+	
+	FavoriteManager::FavoriteMap ul = FavoriteManager::getInstance()->getFavoriteUsers();
+	for(FavoriteManager::FavoriteMap::iterator i = ul.begin(); i != ul.end(); ++i) 
+		datalist << i->second;
+}
+
 FavoriteUsersWindow::~FavoriteUsersWindow()
 {
 	datalist.clear();
@@ -135,7 +144,20 @@ void FavoriteUsersWindow::slot_ignore_user()
 
 void FavoriteUsersWindow::slot_desc_user()
 {
-	
+	bool ok;
+	QString text = QInputDialog::getText(this, tr("Change User Description"), tr("New Description:"), QLineEdit::Normal, lbl_Desc->text() , &ok);
+	if (ok) 
+	{
+		QTreeWidgetItem *it = list->currentItem();
+		if (!it) return;
+		FavoriteUser aUser = GetFavUser(it->text(COLUMN_NICK));
+		UserInfo *ui = new UserInfo(aUser);
+		lbl_Desc->setText(text);
+		
+		FavoriteManager::getInstance()->setUserDescription(ui->user, Text::fromT(StilUtils::QtoTstr(text)));
+		rebuilddatalist();
+		delete ui;
+	}
 }
 
 void FavoriteUsersWindow::removeUser(const FavoriteUser& aUser) 
@@ -165,6 +187,7 @@ void FavoriteUsersWindow::onAutoGrant(int n)
 	FavoriteUser f = GetFavUser(it->text(0));
 	UserInfo *ui = new UserInfo(f);
 	FavoriteManager::getInstance()->setAutoGrant(ui->user, (n));
+	//rebuilddatalist();
 	delete ui;
 }
 

@@ -85,6 +85,7 @@ private:
 	QList<FavoriteUser> datalist;
 	FavoriteUser & GetFavUser(const QString & );
 	int GetFavUserIndex(const QString & );
+	void rebuilddatalist();
 	
 	enum { USER_UPDATED };
 
