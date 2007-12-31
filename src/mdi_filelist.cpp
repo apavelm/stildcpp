@@ -76,6 +76,7 @@ FileListDlg::FileListDlg(QWidget *parent, const UserPtr &aUser, int64_t aSpeed, 
 	openContent(listing.getRoot());
 
 	//parent -> setWindowTitle("Testtitle"); // set window title in format: "FileList - John" to ./filelist/john.tar.bz2
+	
 }
 
 void FileListDlg::createActions()

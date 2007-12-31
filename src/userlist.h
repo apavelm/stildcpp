@@ -35,6 +35,14 @@
 
 #include "userlistsortingmodel.h"
 
+#include "client/stdinc.h"
+#include "client/DCPlusPlus.h"
+#include "client/forward.h"
+#include "client/ClientManager.h"
+#include "client/QueueManager.h"
+#include "client/LogManager.h"
+#include "client/CID.h"
+
 class HubWindow;
 
 class HubUserList : public QObject
@@ -57,12 +65,21 @@ private slots:
 	void showColumnMenu(const QPoint &point);
 	void set_topOp();
 	void set_classicSort();
+	void actionGetFilelist();
+	void actionMatchQueue();
+	void actionSendPM();
+	void actionAddToFavorites();
+	void actionGrandExtraSlot();
+	void actionRemoveUserFromQueue();
+	void actionCopyNickToClipboard();
+	void showUserMenu(const QPoint &point);
 	
 private:
 	const int totalColumns;
 	bool topOp;
 	bool classicSort;
 	QMenu *columnMenu;
+	QMenu *userMenu;
 	QTreeView *treeView;
 	QLineEdit *filterString;
 	QComboBox *criteriaSortBox;
@@ -71,6 +88,9 @@ private:
 	void checkAndReadSettings();
 	void saveSettings();
 	void resort();
+	void initUserMenu();
+	//QList<QAction *> actions;
+	//void updateActions(const QItemSelection &, const QItemSelection &);
 
 };
 #endif

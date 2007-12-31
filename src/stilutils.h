@@ -28,13 +28,15 @@
 #include "client/CID.h"
 #include "client/User.h"
 #include "client/ClientManager.h"
+//#include "client/StringDefs.h"
+//#include "mainwindowimpl.h"
 #include <QString>
+#include <QObject>
 
 using namespace dcpp;
 
 class StilUtils  
 {
-
 public:
 	//StilUtils();
 	static std::string getNicks(const CID& cid);
@@ -47,6 +49,8 @@ public:
 	
 	static pair<tstring, bool> getHubNames(const CID& cid);
 	static pair<tstring, bool> getHubNames(const UserPtr& u);
+	
+	static bool checkCommand(QString& cmd, QString& param, QString& message, QString& status);
 };
 
 #endif // of StilUtils

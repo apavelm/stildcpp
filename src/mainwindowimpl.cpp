@@ -48,7 +48,15 @@ MainWindowImpl::~MainWindowImpl()
 	delete showhide;
 	delete trayIcon;
 	delete trayIconMenu;
-	delete shareStatusLbl;
+	//delete statusStatusLabel;
+	delete statusAwayLabel;
+	delete statusCountsLabel;
+	delete statusSlotsLabel;
+	delete statusDownTotalLabel;
+	delete statusUpTotalLabel;
+	delete statusDownDiffLabel;
+	delete statusUpDiffLabel;
+	//delete shareStatusLbl;
 	delete m_tabwin;
 	thrdGetTTh.wait();
 	AppSettings::AppSettingsMgr::deleteInstance();
@@ -77,6 +85,7 @@ void MainWindowImpl::initMain()
 	createToolBars();
 	createTrayIcon();
 
+	connect(this, SIGNAL(speakerSignal(unsigned int, long)), this, SLOT(handleSpeaker(unsigned int, long)),Qt::QueuedConnection);
 //	connect(trayIcon, SIGNAL(messageClicked()), this, SLOT(messageClicked()));
 	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));	
 	updateWindowMenu();
@@ -85,9 +94,10 @@ void MainWindowImpl::initMain()
 	setToolTip(tr(APPLICATIONNAME));
 	setWindowTitle(tr(APPLICATIONNAME));
 	
-	shareStatusLbl = new QLabel;
-	setShareSize(tr("Total shared: 0b"));
-	statusBar()->addPermanentWidget(shareStatusLbl);
+	//shareStatusLbl = new QLabel;
+	//setShareSize(tr("Total shared: 0b"));
+	//statusBar()->addPermanentWidget(shareStatusLbl);
+	createStatusLabels();
 	
 	trayIcon->setIcon(QIcon(":/images/icon.png"));
 	
@@ -104,9 +114,95 @@ void MainWindowImpl::initMain()
 		if (!APPSETTING(i_USETRAY)) this->show();
 }
 
+void MainWindowImpl::createStatusLabels()
+{
+	//This is stupid code, but this is also workaround for setting labels size
+	 
+	//statusStatusLabel = new QLabel;
+	statusAwayLabel = new QLabel(tr(" AWAY "));
+	statusAwayLabel->setAlignment(Qt::AlignHCenter);
+	statusAwayLabel->setMinimumSize(statusAwayLabel->sizeHint());
+
+	statusCountsLabel = new QLabel(" 9/9/9 ");
+	statusCountsLabel->setAlignment(Qt::AlignHCenter);
+	statusCountsLabel->setMinimumSize(statusCountsLabel->sizeHint());
+	
+	statusSlotsLabel = new QLabel("Slots: 99/99");
+	statusSlotsLabel->setMinimumSize(statusSlotsLabel->sizeHint());
+	
+	statusDownTotalLabel = new QLabel("D: 999.99MiB");
+	statusDownTotalLabel->setMinimumSize(statusDownTotalLabel->sizeHint());
+	
+	statusUpTotalLabel = new QLabel("U: 999.99MiB");
+	statusUpTotalLabel->setMinimumSize(statusUpTotalLabel->sizeHint());
+	
+	statusDownDiffLabel = new QLabel("D: 999.99MiB/s (99)");
+	statusDownDiffLabel->setMinimumSize(statusDownDiffLabel->sizeHint());
+	
+	statusUpDiffLabel = new QLabel("U: 999.99MiB/s (99)");
+	statusUpDiffLabel->setMinimumSize(statusUpDiffLabel->sizeHint());
+	
+	//statusBar()->addWidget(statusStatusLabel, 1);
+	statusBar()->addPermanentWidget(statusAwayLabel);
+	statusBar()->addPermanentWidget(statusCountsLabel);
+	statusBar()->addPermanentWidget(statusSlotsLabel);
+	statusBar()->addPermanentWidget(statusDownTotalLabel);
+	statusBar()->addPermanentWidget(statusUpTotalLabel);
+	statusBar()->addPermanentWidget(statusDownDiffLabel);
+	statusBar()->addPermanentWidget(statusUpDiffLabel);
+	
+}
+
+void MainWindowImpl::initSecond()
+{
+	QTimer *timer = new QTimer(this);
+	connect(timer, SIGNAL(timeout()), this, SLOT(eachSecond()));
+	timer->start(1000);
+}
+
+bool MainWindowImpl::eachSecond()
+{
+	updateStatus();
+	return true;
+}
+
+void MainWindowImpl::updateStatus()
+{
+	uint64_t now = GET_TICK();
+	uint64_t tdiff = now - lastTick;
+	if (tdiff < 100) {
+		tdiff = 1;
+	}
+
+	uint64_t up = Socket::getTotalUp();
+	uint64_t down = Socket::getTotalDown();
+	uint64_t updiff = up - lastUp;
+	uint64_t downdiff = down - lastDown;
+	
+	lastTick = now;
+	lastUp = up;
+	lastDown = down;
+
+	/** @todo move this to client/ */
+	SettingsManager::getInstance()->set(SettingsManager::TOTAL_UPLOAD, SETTING(TOTAL_UPLOAD) + static_cast<int64_t>(updiff));
+	SettingsManager::getInstance()->set(SettingsManager::TOTAL_DOWNLOAD, SETTING(TOTAL_DOWNLOAD) + static_cast<int64_t>(downdiff));
+
+	setStatus(STATUS_AWAY, Util::getAway() ? TSTRING(AWAY) : _T(""));
+	setStatus(STATUS_COUNTS, Text::toT(Client::getCounts()));
+	setStatus(STATUS_SLOTS, Text::toT(STRING(SLOTS) + ": " + Util::toString(UploadManager::getInstance()->getFreeSlots()) + '/' + Util::toString(SETTING(SLOTS))));
+	setStatus(STATUS_DOWN_TOTAL, Text::toT("D: " + Util::formatBytes(down)));
+	setStatus(STATUS_UP_TOTAL, Text::toT("U: " + Util::formatBytes(up)));
+	setStatus(STATUS_DOWN_DIFF, Text::toT("D: " + Util::formatBytes((downdiff*1000)/tdiff) + "/s ("
+	    + Util::toString(DownloadManager::getInstance()->getDownloadCount()) + ")"));
+	setStatus(STATUS_UP_DIFF, Text::toT("U: " + Util::formatBytes((updiff*1000)/tdiff) + "/s ("
+	    + Util::toString(UploadManager::getInstance()->getUploadCount()) + ")"));
+}
+
 void MainWindowImpl::clientInit()
 {
 
+	updateStatus();
+	
 	dcpp::QueueManager::getInstance()->addListener(this);
 	dcpp::LogManager::getInstance()->addListener(this);
 	
@@ -128,11 +224,14 @@ void MainWindowImpl::clientInit()
 	if(BOOLSETTING(OPEN_PUBLIC)) PubHubFunc();
 	if(BOOLSETTING(OPEN_FAVORITE_HUBS)) FavHubListFunc();
 	
+	speak(AUTO_CONNECT);
+	
 	// If First-time launch
 	if(SETTING(NICK).empty()) 
-		{ 
-			// open settings dialog
-		}
+	{ 
+		// open settings dialog
+		//PreferencesFunc();
+	}
 	
 }
 
@@ -152,6 +251,7 @@ void MainWindowImpl::startSocket()
 MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f) : QMainWindow(parent, f)
 {
 	initMain();
+	initSecond();
 }
 
 void MainWindowImpl::closeEvent(QCloseEvent *event)
@@ -489,7 +589,7 @@ void MainWindowImpl::statusbarcheck()
 
 void MainWindowImpl::setShareSize(const QString &sz)
 {
-	shareStatusLbl->setText(sz);
+//	shareStatusLbl->setText(sz);
 }
 
 void MainWindowImpl::updateWindowMenu()
@@ -739,4 +839,134 @@ void MainWindowImpl::slotCurrentTabChanged(int index)
 	setToolTip(tr(APPLICATIONNAME)+" - [" + m_tabwin->tabToolTip(index) + "]");
 }
 
+void MainWindowImpl::autoConnect(const FavoriteHubEntryList& fl)
+{	
+	for (FavoriteHubEntryList::const_iterator i = fl.begin(); i != fl.end(); ++i)
+	{
+		FavoriteHubEntry* entry = *i;
+		if (entry->getConnect())
+		{
+			if (!entry->getNick().empty() || !SETTING(NICK).empty())
+			{
+				//HubFrame::openWindow(getMDIParent(), entry->getServer());
+				OpenHub(this, Text::toT(entry->getServer()));
+			}
+		}
+	}
+}
+
+bool MainWindowImpl::speak(unsigned int w, long l)
+{
+	emit speakerSignal(w, l);
+}
+
 //
+void MainWindowImpl::on(QueueManagerListener::Finished, QueueItem* qi, const string& dir, int64_t speed) throw()
+{
+	if (qi->isSet(QueueItem::FLAG_CLIENT_VIEW))
+	{
+		if (qi->isSet(QueueItem::FLAG_USER_LIST))
+		{
+			// This is a file listing, show it...
+			DirectoryListInfo* i = new DirectoryListInfo(qi->getDownloads().at(0)->getUser(), Text::toT(qi->getListName()), Text::toT(dir), speed);
+
+			speak(DOWNLOAD_LISTING, (long)i);
+		}
+		else if (qi->isSet(QueueItem::FLAG_TEXT))
+		{
+			speak(VIEW_FILE_AND_DELETE, reinterpret_cast<long>(new std::string(qi->getTarget())));
+		}
+	}
+}
+
+void MainWindowImpl::on(PartialList, const UserPtr& aUser, const string& text) throw()
+{
+	speak(BROWSE_LISTING, (long)new DirectoryBrowseInfo(aUser, text));
+}
+
+int MainWindowImpl::handleSpeaker(unsigned int wParam, long lParam)
+{
+	Speaker s = static_cast<Speaker>(wParam);
+
+	switch (s) {
+	case DOWNLOAD_LISTING: {
+		boost::scoped_ptr<DirectoryListInfo> i(reinterpret_cast<DirectoryListInfo*>(lParam));
+		//DirectoryListingFrame::openWindow(getMDIParent(), i->file, i->dir, i->user, i->speed);
+		QString NickName = QString::fromStdString(FileListDlg::getNickFromFilename(Text::fromT(i->file)));
+		OpenList(this, i->file, i->user, i->speed, NickName);
+	}
+		break;
+	case BROWSE_LISTING: {/*
+		boost::scoped_ptr<DirectoryBrowseInfo> i(reinterpret_cast<DirectoryBrowseInfo*>(lParam));
+		//DirectoryListingFrame::openWindow(getMDIParent(), i->user, i->text, 0);
+		OpenList(this, i->user, i->text, 0, QString(""));
+	}*/
+		break;
+	case AUTO_CONNECT: {
+		autoConnect(FavoriteManager::getInstance()->getFavoriteHubs());
+	}
+		break;
+	case PARSE_COMMAND_LINE: {
+		//parseCommandLine(GetCommandLine());
+	}
+		break;
+	case VIEW_FILE_AND_DELETE: {/*
+		boost::scoped_ptr<std::string> file(reinterpret_cast<std::string*>(lParam));
+		new TextFrame(this->getMDIParent(), *file);
+		File::deleteFile(*file);*/
+	}
+		break;
+	case STATUS_MESSAGE: {
+		boost::scoped_ptr<pair<time_t, tstring> > msg(reinterpret_cast<std::pair<time_t, tstring>*>(lParam));
+		tstring line = Text::toT("[" + Util::getShortTimeString(msg->first) + "] ") + msg->second;
+
+		setStatus(STATUS_STATUS, line);
+		while (lastLinesList.size() + 1> MAX_CLIENT_LINES)
+			lastLinesList.erase(lastLinesList.begin());
+		if (line.find(_T('\r')) == tstring::npos) {
+			lastLinesList.push_back(line);
+		} else {
+			lastLinesList.push_back(line.substr(0, line.find(_T('\r'))));
+		}
+	}
+		break;
+	case LAYOUT: {
+		//layout();
+	}
+		break;
+	}
+	return 0;
+}
+}
+
+void MainWindowImpl::setStatus(int s, const tstring& text)
+{
+	switch(s)
+	{
+		case STATUS_STATUS:
+			//statusStatusLabel->setText(StilUtils::TstrtoQ(text));
+			statusBar()->showMessage(StilUtils::TstrtoQ(text));
+			break;
+		case STATUS_AWAY:
+			statusAwayLabel->setText(StilUtils::TstrtoQ(text));
+			break;
+		case STATUS_COUNTS:
+			statusCountsLabel->setText(StilUtils::TstrtoQ(text));
+			break;
+		case STATUS_SLOTS:
+			statusSlotsLabel->setText(StilUtils::TstrtoQ(text));
+			break;
+		case STATUS_DOWN_TOTAL:
+			statusDownTotalLabel->setText(StilUtils::TstrtoQ(text));
+			break;
+		case STATUS_UP_TOTAL:
+			statusUpTotalLabel->setText(StilUtils::TstrtoQ(text));
+			break;
+		case STATUS_DOWN_DIFF:
+			statusDownDiffLabel->setText(StilUtils::TstrtoQ(text));
+			break;
+		case STATUS_UP_DIFF:
+			statusUpDiffLabel->setText(StilUtils::TstrtoQ(text));
+			break;
+	}
+}

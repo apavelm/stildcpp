@@ -53,12 +53,15 @@ HubUserList::HubUserList(QTreeView *&_treeView, QLineEdit *&_filterString,
 	connect(treeView->header(), SIGNAL(customContextMenuRequested(const QPoint&)), 
 				this, SLOT(showColumnMenu(const QPoint&)));
 	
+	initUserMenu();
+	
 	checkAndReadSettings();
 	
 	proxyModel = new UserListSortingModel();
 	proxyModel -> setSortingSettings(classicSort, topOp);
 	
 	proxyModel -> setDynamicSortFilter(true);
+	treeView   -> setSelectionMode(QAbstractItemView::ExtendedSelection);
 	treeView   -> setEditTriggers(QAbstractItemView::NoEditTriggers);
 	proxyModel -> setSourceModel(model);
 	treeView   -> setModel(proxyModel);
@@ -183,10 +186,10 @@ void HubUserList::showColumnMenu(const QPoint &point)
 {
 	columnMenu->clear();
 	
-	QAction *action_classicSort = columnMenu->addAction("Classic sort", this, SLOT(set_classicSort()));
+	QAction *action_classicSort = columnMenu->addAction(tr("Classic sort"), this, SLOT(set_classicSort()));
 	action_classicSort->setCheckable(true);
 	
-	QAction *action_topOp = columnMenu->addAction("Op on top", this, SLOT(set_topOp()));
+	QAction *action_topOp = columnMenu->addAction(tr("Op on top"), this, SLOT(set_topOp()));
 	action_topOp->setCheckable(true);
 	
 	action_classicSort->setChecked(classicSort);
@@ -258,3 +261,91 @@ void HubUserList::saveSettings()
 	SETAPPSETTING(i_SORTUSERLISTOPSFIRST, static_cast<int>(topOp));
 	SETAPPSETTING(i_SORTUSERLISTCLASSIC, static_cast<int>(classicSort));
 }
+
+void HubUserList::initUserMenu()
+{
+	userMenu = new QMenu(treeView);
+	treeView->setContextMenuPolicy(Qt::CustomContextMenu);
+	connect(treeView, SIGNAL(customContextMenuRequested(const QPoint&)), 
+				this, SLOT(showUserMenu(const QPoint&)));
+
+	//connect(treeView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
+	//		this, SLOT(updateActions(const QItemSelection &, const QItemSelection &)));
+	
+	//TODO: switch to core defined strings like TSTRING(GET_FILE_LIST)
+	userMenu->addAction(tr("Get file list"), this, SLOT(actionGetFilelist()));
+	userMenu->addAction(tr("Match queue"), this, SLOT(actionMatchQueue()));
+	userMenu->addAction(tr("Send private message"), this, SLOT(actionSendPM()));
+	userMenu->addAction(tr("Add to favorites"), this, SLOT(actionAddToFavorites()));
+	userMenu->addAction(tr("Grand extra slot"), this, SLOT(actionGrandExtraSlot()));
+
+	userMenu->addSeparator();
+	
+	userMenu->addAction(tr("Remove user from queue"), this, SLOT(actionRemoveUserFromQueue()));
+	userMenu->addAction(tr("Copy nick to clipboard"), this, SLOT(actionCopyNickToClipboard()));
+}
+
+void HubUserList::showUserMenu(const QPoint &point)
+{
+    if (treeView->indexAt(point).isValid())
+        userMenu->exec(treeView->mapToGlobal(point));
+}
+
+void HubUserList::actionGetFilelist()
+{	
+	QModelIndex index = treeView->selectionModel()->currentIndex();
+	QString userCID = proxyModel->sibling(index.row(), 7, index).data().toString();
+	
+	std::string cid = userCID.toStdString();
+	
+	if (!cid.empty())
+	{
+		try
+		{
+			dcpp::UserPtr user = dcpp::ClientManager::getInstance()->findUser(dcpp::CID(cid));
+			if (user)
+				dcpp::QueueManager::getInstance()->addList(user, dcpp::QueueItem::FLAG_CLIENT_VIEW);
+		}
+		catch (const dcpp::Exception &e)
+		{
+			dcpp::LogManager::getInstance()->message(e.getError());
+		}
+	}
+}
+
+void HubUserList::actionMatchQueue()
+{
+	
+}
+
+void HubUserList::actionSendPM()
+{
+	
+}
+
+void HubUserList::actionAddToFavorites()
+{
+	
+}
+
+void HubUserList::actionGrandExtraSlot()
+{
+	
+}
+
+void HubUserList::actionRemoveUserFromQueue()
+{
+	
+}
+
+void HubUserList::actionCopyNickToClipboard()
+{
+	
+}
+
+/*
+void HubUserList::updateActions(const QItemSelection &, const QItemSelection &)
+{
+	qDebug() << "Update actions";
+}
+*/

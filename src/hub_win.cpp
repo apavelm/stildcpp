@@ -100,7 +100,57 @@ void HubWindow::addnicktext( const QString & t)
 void HubWindow::sendFunc(const QString &txt)
 {
 	if ( (client) && (!txt.isEmpty()) )
-		client->hubMessage(Text::fromT(StilUtils::QtoTstr(txt)));
+	{
+		if (txt.at(0) == '/')
+		{
+			QString cmd = txt;
+			QString param;
+			QString msg;
+			QString status;
+
+			if(StilUtils::checkCommand(cmd, param, msg, status))
+			{
+				if(!msg.isEmpty())
+					client->hubMessage((Text::fromT(StilUtils::QtoTstr(msg))));
+				
+				if(!status.isEmpty())
+					addStatus(StilUtils::QtoTstr(status));
+			}
+		/* else if(QString::compare(cmd, "join", Qt::CaseInsensitive) == 0) 
+		{
+			if(!param.isEmpty())
+			{
+				redirect = Text::fromT(param);
+				
+				if(BOOLSETTING(JOIN_OPEN_NEW_WINDOW))
+					HubFrame::openWindow(getParent(), Text::fromT(param));
+				else
+					handleFollow();
+			} 
+			else
+				addStatus(TSTRING(SPECIFY_SERVER));
+		}*/
+		else
+		{
+			if (BOOLSETTING(SEND_UNKNOWN_COMMANDS))
+				client->hubMessage(Text::fromT(StilUtils::QtoTstr(txt)));
+			else
+				addStatus(TSTRING(UNKNOWN_COMMAND) + StilUtils::QtoTstr(cmd));
+		}
+		//message->setText(_T(""));
+	}/* else if(waitingForPW)
+	{
+		addStatus(TSTRING(DONT_REMOVE_SLASH_PASSWORD));
+		message->setText(_T("/password "));
+		message->setFocus();
+		message->setSelection(10, 10);
+	}*/
+		else
+		{
+			client->hubMessage(Text::fromT(StilUtils::QtoTstr(txt)));
+			//message->setText(_T(""));
+		}
+	}
 }
 
 void HubWindow::setupeditor()
@@ -991,4 +1041,5 @@ void HubWindow::setStatus(int s, const tstring& text)
 			dcdebug("Set status for %d with text: %s\n", s, Text::fromT(text).c_str());
 	}
 }
+
 // HubWindow

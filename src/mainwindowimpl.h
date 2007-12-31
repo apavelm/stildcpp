@@ -21,6 +21,7 @@
 #ifndef MAINWINDOWIMPL_H
 #define MAINWINDOWIMPL_H
 //
+
 #include <QMainWindow>
 #include <QFileDialog>
 #include <QFileInfo>
@@ -36,6 +37,7 @@
 #include <QUrl>
 #include <QThread>
 #include <sstream>
+#include <boost/scoped_ptr.hpp>
 
 #include "defs.h"
 
@@ -68,6 +70,7 @@
 //
 #include "client/stdinc.h"
 #include "client/DCPlusPlus.h"
+#include "client/QueueItem.h"
 #include "client/SimpleXML.h"
 #include "client/LogManager.h"
 #include "client/ConnectionManager.h"
@@ -85,10 +88,7 @@
 #include "client/DownloadManager.h"
 #include "client/SettingsManager.h"
 
-
-//#include "dcpp/ResourceManager.h"
-
-#include "client/DownloadManager.h"
+#include "client/Download.h"
 #include "client/UploadManager.h"
 
 
@@ -96,10 +96,11 @@
 #include "client/SearchManager.h"
 #include "client/QueueManager.h"
 #include "client/ClientManager.h"
+
 //
 
 #include "ui_mainwindow.h"
-#include "stilutils.h"
+//#include "stilutils.h"
 
 class ThreadGetTTH : public QThread
 {
@@ -128,6 +129,20 @@ public:
 	void initMain();
 	MainWindowImpl( QWidget * parent = 0, Qt::WFlags f = 0 );
 	~MainWindowImpl();
+	
+	//PORTED CODE
+	enum Status {
+		STATUS_STATUS,
+		STATUS_AWAY,
+		STATUS_COUNTS,
+		STATUS_SLOTS,
+		STATUS_DOWN_TOTAL,
+		STATUS_UP_TOTAL,
+		STATUS_DOWN_DIFF,
+		STATUS_UP_DIFF,
+		STATUS_DUMMY,
+		STATUS_LAST
+	};
 
 protected:
 	void closeEvent(QCloseEvent *event);
@@ -175,8 +190,14 @@ private slots:
 	void fQuickConFunc();
 	void statusbarcheck(); // if StatusBar Checked in menu @View@
 	
+	int handleSpeaker(unsigned int wParam, long lParam);
+	bool eachSecond();	
+	
+signals:
+	int speakerSignal(unsigned int, long=0);
+	
 public slots:
-	void OpenList(QWidget *, const dcpp::tstring & , const dcpp::UserPtr & , int64_t, const QString );
+	void OpenList(QWidget *, const dcpp::tstring & , const dcpp::UserPtr & , int64_t, const QString);
 	void OpenPM(QWidget *parent, const QString &);
 	void OpenHub(QWidget *parent, const dcpp::tstring& adr);
 
@@ -184,6 +205,7 @@ private:
 	void createActions();
 	void createTrayIcon();
 	void createToolBars();
+	void createStatusLabels();
 	void clientInit();
 	void startSocket();
 	void setShareSize(const QString &sz);
@@ -194,10 +216,69 @@ private:
 
 	QSystemTrayIcon *trayIcon;
 	QMenu *trayIconMenu;
-	QLabel *shareStatusLbl;
+	//QLabel *shareStatusLbl;
 	
 	ThreadGetTTH thrdGetTTh;
 	TabWidget *m_tabwin;
+	
+	//PORTED CODE
+	//QLabel *statusStatusLabel;
+	QLabel *statusAwayLabel;
+	QLabel *statusCountsLabel;
+	QLabel *statusSlotsLabel;
+	QLabel *statusDownTotalLabel;
+	QLabel *statusUpTotalLabel;
+	QLabel *statusDownDiffLabel;
+	QLabel *statusUpDiffLabel;
+	
+	enum { MAX_CLIENT_LINES = 10 };
+	int64_t lastUp;
+	int64_t lastDown;
+	uint64_t lastTick;
+	TStringList lastLinesList;
+	tstring lastLines;
+	bool speak(unsigned int, long=0);
+	void initSecond();
+	void updateStatus();
+	void setStatus(int s, const tstring& text);
+	void autoConnect(const FavoriteHubEntryList& fl);
+	// LogManagerListener
+	virtual void on(LogManagerListener::Message, time_t t, const string& m) throw() 
+	{ speak(STATUS_MESSAGE, (long)new pair<time_t, tstring>(t, tstring(Text::toT(m)))); }
+
+	// HttpConnectionListener
+	//virtual void on(HttpConnectionListener::Complete, HttpConnection* conn, string const& /*aLine*/) throw();
+	//virtual void on(HttpConnectionListener::Data, HttpConnection* /*conn*/, const uint8_t* buf, size_t len) throw();
+
+	// QueueManagerListener
+	virtual void on(QueueManagerListener::Finished, QueueItem* qi, const string& dir, int64_t speed) throw();
+	virtual void on(PartialList, const UserPtr&, const string& text) throw();
+	
+	class DirectoryListInfo {
+	public:
+		DirectoryListInfo(const UserPtr& aUser, const tstring& aFile, const tstring& aDir, int64_t aSpeed) : user(aUser), file(aFile), dir(aDir), speed(aSpeed) { }
+		UserPtr user;
+		tstring file;
+		tstring dir;
+		int64_t speed;
+	};
+	
+	class DirectoryBrowseInfo {
+	public:
+		DirectoryBrowseInfo(const UserPtr& ptr, string aText) : user(ptr), text(aText) { }
+		UserPtr user;
+		string text;
+	};
+	
+	enum Speaker {
+		DOWNLOAD_LISTING,
+		BROWSE_LISTING,
+		AUTO_CONNECT,
+		PARSE_COMMAND_LINE,
+		VIEW_FILE_AND_DELETE,
+		STATUS_MESSAGE,
+		LAYOUT
+	};
 };
 
 #endif

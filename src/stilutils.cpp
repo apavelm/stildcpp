@@ -98,4 +98,53 @@ pair<tstring, bool> StilUtils::getHubNames(const UserPtr& u)
 	return getHubNames(u->getCID()); 
 }
 
+bool StilUtils::checkCommand(QString& cmd, QString& param, QString& message, QString& status)
+{
+	//if (cmd.at(0) == '/')
+	//{		
+		int space = cmd.indexOf(' ');
+		
+		if ((space != -1))// && cmd.size() > space + 1)
+		{			
+			param = cmd.mid(space + 1);
+			cmd = cmd.mid(1, space - 1);
+		}
+		else
+		{
+			cmd = cmd.mid(1);
+		}
+		
+		//cmd = cmd.toLower();
+
+		if (QString::compare(cmd, "away", Qt::CaseInsensitive) == 0)
+		{
+			if (Util::getAway() && param.isEmpty())
+			{
+				Util::setAway(false);
+				Util::setManualAway(false);
+				//status = StilUtils::TstrtoQ(TSTRING(AWAY_MODE_OFF));
+				status = QString(QObject::tr("Away mode off"));
+			}
+			else
+			{
+				Util::setAway(true);
+				Util::setManualAway(true);
+				Util::setAwayMessage(Text::fromT(StilUtils::QtoTstr(param)));
+				//status = StilUtils::TstrtoQ(TSTRING(AWAY_MODE_ON) + Text::toT(Util::getAwayMessage()));
+				status = QString(QObject::tr("Away mode on: ") + StilUtils::TstrtoQ(Text::toT(Util::getAwayMessage())));
+			}
+		}
+		else if (QString::compare(cmd, "back", Qt::CaseInsensitive) == 0)
+		{
+			Util::setAway(FALSE);
+			//status = StilUtils::TstrtoQ(TSTRING(AWAY_MODE_OFF));
+			status = QString(QObject::tr("Away mode off"));
+		}
+		else
+			return false;
+			
+		return true;
+	
+}
+
 // of stilutils
