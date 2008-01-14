@@ -151,7 +151,9 @@ HEADERS = src/mainwindowimpl.h \
  src/useractmenu.h \
  src/client/HashBloom.h \
  src/userlist.h \
- src/userlistsortingmodel.h
+ src/userlistsortingmodel.h \
+ src/widgets/stil_TransferView.h \
+ src/widgets/myprogress.h
 SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
  src/frmAbout.cpp \
@@ -238,12 +240,16 @@ SOURCES = src/mainwindowimpl.cpp \
  src/useractmenu.cpp \
  src/client/HashBloom.cpp \
  src/userlist.cpp \
- src/userlistsortingmodel.cpp
+ src/userlistsortingmodel.cpp \
+ src/widgets/stil_TransferView.cpp \
+ src/widgets/myprogress.cpp
 RESOURCES += src/stildcpp.qrc src/langs.qrc
 LIBS += -lssl -lbz2 -lcrypto
 TRANSLATIONS = lang/stildcpp_ru.ts
 DEFINES += _DEBUG \
-	    BOOST_HAS_GCC_TR1 \
-	    USE_SYS_STL=1 \
-	    UNICODE \
-	     _UNICODE
+ BOOST_HAS_GCC_TR1 \
+ UNICODE \
+ _UNICODE \
+ BUILDING_DCPP \
+ DEBUG \
+ USE_SYS_STL=1

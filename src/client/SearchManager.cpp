@@ -234,7 +234,7 @@ void SearchManager::onData(const uint8_t* buf, size_t aLen, const string& remote
 		if( (j = x.find((char)5, i)) == string::npos) {
 			return;
 		}
-		int Slots = Util::toInt(x.substr(i, j-i));
+		int slots = Util::toInt(x.substr(i, j-i));
 		i = j + 1;
 		if( (j = x.rfind(" (")) == string::npos) {
 			return;
@@ -273,7 +273,7 @@ void SearchManager::onData(const uint8_t* buf, size_t aLen, const string& remote
 		}
 
 
-		SearchResult* sr = new SearchResult(user, type, Slots, freeSlots, size,
+		SearchResult* sr = new SearchResult(user, type, slots, freeSlots, size,
 			file, hubName, url, remoteIp, TTHValue(tth), Util::emptyString);
 		fire(SearchManagerListener::SR(), sr);
 		sr->decRef();

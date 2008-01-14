@@ -19,6 +19,20 @@
 #ifndef DCPLUSPLUS_DCPP_TEXT_H
 #define DCPLUSPLUS_DCPP_TEXT_H
 
+#if defined(UNICODE) && defined(_UNICODE)
+#define _T(s) L ## s 
+#else
+#define _T(s) ## s
+#endif
+
+#ifdef UNICODE
+typedef wchar_t TCHAR;
+typedef wchar_t _TCHAR;
+#else
+typedef char	TCHAR;
+typedef char	_TCHAR;
+#endif
+
 namespace dcpp {
 
 /**
@@ -81,7 +95,7 @@ namespace Text {
 #ifdef UNICODE
 	inline const tstring& toT(const string& str, tstring& tmp) throw() { return utf8ToWide(str, tmp); }
 	inline tstring toT(const string& str) throw() { return utf8ToWide(str); }
-
+	
 	inline const string& fromT(const tstring& str, string& tmp) throw() { return wideToUtf8(str, tmp); }
 	inline string fromT(const tstring& str) throw() { return wideToUtf8(str); }
 #else
@@ -135,11 +149,7 @@ namespace Text {
 	
 	template<typename T>
 	tstring tformat(const tstring& src, T t) {
-#ifdef UNICODE
-		tstring ret(src.size() + 64, L'\0');
-#else
-		tstring ret(src.size() + 64, '\0');
-#endif
+		tstring ret(src.size() + 64, _T('\0'));
 		int n = _sntprintf(&ret[0], ret.size(), src.c_str(), t);
 		if(n != -1 && n < static_cast<int>(ret.size())) {
 			ret.resize(n);
@@ -148,11 +158,7 @@ namespace Text {
 	}
 	template<typename T, typename T2, typename T3>
 	tstring tformat(const tstring& src, T t, T2 t2, T3 t3) {
-#ifdef UNICODE
-		tstring ret(src.size() + 128, L'\0');
-#else
-		tstring ret(src.size() + 128, '\0');
-#endif
+		tstring ret(src.size() + 128, _T('\0'));
 		int n = _sntprintf(&ret[0], ret.size(), src.c_str(), t, t2, t3);
 		if(n != -1 && n < static_cast<int>(ret.size())) {
 			ret.resize(n);

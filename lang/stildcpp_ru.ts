@@ -50,30 +50,58 @@
 <context>
     <name>FavoriteHubListWindow</name>
     <message>
-        <location filename="../src/favHubLstWin.cpp" line="30"/>
+        <location filename="../src/favHubLstWin.cpp" line="70"/>
         <source>Favorite Hubs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/favHubLstWin.cpp" line="29"/>
+        <location filename="../src/favHubLstWin.cpp" line="143"/>
+        <source>StilDC++</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/favHubLstWin.cpp" line="143"/>
+        <source>Do you realy want to delete?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/favHubLstWin.cpp" line="69"/>
         <source></source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>FavoriteUsersWindow</name>
+    <message>
+        <location filename="../src/FavUsr.cpp" line="63"/>
+        <source>Favorite Users</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/FavUsr.cpp" line="148"/>
+        <source>Change User Description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/FavUsr.cpp" line="148"/>
+        <source>New Description:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>FileListDlg</name>
     <message>
-        <location filename="../src/mdi_filelist.cpp" line="83"/>
+        <location filename="../src/mdi_filelist.cpp" line="84"/>
         <source>Download</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mdi_filelist.cpp" line="228"/>
+        <location filename="../src/mdi_filelist.cpp" line="229"/>
         <source>Dir</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mdi_filelist.cpp" line="149"/>
+        <location filename="../src/mdi_filelist.cpp" line="150"/>
         <source>File</source>
         <translation type="unfinished"></translation>
     </message>
@@ -83,6 +111,54 @@
     <message>
         <location filename="../src/indexing.cpp" line="76"/>
         <source>Done</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>HubUserList</name>
+    <message>
+        <location filename="../src/userlist.cpp" line="189"/>
+        <source>Classic sort</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/userlist.cpp" line="192"/>
+        <source>Op on top</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/userlist.cpp" line="276"/>
+        <source>Get file list</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/userlist.cpp" line="277"/>
+        <source>Match queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/userlist.cpp" line="278"/>
+        <source>Send private message</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/userlist.cpp" line="279"/>
+        <source>Add to favorites</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/userlist.cpp" line="280"/>
+        <source>Grand extra slot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/userlist.cpp" line="284"/>
+        <source>Remove user from queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/userlist.cpp" line="285"/>
+        <source>Copy nick to clipboard</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -135,311 +211,311 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="146"/>
+        <location filename="../ui/mainwindow.ui" line="168"/>
         <source>Exit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="149"/>
+        <location filename="../ui/mainwindow.ui" line="171"/>
         <source>Quit from StilDC++ application</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="157"/>
+        <location filename="../ui/mainwindow.ui" line="182"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="162"/>
+        <location filename="../ui/mainwindow.ui" line="190"/>
         <source>Open filelist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="165"/>
+        <location filename="../ui/mainwindow.ui" line="193"/>
         <source>Open Your Own FileList</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="170"/>
+        <location filename="../ui/mainwindow.ui" line="198"/>
         <source>Open own filelist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="173"/>
+        <location filename="../ui/mainwindow.ui" line="201"/>
         <source>Open FileList From File...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="178"/>
+        <location filename="../ui/mainwindow.ui" line="206"/>
         <source>Refresh own filelist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="181"/>
+        <location filename="../ui/mainwindow.ui" line="209"/>
         <source>Refresh Your FileList</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="186"/>
+        <location filename="../ui/mainwindow.ui" line="214"/>
         <source>Open Downloads Folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="189"/>
+        <location filename="../ui/mainwindow.ui" line="217"/>
         <source>Open Downloads Folder in FileManager</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="194"/>
+        <location filename="../ui/mainwindow.ui" line="225"/>
         <source>Quick Connect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="197"/>
+        <location filename="../ui/mainwindow.ui" line="228"/>
         <source>Quick Connect to Hub</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="205"/>
+        <location filename="../ui/mainwindow.ui" line="236"/>
         <source>Follow last redirect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="210"/>
+        <location filename="../ui/mainwindow.ui" line="244"/>
         <source>Reconnect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="213"/>
+        <location filename="../ui/mainwindow.ui" line="247"/>
         <source>Reconnect to Hub</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="216"/>
+        <location filename="../ui/mainwindow.ui" line="250"/>
         <source>Ctrl+R</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="221"/>
+        <location filename="../ui/mainwindow.ui" line="258"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="224"/>
+        <location filename="../ui/mainwindow.ui" line="261"/>
         <source>Configure StilDC++ client</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="229"/>
+        <location filename="../ui/mainwindow.ui" line="269"/>
         <source>Get TTH for file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="232"/>
+        <location filename="../ui/mainwindow.ui" line="272"/>
         <source>Calculate TTH for custom file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="237"/>
+        <location filename="../ui/mainwindow.ui" line="277"/>
         <source>Public Hubs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="242"/>
+        <location filename="../ui/mainwindow.ui" line="285"/>
         <source>Favorite Hubs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="247"/>
+        <location filename="../ui/mainwindow.ui" line="293"/>
         <source>Favorite Users</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="252"/>
+        <location filename="../ui/mainwindow.ui" line="301"/>
         <source>Ignored Users</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="257"/>
+        <location filename="../ui/mainwindow.ui" line="309"/>
         <source>Search</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="262"/>
+        <location filename="../ui/mainwindow.ui" line="314"/>
         <source>ADL Search</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="267"/>
+        <location filename="../ui/mainwindow.ui" line="319"/>
         <source>Search Spy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="272"/>
+        <location filename="../ui/mainwindow.ui" line="324"/>
         <source>Notepad</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="277"/>
+        <location filename="../ui/mainwindow.ui" line="329"/>
         <source>Indexing Progress</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="291"/>
+        <location filename="../ui/mainwindow.ui" line="343"/>
         <source>Ctrl+1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="288"/>
+        <location filename="../ui/mainwindow.ui" line="340"/>
         <source>StatusBar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="296"/>
+        <location filename="../ui/mainwindow.ui" line="351"/>
         <source>Download Queue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="301"/>
-        <source>Finished downloads</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ui/mainwindow.ui" line="306"/>
+        <location filename="../ui/mainwindow.ui" line="367"/>
         <source>Finished Uploads</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="311"/>
+        <location filename="../ui/mainwindow.ui" line="372"/>
         <source>Homepage</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="316"/>
+        <location filename="../ui/mainwindow.ui" line="377"/>
         <source>Donate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="321"/>
+        <location filename="../ui/mainwindow.ui" line="382"/>
         <source>About Qt</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="326"/>
+        <location filename="../ui/mainwindow.ui" line="390"/>
         <source>Close All Search Windows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="331"/>
+        <location filename="../ui/mainwindow.ui" line="395"/>
         <source>Close All Private Chat Windows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="336"/>
+        <location filename="../ui/mainwindow.ui" line="400"/>
         <source>Close All Hub Windows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="341"/>
+        <location filename="../ui/mainwindow.ui" line="405"/>
         <source>Close All</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="346"/>
+        <location filename="../ui/mainwindow.ui" line="410"/>
         <source>Close All FileList Windows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="132"/>
+        <location filename="../ui/mainwindow.ui" line="154"/>
         <source>Main Bar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="351"/>
+        <location filename="../ui/mainwindow.ui" line="415"/>
         <source>Close Disconnected Hub Windows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="356"/>
+        <location filename="../ui/mainwindow.ui" line="420"/>
         <source>Close Private Chat with Offline Users</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="361"/>
+        <location filename="../ui/mainwindow.ui" line="425"/>
         <source>Close FileLists Offline Users</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="366"/>
+        <location filename="../ui/mainwindow.ui" line="433"/>
         <source>NotePad</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="369"/>
+        <location filename="../ui/mainwindow.ui" line="436"/>
         <source>Ctrl+N</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="152"/>
+        <location filename="../ui/mainwindow.ui" line="174"/>
         <source>Ctrl+X</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.ui" line="200"/>
+        <location filename="../ui/mainwindow.ui" line="231"/>
         <source>Ctrl+Q</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/mainwindow.ui" line="359"/>
+        <source>Finished Downloads</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MainWindowImpl</name>
     <message>
-        <location filename="../src/mainwindowimpl.cpp" line="89"/>
-        <source>Total shared: 0b</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindowimpl.cpp" line="172"/>
+        <location filename="../src/mainwindowimpl.cpp" line="275"/>
         <source>StilDC++</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindowimpl.cpp" line="172"/>
+        <location filename="../src/mainwindowimpl.cpp" line="275"/>
         <source>Do you realy want to exit?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindowimpl.cpp" line="224"/>
+        <location filename="../src/mainwindowimpl.cpp" line="327"/>
         <source>Show / Hide</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindowimpl.cpp" line="226"/>
+        <location filename="../src/mainwindowimpl.cpp" line="329"/>
         <source>Show / Hide application window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindowimpl.cpp" line="694"/>
+        <location filename="../src/mainwindowimpl.cpp" line="798"/>
         <source>Select File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindowimpl.cpp" line="662"/>
+        <location filename="../src/mainwindowimpl.cpp" line="766"/>
         <source>All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindowimpl.cpp" line="303"/>
+        <location filename="../src/mainwindowimpl.cpp" line="407"/>
         <source>Ctrl+2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindowimpl.cpp" line="306"/>
+        <location filename="../src/mainwindowimpl.cpp" line="410"/>
         <source>Ctrl+3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindowimpl.cpp" line="694"/>
+        <location filename="../src/mainwindowimpl.cpp" line="798"/>
         <source>File lists (*.xml.bz2);;All Files (*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindowimpl.cpp" line="125"/>
+        <source> AWAY </source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -565,27 +641,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/preferencesdialog.cpp" line="496"/>
+        <location filename="../src/preferencesdialog.cpp" line="497"/>
         <source>Select Folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/preferencesdialog.cpp" line="326"/>
+        <location filename="../src/preferencesdialog.cpp" line="327"/>
         <source>Rename Favorite Directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/preferencesdialog.cpp" line="396"/>
+        <location filename="../src/preferencesdialog.cpp" line="397"/>
         <source>New Folder Name:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/preferencesdialog.cpp" line="356"/>
+        <location filename="../src/preferencesdialog.cpp" line="357"/>
         <source>Add Favorite Directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/preferencesdialog.cpp" line="429"/>
+        <location filename="../src/preferencesdialog.cpp" line="430"/>
         <source>Folder Name:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -810,17 +886,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/preferencesdialog.cpp" line="465"/>
+        <location filename="../src/preferencesdialog.cpp" line="466"/>
         <source>Total Size: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/preferencesdialog.cpp" line="396"/>
+        <location filename="../src/preferencesdialog.cpp" line="397"/>
         <source>Rename Shared Directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/preferencesdialog.cpp" line="429"/>
+        <location filename="../src/preferencesdialog.cpp" line="430"/>
         <source>Add Shared Directory</source>
         <translation type="unfinished"></translation>
     </message>
@@ -875,17 +951,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/preferencesdialog.cpp" line="496"/>
+        <location filename="../src/preferencesdialog.cpp" line="497"/>
         <source>IconSet Pack (*.icp)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/preferencesdialog.cpp" line="502"/>
+        <location filename="../src/preferencesdialog.cpp" line="503"/>
         <source>Timestamps Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/preferencesdialog.cpp" line="524"/>
+        <location filename="../src/preferencesdialog.cpp" line="525"/>
         <source>
 - %a - Abbreviated weekday name
  - %A - Full weakday name
@@ -1007,6 +1083,16 @@ Default: %H:%M</source>
         <source>Exact size</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../src/stilutils.cpp" line="141"/>
+        <source>Away mode off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/stilutils.cpp" line="134"/>
+        <source>Away mode on: </source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SearchSpyWindow</name>
@@ -1024,7 +1110,7 @@ Default: %H:%M</source>
 <context>
     <name>SearchWindow</name>
     <message>
-        <location filename="../src/SearchWin.cpp" line="41"/>
+        <location filename="../src/SearchWin.cpp" line="40"/>
         <source>Search for: </source>
         <translation type="unfinished"></translation>
     </message>
@@ -1040,32 +1126,32 @@ Default: %H:%M</source>
 <context>
     <name>TabWidget</name>
     <message>
-        <location filename="../src/widgets/tabwidget.cpp" line="40"/>
+        <location filename="../src/widgets/tabwidget.cpp" line="41"/>
         <source>Close Other Tabs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/tabwidget.cpp" line="41"/>
+        <location filename="../src/widgets/tabwidget.cpp" line="42"/>
         <source>Close All Tabs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/tabwidget.cpp" line="39"/>
+        <location filename="../src/widgets/tabwidget.cpp" line="40"/>
         <source>Close Current Tab</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/tabwidget.cpp" line="35"/>
+        <location filename="../src/widgets/tabwidget.cpp" line="36"/>
         <source>Position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/tabwidget.cpp" line="37"/>
+        <location filename="../src/widgets/tabwidget.cpp" line="38"/>
         <source>Tabs Position Down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/tabwidget.cpp" line="36"/>
+        <location filename="../src/widgets/tabwidget.cpp" line="37"/>
         <source>Tabs Position Up</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1073,22 +1159,22 @@ Default: %H:%M</source>
 <context>
     <name>URLObject</name>
     <message>
-        <location filename="../src/widgets/stil_textview.h" line="46"/>
+        <location filename="../src/widgets/stil_textview.h" line="51"/>
         <source>Open mail composer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/stil_textview.h" line="48"/>
+        <location filename="../src/widgets/stil_textview.h" line="53"/>
         <source>Open web browser</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/stil_textview.h" line="43"/>
+        <location filename="../src/widgets/stil_textview.h" line="48"/>
         <source>Open Magnet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/widgets/stil_textview.h" line="50"/>
+        <location filename="../src/widgets/stil_textview.h" line="55"/>
         <source>Copy URL</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1103,6 +1189,49 @@ Default: %H:%M</source>
     <message>
         <location filename="../src/ulfin.cpp" line="27"/>
         <source></source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>UserActionMenu</name>
+    <message>
+        <location filename="../src/useractmenu.cpp" line="55"/>
+        <source>Get File List</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/useractmenu.cpp" line="65"/>
+        <source>Match Queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/useractmenu.cpp" line="75"/>
+        <source>Send Private Message</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/useractmenu.cpp" line="85"/>
+        <source>Send Public Message</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/useractmenu.cpp" line="94"/>
+        <source>Add to Favorites</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/useractmenu.cpp" line="104"/>
+        <source>Grant Extra Slot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/useractmenu.cpp" line="114"/>
+        <source>Remove User From Queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/useractmenu.cpp" line="124"/>
+        <source>Copy Nick to Clipboard</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1170,31 +1299,71 @@ Default: %H:%M</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/favhublist.ui" line="32"/>
+        <location filename="../ui/favhublist.ui" line="49"/>
         <source>Connect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/favhublist.ui" line="55"/>
+        <location filename="../ui/favhublist.ui" line="69"/>
         <source>Add</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/favhublist.ui" line="62"/>
-        <source>Properties</source>
+        <location filename="../ui/favhublist.ui" line="76"/>
+        <source>Remove</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/favhublist.ui" line="69"/>
-        <source>Remove</source>
+        <location filename="../ui/favhublist.ui" line="39"/>
+        <source>Hubs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/favhublist.ui" line="103"/>
+        <source>Hub Properties</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/favhublist.ui" line="244"/>
+        <source>Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/favhublist.ui" line="139"/>
+        <source>Address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/favhublist.ui" line="284"/>
+        <source>Description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/favhublist.ui" line="179"/>
+        <source>Charset encoding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/favhublist.ui" line="198"/>
+        <source>Auto Connect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/favhublist.ui" line="210"/>
+        <source>Identity (leave blank for defaults)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/favhublist.ui" line="264"/>
+        <source>Password</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>mdiHUBwin</name>
     <message>
-        <location filename="../ui/HUBWindow.ui" line="62"/>
-        <source>1</source>
+        <location filename="../ui/HUBWindow.ui" line="47"/>
+        <source>Filter:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1346,28 +1515,48 @@ Default: %H:%M</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/fav_users.ui" line="56"/>
-        <source>AutoSlot / Nick</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ui/fav_users.ui" line="61"/>
-        <source>Hub (last seen on if online)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ui/fav_users.ui" line="66"/>
+        <location filename="../ui/fav_users.ui" line="140"/>
         <source>Time last seen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/fav_users.ui" line="71"/>
+        <location filename="../ui/fav_users.ui" line="170"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/fav_users.ui" line="76"/>
+        <location filename="../ui/fav_users.ui" line="207"/>
         <source>CID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/fav_users.ui" line="36"/>
+        <source>Users</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/fav_users.ui" line="46"/>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/fav_users.ui" line="66"/>
+        <source>Ignore</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/fav_users.ui" line="95"/>
+        <source>AutoSlot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/fav_users.ui" line="110"/>
+        <source>Hub (last seen if online)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/fav_users.ui" line="190"/>
+        <source>...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

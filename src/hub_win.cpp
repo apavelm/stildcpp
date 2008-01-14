@@ -222,7 +222,7 @@ void HubWindow::initIconset()
 {
 	Iconset *ic = new Iconset();
 
-	ic->load("/home/irq/stildcpp/images/emotions/default.icp");
+	ic->load(APPSTRING(s_ICONSETPATH));
 	ic->addToFactory();
 }
 

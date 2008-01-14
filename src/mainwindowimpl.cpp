@@ -29,6 +29,8 @@ MainWindowImpl::~MainWindowImpl()
 {
 	thrdGetTTh.stop();
 	
+	trans_view->preClose();
+	
 	dcpp::SettingsManager::getInstance()->set(SettingsManager::MAIN_WINDOW_POS_X, static_cast<int>(this->x()));
 	dcpp::SettingsManager::getInstance()->set(SettingsManager::MAIN_WINDOW_POS_Y, static_cast<int>(this->y()));
 	dcpp::SettingsManager::getInstance()->set(SettingsManager::MAIN_WINDOW_SIZE_X, static_cast<int>(this->size().width()));
@@ -39,12 +41,6 @@ MainWindowImpl::~MainWindowImpl()
 	AppSettings::AppSettingsMgr::getInstance()->save();
 	QueueManager::getInstance()->saveQueue();
 	
-	dcpp::LogManager::getInstance()->removeListener(this);
-	dcpp::QueueManager::getInstance()->removeListener(this);
-	dcpp::TimerManager::getInstance()->removeListener(this);	
-	
-	SearchManager::getInstance()->disconnect();
-	ConnectionManager::getInstance()->disconnect();
 	delete showhide;
 	delete trayIcon;
 	delete trayIconMenu;
@@ -59,6 +55,13 @@ MainWindowImpl::~MainWindowImpl()
 	//delete shareStatusLbl;
 	delete m_tabwin;
 	thrdGetTTh.wait();
+	
+	dcpp::LogManager::getInstance()->removeListener(this);
+	dcpp::QueueManager::getInstance()->removeListener(this);
+	dcpp::TimerManager::getInstance()->removeListener(this);	
+	
+	SearchManager::getInstance()->disconnect();
+	ConnectionManager::getInstance()->disconnect();
 	AppSettings::AppSettingsMgr::deleteInstance();
 	dcpp::shutdown();
 }

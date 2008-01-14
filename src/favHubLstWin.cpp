@@ -114,7 +114,20 @@ void FavoriteHubListWindow::slot_Add()
 
 void FavoriteHubListWindow::slot_Connect()
 {
-	
+	QTreeWidgetItem *it = list->currentItem();
+	if (!it) return;
+
+	if(SETTING(NICK).empty())
+	{
+//		createMessageBox().show(TSTRING(ENTER_NICK), _T(APPNAME) _T(" ") _T(VERSIONSTRING), WidgetMessageBox::BOX_OK, WidgetMessageBox::BOX_ICONSTOP);
+//		return;
+	}
+
+//	std::vector<unsigned> items = hubs->getSelected();
+//	for(std::vector<unsigned>::iterator i = items.begin(); i != items.end(); ++i) {
+//		FavoriteHubEntryPtr entry = reinterpret_cast<FavoriteHubEntryPtr>(hubs->getData(*i));
+//		HubFrame::openWindow(getParent(), entry->getServer());
+//	}
 }
 
 void FavoriteHubListWindow::slot_Remove()

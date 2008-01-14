@@ -64,6 +64,7 @@
 #include "tthdial.h"
 #include "quickconnectdlg.h"
 #include "widgets/tabwidget.h"
+#include "widgets/stil_TransferView.h"
 
 #include "stilutils.h"
 
@@ -100,7 +101,6 @@
 //
 
 #include "ui_mainwindow.h"
-//#include "stilutils.h"
 
 class ThreadGetTTH : public QThread
 {
@@ -130,7 +130,6 @@ public:
 	MainWindowImpl( QWidget * parent = 0, Qt::WFlags f = 0 );
 	~MainWindowImpl();
 	
-	//PORTED CODE
 	enum Status {
 		STATUS_STATUS,
 		STATUS_AWAY,
@@ -191,7 +190,7 @@ private slots:
 	void statusbarcheck(); // if StatusBar Checked in menu @View@
 	
 	int handleSpeaker(unsigned int wParam, long lParam);
-	bool eachSecond();	
+	bool eachSecond();
 	
 signals:
 	int speakerSignal(unsigned int, long=0);

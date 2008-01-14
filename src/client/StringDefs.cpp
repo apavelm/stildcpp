@@ -430,7 +430,7 @@ string ResourceManager::strings[] = {
 "Downloads", 
 "Maximum simultaneous downloads (0 = infinite)", 
 "No new downloads if speed exceeds (KiB/s, 0 = disable)", 
-"Donate :s! (ok, dirty dollars are fine as well =) (see help menu)", 
+"Donate \342\202\254\342\202\254\342\202\254:s! (ok, dirty dollars are fine as well =) (see help menu)", 
 "External / WAN IP", 
 "Only show joins / parts for favorite users", 
 "Downloads\\Favorites", 

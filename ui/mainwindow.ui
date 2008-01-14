@@ -122,7 +122,29 @@
    <widget class="QWidget" name="dockWidgetContents" >
     <layout class="QVBoxLayout" >
      <item>
-      <widget class="QColumnView" name="columnView" />
+      <widget class="TransferView" name="trans_view" >
+       <property name="autoFillBackground" >
+        <bool>false</bool>
+       </property>
+       <property name="editTriggers" >
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="indentation" >
+        <number>2</number>
+       </property>
+       <property name="uniformRowHeights" >
+        <bool>true</bool>
+       </property>
+       <property name="itemsExpandable" >
+        <bool>false</bool>
+       </property>
+       <property name="sortingEnabled" >
+        <bool>true</bool>
+       </property>
+       <property name="allColumnsShowFocus" >
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -415,6 +437,13 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>TransferView</class>
+   <extends>QTreeWidget</extends>
+   <header>../src/widgets/stil_TransferView.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../src/stildcpp.qrc" />
  </resources>
