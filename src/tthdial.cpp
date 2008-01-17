@@ -60,28 +60,22 @@ void TthDialog::restoreSelection(QLineEdit &t, Selection selection)
 
 void TthDialog::fcp1()
 {
-	QLineEdit *p = filebox;
-	Selection s = saveSelection(*p);
-	p->selectAll();
-	p->copy();
-	restoreSelection(*p, s);
+	QApplication::clipboard()->setText(filebox->text(), QClipboard::Clipboard);
+	if(QApplication::clipboard()->supportsSelection())
+		QApplication::clipboard()->setText(filebox->text(), QClipboard::Selection);
 }
 void TthDialog::fcp2()
 {
-	QLineEdit *p = tthbox;
-	Selection s = saveSelection(*p);
-	p->selectAll();
-	p->copy();
-	restoreSelection(*p, s);
+	QApplication::clipboard()->setText(tthbox->text(), QClipboard::Clipboard);
+	if(QApplication::clipboard()->supportsSelection())
+		QApplication::clipboard()->setText(tthbox->text(), QClipboard::Selection);
 }
 
 void TthDialog::fcp3()
 {
-	QLineEdit *p = magnetbox;
-	Selection s = saveSelection(*p);
-	p->selectAll();
-	p->copy();
-	restoreSelection(*p, s);
+	QApplication::clipboard()->setText(magnetbox->text(), QClipboard::Clipboard);
+	if(QApplication::clipboard()->supportsSelection())
+		QApplication::clipboard()->setText(magnetbox->text(), QClipboard::Selection);
 }
 
 // TTH DIALOG

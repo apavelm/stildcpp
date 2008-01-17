@@ -22,6 +22,7 @@
 #define __TTHDIAL_H__
 
 #include <QDialog>
+#include <QClipboard>
 
 #include "ui_tthdialog.h"
 

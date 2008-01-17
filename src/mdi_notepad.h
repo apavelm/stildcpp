@@ -23,6 +23,7 @@
 #define __MDI_NOTEPAD_H__
 
 #include "config.h"
+#include "stilutils.h"
 #include "mdi_c.h"
 
 #include <QTextStream>

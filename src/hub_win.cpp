@@ -933,7 +933,7 @@ int HubWindow::UserInfo::compareItems(const HubWindow::UserInfo* a, const HubWin
 
 void HubWindow::insertUser(UserInfo *ui)
 {/*
-	//QString newUser = QString::fromStdString(ui->getNick());
+	//QString newUser = StilUtils::TstrtoQ(Text::toT(ui->getNick()));
 	QTreeWidgetItem *userItem;
 	
 	//userItem = new QTreeWidgetItem(userlist, QStringList(newUser));

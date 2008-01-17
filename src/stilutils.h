@@ -28,9 +28,11 @@
 #include "client/CID.h"
 #include "client/User.h"
 #include "client/ClientManager.h"
+#include "client/UserCommand.h"
 //#include "client/StringDefs.h"
 //#include "mainwindowimpl.h"
 #include <QString>
+#include <QInputDialog>
 #include <QObject>
 
 using namespace dcpp;
@@ -51,6 +53,7 @@ public:
 	static pair<tstring, bool> getHubNames(const UserPtr& u);
 	
 	static bool checkCommand(QString& cmd, QString& param, QString& message, QString& status);
+	static bool getUCParams(QWidget * parent, const UserCommand& uc, StringMap& sm) throw();
 };
 
 #endif // of StilUtils

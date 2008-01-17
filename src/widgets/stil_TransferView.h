@@ -27,6 +27,7 @@
 #include "../client/DownloadManagerListener.h"
 #include "../client/UploadManagerListener.h"
 #include "../client/ConnectionManagerListener.h"
+#include "../client/FavoriteManagerListener.h"
 #include "../client/TaskQueue.h"
 #include "../client/forward.h"
 #include "../client/Util.h"
@@ -43,9 +44,12 @@
 
 #include "../UserInfoBase.h"
 #include "../stilutils.h"
+#include "../config.h"
 
+#include <QClipboard>
 #include <QtGui>
 #include <QtCore>
+
 
 using namespace dcpp;
 using namespace std;
@@ -55,6 +59,7 @@ class TransferView : public QTreeWidget
 	,private dcpp::DownloadManagerListener
 	,private dcpp::UploadManagerListener
 	,private dcpp::ConnectionManagerListener
+	//,private dcpp::FavoriteManagerListener
 {
 	Q_OBJECT
 public:
@@ -89,11 +94,6 @@ private:
 		COLUMN_LAST
 	};
 
-	enum {
-		IMAGE_DOWNLOAD = 0,
-		IMAGE_UPLOAD
-	};
-
 	struct UpdateInfo;
 	class ItemInfo : public UserInfoBase {
 	public:
@@ -124,9 +124,6 @@ private:
 
 		const tstring& getText(int col) const {
 			return columns[col];
-		}
-		int getImage() const {
-			return download ? IMAGE_DOWNLOAD : IMAGE_UPLOAD;
 		}
 
 		static int compareItems(ItemInfo* a, ItemInfo* b, int col);
@@ -185,16 +182,8 @@ private:
 	static int columnIndexes[];
 	static int columnSizes[];
 
-//	typedef TypedListView<TransferView, ItemInfo> WidgetTransfers;
-//	typedef WidgetTransfers* WidgetTransfersPtr;
-	//QTreeView * transfers;
-//	SmartWin::WidgetTabView* mdi;
-//	SmartWin::ImageListPtr arrows;
-
 	TaskQueue tasks;
 	StringMap ucLineParams;
-
-//	bool handleSized(const SmartWin::WidgetSizedEventResult& sz);
 
 	// workarounds
 	void IIinsert(ItemInfo*);
@@ -205,20 +194,9 @@ private:
 	QList<QModelIndex> datalistitem;
 	//
 	
-	void handleForce();
-	void handleSearchAlternates();
-	void handleCopyNick();
-	void handleRemove();
-	void runUserCommand(const UserCommand& uc);
-	//bool handleKeyDown(int c);
-	void handleDblClicked();
+	void makeContextMenu();
 
-//	WidgetMenuPtr makeContextMenu(ItemInfo* ii);
 
-//	WidgetTransfersPtr getUserList() { return transfers; }
-	
-//	using AspectSpeaker<TransferView>::speak;
-	
 	void speak(int type, UpdateInfo* ui) { tasks.add(type, ui); speak(); }
 	ItemInfo * getItemInfoFromItem(QTreeWidgetItem *);
 
@@ -239,12 +217,25 @@ private:
 	virtual void on(UploadManagerListener::Complete, Upload* aUpload) throw() { onTransferComplete(aUpload, true); }
 
 	void onTransferComplete(Transfer* aTransfer, bool isUpload);
-
+// FavoriteManager
+	//void on(FavoriteManagerListener::UserAdded, const FavoriteUser& /*aUser*/) throw(); 
+	//void on(FavoriteManagerListener::UserRemoved, const FavoriteUser& /*aUser*/) throw();
+protected:
+	void keyPressEvent(QKeyEvent *);
 private slots:
 	void slotSpeak();
 	void chooseColumn(QAction *action);
 	void showColumnMenu(const QPoint &point);
 	void showCnxtMenu(const QPoint &point);
+	// handlers
+	void handleForce();
+	void handleAddToFav();
+	void handleGetFL();
+	void handleSearchAlternates();
+	void handleCopyNick();
+	void handleRemove();
+	void runUserCommand(const UserCommand& uc);
+	void handleDblClicked(const QModelIndex &);
 signals:
 	void sigSpeak();
 };

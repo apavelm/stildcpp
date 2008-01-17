@@ -61,6 +61,8 @@ public:
 
 	void setFormat(const QString &format);
 	QString format() const { return _format; }
+	
+	void SetBarColor(QPalette::ColorRole role, const QColor & color );
 
 public slots:
 	void reset();
@@ -81,6 +83,7 @@ private:
 	int64_t _minimum;
 	int64_t _maximum;
 	int64_t _value;
+	QPalette plt;
 	Qt::Alignment _alignment;
 	uint _textVisible : 1;
 	int64_t _lastPaintedValue;

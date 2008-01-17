@@ -807,7 +807,7 @@ void MainWindowImpl::openfilelistFunc()
 		if(u) 
 		{
 			const string nick = FileListDlg::getNickFromFilename(Text::fromT(strFile));
-			QString NickName = QString::fromStdString(nick);
+			QString NickName = StilUtils::TstrtoQ(Text::toT(nick));
 			OpenList(this, strFile, u, 0, NickName);
 		}
 			
@@ -895,7 +895,7 @@ int MainWindowImpl::handleSpeaker(unsigned int wParam, long lParam)
 	case DOWNLOAD_LISTING: {
 		boost::scoped_ptr<DirectoryListInfo> i(reinterpret_cast<DirectoryListInfo*>(lParam));
 		//DirectoryListingFrame::openWindow(getMDIParent(), i->file, i->dir, i->user, i->speed);
-		QString NickName = QString::fromStdString(FileListDlg::getNickFromFilename(Text::fromT(i->file)));
+		QString NickName = StilUtils::TstrtoQ(Text::toT((FileListDlg::getNickFromFilename(Text::fromT(i->file)))));
 		OpenList(this, i->file, i->user, i->speed, NickName);
 	}
 		break;

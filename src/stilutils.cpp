@@ -147,4 +147,29 @@ bool StilUtils::checkCommand(QString& cmd, QString& param, QString& message, QSt
 	
 }
 
+bool StilUtils::getUCParams(QWidget *parent, const UserCommand& uc, StringMap& sm) throw()
+{
+	string::size_type i = 0;
+	StringMap done;
+
+	while( (i = uc.getCommand().find("%[line:", i)) != string::npos)
+		{
+		i += 7;
+		string::size_type j = uc.getCommand().find(']', i);
+		if(j == string::npos)
+			break;
+
+		string name = uc.getCommand().substr(i, j-i);
+		if(done.find(name) == done.end()) 
+			{
+				bool ok;
+				QString text = QInputDialog::getText(parent, TstrtoQ(Text::toT(uc.getName())), TstrtoQ(Text::toT(name)), QLineEdit::Normal,  TstrtoQ(Text::toT(sm["line:" + name])), &ok);
+				if (ok && !text.isEmpty()) done[name] = sm["line:" + name] = text.toStdString();
+					else return false;
+			}
+		i = j + 1;
+	}
+	return true;
+}
+
 // of stilutils

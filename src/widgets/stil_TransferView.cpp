@@ -28,6 +28,45 @@ static ResourceManager::Strings columnNames[] = { ResourceManager::USER, Resourc
 ResourceManager::TIME_LEFT, ResourceManager::SPEED, ResourceManager::FILENAME, ResourceManager::SIZE, ResourceManager::PATH,
 ResourceManager::IP_BARE, ResourceManager::RATIO, ResourceManager::CID, ResourceManager::CIPHER };
 
+void TransferView::handleDblClicked(const QModelIndex & mi)
+{
+	// case of "i_ACT_ON_DBLCLICK_TRANSFERVIEW"
+	// 0 - Private Message
+	// 1 - Public Message =--------------= NOT IMPLEMENTED YET
+	// 2 - Get FileList
+	// 3 - Copy Nick
+	// 4 - Force Atempt
+	// 5 - Close Connection
+	// 6 - Run UserCommand =--------------= NOT IMPLEMENTED YET
+	// 7 - Search For alternates
+	// 8 - Add User To Favorites
+	
+	if (datalistitem.isEmpty()) return;
+	int no = -1;
+
+	for (int i = 0; i < datalistitem.size(); i++) 
+		if ( datalistitem[i] == mi ) { no = i; break;}
+	if (no == -1) return; // if no item found then exit
+		ItemInfo* ii = datalist[no];
+		
+		int ua = APPSETTING(i_ACT_ON_DBLCLICK_TRANSFERVIEW);
+
+		switch (ua)
+		{
+			case 0: if(ii) ii->pm(this); // WARN:  NOT SURE ABOUT "this"
+			case 1: break;
+			case 2: handleGetFL(); break;
+			case 3: handleCopyNick(); break;
+			case 4: handleForce(); break;
+			case 5: handleRemove(); break;
+			case 6: break;
+			case 7: handleSearchAlternates(); break;
+			case 8: handleAddToFav(); break;
+		
+		default: ;
+		}
+}
+
 void TransferView::preClose()
 {
 	QStringList w;
@@ -40,6 +79,7 @@ void TransferView::preClose()
 	DownloadManager::getInstance()->removeListener(this);
 	UploadManager::getInstance()->removeListener(this);
 	ConnectionManager::getInstance()->removeListener(this);
+	//FavoriteManager::getInstance()->removeListener(this);
 }
 
 void TransferView::chooseColumn(QAction *action)
@@ -77,10 +117,26 @@ void TransferView::showColumnMenu(const QPoint &point)
 	columnMenu->exec(header()->mapToGlobal(point));
 }
 
+void TransferView::makeContextMenu() 
+{
+	cnxtMenu->addAction(StilUtils::TstrtoQ(TSTRING(FORCE_ATTEMPT)) ,this ,SLOT(handleForce()) );
+	cnxtMenu->addSeparator();
+	cnxtMenu->addAction(StilUtils::TstrtoQ(TSTRING(ADD_TO_FAVORITES)) ,this ,SLOT(handleAddToFav()) );
+	cnxtMenu->addSeparator();
+	cnxtMenu->addAction(StilUtils::TstrtoQ(TSTRING(SEARCH_FOR_ALTERNATES)) ,this ,SLOT(handleSearchAlternates()) );
+	cnxtMenu->addSeparator();
+	cnxtMenu->addAction(StilUtils::TstrtoQ(TSTRING(COPY_NICK)) ,this ,SLOT(handleCopyNick()) );
+	cnxtMenu->addSeparator();
+	cnxtMenu->addAction(StilUtils::TstrtoQ(TSTRING(GET_FILE_LIST)) ,this ,SLOT(handleGetFL()) );
+	cnxtMenu->addSeparator();
+	cnxtMenu->addAction(StilUtils::TstrtoQ(TSTRING(CLOSE_CONNECTION)) ,this ,SLOT(handleRemove()) );
+}
+
 void TransferView::showCnxtMenu(const QPoint& point)
 {
-	// HERE NEED TO GENERATE MENU FORM ITEMINFO CLASS
-	
+	cnxtMenu->clear();
+	// NEED TO GENERATE MENU FORM ITEMINFO CLASS
+	makeContextMenu();
 	// SHOW MENU
 	if (indexAt(point).isValid()) cnxtMenu->exec(mapToGlobal(point));
 }
@@ -124,57 +180,36 @@ TransferView::TransferView(QWidget *parent) : QTreeWidget(parent)
 	setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showCnxtMenu(const QPoint&)));
 	
-//	transfers->setColumnOrder(WinUtil::splitTokens(SETTING(MAINFRAME_ORDER), columnIndexes));
-//	transfers->setColor(WinUtil::textColor, WinUtil::bgColor);
-//	transfers->setSort(COLUMN_USER);
-//	transfers->onContextMenu(std::tr1::bind(&TransferView::handleContextMenu, this, _1));
-//	transfers->onKeyDown(std::tr1::bind(&TransferView::handleKeyDown, this, _1));
-//	transfers->onDblClicked(std::tr1::bind(&TransferView::handleDblClicked, this));
+	connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(handleDblClicked(QModelIndex)) );
 	
-//	onRaw(std::tr1::bind(&TransferView::handleDestroy, this, _1, _2), SmartWin::Message(WM_DESTROY));
-//	noEraseBackground();
-		
+//	transfers->setColumnOrder(WinUtil::splitTokens(SETTING(MAINFRAME_ORDER), columnIndexes));
+
+	//FavoriteManager::getInstance()->addListener(this);
 	ConnectionManager::getInstance()->addListener(this);
 	DownloadManager::getInstance()->addListener(this);
 	UploadManager::getInstance()->addListener(this);
 }
-/*
 
-bool TransferView::handleContextMenu(SmartWin::ScreenCoordinate pt) {
-	if (transfers->hasSelection()) {
-		if(pt.x() == -1 && pt.y() == -1) {
-			pt = transfers->getContextMenuPos();
+void TransferView::handleGetFL()
+{
+	QList<QTreeWidgetItem *> lt = selectedItems();
+	if (lt.isEmpty()) return;
+	for (int i = 0; i < lt.size(); i++)
+	{
+		ItemInfo* ii = getItemInfoFromItem(lt[i]); 
+		
+		try
+		{
+			if (ii->user)
+				dcpp::QueueManager::getInstance()->addList(ii->user, dcpp::QueueItem::FLAG_CLIENT_VIEW);
 		}
-
-		/// @todo Fix multiple selection menu...
-		int i = -1;
-		ItemInfo* ii = transfers->getSelectedData();
-		WidgetMenuPtr contextMenu = makeContextMenu(ii);
-		contextMenu->trackPopupMenu(this, pt, TPM_LEFTALIGN | TPM_RIGHTBUTTON);
-
-		return true;
+		catch (const dcpp::Exception &e)
+		{
+			dcpp::LogManager::getInstance()->message(e.getError());
+		}
+		
 	}
-	return false;
 }
-
-
-TransferView::WidgetMenuPtr TransferView::makeContextMenu(ItemInfo* ii) {
-	WidgetMenuPtr menu = createMenu(true);
-	
-	appendUserItems(mdi, menu);
-	menu->appendSeparatorItem();
-	
-	menu->appendItem(IDC_FORCE, TSTRING(FORCE_ATTEMPT), std::tr1::bind(&TransferView::handleForce, this));
-	if(ii->download) {
-		menu->appendItem(IDC_SEARCH_ALTERNATES, CTSTRING(SEARCH_FOR_ALTERNATES), std::tr1::bind(&TransferView::handleSearchAlternates, this));
-	}
-	menu->appendItem(IDC_COPY_NICK, TSTRING(COPY_NICK), std::tr1::bind(&TransferView::handleCopyNick, this));
-	menu->appendSeparatorItem();
-	menu->appendItem(IDC_REMOVE, TSTRING(CLOSE_CONNECTION), std::tr1::bind(&TransferView::handleRemove, this));
-	menu->setDefaultItem(IDC_PRIVATEMESSAGE);
-	return menu;
-}
-*/
 
 void TransferView::handleRemove() 
 {
@@ -189,37 +224,23 @@ void TransferView::handleRemove()
 
 void TransferView::runUserCommand(const UserCommand& uc) 
 {
-	/*
-	if(!WinUtil::getUCParams(this, uc, ucLineParams))
-		return;
+	if(!StilUtils::getUCParams(this, uc, ucLineParams)) return;
 
 	StringMap ucParams = ucLineParams;
 
-	int i = -1;
-	while((i = transfers->getNext(i, LVNI_SELECTED)) != -1) {
-		ItemInfo* itemI = transfers->getData(i);
-		if(!itemI->user->isOnline())
-			continue;
-
+	QList<QTreeWidgetItem *> lt = selectedItems();
+	if (lt.isEmpty()) return;
+	for (int i = 0; i < lt.size(); i++)
+	{
+		ItemInfo* ii = getItemInfoFromItem(lt[i]); 
+		if(!ii->user->isOnline()) continue;
 		StringMap tmp = ucParams;
-		/// @todo tmp["fileFN"] = Text::fromT(itemI->path + itemI->file);
-
+		/// @todo tmp["fileFN"] = Text::fromT(ii->path + ii->file);
 		// compatibility with 0.674 and earlier
 		ucParams["file"] = ucParams["fileFN"];
-
-		ClientManager::getInstance()->userCommand(itemI->user, uc, tmp, true);
+		ClientManager::getInstance()->userCommand(ii->user, uc, tmp, true);
 	}
-	*/
 }
-
-/*
-bool TransferView::handleKeyDown(int c) {
-	if(c == VK_DELETE) {
-		transfers->forEachSelected(&ItemInfo::disconnect);
-	}
-	return true;
-}
-*/
 
 void TransferView::handleForce()
 {
@@ -228,7 +249,7 @@ void TransferView::handleForce()
 	for (int i = 0; i < lt.size(); i++)
 	{
 		ItemInfo* ii = getItemInfoFromItem(lt[i]); 
-		//->setText(i, COLUMN_STATUS, TSTRING(CONNECTING_FORCED));
+		ii->columns[COLUMN_STATUS] = TSTRING(CONNECTING_FORCED);
 		ConnectionManager::getInstance()->force(ii->user);
 	}
 }
@@ -236,24 +257,21 @@ void TransferView::handleForce()
 void TransferView::handleCopyNick()
 {
 	QTreeWidgetItem * lt = currentItem();
+	if (!lt) return;
 	ItemInfo* ii = getItemInfoFromItem(lt);
-/*	int i = -1;
-
-	/// @todo Fix when more items are selected
-	while( (i = transfers->getNext(i, LVNI_SELECTED)) != -1) {
-		WinUtil::setClipboard(WinUtil::getNicks(transfers->getData(i)->user));
-	}
-*/
+	
+	QApplication::clipboard()->setText(StilUtils::TstrtoQ(Text::toT(StilUtils::getNicks(ii->user))), QClipboard::Clipboard);
+	if(QApplication::clipboard()->supportsSelection()) QApplication::clipboard()->setText(StilUtils::TstrtoQ(Text::toT(StilUtils::getNicks(ii->user))), QClipboard::Selection);
 }
 
-void TransferView::handleDblClicked()
+void TransferView::handleAddToFav()
 {
 	QList<QTreeWidgetItem *> lt = selectedItems();
 	if (lt.isEmpty()) return;
 	for (int i = 0; i < lt.size(); i++)
 	{
 		ItemInfo* ii = getItemInfoFromItem(lt[i]); 
-		if(ii) ii->pm(this); // WARN:  NOT SURE ABOUT "this"
+		FavoriteManager::getInstance()->addFavoriteUser(ii->user);
 	}
 }
 
@@ -275,7 +293,14 @@ void TransferView::handleSearchAlternates()
 	}
 }
 
-int TransferView::ItemInfo::compareItems(ItemInfo* a, ItemInfo* b, int col) {
+void TransferView::keyPressEvent(QKeyEvent *e)
+{
+	QTreeWidget::keyPressEvent(e);
+	if ( e->key() == Qt::Key_Delete) handleRemove();
+}
+
+int TransferView::ItemInfo::compareItems(ItemInfo* a, ItemInfo* b, int col)
+{
 	if(BOOLSETTING(ALT_SORT_ORDER)) {
 		if(a->download == b->download) {
 			if(a->status != b->status) {
@@ -321,18 +346,25 @@ void TransferView::IIinsert(ItemInfo* ii)
 	datalist << ii;
 	QStringList lst;
 	for (int i=COLUMN_FIRST; i<COLUMN_LAST; i++) 
-		if (i!=COLUMN_STATUS) lst << StilUtils::TstrtoQ(ii->columns[i]); else lst << "";
+		if ((i!=COLUMN_STATUS) && (SETTING(SHOW_PROGRESS_BARS))) lst << StilUtils::TstrtoQ(ii->columns[i]); else lst << "";
 	setUpdatesEnabled(false);
 	QTreeWidgetItem *fItem = new QTreeWidgetItem(this, lst);
 	
+	if (SETTING(SHOW_PROGRESS_BARS))
+	{	
+	// creating ProgressBar
 	MyProgressBar *pb = new MyProgressBar();
 	pb->setMaximum(ii->size);
 	pb->setTextVisible(true);
 	pb->setFormat(StilUtils::TstrtoQ(ii->columns[COLUMN_STATUS]));
 	pb->setValue(0);
 	if (ii->download) fItem->setIcon(0,QIcon(":images/trans_DL.png")); else fItem->setIcon(0,QIcon(":images/trans_UL.png"));
-	//COLORREF barBase = ii->download ? SETTING(DOWNLOAD_BAR_COLOR) : SETTING(UPLOAD_BAR_COLOR);
+	// Setting up color
+	if (ii->download) pb->SetBarColor(QPalette::Highlight,SETTING(DOWNLOAD_BAR_COLOR)); 
+		else pb->SetBarColor(QPalette::Highlight,SETTING(UPLOAD_BAR_COLOR));
+	// inserting widget
 	setItemWidget ( fItem, COLUMN_STATUS, pb );
+	}
 	
 	datalistitem << indexFromItem(fItem);
 	setUpdatesEnabled(true);
@@ -343,7 +375,7 @@ void TransferView::IIupdate(int index)
 	setUpdatesEnabled(false);
 	for (int i=COLUMN_FIRST; i<COLUMN_LAST; i++)
 	{
-		if (i != COLUMN_STATUS)
+		if ((i != COLUMN_STATUS) || (!SETTING(SHOW_PROGRESS_BARS)))
 			itemFromIndex(datalistitem[index])->setText(i, StilUtils::TstrtoQ(datalist[index]->columns[i]) );
 		else // If current_column is ProgressBar
 			{
@@ -472,7 +504,8 @@ void TransferView::ItemInfo::update(const UpdateInfo& ui)
 	}
 }
 
-void TransferView::on(ConnectionManagerListener::Added, ConnectionQueueItem* aCqi) throw() {
+void TransferView::on(ConnectionManagerListener::Added, ConnectionQueueItem* aCqi) throw()
+{
 	UpdateInfo* ui = new UpdateInfo(aCqi->getUser(), aCqi->getDownload());
 
 	ui->setStatus(ItemInfo::STATUS_WAITING);
@@ -480,7 +513,8 @@ void TransferView::on(ConnectionManagerListener::Added, ConnectionQueueItem* aCq
 	speak(ADD_ITEM, ui);
 }
 
-void TransferView::on(ConnectionManagerListener::StatusChanged, ConnectionQueueItem* aCqi) throw() {
+void TransferView::on(ConnectionManagerListener::StatusChanged, ConnectionQueueItem* aCqi) throw()
+{
 	UpdateInfo* ui = new UpdateInfo(aCqi->getUser(), aCqi->getDownload());
 
 	ui->setStatusString((aCqi->getState() == ConnectionQueueItem::CONNECTING) ? TSTRING(CONNECTING) : TSTRING(WAITING_TO_RETRY));
@@ -488,11 +522,13 @@ void TransferView::on(ConnectionManagerListener::StatusChanged, ConnectionQueueI
 	speak(UPDATE_ITEM, ui);
 }
 
-void TransferView::on(ConnectionManagerListener::Removed, ConnectionQueueItem* aCqi) throw() {
+void TransferView::on(ConnectionManagerListener::Removed, ConnectionQueueItem* aCqi) throw()
+{
 	speak(REMOVE_ITEM, new UpdateInfo(aCqi->getUser(), aCqi->getDownload()));
 }
 
-void TransferView::on(ConnectionManagerListener::Failed, ConnectionQueueItem* aCqi, const string& aReason) throw() {
+void TransferView::on(ConnectionManagerListener::Failed, ConnectionQueueItem* aCqi, const string& aReason) throw()
+{
 	UpdateInfo* ui = new UpdateInfo(aCqi->getUser(), aCqi->getDownload());
 	if(aCqi->getUser()->isSet(User::OLD_CLIENT)) {
 		ui->setStatusString(TSTRING(SOURCE_TOO_OLD));
@@ -502,7 +538,8 @@ void TransferView::on(ConnectionManagerListener::Failed, ConnectionQueueItem* aC
 	speak(UPDATE_ITEM, ui);
 }
 
-void TransferView::on(DownloadManagerListener::Starting, Download* aDownload) throw() {
+void TransferView::on(DownloadManagerListener::Starting, Download* aDownload) throw()
+{
 	UpdateInfo* ui = new UpdateInfo(aDownload->getUser(), true);
 	ui->setStatus(ItemInfo::STATUS_RUNNING);
 	ui->setPos(aDownload->getPos());
@@ -526,7 +563,8 @@ void TransferView::on(DownloadManagerListener::Starting, Download* aDownload) th
 	speak(UPDATE_ITEM, ui);
 }
 
-void TransferView::on(DownloadManagerListener::Tick, const DownloadList& dl) throw()  {
+void TransferView::on(DownloadManagerListener::Tick, const DownloadList& dl) throw()
+{
 	for(DownloadList::const_iterator j = dl.begin(); j != dl.end(); ++j) {
 		Download* d = *j;
 
@@ -568,7 +606,8 @@ void TransferView::on(DownloadManagerListener::Tick, const DownloadList& dl) thr
 	speak();
 }
 
-void TransferView::on(DownloadManagerListener::Failed, Download* aDownload, const string& aReason) throw() {
+void TransferView::on(DownloadManagerListener::Failed, Download* aDownload, const string& aReason) throw()
+{
 	UpdateInfo* ui = new UpdateInfo(aDownload->getUser(), true, true);
 	ui->setStatus(ItemInfo::STATUS_WAITING);
 	ui->setPos(0);
@@ -582,7 +621,8 @@ void TransferView::on(DownloadManagerListener::Failed, Download* aDownload, cons
 	speak(UPDATE_ITEM, ui);
 }
 
-void TransferView::on(UploadManagerListener::Starting, Upload* aUpload) throw() {
+void TransferView::on(UploadManagerListener::Starting, Upload* aUpload) throw()
+{
 	UpdateInfo* ui = new UpdateInfo(aUpload->getUser(), false);
 
 	ui->setStatus(ItemInfo::STATUS_RUNNING);
@@ -607,7 +647,8 @@ void TransferView::on(UploadManagerListener::Starting, Upload* aUpload) throw() 
 	speak(UPDATE_ITEM, ui);
 }
 
-void TransferView::on(UploadManagerListener::Tick, const UploadList& ul) throw() {
+void TransferView::on(UploadManagerListener::Tick, const UploadList& ul) throw()
+{
 	AutoArray<TCHAR> buf(TSTRING(UPLOADED_BYTES).size() + 64);
 
 	for(UploadList::const_iterator j = ul.begin(); j != ul.end(); ++j) {
@@ -648,7 +689,8 @@ void TransferView::on(UploadManagerListener::Tick, const UploadList& ul) throw()
 	speak();
 }
 
-void TransferView::onTransferComplete(Transfer* aTransfer, bool isUpload) {
+void TransferView::onTransferComplete(Transfer* aTransfer, bool isUpload)
+{
 	UpdateInfo* ui = new UpdateInfo(aTransfer->getUser(), !isUpload);
 
 	ui->setStatus(ItemInfo::STATUS_WAITING);
@@ -668,3 +710,11 @@ bool TransferView::speak()
 	emit sigSpeak();
 	return true;
 }
+
+//void TransferView::on(FavoriteManagerListener::UserAdded, const FavoriteUser& /*aUser*/) throw() 
+//{
+//}
+//
+//void TransferView::on(FavoriteManagerListener::UserRemoved, const FavoriteUser& /*aUser*/) throw() 
+//{
+//}

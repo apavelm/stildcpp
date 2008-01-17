@@ -40,7 +40,7 @@ NotePad::NotePad(QWidget *parent) : MdiChild(parent)
 	f.setPointSize(APPSETTING(i_NOTEPADFONTSIZE));
 	textEdit->setFont(f);
 
-	QString tmp(QString::fromStdString(dcpp::Util::getNotepadFile()));
+	QString tmp(StilUtils::TstrtoQ(Text::toT(dcpp::Util::getNotepadFile())));
 
 	QFile file(tmp);
 	file.open(QFile::ReadOnly | QFile::Text);

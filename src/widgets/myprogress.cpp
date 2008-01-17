@@ -57,6 +57,7 @@ void MyProgressBar::initStyleOption(QStyleOptionProgressBar *option) const
 	option->textAlignment = _alignment;
 	option->textVisible = _textVisible;
 	option->text = text();
+	option->palette = plt;
 	option->type = QStyleOption::SO_ProgressBar;
 
 	if (QStyleOptionProgressBarV2 *optionV2 = qstyleoption_cast<QStyleOptionProgressBarV2 *>(option)) 
@@ -74,6 +75,11 @@ void MyProgressBar::resetLayoutItemMargins()
 	updateGeometry();
 }
 
+void MyProgressBar::SetBarColor(QPalette::ColorRole role, const QColor & color )
+{
+	plt.setColor(role, color);
+}
+
 MyProgressBar::MyProgressBar(QWidget *parent) : QWidget(parent)
 {
 	_minimum = 0;
@@ -86,6 +92,7 @@ MyProgressBar::MyProgressBar(QWidget *parent) : QWidget(parent)
 	_invertedAppearance = false;
 	_textDirection = MyProgressBar::TopToBottom;
 	_format = QLatin1String("%p%");
+	plt = palette();
 
 	QSizePolicy sp(QSizePolicy::Expanding, QSizePolicy::Fixed);
 	if (_orientation == Qt::Vertical) sp.transpose();

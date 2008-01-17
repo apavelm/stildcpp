@@ -136,7 +136,7 @@ void PreferencesDialog::initGeneralPage()
 	connections->clear();
 	for(StringIter i = dcpp::SettingsManager::connectionSpeeds.begin(); i != dcpp::SettingsManager::connectionSpeeds.end(); ++i, ++j) 
 	{
-		connections->addItem(QString::fromStdString(*i));
+		connections->addItem(StilUtils::TstrtoQ(Text::toT(*i)));
 		if(selected == 0 && SETTING(UPLOAD_SPEED) == *i) {
 			selected = j; 
 		}

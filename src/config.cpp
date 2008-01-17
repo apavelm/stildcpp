@@ -30,7 +30,7 @@ const char * AppSettingsMgr::intTags[] =
 {
 	"HideOnClose", "ShowSplash", "UseTray", "StartHidden", "PromptOnClose", "TabPosition"
 	,"NotePadFontSize", "UpdateIPonStartup", "ShowSmiles", "SwapUserListHub", "MainToolBarIconSize"
-	,"MainToolBarStyle", "OPsGoesFirst", "ClassicSort"
+	,"MainToolBarStyle", "OPsGoesFirst", "ClassicSort", "ActionOnTransferDblClick"
 };
 
 const char * AppSettingsMgr::strTags[] = 
@@ -40,7 +40,7 @@ const char * AppSettingsMgr::strTags[] =
 
 void AppSettingsMgr::writeDefs()
 {
-	intDefaults << 1 << 1 << 1 << 0 << 1 << 0 << 10 << 0 << 1 << 0 << 48 << Qt::ToolButtonIconOnly << 1 << 1;
+	intDefaults << 1 << 1 << 1 << 0 << 1 << 0 << 10 << 0 << 1 << 0 << 48 << Qt::ToolButtonIconOnly << 1 << 1 << 0;
 	strDefaults << "/home/irq/stildcpp/images/emotions/default.icp";
 	strDefaults << "CP1251";
 	strDefaults << "";
@@ -98,7 +98,7 @@ if (fi.exists() && fi.isReadable())
 
 void AppSettingsMgr::save(const QString &aFileName) 
 {
-	QDir(".").mkpath(QString::fromStdString(dcpp::Util::getConfigPath()));
+	QDir(".").mkpath(StilUtils::TstrtoQ(Text::toT(dcpp::Util::getConfigPath())));
 	
 	// Creating structure of XML file
 	xml.clear();
@@ -141,14 +141,14 @@ void AppSettingsMgr::save(const QString &aFileName)
 
 void AppSettingsMgr::save() 
 {
-	QString tmp(QString::fromStdString(dcpp::Util::getConfigPath()));
+	QString tmp(StilUtils::TstrtoQ(Text::toT(dcpp::Util::getConfigPath())));
 	tmp+="stildcpp.xml";
 	save(tmp);
 }
 
 const int AppSettingsMgr::load()
 {
-	QString tmp(QString::fromStdString(dcpp::Util::getConfigPath()));
+	QString tmp(StilUtils::TstrtoQ(Text::toT(dcpp::Util::getConfigPath())));
 	tmp+="stildcpp.xml";
 	const int r = load(tmp);
 	if (r) save();
