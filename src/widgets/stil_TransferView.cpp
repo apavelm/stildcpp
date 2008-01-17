@@ -69,13 +69,19 @@ void TransferView::handleDblClicked(const QModelIndex & mi)
 
 void TransferView::preClose()
 {
+	// SAVING COLUMN WIDTHs
 	QStringList w;
 	for (int i=0; i<COLUMN_LAST; i++) w << QString::number(columnWidth(i));
 	QString r = w.join(",");
 	SettingsManager::getInstance()->set(SettingsManager::MAINFRAME_WIDTHS, r.toStdString());
 	
-	//SettingsManager::getInstance()->set(SettingsManager::MAINFRAME_ORDER, WinUtil::toString(transfers->getColumnOrder()));
+	// SAVING COLUMN ORDER
+	QStringList ww;
+	for (int i=0; i<COLUMN_LAST; i++) ww << QString::number(header()->visualIndex(i));
+	QString rr = ww.join(",");
+	SettingsManager::getInstance()->set(SettingsManager::MAINFRAME_ORDER, rr.toStdString());
 	
+	// REMOVING LISTENERS
 	DownloadManager::getInstance()->removeListener(this);
 	UploadManager::getInstance()->removeListener(this);
 	ConnectionManager::getInstance()->removeListener(this);
@@ -155,12 +161,14 @@ TransferView::TransferView(QWidget *parent) : QTreeWidget(parent)
 	datalistitem.clear();
 	connect(this, SIGNAL(sigSpeak()), this, SLOT(slotSpeak()), Qt::QueuedConnection);
 	
+	// COLUMN LABELS (text)
 	QStringList columns;
 	foreach(tstring name, ResourceManager::getInstance()->getStrings(columnNames))
 		columns << StilUtils::TstrtoQ(name);
 	setHeaderLabels(columns);
 	
-	QStringList clist = QString::fromStdString(SETTING(MAINFRAME_WIDTHS)).split(",");
+	// COLUMN WIDTHs
+	QStringList clist = StilUtils::TstrtoQ(Text::toT(SETTING(MAINFRAME_WIDTHS))).split(",");
 	if (clist.size() != COLUMN_LAST)
 		for (int i=0; i<COLUMN_LAST; i++) setColumnWidth(i, columnSizes[i]);
 	else 
@@ -171,19 +179,26 @@ TransferView::TransferView(QWidget *parent) : QTreeWidget(parent)
 			}
 			
 	
+	// COLUMN (HEADER) MENU
 	columnMenu = new QMenu();
 	connect(columnMenu, SIGNAL(triggered(QAction*)), this, SLOT(chooseColumn(QAction *)));
 	header()->setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(header(), SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showColumnMenu(const QPoint&)));
 	
+	// CONTEXT MENU
 	cnxtMenu = new QMenu();
 	setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showCnxtMenu(const QPoint&)));
 	
 	connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(handleDblClicked(QModelIndex)) );
 	
-//	transfers->setColumnOrder(WinUtil::splitTokens(SETTING(MAINFRAME_ORDER), columnIndexes));
-
+	// COLUMNS ORDER SET
+	QStringList olist = StilUtils::TstrtoQ(Text::toT(SETTING(MAINFRAME_ORDER))).split(",");
+	if (olist.size() == COLUMN_LAST)
+		for (int j=0; j<COLUMN_LAST; j++) header()->swapSections(header()->visualIndex(olist[j].toInt()), j);
+	// END OF COLUMNS ORDER SET
+	
+	// ADDING LISTENERS
 	//FavoriteManager::getInstance()->addListener(this);
 	ConnectionManager::getInstance()->addListener(this);
 	DownloadManager::getInstance()->addListener(this);
