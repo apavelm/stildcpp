@@ -69,13 +69,17 @@ void TransferView::handleDblClicked(const QModelIndex & mi)
 
 void TransferView::preClose()
 {
+	// SAVING COLUMN VISIBILITY
+	QStringList vv;
+	for (int i=0; i<COLUMN_LAST; i++) vv << QString::number(header()->isSectionHidden(i));
+	SETAPPSTRING(s_TRANSVIEW_COLUMN_VISIBILITY, vv.join(","));
+	
 	// SAVING COLUMN WIDTHs
 	QStringList w;
 	for (int i=0; i<COLUMN_LAST; i++) w << QString::number(columnWidth(i));
 	QString r = w.join(",");
 	SettingsManager::getInstance()->set(SettingsManager::MAINFRAME_WIDTHS, r.toStdString());
 	
-	// SAVING COLUMN ORDER
 	QStringList ww;
 	for (int i=0; i<COLUMN_LAST; i++) ww << QString::number(header()->visualIndex(i));
 	QString rr = ww.join(",");
@@ -167,6 +171,7 @@ TransferView::TransferView(QWidget *parent) : QTreeWidget(parent)
 		columns << StilUtils::TstrtoQ(name);
 	setHeaderLabels(columns);
 	
+	
 	// COLUMN WIDTHs
 	QStringList clist = StilUtils::TstrtoQ(Text::toT(SETTING(MAINFRAME_WIDTHS))).split(",");
 	if (clist.size() != COLUMN_LAST)
@@ -174,10 +179,21 @@ TransferView::TransferView(QWidget *parent) : QTreeWidget(parent)
 	else 
 		for (int i=0; i<COLUMN_LAST; i++) 
 			{
-				if ( (clist[i]==QString()) || (clist[i].toInt() < 0)) setColumnWidth(i, columnSizes[i]);
+				if ( (clist[i]==QString()) || (clist[i].toInt() <= 0)) setColumnWidth(i, columnSizes[i]);
 				else setColumnWidth(i, clist[i].toInt());
 			}
 			
+	// SETTING COLUMNS VISIBILITY
+	QStringList vlist = APPSTRING(s_TRANSVIEW_COLUMN_VISIBILITY).split(",");
+	if (vlist.size() == COLUMN_LAST)
+		for (int i=0; i<COLUMN_LAST; i++) header()->setSectionHidden(i, vlist[i].toInt());
+			
+	// COLUMNS ORDER SET
+	QStringList olist = StilUtils::TstrtoQ(Text::toT(SETTING(MAINFRAME_ORDER))).split(",");
+	if (olist.size() == COLUMN_LAST)
+		for (int j=0; j<COLUMN_LAST; j++) header()->swapSections(header()->visualIndex(olist[j].toInt()), j);
+	// END OF COLUMNS ORDER SET
+	
 	
 	// COLUMN (HEADER) MENU
 	columnMenu = new QMenu();
@@ -191,12 +207,6 @@ TransferView::TransferView(QWidget *parent) : QTreeWidget(parent)
 	connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showCnxtMenu(const QPoint&)));
 	
 	connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(handleDblClicked(QModelIndex)) );
-	
-	// COLUMNS ORDER SET
-	QStringList olist = StilUtils::TstrtoQ(Text::toT(SETTING(MAINFRAME_ORDER))).split(",");
-	if (olist.size() == COLUMN_LAST)
-		for (int j=0; j<COLUMN_LAST; j++) header()->swapSections(header()->visualIndex(olist[j].toInt()), j);
-	// END OF COLUMNS ORDER SET
 	
 	// ADDING LISTENERS
 	//FavoriteManager::getInstance()->addListener(this);

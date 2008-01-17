@@ -45,7 +45,7 @@ namespace AppSettings
 		
 		enum EnumSettings2 
 	{ 
-		s_ICONSETPATH, s_DEFCHARSET, s_HUBUSERLISTGEOMETRY
+		s_ICONSETPATH, s_DEFCHARSET, s_TRANSVIEW_COLUMN_VISIBILITY
 		,s_LAST };// DO NOT CHANGE THIS LINE
 		
 class AppSettingsMgr: public dcpp::Singleton<AppSettingsMgr>
