@@ -106,7 +106,7 @@ void HubUserList::addUser(const QStringList &list, QIcon *&icon)
     		
     	itemList << item;
     }
-    parentItem->appendRow(itemList);    
+    parentItem->appendRow(itemList);
 }
 
 int HubUserList::findUser(const QString& str)
@@ -293,54 +293,159 @@ void HubUserList::showUserMenu(const QPoint &point)
 
 void HubUserList::actionGetFilelist()
 {	
-	QModelIndex index = treeView->selectionModel()->currentIndex();
-	QString userCID = proxyModel->sibling(index.row(), 7, index).data().toString();
+	const QModelIndexList indexes = treeView->selectionModel()->selectedRows();
 	
-	std::string cid = userCID.toStdString();
+	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
+	{    
+
+		QString userCID = proxyModel->sibling(index->row(), 7, *index).data().toString();
 	
-	if (!cid.empty())
-	{
-		try
+		std::string cid = userCID.toStdString();
+	
+		if (!cid.empty())
 		{
-			dcpp::UserPtr user = dcpp::ClientManager::getInstance()->findUser(dcpp::CID(cid));
-			if (user)
-				dcpp::QueueManager::getInstance()->addList(user, dcpp::QueueItem::FLAG_CLIENT_VIEW);
-		}
-		catch (const dcpp::Exception &e)
-		{
-			dcpp::LogManager::getInstance()->message(e.getError());
+			try
+			{
+				dcpp::UserPtr user = dcpp::ClientManager::getInstance()->findUser(dcpp::CID(cid));
+				if (user)
+					dcpp::QueueManager::getInstance()->addList(user, dcpp::QueueItem::FLAG_CLIENT_VIEW);
+			}
+			catch (const dcpp::Exception &e)
+			{
+				dcpp::LogManager::getInstance()->message(e.getError());
+			}
 		}
 	}
 }
 
 void HubUserList::actionMatchQueue()
 {
+	const QModelIndexList indexes = treeView->selectionModel()->selectedRows();
+	
+	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
+	{    
+
+		QString userCID = proxyModel->sibling(index->row(), 7, *index).data().toString();
+	
+		std::string cid = userCID.toStdString();
+	
+		if (!cid.empty())
+		{
+			try
+			{
+				dcpp::UserPtr user = dcpp::ClientManager::getInstance()->findUser(dcpp::CID(cid));
+				if (user)
+					dcpp::QueueManager::getInstance()->addList(user, dcpp::QueueItem::FLAG_MATCH_QUEUE);
+			}
+			catch (const dcpp::Exception &e)
+			{
+				dcpp::LogManager::getInstance()->message(e.getError());
+			}
+		}
+	}
 	
 }
 
 void HubUserList::actionSendPM()
 {
+	const QModelIndexList indexes = treeView->selectionModel()->selectedRows();
 	
+	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
+	{    
+
+		QString userCID = proxyModel->sibling(index->row(), 7, *index).data().toString();
+	
+		std::string cid = userCID.toStdString();
+	
+		if (!cid.empty())
+		{
+			dcpp::UserPtr user = dcpp::ClientManager::getInstance()->findUser(dcpp::CID(cid));
+			
+			if (user)
+				emit signalOpenPM(NULL, proxyModel->sibling(index->row(), 0, *index).data().toString());
+		}
+	}
 }
 
 void HubUserList::actionAddToFavorites()
 {
+	const QModelIndexList indexes = treeView->selectionModel()->selectedRows();
 	
+	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
+	{    
+
+		QString userCID = proxyModel->sibling(index->row(), 7, *index).data().toString();
+	
+		std::string cid = userCID.toStdString();
+	
+		if (!cid.empty())
+		{
+			dcpp::UserPtr user = dcpp::ClientManager::getInstance()->findUser(dcpp::CID(cid));
+			
+			if (user)
+				dcpp::FavoriteManager::getInstance()->addFavoriteUser(user);
+		}
+	}
 }
 
 void HubUserList::actionGrandExtraSlot()
 {
+	const QModelIndexList indexes = treeView->selectionModel()->selectedRows();
 	
+	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
+	{    
+
+		QString userCID = proxyModel->sibling(index->row(), 7, *index).data().toString();
+	
+		std::string cid = userCID.toStdString();
+	
+		if (!cid.empty())
+		{
+			dcpp::UserPtr user = dcpp::ClientManager::getInstance()->findUser(dcpp::CID(cid));
+			
+			if (user)
+				dcpp::UploadManager::getInstance()->reserveSlot(user);
+		}
+	}
 }
 
 void HubUserList::actionRemoveUserFromQueue()
 {
+	const QModelIndexList indexes = treeView->selectionModel()->selectedRows();
+	
+	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
+	{
+		QString userCID = proxyModel->sibling(index->row(), 7, *index).data().toString();
+	
+		std::string cid = userCID.toStdString();
+	
+		if (!cid.empty())
+		{
+			dcpp::UserPtr user = dcpp::ClientManager::getInstance()->findUser(dcpp::CID(cid));
+			
+			if (user)
+				dcpp::QueueManager::getInstance()->removeSource(user, dcpp::QueueItem::Source::FLAG_REMOVED);
+		}
+	}
 	
 }
 
 void HubUserList::actionCopyNickToClipboard()
 {
+	const QModelIndexList indexes = treeView->selectionModel()->selectedRows();
 	
+	QString nicks;
+	
+	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
+		nicks += proxyModel->sibling(index->row(), 0, *index).data().toString() + ' ';
+	
+	//Remove last space
+	nicks.chop(1);
+	
+	QApplication::clipboard()->setText(nicks, QClipboard::Clipboard);
+	
+	if(QApplication::clipboard()->supportsSelection())
+		QApplication::clipboard()->setText(nicks, QClipboard::Selection);	
 }
 
 /*

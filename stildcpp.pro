@@ -118,7 +118,6 @@ HEADERS = src/mainwindowimpl.h \
  src/client/SSLSocket.h \
  src/client/stdinc.h \
  src/client/Streams.h \
- src/client/StringDefs.h \
  src/client/StringSearch.h \
  src/client/StringTokenizer.h \
  src/client/TaskQueue.h \
@@ -213,7 +212,6 @@ SOURCES = src/mainwindowimpl.cpp \
  src/client/SSL.cpp \
  src/client/SSLSocket.cpp \
  src/client/stdinc.cpp \
- src/client/StringDefs.cpp \
  src/client/StringTokenizer.cpp \
  src/client/Text.cpp \
  src/client/Thread.cpp \
@@ -252,4 +250,5 @@ DEFINES += _DEBUG \
  _UNICODE \
  BUILDING_DCPP \
  DEBUG \
- USE_SYS_STL=1
+ USE_SYS_STL=1 \
+ BUILDING_DCPP

@@ -41,6 +41,7 @@
 #include "UserInfoBase.h"
 #include "stilutils.h"
 #include "useractmenu.h"
+#include "mainwindowimpl.h"
 //
 #include "client/stdinc.h"
 #include "client/DCPlusPlus.h"
@@ -56,12 +57,6 @@
 //
 
 #include "ui_HUBWindow.h"
-
-#if defined(UNICODE) && defined(_UNICODE)
-#define _T(s) L ## s 
-#else
-#define _T(s) ## s
-#endif
 
 using namespace dcpp;
 
@@ -263,11 +258,13 @@ private:
 	void initIconset();
 	// Create UserActionMenu
 	void initUserActionMenu();
+	void setHubEncoding();
+	
 public:
 	HubWindow(QWidget *parent, const dcpp::tstring& url);
 	virtual ~HubWindow();
 	void setupeditor();
-	void ReConnect() { client->reconnect(); }
+	void ReConnect() { client->reconnect(); setHubEncoding(); }
 	bool isConnected() { return client->isConnected(); }
 	
 	enum Status 

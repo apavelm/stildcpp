@@ -31,9 +31,12 @@
 #include <QAction>
 #include <QHeaderView>
 #include <QMenu>
+#include <QClipboard>
+#include <QApplication>
 #include <QDebug>
 
 #include "userlistsortingmodel.h"
+#include "pm_win.h"
 
 #include "client/stdinc.h"
 #include "client/DCPlusPlus.h"
@@ -41,6 +44,8 @@
 #include "client/ClientManager.h"
 #include "client/QueueManager.h"
 #include "client/LogManager.h"
+#include "client/FavoriteManager.h"
+#include "client/UploadManager.h"
 #include "client/CID.h"
 
 class HubWindow;
@@ -74,6 +79,8 @@ private slots:
 	void actionCopyNickToClipboard();
 	void showUserMenu(const QPoint &point);
 	
+signals:
+	void signalOpenPM(QWidget *parent, const QString &);
 private:
 	const int totalColumns;
 	bool topOp;

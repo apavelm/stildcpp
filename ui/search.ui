@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>515</width>
-    <height>327</height>
+    <width>580</width>
+    <height>404</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -14,305 +14,397 @@
   </property>
   <layout class="QGridLayout" >
    <item row="0" column="0" >
-    <layout class="QHBoxLayout" >
+    <layout class="QVBoxLayout" >
      <item>
-      <layout class="QVBoxLayout" >
-       <property name="spacing" >
-        <number>6</number>
-       </property>
-       <property name="leftMargin" >
-        <number>0</number>
-       </property>
-       <property name="topMargin" >
-        <number>0</number>
-       </property>
-       <property name="rightMargin" >
-        <number>0</number>
-       </property>
-       <property name="bottomMargin" >
-        <number>0</number>
-       </property>
+      <layout class="QHBoxLayout" >
        <item>
-        <widget class="QGroupBox" name="searchGroupBox" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="title" >
-          <string>Search</string>
-         </property>
-         <layout class="QVBoxLayout" >
-          <property name="spacing" >
-           <number>6</number>
-          </property>
-          <property name="leftMargin" >
-           <number>9</number>
-          </property>
-          <property name="topMargin" >
-           <number>9</number>
-          </property>
-          <property name="rightMargin" >
-           <number>9</number>
-          </property>
-          <property name="bottomMargin" >
-           <number>9</number>
-          </property>
-          <item>
-           <widget class="QComboBox" name="searchCombo" >
-            <property name="sizePolicy" >
-             <sizepolicy vsizetype="Minimum" hsizetype="Minimum" >
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="editable" >
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" >
+        <layout class="QVBoxLayout" >
+         <item>
+          <widget class="QGroupBox" name="searchGroupBox" >
+           <property name="sizePolicy" >
+            <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="title" >
+            <string>Search</string>
+           </property>
+           <layout class="QVBoxLayout" >
             <property name="spacing" >
              <number>6</number>
             </property>
             <property name="leftMargin" >
-             <number>0</number>
+             <number>9</number>
             </property>
             <property name="topMargin" >
-             <number>0</number>
+             <number>9</number>
             </property>
             <property name="rightMargin" >
-             <number>0</number>
+             <number>9</number>
             </property>
             <property name="bottomMargin" >
-             <number>0</number>
+             <number>9</number>
             </property>
             <item>
-             <widget class="QLabel" name="minSizeLabel" >
-              <property name="text" >
-               <string>Size</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QComboBox" name="sizeModeCombo" >
-              <item>
-               <property name="text" >
-                <string>at least</string>
-               </property>
-              </item>
-              <item>
-               <property name="text" >
-                <string>at most</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSpinBox" name="sizeSpin" >
+             <widget class="QComboBox" name="searchCombo" >
               <property name="sizePolicy" >
-               <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
-                <horstretch>1</horstretch>
+               <sizepolicy vsizetype="Minimum" hsizetype="Minimum" >
+                <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
-              <property name="maximum" >
-               <number>9999</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QComboBox" name="sizeTypeCombo" >
-              <item>
-               <property name="text" >
-                <string>B</string>
-               </property>
-              </item>
-              <item>
-               <property name="text" >
-                <string>KiB</string>
-               </property>
-              </item>
-              <item>
-               <property name="text" >
-                <string>MiB</string>
-               </property>
-              </item>
-              <item>
-               <property name="text" >
-                <string>GiB</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" >
-            <property name="spacing" >
-             <number>6</number>
-            </property>
-            <property name="leftMargin" >
-             <number>0</number>
-            </property>
-            <property name="topMargin" >
-             <number>0</number>
-            </property>
-            <property name="rightMargin" >
-             <number>0</number>
-            </property>
-            <property name="bottomMargin" >
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="typeLabel" >
-              <property name="text" >
-               <string>Type:</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QComboBox" name="typeCombo" >
-              <property name="sizePolicy" >
-               <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
-                <horstretch>1</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <item>
-               <property name="text" >
-                <string>Any type</string>
-               </property>
-              </item>
-              <item>
-               <property name="text" >
-                <string>Audio</string>
-               </property>
-              </item>
-              <item>
-               <property name="text" >
-                <string>Compressed</string>
-               </property>
-              </item>
-              <item>
-               <property name="text" >
-                <string>Documents</string>
-               </property>
-              </item>
-              <item>
-               <property name="text" >
-                <string>Executables</string>
-               </property>
-              </item>
-              <item>
-               <property name="text" >
-                <string>Pictures</string>
-               </property>
-              </item>
-              <item>
-               <property name="text" >
-                <string>Video</string>
-               </property>
-              </item>
-              <item>
-               <property name="text" >
-                <string>Directories</string>
-               </property>
-              </item>
-              <item>
-               <property name="text" >
-                <string>TTH</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" >
-            <property name="spacing" >
-             <number>6</number>
-            </property>
-            <property name="leftMargin" >
-             <number>0</number>
-            </property>
-            <property name="topMargin" >
-             <number>0</number>
-            </property>
-            <property name="rightMargin" >
-             <number>0</number>
-            </property>
-            <property name="bottomMargin" >
-             <number>0</number>
-            </property>
-            <item>
-             <spacer>
-              <property name="orientation" >
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" >
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QPushButton" name="searchButton" >
-              <property name="text" >
-               <string>Search</string>
-              </property>
-              <property name="default" >
+              <property name="editable" >
                <bool>true</bool>
               </property>
              </widget>
             </item>
+            <item>
+             <layout class="QHBoxLayout" >
+              <property name="spacing" >
+               <number>6</number>
+              </property>
+              <property name="leftMargin" >
+               <number>0</number>
+              </property>
+              <property name="topMargin" >
+               <number>0</number>
+              </property>
+              <property name="rightMargin" >
+               <number>0</number>
+              </property>
+              <property name="bottomMargin" >
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="minSizeLabel" >
+                <property name="text" >
+                 <string>Size</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="sizeModeCombo" >
+                <item>
+                 <property name="text" >
+                  <string>Normal</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text" >
+                  <string>At least</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text" >
+                  <string>At most</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="sizeLineEdit" />
+              </item>
+              <item>
+               <widget class="QComboBox" name="sizeTypeCombo" >
+                <item>
+                 <property name="text" >
+                  <string>B</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text" >
+                  <string>KiB</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text" >
+                  <string>MiB</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text" >
+                  <string>GiB</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" >
+              <property name="spacing" >
+               <number>6</number>
+              </property>
+              <property name="leftMargin" >
+               <number>0</number>
+              </property>
+              <property name="topMargin" >
+               <number>0</number>
+              </property>
+              <property name="rightMargin" >
+               <number>0</number>
+              </property>
+              <property name="bottomMargin" >
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="typeLabel" >
+                <property name="text" >
+                 <string>Type:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="typeCombo" >
+                <property name="sizePolicy" >
+                 <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
+                  <horstretch>1</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <item>
+                 <property name="text" >
+                  <string>Any type</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text" >
+                  <string>Audio</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text" >
+                  <string>Compressed</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text" >
+                  <string>Documents</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text" >
+                  <string>Executables</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text" >
+                  <string>Pictures</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text" >
+                  <string>Video</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text" >
+                  <string>Directories</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text" >
+                  <string>TTH</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" >
+              <property name="spacing" >
+               <number>6</number>
+              </property>
+              <property name="leftMargin" >
+               <number>0</number>
+              </property>
+              <property name="topMargin" >
+               <number>0</number>
+              </property>
+              <property name="rightMargin" >
+               <number>0</number>
+              </property>
+              <property name="bottomMargin" >
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QPushButton" name="purgeButton" >
+                <property name="text" >
+                 <string>Purge</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer>
+                <property name="orientation" >
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" >
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="searchButton" >
+                <property name="text" >
+                 <string>Search</string>
+                </property>
+                <property name="default" >
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="Line" name="line" >
+              <property name="orientation" >
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="hideZeroSlots" >
+              <property name="text" >
+               <string>Hide results with zero slots</string>
+              </property>
+             </widget>
+            </item>
            </layout>
-          </item>
-          <item>
-           <widget class="Line" name="line" >
-            <property name="orientation" >
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="hideZeroSlots" >
-            <property name="text" >
-             <string>Hide results with zero slots</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="HubsGroupBox" >
+           <property name="title" >
+            <string>Hubs</string>
+           </property>
+           <layout class="QGridLayout" >
+            <item row="0" column="0" >
+             <widget class="QListWidget" name="hubListWidget" >
+              <property name="verticalScrollBarPolicy" >
+               <enum>Qt::ScrollBarAlwaysOn</enum>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <spacer>
+           <property name="orientation" >
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" >
+            <size>
+             <width>20</width>
+             <height>61</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QTreeView" name="searchView" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+           <horstretch>1</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" >
+       <item>
+        <widget class="QLabel" name="searchStatusLabel" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text" >
+          <string/>
+         </property>
         </widget>
        </item>
        <item>
         <spacer>
          <property name="orientation" >
-          <enum>Qt::Vertical</enum>
+          <enum>Qt::Horizontal</enum>
          </property>
          <property name="sizeHint" >
           <size>
-           <width>20</width>
-           <height>40</height>
+           <width>391</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QLabel" name="countStatusLabel" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text" >
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" >
+          <size>
+           <width>16</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QLabel" name="filteredStatusLabel" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text" >
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType" >
+          <enum>QSizePolicy::Minimum</enum>
+         </property>
+         <property name="sizeHint" >
+          <size>
+           <width>81</width>
+           <height>20</height>
           </size>
          </property>
         </spacer>
        </item>
       </layout>
-     </item>
-     <item>
-      <widget class="QTreeView" name="searchView" >
-       <property name="sizePolicy" >
-        <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
-         <horstretch>1</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
      </item>
     </layout>
    </item>

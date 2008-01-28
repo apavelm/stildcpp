@@ -29,20 +29,20 @@
 #include "client/User.h"
 #include "client/ClientManager.h"
 #include "client/UserCommand.h"
-//#include "client/StringDefs.h"
-//#include "mainwindowimpl.h"
-#include <QString>
+#include "client/ResourceManager.h"
+
 #include <QInputDialog>
+#include <QString>
 #include <QObject>
 
 using namespace dcpp;
 
-class StilUtils  
+ class StilUtils  
 {
 public:
 	//StilUtils();
-	static std::string getNicks(const CID& cid);
-	static std::string getNicks(const UserPtr& user);
+	static tstring getNicks(const CID& cid);
+	static tstring getNicks(const UserPtr& user);
 	
 	static tstring QtoTstr(const QString& qstr);
 	static QString TstrtoQ(const tstring& tstr);
@@ -54,6 +54,18 @@ public:
 	
 	static bool checkCommand(QString& cmd, QString& param, QString& message, QString& status);
 	static bool getUCParams(QWidget * parent, const UserCommand& uc, StringMap& sm) throw();
+
+	template<typename T>
+	static TStringList getStrings(const T& t)
+	{
+		const size_t n = sizeof(t) / sizeof(t[0]);
+		TStringList ret(n);
+		for(size_t i = 0; i < n; ++i)
+		{
+			ret[i] = T_(t[i]);
+		}
+		return ret;
+	}
 };
 
 #endif // of StilUtils

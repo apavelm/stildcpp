@@ -25,12 +25,12 @@
 using namespace std;
 using namespace dcpp;
 
-string StilUtils::getNicks(const CID& cid)
+tstring StilUtils::getNicks(const CID& cid)
 {
-	return Util::toString(ClientManager::getInstance()->getNicks(cid));
+	return Text::toT(Util::toString(ClientManager::getInstance()->getNicks(cid)));
 }
 
-string StilUtils::getNicks(const UserPtr& user)
+tstring StilUtils::getNicks(const UserPtr& user)
 {
 	return getNicks(user->getCID());
 }
@@ -122,23 +122,20 @@ bool StilUtils::checkCommand(QString& cmd, QString& param, QString& message, QSt
 			{
 				Util::setAway(false);
 				Util::setManualAway(false);
-				//status = StilUtils::TstrtoQ(TSTRING(AWAY_MODE_OFF));
-				status = QString(QObject::tr("Away mode off"));
+				status = StilUtils::TstrtoQ(T_("Away mode off"));
 			}
 			else
 			{
 				Util::setAway(true);
 				Util::setManualAway(true);
 				Util::setAwayMessage(Text::fromT(StilUtils::QtoTstr(param)));
-				//status = StilUtils::TstrtoQ(TSTRING(AWAY_MODE_ON) + Text::toT(Util::getAwayMessage()));
-				status = QString(QObject::tr("Away mode on: ") + StilUtils::TstrtoQ(Text::toT(Util::getAwayMessage())));
+				status = StilUtils::TstrtoQ(T_("Away mode on: ") + Text::toT(Util::getAwayMessage()));
 			}
 		}
 		else if (QString::compare(cmd, "back", Qt::CaseInsensitive) == 0)
 		{
 			Util::setAway(FALSE);
-			//status = StilUtils::TstrtoQ(TSTRING(AWAY_MODE_OFF));
-			status = QString(QObject::tr("Away mode off"));
+			status = StilUtils::TstrtoQ(T_("Away mode off"));
 		}
 		else
 			return false;

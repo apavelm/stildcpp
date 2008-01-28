@@ -31,7 +31,6 @@
 #include "Util.h"
 
 #include "SettingsManager.h"
-#include "ResourceManager.h"
 
 #include "StringSearch.h"
 #include "StringTokenizer.h"
@@ -110,26 +109,20 @@ public:
 		}
 	}
 
-	tstring SourceTypeToDisplayString(SourceType t) {
-		switch(t) {
-		default:
-		case OnlyFile:		return TSTRING(FILENAME);
-		case OnlyDirectory:	return TSTRING(DIRECTORY);
-		case FullPath:		return TSTRING(ADLS_FULL_PATH);
-		}
-	}
-
 	// Maximum & minimum file sizes (in bytes).
 	// Negative values means do not check.
 	int64_t minFileSize;
 	int64_t maxFileSize;
+
 	enum SizeType {
 		SizeBytes	= TypeFirst,
 		SizeKibiBytes,
 		SizeMebiBytes,
 		SizeGibiBytes
 	};
+
 	SizeType typeFileSize;
+
 	SizeType StringToSizeType(const string& s) {
 		if(Util::stricmp(s.c_str(), "B") == 0) {
 			return SizeBytes;
@@ -143,6 +136,7 @@ public:
 			return SizeBytes;
 		}
 	}
+
 	string SizeTypeToString(SizeType t) {
 		switch(t) {
 		default:
@@ -152,15 +146,7 @@ public:
 		case SizeGibiBytes:	return "GiB";
 		}
 	}
-	tstring SizeTypeToDisplayString(SizeType t) {
-		switch(t) {
-		default:
-		case SizeBytes:		return CTSTRING(B);
-		case SizeKibiBytes:	return CTSTRING(KiB);
-		case SizeMebiBytes:	return CTSTRING(MiB);
-		case SizeGibiBytes:	return CTSTRING(GiB);
-		}
-	}
+
 	int64_t GetSizeBase() {
 		switch(typeFileSize) {
 		default:
@@ -292,7 +278,7 @@ private:
 	void PrepareDestinationDirectories(DestDirList& destDirVector, DirectoryListing::Directory* root, StringMap& params);
 	// Finalize destination directories
 	void FinalizeDestinationDirectories(DestDirList& destDirVector, DirectoryListing::Directory* root) {
-		string szDiscard = "<<<" + STRING(ADLS_DISCARD) + ">>>";
+		string szDiscard("<<<" + string(_("Discard")) + ">>>");
 
 		// Add non-empty destination directories to the top level
 		for(vector<DestDir>::iterator id = destDirVector.begin(); id != destDirVector.end(); ++id) {

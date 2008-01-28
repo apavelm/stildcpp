@@ -190,9 +190,9 @@ void MainWindowImpl::updateStatus()
 	SettingsManager::getInstance()->set(SettingsManager::TOTAL_UPLOAD, SETTING(TOTAL_UPLOAD) + static_cast<int64_t>(updiff));
 	SettingsManager::getInstance()->set(SettingsManager::TOTAL_DOWNLOAD, SETTING(TOTAL_DOWNLOAD) + static_cast<int64_t>(downdiff));
 
-	setStatus(STATUS_AWAY, Util::getAway() ? TSTRING(AWAY) : _T(""));
+	setStatus(STATUS_AWAY, Util::getAway() ? T_("AWAY") : _T(""));
 	setStatus(STATUS_COUNTS, Text::toT(Client::getCounts()));
-	setStatus(STATUS_SLOTS, Text::toT(STRING(SLOTS) + ": " + Util::toString(UploadManager::getInstance()->getFreeSlots()) + '/' + Util::toString(SETTING(SLOTS))));
+	setStatus(STATUS_SLOTS, Text::toT(_( "Slots: ") + Util::toString(UploadManager::getInstance()->getFreeSlots()) + '/' + Util::toString(SETTING(SLOTS))));
 	setStatus(STATUS_DOWN_TOTAL, Text::toT("D: " + Util::formatBytes(down)));
 	setStatus(STATUS_UP_TOTAL, Text::toT("U: " + Util::formatBytes(up)));
 	setStatus(STATUS_DOWN_DIFF, Text::toT("D: " + Util::formatBytes((downdiff*1000)/tdiff) + "/s ("

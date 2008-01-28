@@ -23,15 +23,213 @@
 
 #include "mdi_c.h"
 
-#include "ui_search.h"
 
-class SearchWindow : public MdiChild, private Ui::mdiSEARCHwin
+#include "client/stdinc.h"
+#include "client/DCPlusPlus.h"
+//#include "client/forward.h"
+#include "client/ResourceManager.h"
+#include "client/SearchManager.h"
+#include "client/ClientManagerListener.h"
+#include "client/StringTokenizer.h"
+#include "UserInfoBase.h"
+
+#include "ui_search.h"
+#include "stilutils.h"
+
+#include <QTimer>
+#include <QStandardItemModel>
+
+class SearchWindow : public MdiChild, private Ui::mdiSEARCHwin, private SearchManagerListener, private ClientManagerListener
 {
 	Q_OBJECT
 private slots:
 	void SearchBtn();
+	void purgeClicked();
+	void zeroStatusChanged(int state);
+	bool eachSecond();
+	int handleSpeaker(unsigned int wParam, long lParam);
+	void hubStateChanged(QListWidgetItem * item);
+signals:
+	void speakerSignal(unsigned int wParam, long lParam=0);
+	
 public:
-	SearchWindow(QWidget *parent, const QString &what);
+	SearchWindow(QWidget *parent, const QString &what, const tstring& initialString_ = Util::emptyStringT, int64_t initialSize_ = 0, SearchManager::SizeModes initialMode = SearchManager::SIZE_ATLEAST, SearchManager::TypeModes initialType_ = SearchManager::TYPE_ANY);
+	~SearchWindow();
+
+	enum Status
+	{
+		STATUS_SHOW_UI,
+		STATUS_STATUS,
+		STATUS_COUNT,
+		STATUS_FILTERED,
+		STATUS_LAST
+	};
+
+private:
+	/*
+	class HubList : private Ui::mdiSEARCHwin
+	{
+	public:
+		HubList();
+	};
+	
+	HubList *hubs;
+	*/
+	enum Speakers {
+		SPEAK_ADD_RESULT,
+		SPEAK_FILTER_RESULT,
+		SPEAK_HUB_ADDED,
+		SPEAK_HUB_CHANGED,
+		SPEAK_HUB_REMOVED
+	};
+
+	enum {
+		COLUMN_FIRST,
+		COLUMN_FILENAME = COLUMN_FIRST,
+		COLUMN_NICK,
+		COLUMN_TYPE,
+		COLUMN_SIZE,
+		COLUMN_PATH,
+		COLUMN_SLOTS,
+		COLUMN_CONNECTION,
+		COLUMN_HUB,
+		COLUMN_EXACT_SIZE,
+		COLUMN_IP,
+		COLUMN_TTH,
+		COLUMN_CID,
+		COLUMN_LAST
+	};
+
+	class SearchInfo : public UserInfoBase {
+	public:
+		SearchInfo(SearchResult* aSR) : UserInfoBase(aSR->getUser()), sr(aSR) {
+			sr->incRef(); update();
+		}
+		~SearchInfo() {
+			sr->decRef();
+		}
+
+//		void getList();
+//		void browseList();
+
+//		void view();
+		struct Download {
+			Download(const tstring& aTarget) : tgt(aTarget) { }
+			void operator()(SearchInfo* si);
+			const tstring& tgt;
+		};
+		struct DownloadWhole {
+			DownloadWhole(const tstring& aTarget) : tgt(aTarget) { }
+			void operator()(SearchInfo* si);
+			const tstring& tgt;
+		};
+		struct DownloadTarget {
+			DownloadTarget(const tstring& aTarget) : tgt(aTarget) { }
+			void operator()(SearchInfo* si);
+			const tstring& tgt;
+		};
+		struct CheckTTH {
+			CheckTTH() : firstHubs(true), op(true), hasTTH(false), firstTTH(true) { }
+			void operator()(SearchInfo* si);
+			bool firstHubs;
+			StringList hubs;
+			bool op;
+			bool hasTTH;
+			bool firstTTH;
+			tstring tth;
+		};
+
+		const tstring& getText(int col) const { return columns[col]; }
+//		int getImage();
+
+//		static int compareItems(SearchInfo* a, SearchInfo* b, int col);
+
+		void update();
+
+		SearchResult* sr;
+
+		tstring columns[COLUMN_LAST];
+	};
+
+	struct HubInfo : public FastAlloc<HubInfo> {
+		HubInfo(const tstring& aUrl, const tstring& aName, bool aOp) : url(aUrl),
+			name(aName), op(aOp) { }
+
+		const tstring& getText() const //int col) const {
+		{
+			//return (col == 0) ? name : Util::emptyStringT;
+			return name;
+		}
+		/*
+		int getImage() const {
+			return 0;
+		}*
+		*/
+		static int compareItems(HubInfo* a, HubInfo* b)//, int col) {
+		{
+//			return (col == 0) ? lstrcmpi(a->name.c_str(), b->name.c_str()) : 0;
+			return QString::compare(StilUtils::TstrtoQ(a->name), StilUtils::TstrtoQ(b->name), Qt::CaseInsensitive);
+		}
+
+		tstring url;
+		tstring name;
+		bool op;
+	};
+
+	CriticalSection cs;
+	std::string token;
+	size_t droppedResults;
+	TStringList currentSearch;
+	static TStringList lastSearches;
+
+	tstring initialString;
+	int64_t initialSize;
+	SearchManager::SizeModes initialMode;
+	SearchManager::TypeModes initialType;
+
+	bool isHash;
+	bool onlyFree;
+
+	// I know: this is ugly
+	void setStatus(int s, const tstring& text);
+	void setStatus(int s, const QString& text);
+	//May be replace setText() with setTabText() simply...
+	void setText(const tstring& text);
+	void setText(const QString& text);
+
+	void initSecond();
+
+	// SearchManagerListener
+	virtual void on(SearchManagerListener::SR, SearchResult* aResult) throw();
+
+	// ClientManagerListener
+	virtual void on(ClientConnected, Client* c) throw() { speak(SPEAK_HUB_ADDED, c); }
+	virtual void on(ClientUpdated, Client* c) throw() { speak(SPEAK_HUB_CHANGED, c); }
+	virtual void on(ClientDisconnected, Client* c) throw() { speak(SPEAK_HUB_REMOVED, c); }
+
+	void onHubAdded(HubInfo* info);
+	void onHubChanged(HubInfo* info);
+	void onHubRemoved(HubInfo* info);
+
+	void speak(Speakers s, Client* aClient){};
+
+	// Use QMap for replacing TypedListView of original client
+	QMap<HubInfo*, QListWidgetItem*> hubMap;
+	QMap<SearchInfo*, QStandardItem*> searchMap;
+
+	void initHubs();
+	void initSearchList();
+	void runSearch();
+
+	void insertSearchResult(SearchInfo* si);
+	void clearSearchResult();
+	
+	QStandardItemModel *model;
+	QTimer* timer;
+	
+	//reimplemented thiz
+	void speak(unsigned int, long=0);
+	
 };
 
 #endif // __SEARCHWIN_H__

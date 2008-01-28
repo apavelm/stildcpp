@@ -169,10 +169,35 @@ extern void startup(void (*f)(void*, const string&), void* p);
 extern void shutdown();
 
 #ifdef BUILDING_DCPP
+
 #define PACKAGE "dcpp"
 #define LOCALEDIR Util::getLocalePath().c_str()
+/*
 #define _(String) dgettext(PACKAGE, String)
 #define F_(String) boost::format(dgettext(PACKAGE, String))
+#define FN_(String1,String2, N) boost::format(dngettext(PACKAGE, String1, String2, N))
+*/
+#define _(String) gettext(String)
+#define gettext_noop(String) String
+#define N_(String) gettext_noop (String)
+#define T_(String) Text::toT(gettext(String))
+#define CT_(String) T_(String).c_str()
+#define F_(String) boost::format(gettext(String))
+#define FN_(String1,String2, N) boost::format(ngettext(String1, String2, N))
+#ifdef UNICODE
+#define TF_(String) boost::wformat(Text::toT(gettext(String)))
+#define TFN_(String1,String2, N) boost::wformat(Text::toT(ngettext(String1, String2, N)))
+#else
+#define TF_(String) boost::format(Text::toT(gettext(String)))
+#define TFN_(String1,String2, N) boost::format(Text::toT(ngettext(String1, String2, N)))
+#endif
+
+#endif
+
+#if defined(UNICODE) && defined(_UNICODE)
+#define _T(s) L ## s 
+#else
+#define _T(s) ## s
 #endif
 
 } // namespace dcpp

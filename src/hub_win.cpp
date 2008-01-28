@@ -28,8 +28,16 @@
 using namespace std;
 using namespace dcpp;
 
-static ResourceManager::Strings columnNames[] = { ResourceManager::NICK, ResourceManager::SHARED,
-ResourceManager::DESCRIPTION, ResourceManager::TAG, ResourceManager::CONNECTION, ResourceManager::IP_BARE, ResourceManager::EMAIL, ResourceManager::CID };
+static const char* columnNames[] = {
+	N_("Nick"),
+	N_("Shared"),
+	N_("Description"),
+	N_("Tag"),
+	N_("Connection"),
+	N_("IP"),
+	N_("E-Mail"),
+	N_("CID")
+};
 
 HubWindow::~HubWindow()
 {
@@ -70,13 +78,15 @@ HubWindow::HubWindow(QWidget *parent, const dcpp::tstring& url) : MdiChild(paren
 
 	client = ClientManager::getInstance()->getClient(dcpp::Text::fromT(url));
 	client->addListener(this);
-	
-	if (APPSTRING(s_DEFCHARSET) != "System")
-		client->setEncoding(APPSTRING(s_DEFCHARSET).toStdString());
-	
+
 	client->connect();
 	
+	setHubEncoding();
+	
 	connect(lineEdit, SIGNAL( SendText(const QString &) ), this, SLOT(sendFunc(const QString &)) );
+	
+	MainWindowImpl *mw = qobject_cast<MainWindowImpl *>(parent->parent());
+	connect(UList, SIGNAL(signalOpenPM(QWidget *,const QString &)), mw, SLOT(OpenPM(QWidget *, const QString &)));
 	
 	FavoriteManager::getInstance()->addListener(this);
 	
@@ -84,6 +94,12 @@ HubWindow::HubWindow(QWidget *parent, const dcpp::tstring& url) : MdiChild(paren
 	usrActionMenu = new UserActionMenu;
 	connect(usrActionMenu, SIGNAL(sig_sendPublicMessage(const QString &)), this, SLOT(addnicktext(const QString &)) );
 	editor->setUserMenu(usrActionMenu);
+}
+
+void HubWindow::setHubEncoding()
+{
+	if (APPSTRING(s_DEFCHARSET) != "System")
+		client->setEncoding(APPSTRING(s_DEFCHARSET).toStdString());
 }
 
 void HubWindow::addnicktext( const QString & t)
@@ -135,7 +151,7 @@ void HubWindow::sendFunc(const QString &txt)
 			if (BOOLSETTING(SEND_UNKNOWN_COMMANDS))
 				client->hubMessage(Text::fromT(StilUtils::QtoTstr(txt)));
 			else
-				addStatus(TSTRING(UNKNOWN_COMMAND) + StilUtils::QtoTstr(cmd));
+				addStatus(T_("Unknown command:") + StilUtils::QtoTstr(cmd));
 		}
 		//message->setText(_T(""));
 	}/* else if(waitingForPW)
@@ -201,10 +217,11 @@ void HubWindow::initUserListIcons()
 void HubWindow::initUserList()
 {
 	QStringList columns;
-	foreach(tstring name, ResourceManager::getInstance()->getStrings(columnNames))
+	foreach(tstring name, StilUtils::getStrings(columnNames))
 		columns << StilUtils::TstrtoQ(name);
 		
-		
+	columns << "IsOp" << "Total Shared";
+	
 	userListView->setRootIsDecorated(false);
 	userListView->setAlternatingRowColors(true);
 	userListView->setSortingEnabled(true);
@@ -213,7 +230,6 @@ void HubWindow::initUserList()
 	criteriaSortBox -> addItems(columns);
 	criteriaSortBox -> setCurrentIndex(0);
 	
-	columns << "IsOp" << "Total Shared";
 	UList = new HubUserList(userListView, filterLine, criteriaSortBox, columns);
 	//userlist -> setHeaderLabels(columns);
 }
@@ -252,7 +268,7 @@ tstring HubWindow::getStatusUsers() const {
 	if (showUsers->getChecked() && users->size() < userCount)
 		textForUsers += Text::toT(Util::toString(users->size()) + "/");
 */
-	return textForUsers + Text::toT(Util::toString(userCount) + " " + STRING(HUB_USERS));
+	return textForUsers + Text::toT(Util::toString(userCount) + " " + _("Users"));
 }
 
 void HubWindow::updateStatus() {
@@ -429,7 +445,7 @@ bool HubWindow::parseFilter(FilterModes& mode, int64_t& size) {
 }
 
 void HubWindow::on(Connecting, Client*) throw() {
-	speak(ADD_STATUS_LINE, STRING(CONNECTING_TO) + client->getHubUrl() + "...");
+	speak(ADD_STATUS_LINE, _("Connecting to ") + client->getHubUrl() + "...");
 	speak(SET_TAB_AND_WINDOW_TITLE, client->getHubUrl());
 }
 
@@ -455,14 +471,14 @@ void HubWindow::on(ClientListener::UserRemoved, Client*, const OnlineUser& user)
 
 void HubWindow::on(Redirect, Client*, const string& line) throw() {
 	if(ClientManager::getInstance()->isConnected(line)) {
-		speak(ADD_STATUS_LINE, STRING(REDIRECT_ALREADY_CONNECTED));
+		speak(ADD_STATUS_LINE, _("Redirect request received to a hub that's already connected"));
 		return;
 	}
 	redirect = line;
 	if(BOOLSETTING(AUTO_FOLLOW)) {
 		speak(FOLLOW);
 	} else {
-		speak(ADD_STATUS_LINE, STRING(PRESS_FOLLOW) + line);
+		speak(ADD_STATUS_LINE, _("Press the follow redirect button to connect to ") + line);
 	}
 }
 
@@ -514,11 +530,11 @@ void HubWindow::on(PrivateMessage, Client*, const OnlineUser& from, const Online
 }
 
 void HubWindow::on(NickTaken, Client*) throw() {
-	speak(ADD_STATUS_LINE, STRING(NICK_TAKEN));
+	speak(ADD_STATUS_LINE, _("Your nick was already taken, please change to something else!"));
 }
 
 void HubWindow::on(SearchFlood, Client*, const string& line) throw() {
-	speak(ADD_STATUS_LINE, STRING(SEARCH_SPAM_FROM) + line);
+	speak(ADD_STATUS_LINE, _("Search spam detected from ") + line);
 }
 
 bool HubWindow::speak()
@@ -728,7 +744,7 @@ void HubWindow::clearUserList() {
 void HubWindow::handleFollow() {
 	if(!redirect.empty()) {
 		if(ClientManager::getInstance()->isConnected(redirect)) {
-			addStatus(TSTRING(REDIRECT_ALREADY_CONNECTED));
+			addStatus(T_("Redirect request received to a hub that's already connected"));
 			return;
 		}
 
@@ -742,6 +758,7 @@ void HubWindow::handleFollow() {
 		client = ClientManager::getInstance()->getClient(url);
 		client->addListener(this);
 		client->connect();
+		setHubEncoding();
 	}
 }
 
@@ -764,17 +781,17 @@ void HubWindow::handleSpeaker()//Tasks s, const OnlineUser& u)
 			UserTask& u = *static_cast<UserTask*>(i->second);
 			if(updateUser(u)) {
 				if (showJoins || (favShowJoins && FavoriteManager::getInstance()->isFavoriteUser(u.user))) {
-					addStatus(_T("*** ") + TSTRING(JOINS) + Text::toT(u.identity.getNick()));
+					addStatus(_T("*** ") + T_("Joins: ") + Text::toT(u.identity.getNick()));
 				}
 			}
 		} else if(i->first == REMOVE_USER) {
 			UserTask& u = *static_cast<UserTask*>(i->second);
 			removeUser(u.user);
 			if (showJoins || (favShowJoins && FavoriteManager::getInstance()->isFavoriteUser(u.user))) {
-				addStatus(Text::toT("*** " + STRING(PARTS) + u.identity.getNick()));
+				addStatus(Text::toT("*** ") + T_("Parts: ") + Text::toT(u.identity.getNick()));
 			}
 		} else if(i->first == CONNECTED) {
-			addStatus(TSTRING(CONNECTED));
+			addStatus(T_("Connected"));
 #ifdef PORT_ME
 			setTabColor(GREEN);
 #endif
@@ -796,7 +813,7 @@ void HubWindow::handleSpeaker()//Tasks s, const OnlineUser& u)
 		} else if(i->first == GET_PASSWORD) {
 			if(client->getPassword().size() > 0) {
 				client->password(client->getPassword());
-				addStatus(TSTRING(STORED_PASSWORD_SENT));
+				addStatus(T_("Stored password sent..."));
 			} else {
 				if(!BOOLSETTING(PROMPT_PASSWORD)) {
 					dcdebug("Message settext: /password\n");
@@ -822,25 +839,25 @@ void HubWindow::handleSpeaker()//Tasks s, const OnlineUser& u)
 			PMTask& pm = *static_cast<PMTask*>(i->second);
 			if(pm.hub) {
 				if(BOOLSETTING(IGNORE_HUB_PMS)) {
-					addStatus(TSTRING(IGNORED_MESSAGE) + Text::toT(pm.str), false);
+					addStatus(T_("Ignored message: ") + Text::toT(pm.str), false);
 				} /*else if(BOOLSETTING(POPUP_HUB_PMS) || PrivateFrame::isOpen(pm.replyTo)) {
 					PrivateFrame::gotMessage(getParent(), pm.from, pm.to, pm.replyTo, Text::toT(pm.str));
 				} else {*/
-					addChat(TSTRING(PRIVATE_MESSAGE_FROM) + getNick(pm.from) + _T(": ") + Text::toT(pm.str));
+					addChat(T_("Private message from ") + getNick(pm.from) + _T(": ") + Text::toT(pm.str));
 				//}
 			} else if(pm.bot) {
 				if(BOOLSETTING(IGNORE_BOT_PMS)) {
-					addStatus(TSTRING(IGNORED_MESSAGE) + Text::toT(pm.str), false);
+					addStatus(T_("Ignored message: ") + Text::toT(pm.str), false);
 				} /*else if(BOOLSETTING(POPUP_BOT_PMS) || PrivateFrame::isOpen(pm.replyTo)) {
 					PrivateFrame::gotMessage(getParent(), pm.from, pm.to, pm.replyTo, Text::toT(pm.str));
 				} else {*/
-					addChat(TSTRING(PRIVATE_MESSAGE_FROM) + getNick(pm.from) + _T(": ") + Text::toT(pm.str));
+					addChat(T_( "Private message from ") + getNick(pm.from) + _T(": ") + Text::toT(pm.str));
 				//}
 			} else {/*
 				if(BOOLSETTING(POPUP_PMS) || PrivateFrame::isOpen(pm.replyTo) || pm.from == client->getMyIdentity().getUser()) {
 					PrivateFrame::gotMessage(getParent(), pm.from, pm.to, pm.replyTo, Text::toT(pm.str));
 				} else {*/
-					addChat(TSTRING(PRIVATE_MESSAGE_FROM) + getNick(pm.from) + _T(": ") + Text::toT(pm.str));
+					addChat(T_( "Private message from ") + getNick(pm.from) + _T(": ") + Text::toT(pm.str));
 				//}
 			}
 		} else if(i->first == FOLLOW) {
@@ -928,7 +945,7 @@ int HubWindow::UserInfo::compareItems(const HubWindow::UserInfo* a, const HubWin
 	if(col == COLUMN_SHARED) {
 		return compare(a->identity.getBytesShared(), b->identity.getBytesShared());;
 	}
-	return wcscmp(a->columns[col].c_str(), b->columns[col].c_str());
+	return wcscasecmp(a->columns[col].c_str(), b->columns[col].c_str());
 }
 
 void HubWindow::insertUser(UserInfo *ui)
