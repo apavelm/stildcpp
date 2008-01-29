@@ -18,43 +18,59 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "mdi_notepad.h"
+#include "mdi_syslog.h"
 
-using namespace std;
-using namespace dcpp;
-
-NotePad::~NotePad()
+SysLogWindow::~SysLogWindow()
 {
-	save();
+	LogManager::getInstance()->removeListener(this);
 }
 
-NotePad::NotePad(QWidget *parent) : MdiChild(parent)
+SysLogWindow::SysLogWindow(QWidget *parent) : MdiChild(parent)
 {
 	setupUi(this);
-	type = 14;
-	idText = "Notepad";
-	setTabText(tr("NotePad"));
+	type = 16;
+	idText = "System Log";
+	setTabText(tr("System Log"));
 	
 	QFont f = textEdit->font();
-	f.setPointSize(APPSETTING(i_NOTEPADFONTSIZE));
+	f.setPointSize(APPSETTING(i_SYSLOGFONTSIZE));
 	textEdit->setFont(f);
-
-	QString tmp(StilUtils::TstrtoQ(Text::toT(dcpp::Util::getNotepadFile())));
-
-	QFile file(tmp);
-	file.open(QFile::ReadOnly | QFile::Text);
-
-	QTextStream in(&file);
-	textEdit->setPlainText(in.readAll());
 	
-	curFile= tmp;
+	connect(this, SIGNAL(sigSpeak(QDateTime, const QString &)), this, SLOT(slotSpeak(QDateTime, const QString & )), Qt::QueuedConnection);
+	
+	deque<pair<time_t, string> > oldMessages = LogManager::getInstance()->getLastLogs();
+	// Technically, we might miss a message or two here, but who cares...
+	LogManager::getInstance()->addListener(this);
+	
+	for(deque<pair<time_t, string> >::iterator i = oldMessages.begin(); i != oldMessages.end(); ++i) {
+		addLine(i->first, Text::toT(i->second));
+	}
 }
 
-void NotePad::save()
+QDateTime SysLogWindow::convTime(time_t tm)
 {
-	QFile file(curFile);
-	file.open(QFile::WriteOnly | QFile::Text);
+	struct tm* t = localtime(&tm);
 
-	QTextStream out(&file);
-	out << textEdit->toPlainText();
+	return QDateTime(QDate(t->tm_year + 1900, t->tm_mon + 1, t->tm_mday), QTime(t->tm_hour, t->tm_min, t->tm_sec), Qt::LocalTime); //Or may be Qt::UTC ???
+}
+
+void SysLogWindow::addLine(time_t tm, const tstring& msg)
+{
+	addLine(convTime(tm), StilUtils::TstrtoQ( msg ) );
+}
+
+void SysLogWindow::addLine(QDateTime t, const QString & msg) 
+{
+	textEdit->textCursor().insertText("[" + t.toString("hh:mm:ss") + "] " + msg+"\n");
+	//setDirty(SettingsManager::BOLD_SYSTEM_LOG);
+}
+
+void SysLogWindow::slotSpeak(QDateTime t, const QString & s)
+{
+	addLine(t, s);
+}
+
+void SysLogWindow::on(Message, time_t tm, const string& message) throw() 
+{ 
+	emit sigSpeak(convTime(tm), StilUtils::TstrtoQ(Text::toT(message)) ); 
 }

@@ -57,8 +57,9 @@
     <addaction name="actionADL_Search" />
     <addaction name="actionSearch_Spy" />
     <addaction name="separator" />
-    <addaction name="actionIndexing_Progress" />
+    <addaction name="actionSysLog" />
     <addaction name="actionDownloads" />
+    <addaction name="actionIndexing_Progress" />
     <addaction name="actionNotePad" />
     <addaction name="separator" />
     <addaction name="actionStatusBar" />
@@ -440,6 +441,11 @@
   <action name="actionDownloads" >
    <property name="text" >
     <string>Downloads</string>
+   </property>
+  </action>
+  <action name="actionSysLog" >
+   <property name="text" >
+    <string>System Log</string>
    </property>
   </action>
  </widget>

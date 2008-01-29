@@ -20,11 +20,6 @@
 
 #include "mainwindowimpl.h"
 
-#include <QtDebug>
-
-using namespace std;
-using namespace dcpp;
-//
 MainWindowImpl::~MainWindowImpl()
 {
 	thrdGetTTh.stop();
@@ -215,8 +210,8 @@ void MainWindowImpl::clientInit()
 	
 	startSocket();
 	
-	//if(BOOLSETTING(OPEN_SYSTEM_LOG)) postMessage(WM_COMMAND, IDC_SYSTEM_LOG);
-	//if(BOOLSETTING(OPEN_DOWNLOADS)) DLoadsFunc(); // SEGFAULT Why ???
+	if(BOOLSETTING(OPEN_SYSTEM_LOG)) SLogFunc();
+	if(BOOLSETTING(OPEN_DOWNLOADS)) DLoadsFunc();
 	if(BOOLSETTING(OPEN_FAVORITE_USERS)) FavUsrFunc();
 	if(BOOLSETTING(OPEN_QUEUE)) DLQueueFunc();
 	if(BOOLSETTING(OPEN_FINISHED_DOWNLOADS)) DLFinFunc();
@@ -342,6 +337,7 @@ void MainWindowImpl::createActions()
 
 	connect(actionStatusBar, SIGNAL(triggered()), this, SLOT(statusbarcheck()));
 	connect(actionDownloads, SIGNAL(triggered()), this, SLOT(DLoadsFunc()));
+	connect(actionSysLog, SIGNAL(triggered()), this, SLOT(SLogFunc()));
 
 	
 	connect(actionSettings, SIGNAL(triggered()), this, SLOT(PreferencesFunc()));
@@ -498,6 +494,13 @@ void MainWindowImpl::OpenPM(QWidget *parent, const QString &name)
 void MainWindowImpl::SearchFunc()
 {
 	m_tabwin->setCurrentIndex(m_tabwin->addTab((new SearchWindow(m_tabwin,"")),"search"));
+}
+
+void MainWindowImpl::SLogFunc()
+{
+	if (FindWinByType(16)==-1)
+		m_tabwin->setCurrentIndex(m_tabwin->addTab((new SysLogWindow(m_tabwin)),"System Log"));
+	else m_tabwin->setCurrentIndex(FindWinByType(16));
 }
 
 void MainWindowImpl::DLoadsFunc()

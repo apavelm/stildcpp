@@ -29,6 +29,7 @@ FORMS = ui/mainwindow.ui \
  ui/adl.ui \
  ui/searchspy.ui \
  ui/notepad.ui \
+ ui/syslog.ui \
  ui/DownLoads.ui \
  ui/hashman.ui
 HEADERS = src/mainwindowimpl.h \
@@ -139,6 +140,7 @@ HEADERS = src/mainwindowimpl.h \
  src/client/ZUtils.h \
  src/stilutils.h \
  src/mdi_notepad.h \
+ src/mdi_syslog.h \
  src/UserInfoBase.h \
  src/indexing.h \
  src/widgets/stil_textview.h \
@@ -229,6 +231,7 @@ SOURCES = src/mainwindowimpl.cpp \
  src/client/ZUtils.cpp \
  src/stilutils.cpp \
  src/mdi_notepad.cpp \
+ src/mdi_syslog.cpp \
  src/UserInfoBase.cpp \
  src/indexing.cpp \
  src/widgets/stil_textview.cpp \

@@ -56,6 +56,7 @@ public:
 		13 - Search Spy
 		14 - NotePad
 		15 - DownLoads Frame
+		16 - System Log
 	*/
 	QString idText;
 	void setTabText(const QString &);

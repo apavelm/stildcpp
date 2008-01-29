@@ -75,6 +75,12 @@ DownLoadsWindow::DownLoadsWindow(QWidget *parent) : MdiChild(parent), startup(tr
 	
 	connect(this, SIGNAL(sigSpeak(int , const QString & )), this, SLOT(slotSpeak(int , const QString & )), Qt::QueuedConnection);
 	
+	// COLUMN (HEADER) MENU
+	columnMenu = new QMenu();
+	connect(columnMenu, SIGNAL(triggered(QAction*)), this, SLOT(chooseColumn(QAction *)));
+	downloads->header()->setContextMenuPolicy(Qt::CustomContextMenu);
+	connect(downloads->header(), SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showColumnMenu(const QPoint&)));
+	// ADDING LISTENERS
 	QueueManager::getInstance()->addListener(this);
 	DownloadManager::getInstance()->addListener(this);
 }
@@ -103,6 +109,43 @@ DownLoadsWindow::~DownLoadsWindow()
 	// REMOVING LISTENERS
 	QueueManager::getInstance()->removeListener(this);
 	DownloadManager::getInstance()->removeListener(this);
+	
+	delete columnMenu;
+}
+
+void DownLoadsWindow::chooseColumn(QAction *action)
+{
+	int index = action->data().toInt();
+
+	if(index < 0) downloads->hideColumn(-index-1);
+	else downloads->showColumn(index);
+}
+
+void DownLoadsWindow::showColumnMenu(const QPoint &point)
+{
+	columnMenu->clear();
+	
+	QStringList columns;
+	foreach(tstring name, StilUtils::getStrings(columnNames))
+		columns << StilUtils::TstrtoQ(name);
+	
+	for(int i = 0; i < COLUMN_LAST; i++)
+	{
+		QAction *action = new QAction(columns[i], columnMenu);
+		
+		bool isHidden = downloads->header()->isSectionHidden(i);
+		
+		if (!isHidden)
+			action->setData(-i-1);
+		else
+			action->setData(i);
+		
+		action->setCheckable(true);
+		action->setChecked(!isHidden);
+		columnMenu->addAction(action);
+	}
+	
+	columnMenu->exec(downloads->header()->mapToGlobal(point));
 }
 
 DownLoadsWindow::DownloadInfo::DownloadInfo(const string& target, int64_t size_, const TTHValue& tth_) : 

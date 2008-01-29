@@ -68,10 +68,11 @@ public:
 		STATUS_LAST
 	};
 
-	DownLoadsWindow(QWidget *parent);
+	DownLoadsWindow(QWidget *parent=0);
 	~DownLoadsWindow();
 private:
-
+	QMenu * columnMenu;
+	
 	enum {
 		COLUMN_FIRST,
 		COLUMN_FILE = COLUMN_FIRST,
@@ -153,6 +154,8 @@ private:
 
 	virtual void on(QueueManagerListener::Removed, QueueItem*) throw();
 private slots:
+	void chooseColumn(QAction *action);
+	void showColumnMenu(const QPoint &point);
 	void slotSpeak(int , const QString &);
 signals:
 	void sigSpeak(int , const QString &);

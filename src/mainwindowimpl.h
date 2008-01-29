@@ -66,6 +66,7 @@
 #include "quickconnectdlg.h"
 #include "widgets/tabwidget.h"
 #include "widgets/stil_TransferView.h"
+#include "mdi_syslog.h"
 
 #include "stilutils.h"
 
@@ -102,6 +103,9 @@
 //
 
 #include "ui_mainwindow.h"
+
+using namespace std;
+using namespace dcpp;
 
 class ThreadGetTTH : public QThread
 {
@@ -170,6 +174,7 @@ private slots:
 	void DonateFunc();
 	void DLQueueFunc();
 	void notepadFunc();
+	void SLogFunc();
 	void indexingFunc();
 	void ADLFunc();
 	void SSFunc();

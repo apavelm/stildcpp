@@ -18,43 +18,51 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "mdi_notepad.h"
+#ifndef __MDI_SYSLOG_H__
+#define __MDI_SYSLOG_H__
+
+#include "config.h"
+#include "stilutils.h"
+#include "mdi_c.h"
+
+#include <QtGui>
+#include <QtCore>
+
+//
+#include "client/stdinc.h"
+#include "client/DCPlusPlus.h"
+#include "client/LogManager.h"
+//
+
+#include "ui_syslog.h"
 
 using namespace std;
 using namespace dcpp;
 
-NotePad::~NotePad()
+class SysLogWindow : public MdiChild, private Ui::mdi_SysLog, private LogManagerListener
 {
-	save();
-}
-
-NotePad::NotePad(QWidget *parent) : MdiChild(parent)
-{
-	setupUi(this);
-	type = 14;
-	idText = "Notepad";
-	setTabText(tr("NotePad"));
+	Q_OBJECT
+public:
+	SysLogWindow(QWidget *parent = 0);
+	~SysLogWindow();
 	
-	QFont f = textEdit->font();
-	f.setPointSize(APPSETTING(i_NOTEPADFONTSIZE));
-	textEdit->setFont(f);
-
-	QString tmp(StilUtils::TstrtoQ(Text::toT(dcpp::Util::getNotepadFile())));
-
-	QFile file(tmp);
-	file.open(QFile::ReadOnly | QFile::Text);
-
-	QTextStream in(&file);
-	textEdit->setPlainText(in.readAll());
+	enum Status {
+		STATUS_STATUS,
+		STATUS_LAST
+	};
 	
-	curFile= tmp;
-}
+private:
+	void addLine(time_t t, const tstring& msg);
+	void addLine(QDateTime, const QString &);
+	
+	QDateTime convTime(time_t t);
+	
+	// LogManagerListener
+	virtual void on(Message, time_t tm, const string& message) throw();
+private slots:
+	void slotSpeak(QDateTime, const QString &);
+signals:
+	void sigSpeak(QDateTime, const QString &);
+};
 
-void NotePad::save()
-{
-	QFile file(curFile);
-	file.open(QFile::WriteOnly | QFile::Text);
-
-	QTextStream out(&file);
-	out << textEdit->toPlainText();
-}
+#endif // __MDI_SYSLOG_H__
