@@ -29,6 +29,7 @@ FORMS = ui/mainwindow.ui \
  ui/adl.ui \
  ui/searchspy.ui \
  ui/notepad.ui \
+ ui/DownLoads.ui \
  ui/hashman.ui
 HEADERS = src/mainwindowimpl.h \
  src/frmAbout.h \
@@ -152,7 +153,9 @@ HEADERS = src/mainwindowimpl.h \
  src/userlist.h \
  src/userlistsortingmodel.h \
  src/widgets/stil_TransferView.h \
- src/widgets/myprogress.h
+ src/widgets/myprogress.h \
+ src/DownLoads.h \
+ src/widgets/stil_qdltreewidget.h
 SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
  src/frmAbout.cpp \
@@ -240,7 +243,9 @@ SOURCES = src/mainwindowimpl.cpp \
  src/userlist.cpp \
  src/userlistsortingmodel.cpp \
  src/widgets/stil_TransferView.cpp \
- src/widgets/myprogress.cpp
+ src/widgets/myprogress.cpp \
+ src/DownLoads.cpp \
+ src/widgets/stil_qdltreewidget.cpp
 RESOURCES += src/stildcpp.qrc src/langs.qrc
 LIBS += -lssl -lbz2 -lcrypto
 TRANSLATIONS = lang/stildcpp_ru.ts

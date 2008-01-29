@@ -1,0 +1,46 @@
+<ui version="4.0" >
+ <class>mdiDownLoads</class>
+ <widget class="QDialog" name="mdiDownLoads" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Downloads</string>
+  </property>
+  <layout class="QGridLayout" >
+   <item row="0" column="0" >
+    <widget class="QDLTreeWidget" name="downloads" >
+     <property name="indentation" >
+      <number>5</number>
+     </property>
+     <property name="uniformRowHeights" >
+      <bool>true</bool>
+     </property>
+     <property name="itemsExpandable" >
+      <bool>false</bool>
+     </property>
+     <property name="sortingEnabled" >
+      <bool>true</bool>
+     </property>
+     <property name="allColumnsShowFocus" >
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QDLTreeWidget</class>
+   <extends>QTreeWidget</extends>
+   <header>../src/widgets/stil_qdltreewidget.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

@@ -22,28 +22,17 @@
 #include "myprogress.h"
 
 
-int TransferView::columnSizes[] = { 170, 80, 320, 100, 100, 223, 150, 250, 90, 100, 150, 150 };
-/*
-static ResourceManager::Strings columnNames[] = { ResourceManager::USER, ResourceManager::HUB, ResourceManager::STATUS,
-ResourceManager::TIME_LEFT, ResourceManager::SPEED, ResourceManager::FILENAME, ResourceManager::SIZE, ResourceManager::PATH,
-ResourceManager::IP_BARE, ResourceManager::RATIO, ResourceManager::CID, ResourceManager::CIPHER };
-*/
+int TransferView::columnSizes[] = { 125, 375, 100, 100, 125, 75, 100, 100 };
+
 static const char* columnNames[] = {
 	N_("User"),
-	N_("Hub"),
 	N_("Status"),
-	N_("Time left"),
 	N_("Speed"),
-	N_("Filename"),
-	N_("Size"),
-//	N_("Chunk size"),
-	N_("Path"),
-	N_("IP"),
+	N_("Chunk size"),
 	N_("Transfered (Ratio)"),
-//	N_("Queued"),
-	N_("CID"),
-	N_("Cipher")
-//	N_("IP")
+	N_("Queued"),
+	N_("Cipher"),
+	N_("IP")
 };
 
 void TransferView::handleDblClicked(const QModelIndex & mi)
@@ -98,6 +87,7 @@ void TransferView::preClose()
 	QString r = w.join(",");
 	SettingsManager::getInstance()->set(SettingsManager::MAINFRAME_WIDTHS, r.toStdString());
 	
+	//SAVING COLUMN ORDER
 	QStringList ww;
 	for (int i=0; i<COLUMN_LAST; i++) ww << QString::number(header()->visualIndex(i));
 	QString rr = ww.join(",");
@@ -325,10 +315,10 @@ void TransferView::handleSearchAlternates()
 	for (int i = 0; i < lt.size(); i++)
 	{
 		ItemInfo* ii = getItemInfoFromItem(lt[i]); 
-		string target = Text::fromT(ii->getText(COLUMN_PATH) + ii->getText(COLUMN_FILE));
+//		string target = Text::fromT(ii->getText(COLUMN_PATH) + ii->getText(COLUMN_FILE));
 		TTHValue tth;
-		if(QueueManager::getInstance()->getTTH(target, tth))
-			; 
+//		if(QueueManager::getInstance()->getTTH(target, tth))
+//			; 
 			//WinUtil::searchHash(tth);
 			// - --- - - - - - OR - - - - --  - -- - - -
 			// TTHValue aHash = TTH;
@@ -363,15 +353,11 @@ int TransferView::ItemInfo::compareItems(ItemInfo* a, ItemInfo* b, int col)
 	}
 	switch(col) {
 	case COLUMN_STATUS: return 0;
-	case COLUMN_TIMELEFT: return compare(a->timeLeft, b->timeLeft);
 	case COLUMN_SPEED: return compare(a->speed, b->speed);
-	case COLUMN_SIZE: return compare(a->size, b->size);
-	case COLUMN_RATIO: return compare(a->getRatio(), b->getRatio());
-	#ifdef UNICODE
-	default: return wcscasecmp(a->columns[col].c_str(), b->columns[col].c_str());
-	#else
-	default: return strcasecmp(a->columns[col].c_str(), b->columns[col].c_str());
-	#endif
+	case COLUMN_TRANSFERED: return compare(a->transfered, b->transfered);
+	case COLUMN_QUEUED: return compare(a->queued, b->queued);
+	case COLUMN_CHUNK: return compare(a->chunk, b->chunk);
+	default: return QString::compare(StilUtils::TstrtoQ(a->columns[col]), StilUtils::TstrtoQ(b->columns[col]), Qt::CaseInsensitive);
 	}
 }
 
@@ -396,18 +382,20 @@ void TransferView::IIinsert(ItemInfo* ii)
 	if (SETTING(SHOW_PROGRESS_BARS))
 	{	
 	// creating ProgressBar
-	MyProgressBar *pb = new MyProgressBar();
-	pb->setMaximum(ii->size);
-	pb->setTextVisible(true);
-	pb->setFormat(StilUtils::TstrtoQ(ii->columns[COLUMN_STATUS]));
-	pb->setValue(0);
-	if (ii->download) fItem->setIcon(0,QIcon(":images/trans_DL.png")); else fItem->setIcon(0,QIcon(":images/trans_UL.png"));
+	//MyProgressBar *pb = new MyProgressBar();
+	//pb->setMaximum(ii->size);
+	//pb->setTextVisible(true);
+	//pb->setFormat(StilUtils::TstrtoQ(ii->columns[COLUMN_STATUS]));
+	//pb->setValue(0);
+
 	// Setting up color
-	if (ii->download) pb->SetBarColor(QPalette::Highlight,SETTING(DOWNLOAD_BAR_COLOR)); 
-		else pb->SetBarColor(QPalette::Highlight,SETTING(UPLOAD_BAR_COLOR));
+	//if (ii->download) pb->SetBarColor(QPalette::Highlight,SETTING(DOWNLOAD_BAR_COLOR)); 
+	//	else pb->SetBarColor(QPalette::Highlight,SETTING(UPLOAD_BAR_COLOR));
 	// inserting widget
-	setItemWidget ( fItem, COLUMN_STATUS, pb );
+//	setItemWidget ( fItem, COLUMN_STATUS, pb );
 	}
+	
+	if (ii->download) fItem->setIcon(0,QIcon(":images/trans_DL.png")); else fItem->setIcon(0,QIcon(":images/trans_UL.png"));
 	
 	datalistitem << indexFromItem(fItem);
 	setUpdatesEnabled(true);
@@ -418,15 +406,15 @@ void TransferView::IIupdate(int index)
 	setUpdatesEnabled(false);
 	for (int i=COLUMN_FIRST; i<COLUMN_LAST; i++)
 	{
-		if ((i != COLUMN_STATUS) || (!SETTING(SHOW_PROGRESS_BARS)))
+//		if ((i != COLUMN_STATUS) || (!SETTING(SHOW_PROGRESS_BARS)))
 			itemFromIndex(datalistitem[index])->setText(i, StilUtils::TstrtoQ(datalist[index]->columns[i]) );
-		else // If current_column is ProgressBar
-			{
-				MyProgressBar *pb = qobject_cast<MyProgressBar *>( itemWidget(itemFromIndex(datalistitem[index]), COLUMN_STATUS) );
-				pb->setMaximum(datalist[index]->size);
-				pb->setFormat(StilUtils::TstrtoQ(datalist[index]->columns[COLUMN_STATUS]));
-				pb->setValue(datalist[index]->pos);
-			}
+//		else // If current_column is ProgressBar
+//			{
+//				MyProgressBar *pb = qobject_cast<MyProgressBar *>( itemWidget(itemFromIndex(datalistitem[index]), COLUMN_STATUS) );
+//				pb->setMaximum(datalist[index]->size);
+//				pb->setFormat(StilUtils::TstrtoQ(datalist[index]->columns[COLUMN_STATUS]));
+//				pb->setValue(datalist[index]->pos);
+//			}
 	}
 	setUpdatesEnabled(true);
 }
@@ -486,62 +474,79 @@ void TransferView::slotSpeak()
 	//if(!t.empty()) { transfers->resort(); }
 }
 
-TransferView::ItemInfo::ItemInfo(const UserPtr& u, bool aDownload) : UserInfoBase(u), download(aDownload), transferFailed(false),
-	status(STATUS_WAITING), pos(0), size(0), start(0), actual(0), speed(0), timeLeft(0)
+TransferView::ItemInfo::ItemInfo(const UserPtr& u, bool aDownload) :
+	UserInfoBase(u), 
+	download(aDownload), 
+	transferFailed(false),
+	status(STATUS_WAITING), 
+	actual(0), 
+	lastActual(0),
+	transfered(0),
+	lastTransfered(0),
+	queued(0),
+	speed(0)
 {
 	columns[COLUMN_USER] = StilUtils::getNicks(u);
-	columns[COLUMN_HUB] = (StilUtils::getHubNames(u)).first;
-	columns[COLUMN_CID] = Text::toT(u->getCID().toBase32());
+	columns[COLUMN_STATUS] = T_("Idle");
+	columns[COLUMN_TRANSFERED] = Text::toT(Util::toString(0));
+	if(aDownload) 
+		{
+		queued = QueueManager::getInstance()->getQueued(u);
+		columns[COLUMN_QUEUED] = Text::toT(Util::formatBytes(queued));
+		}
 }
 
 void TransferView::ItemInfo::update(const UpdateInfo& ui)
 {
 	if(ui.updateMask & UpdateInfo::MASK_STATUS) {
+		lastTransfered = lastActual = 0;
 		status = ui.status;
+		if(download) {
+			// Also update queued when status changes...
+			queued = QueueManager::getInstance()->getQueued(user);
+			columns[COLUMN_QUEUED] = Text::toT(Util::formatBytes(queued));
+		}
 	}
+
 	if(ui.updateMask & UpdateInfo::MASK_STATUS_STRING) {
 		// No slots etc from transfermanager better than disconnected from connectionmanager
 		if(!transferFailed)
 			columns[COLUMN_STATUS] = ui.statusString;
 		transferFailed = ui.transferFailed;
 	}
-	if(ui.updateMask & UpdateInfo::MASK_SIZE) {
-		size = ui.size;
-		columns[COLUMN_SIZE] = Text::toT(Util::formatBytes(size));
+	
+	if(ui.updateMask & UpdateInfo::MASK_TRANSFERED) {
+		actual += ui.actual - lastActual;
+		lastActual = ui.actual;
+		transfered += ui.transfered - lastTransfered;
+		lastTransfered = ui.transfered;
+		if(actual == transfered) {
+			columns[COLUMN_TRANSFERED] = Text::toT(Util::formatBytes(transfered));
+		} else {
+			columns[COLUMN_TRANSFERED] = str(TF_("%1% (%2$0.2f)") 
+				% Text::toT(Util::formatBytes(transfered))
+				% (static_cast<double>(actual) / transfered));
+		}
 	}
-	if(ui.updateMask & UpdateInfo::MASK_START) {
-		start = ui.start;
+	
+	if(ui.updateMask & UpdateInfo::MASK_CHUNK) {
+		chunk = ui.chunk;
+		columns[COLUMN_CHUNK] = Text::toT(Util::formatBytes(ui.chunk));
 	}
-	if(ui.updateMask & UpdateInfo::MASK_POS) {
-		pos = start + ui.pos;
-	}
-	if(ui.updateMask & UpdateInfo::MASK_ACTUAL) {
-		actual = start + ui.actual;
-		columns[COLUMN_RATIO] = Text::toT(Util::toString(getRatio()));
-	}
+	
 	if(ui.updateMask & UpdateInfo::MASK_SPEED) {
 		speed = ui.speed;
 		if (status == STATUS_RUNNING) {
-			columns[COLUMN_SPEED] = Text::toT(Util::formatBytes(speed) + "/s");
+			columns[COLUMN_SPEED] = str(TF_("%1%/s") % Text::toT(Util::formatBytes(speed)));
 		} else {
 			columns[COLUMN_SPEED] = Util::emptyStringT;
 		}
 	}
-	if(ui.updateMask & UpdateInfo::MASK_FILE) {
-		columns[COLUMN_FILE] = ui.file;
-		columns[COLUMN_PATH] = ui.path;
-	}
-	if(ui.updateMask & UpdateInfo::MASK_TIMELEFT) {
-		timeLeft = ui.timeLeft;
-		if (status == STATUS_RUNNING) {
-			columns[COLUMN_TIMELEFT] = Text::toT(Util::formatSeconds(timeLeft));
-		} else {
-			columns[COLUMN_TIMELEFT] = Util::emptyStringT;
-		}
-	}
+	
 	if(ui.updateMask & UpdateInfo::MASK_IP) {
-		columns[COLUMN_IP] = ui.IP;
+		columns[COLUMN_IP] = ui.ip;
 	}
+	
 	if(ui.updateMask & UpdateInfo::MASK_CIPHER) {
 		columns[COLUMN_CIPHER] = ui.cipher;
 	}
@@ -552,7 +557,7 @@ void TransferView::on(ConnectionManagerListener::Added, ConnectionQueueItem* aCq
 	UpdateInfo* ui = new UpdateInfo(aCqi->getUser(), aCqi->getDownload());
 
 	ui->setStatus(ItemInfo::STATUS_WAITING);
-	ui->setStatusString(T_("Connecting..."));
+	ui->setStatusString(T_("Connecting"));
 	speak(ADD_ITEM, ui);
 }
 
@@ -581,67 +586,73 @@ void TransferView::on(ConnectionManagerListener::Failed, ConnectionQueueItem* aC
 	speak(UPDATE_ITEM, ui);
 }
 
+static tstring getFile(Transfer* t) {
+	tstring file;
+	
+	if(t->getType() == Transfer::TYPE_TREE) {
+		file = str(TF_("TTH: %1%") % Text::toT(Util::getFileName(t->getPath())));
+	} else if(t->getType() == Transfer::TYPE_FULL_LIST || t->getType() == Transfer::TYPE_PARTIAL_LIST) {
+		file = T_("file list");
+	} else {
+		file = Text::toT(Util::getFileName(t->getPath()) + 
+			" (" + Util::formatBytes(t->getStartPos()) + 
+			" - " + Util::formatBytes(t->getStartPos() + t->getSize()) + ")");
+	}
+	return file;
+}
+
+void TransferView::starting(UpdateInfo* ui, Transfer* t) 
+{
+	ui->setStatus(ItemInfo::STATUS_RUNNING);
+	ui->setTransfered(t->getPos(), t->getActual());
+	ui->setChunk(t->getSize());
+	const UserConnection& uc = t->getUserConnection();
+	ui->setCipher(Text::toT(uc.getCipherName()));
+	tstring country = Text::toT(Util::getIpCountry(uc.getRemoteIp()));
+	tstring ip = Text::toT(uc.getRemoteIp());
+	if(country.empty()) 
+		ui->setIP(ip);
+	else
+		ui->setIP(country + _T(" (") + ip + _T(")"));
+}
+
 void TransferView::on(DownloadManagerListener::Starting, Download* aDownload) throw()
 {
 	UpdateInfo* ui = new UpdateInfo(aDownload->getUser(), true);
-	ui->setStatus(ItemInfo::STATUS_RUNNING);
-	ui->setPos(aDownload->getPos());
-	ui->setActual(aDownload->getActual());
-	ui->setStart(0);
-	ui->setSize(aDownload->getSize());
-	ui->setFile(Text::toT(aDownload->getPath()));
-	ui->setStatusString(T_("Download starting..."));
-	ui->setCipher(Text::toT(aDownload->getUserConnection().getCipherName()));
-	tstring country = Text::toT(Util::getIpCountry(aDownload->getUserConnection().getRemoteIp()));
-	tstring ip = Text::toT(aDownload->getUserConnection().getRemoteIp());
-	if(country.empty()) {
-		ui->setIP(ip);
-	} else {
-		ui->setIP(country + _T(" (") + ip + _T(")"));
-	}
-	if(aDownload->getType() == Transfer::TYPE_TREE) {
-		ui->file = _T("TTH: ") + ui->file;
-	}
+	
+	starting(ui, aDownload);
+	tstring statusString;
 
+	if(aDownload->getUserConnection().isSecure()) {
+		if(aDownload->getUserConnection().isTrusted()) {
+			statusString += _T("[S]");
+		} else {
+			statusString += _T("[U]");
+		}
+	}
+	if(aDownload->isSet(Download::FLAG_TTH_CHECK)) {
+		statusString += _T("[T]");
+	}
+	if(aDownload->isSet(Download::FLAG_ZDOWNLOAD)) {
+		statusString += _T("[Z]");
+	}
+	if(!statusString.empty()) {
+		statusString += _T(" ");
+	}
+	statusString += str(TF_("Downloading %1%") % getFile(aDownload));
+	
+	ui->setStatusString(statusString);
 	speak(UPDATE_ITEM, ui);
 }
 
 void TransferView::on(DownloadManagerListener::Tick, const DownloadList& dl) throw()
 {
-	for(DownloadList::const_iterator j = dl.begin(); j != dl.end(); ++j) {
+		for(DownloadList::const_iterator j = dl.begin(); j != dl.end(); ++j) {
 		Download* d = *j;
 
 		UpdateInfo* ui = new UpdateInfo(d->getUser(), true);
-		ui->setActual(d->getActual());
-		ui->setPos(d->getPos());
-		ui->setTimeLeft(d->getSecondsLeft());
+		ui->setTransfered(d->getPos(), d->getActual());
 		ui->setSpeed(d->getAverageSpeed());
-
-		tstring pos = Text::toT(Util::formatBytes(d->getPos()));
-		double percent = (double)d->getPos()*100.0/(double)d->getSize();
-		tstring elapsed = Text::toT(Util::formatSeconds((GET_TICK() - d->getStart())/1000)); 
-
-		tstring statusString;
-
-		if(d->getUserConnection().isSecure()) {
-			if(d->getUserConnection().isTrusted()) {
-				statusString += _T("[S]");
-			} else {
-				statusString += _T("[U]");
-			}
-		}
-		if(d->isSet(Download::FLAG_TTH_CHECK)) {
-			statusString += _T("[T]");
-		}
-		if(d->isSet(Download::FLAG_ZDOWNLOAD)) {
-			statusString += _T("[Z]");
-		}
-		if(!statusString.empty()) {
-			statusString += _T(" ");
-		}
-		
-		statusString += _T("Downloaded ") + pos + _T(" (") + StilUtils::QtoTstr(QString::number(percent, 'g', 3)+"%") + _T(") in ") + elapsed;
-		ui->setStatusString(statusString);
 
 		tasks.add(UPDATE_ITEM, ui);
 	}
@@ -653,13 +664,7 @@ void TransferView::on(DownloadManagerListener::Failed, Download* aDownload, cons
 {
 	UpdateInfo* ui = new UpdateInfo(aDownload->getUser(), true, true);
 	ui->setStatus(ItemInfo::STATUS_WAITING);
-	ui->setPos(0);
 	ui->setStatusString(Text::toT(aReason));
-	ui->setSize(aDownload->getSize());
-	ui->setFile(Text::toT(aDownload->getPath()));
-	if(aDownload->getType() == Transfer::TYPE_TREE) {
-		ui->file = _T("TTH: ") + ui->file;
-	}
 
 	speak(UPDATE_ITEM, ui);
 }
@@ -668,69 +673,38 @@ void TransferView::on(UploadManagerListener::Starting, Upload* aUpload) throw()
 {
 	UpdateInfo* ui = new UpdateInfo(aUpload->getUser(), false);
 
-	ui->setStatus(ItemInfo::STATUS_RUNNING);
-	ui->setPos(aUpload->getPos());
-	ui->setActual(aUpload->getActual());
-	ui->setStart(aUpload->getPos());
-	ui->setSize(aUpload->getSize());
-	ui->setFile(Text::toT(aUpload->getPath()));
-	ui->setStatusString(T_("Upload starting..."));
-	ui->setCipher(Text::toT(aUpload->getUserConnection().getCipherName()));
-	tstring country = Text::toT(Util::getIpCountry(aUpload->getUserConnection().getRemoteIp()));
-	tstring ip = Text::toT(aUpload->getUserConnection().getRemoteIp());
-	if(country.empty()) {
-		ui->setIP(ip);
-	} else {
-		ui->setIP(country + _T(" (") + ip + _T(")"));
+	starting(ui, aUpload);
+
+	tstring statusString;
+
+	if(aUpload->getUserConnection().isSecure()) {
+		if(aUpload->getUserConnection().isTrusted()) {
+			statusString += _T("[S]");
+		} else {
+			statusString += _T("[U]");
+		}
 	}
-	if(aUpload->getType() == Transfer::TYPE_TREE) {
-		ui->file = _T("TTH: ") + ui->file;
+	if(aUpload->isSet(Upload::FLAG_ZUPLOAD)) {
+		statusString += _T("[Z]");
 	}
+	if(!statusString.empty()) {
+		statusString += _T(" ");
+	}
+	statusString += str(TF_("Uploading %1%") % getFile(aUpload));
+
+	ui->setStatusString(statusString);
 
 	speak(UPDATE_ITEM, ui);
 }
 
 void TransferView::on(UploadManagerListener::Tick, const UploadList& ul) throw()
 {
-#ifdef UNICODE
-	typedef wchar_t TCHAR;
-#else
-	typedef char	TCHAR;
-#endif
-
-	AutoArray<TCHAR> buf(T_("Uploaded %s (%.01f%%) in %s").size() + 64);
-
 	for(UploadList::const_iterator j = ul.begin(); j != ul.end(); ++j) {
 		Upload* u = *j;
 
 		UpdateInfo* ui = new UpdateInfo(u->getUser(), false);
-		ui->setActual(u->getActual());
-		ui->setPos(u->getPos());
-		ui->setTimeLeft(u->getSecondsLeft());
+		ui->setTransfered(u->getPos(), u->getActual());
 		ui->setSpeed(u->getAverageSpeed());
-
-		tstring pos = Text::toT(Util::formatBytes(u->getPos()));
-		double percent = (double)u->getPos()*100.0/(double)u->getSize();
-		tstring elapsed = Text::toT(Util::formatSeconds((GET_TICK() - u->getStart())/1000)); 
-
-		tstring statusString;
-
-		if(u->getUserConnection().isSecure()) {
-			if(u->getUserConnection().isTrusted()) {
-				statusString += _T("[S]");
-			} else {
-				statusString += _T("[U]");
-			}
-		}
-		if(u->isSet(Upload::FLAG_ZUPLOAD)) {
-			statusString += _T("[Z]");
-		}
-		if(!statusString.empty()) {
-			statusString += _T(" ");
-		}
-		
-		statusString += _T("Uploaded ") + pos + _T(" (") + StilUtils::QtoTstr(QString::number(percent, 'g', 3) + "%") + _T(") in ") + elapsed; 
-		ui->setStatusString(statusString);
 
 		tasks.add(UPDATE_ITEM, ui);
 	}
@@ -743,8 +717,7 @@ void TransferView::onTransferComplete(Transfer* aTransfer, bool isUpload)
 	UpdateInfo* ui = new UpdateInfo(aTransfer->getUser(), !isUpload);
 
 	ui->setStatus(ItemInfo::STATUS_WAITING);
-	ui->setPos(0);
-	ui->setStatusString(isUpload ? T_("Upload finished, idle...") : T_("Download finished, idle..."));
+	ui->setStatusString(T_("Idle"));
 
 	speak(UPDATE_ITEM, ui);
 }

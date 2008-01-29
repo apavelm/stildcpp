@@ -62,6 +62,7 @@
 #include "mdi_filelist.h"
 #include "sspy.h"
 #include "tthdial.h"
+#include "DownLoads.h"
 #include "quickconnectdlg.h"
 #include "widgets/tabwidget.h"
 #include "widgets/stil_TransferView.h"
@@ -174,6 +175,7 @@ private slots:
 	void SSFunc();
 	void ULFinFunc();
 	void DLFinFunc();
+	void DLoadsFunc();
 	void PubHubFunc();
 	void HomepageFunc();
 	void FavUsrFunc();

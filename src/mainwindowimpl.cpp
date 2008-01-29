@@ -216,6 +216,7 @@ void MainWindowImpl::clientInit()
 	startSocket();
 	
 	//if(BOOLSETTING(OPEN_SYSTEM_LOG)) postMessage(WM_COMMAND, IDC_SYSTEM_LOG);
+	//if(BOOLSETTING(OPEN_DOWNLOADS)) DLoadsFunc(); // SEGFAULT Why ???
 	if(BOOLSETTING(OPEN_FAVORITE_USERS)) FavUsrFunc();
 	if(BOOLSETTING(OPEN_QUEUE)) DLQueueFunc();
 	if(BOOLSETTING(OPEN_FINISHED_DOWNLOADS)) DLFinFunc();
@@ -233,7 +234,7 @@ void MainWindowImpl::clientInit()
 	if(SETTING(NICK).empty()) 
 	{ 
 		// open settings dialog
-		//PreferencesFunc();
+		PreferencesFunc();
 	}
 	
 }
@@ -340,6 +341,7 @@ void MainWindowImpl::createActions()
 	connect(aboutqtact, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
 	connect(actionStatusBar, SIGNAL(triggered()), this, SLOT(statusbarcheck()));
+	connect(actionDownloads, SIGNAL(triggered()), this, SLOT(DLoadsFunc()));
 
 	
 	connect(actionSettings, SIGNAL(triggered()), this, SLOT(PreferencesFunc()));
@@ -496,6 +498,13 @@ void MainWindowImpl::OpenPM(QWidget *parent, const QString &name)
 void MainWindowImpl::SearchFunc()
 {
 	m_tabwin->setCurrentIndex(m_tabwin->addTab((new SearchWindow(m_tabwin,"")),"search"));
+}
+
+void MainWindowImpl::DLoadsFunc()
+{
+	if (FindWinByType(15)==-1)
+		m_tabwin->setCurrentIndex(m_tabwin->addTab((new DownLoadsWindow(m_tabwin)),"Downloads"));
+	else m_tabwin->setCurrentIndex(FindWinByType(15));
 }
 
 void MainWindowImpl::ADLFunc()

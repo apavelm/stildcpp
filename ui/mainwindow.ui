@@ -58,6 +58,7 @@
     <addaction name="actionSearch_Spy" />
     <addaction name="separator" />
     <addaction name="actionIndexing_Progress" />
+    <addaction name="actionDownloads" />
     <addaction name="actionNotePad" />
     <addaction name="separator" />
     <addaction name="actionStatusBar" />
@@ -434,6 +435,11 @@
    </property>
    <property name="shortcut" >
     <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionDownloads" >
+   <property name="text" >
+    <string>Downloads</string>
    </property>
   </action>
  </widget>
