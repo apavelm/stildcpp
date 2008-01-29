@@ -36,7 +36,7 @@ SysLogWindow::SysLogWindow(QWidget *parent) : MdiChild(parent)
 	f.setPointSize(APPSETTING(i_SYSLOGFONTSIZE));
 	textEdit->setFont(f);
 	
-	connect(this, SIGNAL(sigSpeak(QDateTime, const QString &)), this, SLOT(slotSpeak(QDateTime, const QString & )), Qt::QueuedConnection);
+	connect(this, SIGNAL(sigSpeak(time_t, tstring)), this, SLOT(slotSpeak(time_t, tstring)), Qt::QueuedConnection);
 	
 	deque<pair<time_t, string> > oldMessages = LogManager::getInstance()->getLastLogs();
 	// Technically, we might miss a message or two here, but who cares...
@@ -47,30 +47,17 @@ SysLogWindow::SysLogWindow(QWidget *parent) : MdiChild(parent)
 	}
 }
 
-QDateTime SysLogWindow::convTime(time_t tm)
+void SysLogWindow::addLine(time_t t, const tstring& msg)
 {
-	struct tm* t = localtime(&tm);
-
-	return QDateTime(QDate(t->tm_year + 1900, t->tm_mon + 1, t->tm_mday), QTime(t->tm_hour, t->tm_min, t->tm_sec), Qt::LocalTime); //Or may be Qt::UTC ???
+	textEdit->textCursor().insertText( "\r\n[" + StilUtils::TstrtoQ(Text::toT(Util::getShortTimeString(t))) + "] " + StilUtils::TstrtoQ(msg) );
 }
 
-void SysLogWindow::addLine(time_t tm, const tstring& msg)
-{
-	addLine(convTime(tm), StilUtils::TstrtoQ( msg ) );
-}
-
-void SysLogWindow::addLine(QDateTime t, const QString & msg) 
-{
-	textEdit->textCursor().insertText("[" + t.toString("hh:mm:ss") + "] " + msg+"\n");
-	//setDirty(SettingsManager::BOLD_SYSTEM_LOG);
-}
-
-void SysLogWindow::slotSpeak(QDateTime t, const QString & s)
+void SysLogWindow::slotSpeak(time_t t, tstring s)
 {
 	addLine(t, s);
 }
 
 void SysLogWindow::on(Message, time_t tm, const string& message) throw() 
 { 
-	emit sigSpeak(convTime(tm), StilUtils::TstrtoQ(Text::toT(message)) ); 
+	emit sigSpeak(tm, Text::toT(message)); 
 }

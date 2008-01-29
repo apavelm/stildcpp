@@ -25,6 +25,11 @@
 using namespace std;
 using namespace dcpp;
 
+int StilUtils::_type_time_t = qRegisterMetaType<time_t>("time_t");
+int StilUtils::_type_tstring = qRegisterMetaType<tstring>("tstring");
+int StilUtils::_type_UserPtr = qRegisterMetaType<UserPtr>("UserPtr");
+
+
 tstring StilUtils::getNicks(const CID& cid)
 {
 	return Text::toT(Util::toString(ClientManager::getInstance()->getNicks(cid)));

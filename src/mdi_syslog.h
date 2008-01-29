@@ -32,6 +32,7 @@
 #include "client/stdinc.h"
 #include "client/DCPlusPlus.h"
 #include "client/LogManager.h"
+#include "client/Util.h"
 //
 
 #include "ui_syslog.h"
@@ -53,16 +54,13 @@ public:
 	
 private:
 	void addLine(time_t t, const tstring& msg);
-	void addLine(QDateTime, const QString &);
-	
-	QDateTime convTime(time_t t);
 	
 	// LogManagerListener
 	virtual void on(Message, time_t tm, const string& message) throw();
 private slots:
-	void slotSpeak(QDateTime, const QString &);
+	void slotSpeak(time_t, tstring);
 signals:
-	void sigSpeak(QDateTime, const QString &);
+	void sigSpeak(time_t, tstring);
 };
 
 #endif // __MDI_SYSLOG_H__

@@ -31,6 +31,7 @@
 #include "client/UserCommand.h"
 #include "client/ResourceManager.h"
 
+#include <QtCore>
 #include <QInputDialog>
 #include <QString>
 #include <QObject>
@@ -40,6 +41,9 @@ using namespace dcpp;
  class StilUtils  
 {
 public:
+	static int _type_time_t;
+	static int _type_tstring;
+	static int _type_UserPtr;
 	//StilUtils();
 	static tstring getNicks(const CID& cid);
 	static tstring getNicks(const UserPtr& user);
