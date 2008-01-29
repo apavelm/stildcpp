@@ -29,3 +29,8 @@ QTreeWidgetItem* QDLTreeWidget::itemFromIndex(const QModelIndex & mi) const
 {
 	return QTreeWidget::itemFromIndex(mi);
 }
+
+QModelIndex QDLTreeWidget::indexFromItem(QTreeWidgetItem* it, int column) const
+{
+	return QTreeWidget::indexFromItem(it, column);
+}

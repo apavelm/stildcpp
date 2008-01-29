@@ -27,7 +27,7 @@
      <widget class="QWidget" name="layoutWidget63" >
       <layout class="QVBoxLayout" >
        <item>
-        <widget class="QTreeWidget" name="list" >
+        <widget class="QDLTreeWidget" name="list" >
          <property name="rootIsDecorated" >
           <bool>false</bool>
          </property>
@@ -244,6 +244,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QDLTreeWidget</class>
+   <extends>QTreeWidget</extends>
+   <header>../src/widgets/stil_qdltreewidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

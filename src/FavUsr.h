@@ -40,7 +40,11 @@
 #include <QtDebug>
 #include <QtGui>
 
-class FavoriteUsersWindow : public MdiChild, private Ui::mdi_FavUsers, private dcpp::FavoriteManagerListener
+using namespace std;
+using namespace dcpp;
+
+
+class FavoriteUsersWindow : public MdiChild, private Ui::mdi_FavUsers, private FavoriteManagerListener
 {
 	Q_OBJECT
 public:
@@ -66,32 +70,24 @@ private:
 			return columns[col];
 		}
 
-		int getImage() const {
-			return 0;
-		}
-
 		static int compareItems(UserInfo* a, UserInfo* b, int col) 
 		{
 			return wcscmp(a->columns[col].c_str(), b->columns[col].c_str());
 		}
 
 		void remove();
-
 		void update(const FavoriteUser& u);
-
 		tstring columns[COLUMN_LAST];
 	};
 	
-	QList<FavoriteUser> datalist;
-	FavoriteUser & GetFavUser(const QString & );
-	int GetFavUserIndex(const QString & );
-	void rebuilddatalist();
+	QList<UserInfo *> datalist;
+	QList<QModelIndex> datalistitem;
 	
 	enum { USER_UPDATED };
 
-	void addUser(const dcpp::FavoriteUser& aUser);
-	void updateUser(const dcpp::UserPtr& aUser);
-	void removeUser(const dcpp::FavoriteUser& aUser);
+	void addUser(const FavoriteUser& aUser);
+	void updateUser(const UserPtr& aUser);
+	void removeUser(const FavoriteUser& aUser);
 	
 	// hack
 	void speak(int, const UserPtr& aUser);
@@ -102,11 +98,12 @@ private:
 	virtual void on(StatusChanged, const UserPtr& aUser) throw();
 private slots:
 	void onAutoGrant(int);
-	void slotSpeak(int, const UserPtr&);
 	void on_list_currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *);
 	void slot_remove_user();
 	void slot_ignore_user();
 	void slot_desc_user();
+	
+	void slotSpeak(int, const UserPtr&);
 signals:
 	void sigSpeak(int, const UserPtr&);
 };

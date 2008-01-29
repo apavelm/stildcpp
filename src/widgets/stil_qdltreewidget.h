@@ -29,6 +29,7 @@ class QDLTreeWidget : public QTreeWidget
 public:
 	QDLTreeWidget(QWidget * parent = 0);
 	QTreeWidgetItem* itemFromIndex(const QModelIndex&) const;
+	QModelIndex indexFromItem(QTreeWidgetItem* it, int column = 0) const;
 };
 
 #endif
