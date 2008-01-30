@@ -205,7 +205,7 @@ signals:
 public slots:
 	void OpenList(QWidget *, const dcpp::tstring & , const dcpp::UserPtr & , int64_t, const QString);
 	void OpenPM(QWidget *parent, const QString &);
-	void OpenHub(QWidget *parent, const dcpp::tstring& adr);
+	void OpenHub(const dcpp::tstring& adr, QWidget *parent = 0);
 
 private:
 	void createActions();

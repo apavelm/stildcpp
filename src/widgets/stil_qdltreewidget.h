@@ -23,6 +23,16 @@
 #ifndef STIL_QDLTREEWIDGET_H
 #define STIL_QDLTREEWIDGET_H
 
+class QHubLineEdit : public QLineEdit
+{
+	Q_OBJECT
+public:
+	QHubLineEdit(QWidget * parent = 0);
+	void keyPressEvent(QKeyEvent *); 
+signals:
+	void sig_KeyPressEvent(QKeyEvent *);
+};
+
 class QDLTreeWidget : public QTreeWidget
 {
 	Q_OBJECT

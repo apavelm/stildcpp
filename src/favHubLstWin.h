@@ -60,24 +60,36 @@ private:
 		COLUMN_LAST
 	};
 	
-	QList<dcpp::FavoriteHubEntryPtr> datalist;
+	bool startup;
 	
-	void addEntry(const dcpp::FavoriteHubEntryPtr entry, int index = -1);
-	int GetFavHubIndex(const QString & name);
-	dcpp::FavoriteHubEntryPtr GetFavHubPtr(const QString & name);
-	void rebuilddatalist();
+	QList<FavoriteHubEntryPtr> datalist;
+	QList<QModelIndex> datalistitem;
+	void addEntry(const dcpp::FavoriteHubEntryPtr entry);
 	
 	// Listner
-	virtual void on(FavoriteAdded, const dcpp::FavoriteHubEntryPtr e) throw();
-	virtual void on(FavoriteRemoved, const dcpp::FavoriteHubEntryPtr e) throw();
+	virtual void on(FavoriteAdded, const FavoriteHubEntryPtr e) throw();
+	virtual void on(FavoriteRemoved, const FavoriteHubEntryPtr e) throw();
 public:
 	FavoriteHubListWindow(QWidget *parent);
 	~FavoriteHubListWindow();
 private slots:
-	void on_list_currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *);
+	void slot_list_currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *);
+	void listkeyPressEvent(QKeyEvent *e);
+	void slot_autoconn(int);
 	void slot_Add();
 	void slot_Connect();
 	void slot_Remove();
+	void slotStore_1();
+	void slotStore_2();
+	void slotStore_3();
+	void slotStore_4();
+	void slotStore_5();
+	void slotStore_6();
+	void slotKey_1(QKeyEvent *);
+	void slotKey_2(QKeyEvent *);
+	void slotKey_4(QKeyEvent *);
+	void slotKey_5(QKeyEvent *);
+	void slotKey_6(QKeyEvent *);
 };
 
 #endif // __FAVHUBLSTWIN_H__

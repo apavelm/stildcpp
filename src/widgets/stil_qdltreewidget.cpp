@@ -20,9 +20,30 @@
  
 #include "stil_qdltreewidget.h"
 
+//QHubLineEdit
+
+QHubLineEdit::QHubLineEdit(QWidget * parent): QLineEdit(parent)
+{
+	
+}
+
+void QHubLineEdit::keyPressEvent(QKeyEvent *e)
+{
+	QLineEdit::keyPressEvent(e);
+	emit sig_KeyPressEvent(e);
+}
+
+// QDLTreeWidget
+
 QDLTreeWidget::QDLTreeWidget(QWidget * parent): QTreeWidget(parent)
 {
 	
+}
+
+void QDLTreeWidget::keyPressEvent(QKeyEvent *e)
+{
+	QTreeWidget::keyPressEvent(e);
+	emit sig_KeyPressEvent(e);
 }
 
 QTreeWidgetItem* QDLTreeWidget::itemFromIndex(const QModelIndex & mi) const
@@ -33,10 +54,4 @@ QTreeWidgetItem* QDLTreeWidget::itemFromIndex(const QModelIndex & mi) const
 QModelIndex QDLTreeWidget::indexFromItem(QTreeWidgetItem* it, int column) const
 {
 	return QTreeWidget::indexFromItem(it, column);
-}
-
-void QDLTreeWidget::keyPressEvent(QKeyEvent *e)
-{
-	QTreeWidget::keyPressEvent(e);
-	emit sig_KeyPressEvent(e);
 }

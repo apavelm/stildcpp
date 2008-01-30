@@ -30,7 +30,7 @@ void FavoriteUsersWindow::updateVisuals(UserInfo * ui)
 	currentLabel->setText("<h1>" + StilUtils::TstrtoQ(ui->getText(COLUMN_NICK)) + "</h1>");
 }
 
-void FavoriteUsersWindow::on_list_currentItemChanged(QTreeWidgetItem *c, QTreeWidgetItem *)
+void FavoriteUsersWindow::slot_list_currentItemChanged(QTreeWidgetItem *c, QTreeWidgetItem *)
 {
 	if (!c) return;
 	if (datalist.isEmpty()) return;
@@ -60,7 +60,7 @@ FavoriteUsersWindow::FavoriteUsersWindow(QWidget *parent) : MdiChild(parent)
 	list->sortByColumn(0,Qt::AscendingOrder);
 	
 	connect(list, SIGNAL(sig_KeyPressEvent(QKeyEvent *)), this, SLOT(listkeyPressEvent(QKeyEvent *)) );
-	connect(list, SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)), this, SLOT(on_list_currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)) );
+	connect(list, SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)), this, SLOT(slot_list_currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)) );
 	connect(btn_Delete, SIGNAL(clicked()), this, SLOT(slot_remove_user()) );
 	connect(btn_Ignore, SIGNAL(clicked()), this, SLOT(slot_ignore_user()) );
 	connect(btn_Desc, SIGNAL(clicked()), this, SLOT(slot_desc_user()) );

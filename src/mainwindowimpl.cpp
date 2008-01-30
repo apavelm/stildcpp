@@ -481,7 +481,7 @@ void MainWindowImpl::OpenList(QWidget *parent, const dcpp::tstring & aFile, cons
 	m_tabwin->setCurrentIndex( m_tabwin->addTab( (new FileListDlg(parent, u, aSpeed, t) ), aTitle ) );
 }
 
-void MainWindowImpl::OpenHub(QWidget *parent, const dcpp::tstring& adr)
+void MainWindowImpl::OpenHub(const dcpp::tstring& adr, QWidget *parent)
 {
 	m_tabwin->setCurrentIndex(m_tabwin->addTab((new HubWindow(m_tabwin, adr)),"Hub"));
 }
@@ -588,7 +588,7 @@ void MainWindowImpl::indexingFunc()
 
 void MainWindowImpl::qcdconFunc(QString adr)
 {
-	OpenHub(this, StilUtils::QtoTstr(adr));
+	OpenHub(StilUtils::QtoTstr(adr));
 }
 
 void MainWindowImpl::fQuickConFunc()
@@ -864,7 +864,7 @@ void MainWindowImpl::autoConnect(const FavoriteHubEntryList& fl)
 			if (!entry->getNick().empty() || !SETTING(NICK).empty())
 			{
 				//HubFrame::openWindow(getMDIParent(), entry->getServer());
-				OpenHub(this, Text::toT(entry->getServer()));
+				OpenHub(Text::toT(entry->getServer()));
 			}
 		}
 	}
