@@ -23,8 +23,8 @@
 MdiChild::MdiChild(QWidget *parent)
 {
 	setAttribute(Qt::WA_DeleteOnClose, true);
-	type=0;
-	idText=tr("");
+	type = StilUtils::WIN_TYPE_NONE;
+	idText="";
 	prnt = (TabWidget*) parent;
 }
 

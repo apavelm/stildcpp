@@ -24,7 +24,7 @@
 SearchSpyWindow::SearchSpyWindow(QWidget *parent) : MdiChild(parent)
 {	
 	setupUi(this);
-	type = 13;
-	idText  = tr("");
+	type = StilUtils::WIN_TYPE_SEARCH_SPY;
+	idText  = "";
 	setWindowTitle(tr("SearchSpy"));
 }

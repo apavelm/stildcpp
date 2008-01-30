@@ -27,9 +27,9 @@
 #include <QWidget>
 
 #include "widgets/tabwidget.h"
+#include "stilutils.h"
 
 //
-
 class MdiChild : public QDialog
 {
 	Q_OBJECT
@@ -39,25 +39,7 @@ public:
 	MdiChild(QWidget *parent);
 	~MdiChild();
 	
-	int type;
-	/*  0 - MdiChild (NONE)
-		1 - Hub
-		2 - Private Chat
-		3 - Search
-		4 - Favorite Hub List
-		5 - FileList
-		6 - DL Queue
-		7 - Favorite Users
-		8 - Ignored Users
-		9 - Public Hubs
-		10 - Finished DL
-		11 - Finished UL
-		12 - ADL Search
-		13 - Search Spy
-		14 - NotePad
-		15 - DownLoads Frame
-		16 - System Log
-	*/
+	StilUtils::tabWinTypes type;
 	QString idText;
 	void setTabText(const QString &);
 	void setTabTextColor(QColor &);

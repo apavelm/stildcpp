@@ -35,7 +35,7 @@ static const char* columnNames[] = {
 DownLoadsWindow::DownLoadsWindow(QWidget *parent) : MdiChild(parent), startup(true)
 {
 	setupUi(this);
-	type = 15;
+	type = StilUtils::WIN_TYPE_DOWNLOADS;
 	idText = "Downloads";
 	setTabText(tr("DownLoads"));
 	

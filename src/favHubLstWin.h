@@ -38,6 +38,9 @@
 #include <QtGui>
 #include <QList>
 
+using namespace std;
+using namespace dcpp;
+
 
 class FavoriteHubListWindow : public MdiChild
 					, private Ui::mdiFAVHUBwin

@@ -22,6 +22,7 @@
 #define __DLFIN_H__
 
 #include "mdi_c.h"
+#include "stilutils.h"
 
 #include "ui_dl_finished.h"
 

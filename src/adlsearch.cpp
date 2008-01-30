@@ -24,7 +24,7 @@
 ADLSearchWindow::ADLSearchWindow(QWidget *parent) : MdiChild(parent)
 {	
 	setupUi(this);
-	type = 12;
-	idText  = tr("");
+	type = StilUtils::WIN_TYPE_ADL_SEARCH;
+	idText  = "";
 	setWindowTitle(tr("ADL Search"));
 }

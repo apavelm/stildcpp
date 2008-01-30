@@ -23,7 +23,7 @@
 PMWindow::PMWindow(QWidget *parent, const QString &nick) : MdiChild(parent)
 {
 	setupUi(this);
-	type = 2;
+	type = StilUtils::WIN_TYPE_PRIVATE_CHAT;
 	idText  = nick;
 	setWindowTitle(tr("Private Chat with: ")+nick);
 	editor->clear();

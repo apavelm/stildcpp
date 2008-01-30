@@ -442,7 +442,7 @@ void MainWindowImpl::About()
 	new AboutDialog(this);
 }
 
-int MainWindowImpl::FindWinByType(int type)
+int MainWindowImpl::FindWinByType(StilUtils::tabWinTypes type)
 {
 	for (int i=0; i<m_tabwin->count(); i++)
 	{
@@ -498,86 +498,86 @@ void MainWindowImpl::SearchFunc()
 
 void MainWindowImpl::SLogFunc()
 {
-	if (FindWinByType(16)==-1)
+	if (FindWinByType(StilUtils::WIN_TYPE_SYSTEM_LOG)==-1)
 		m_tabwin->setCurrentIndex(m_tabwin->addTab((new SysLogWindow(m_tabwin)),"System Log"));
-	else m_tabwin->setCurrentIndex(FindWinByType(16));
+	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_SYSTEM_LOG));
 }
 
 void MainWindowImpl::DLoadsFunc()
 {
-	if (FindWinByType(15)==-1)
+	if (FindWinByType(StilUtils::WIN_TYPE_DOWNLOADS)==-1)
 		m_tabwin->setCurrentIndex(m_tabwin->addTab((new DownLoadsWindow(m_tabwin)),"Downloads"));
-	else m_tabwin->setCurrentIndex(FindWinByType(15));
+	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_DOWNLOADS));
 }
 
 void MainWindowImpl::ADLFunc()
 {
-	if (FindWinByType(12)==-1)
+	if (FindWinByType(StilUtils::WIN_TYPE_ADL_SEARCH)==-1)
 		m_tabwin->setCurrentIndex(m_tabwin->addTab((new ADLSearchWindow(m_tabwin)),"ADL Search"));
-	else m_tabwin->setCurrentIndex(FindWinByType(12));
+	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_ADL_SEARCH));
 }
 
 void MainWindowImpl::SSFunc()
 {
-	if (FindWinByType(13)==-1)
+	if (FindWinByType(StilUtils::WIN_TYPE_SEARCH_SPY)==-1)
 		m_tabwin->setCurrentIndex(m_tabwin->addTab((new SearchSpyWindow(m_tabwin)),"Search Spy"));
-	else m_tabwin->setCurrentIndex(FindWinByType(13));
+	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_SEARCH_SPY));
 }
 
 void MainWindowImpl::ULFinFunc()
 {
-	if (FindWinByType(11)==-1)
+	if (FindWinByType(StilUtils::WIN_TYPE_FINISHED_UL)==-1)
 		m_tabwin->setCurrentIndex(m_tabwin->addTab((new UploadFinishedWindow(m_tabwin)),"UL_Fin"));
-	else m_tabwin->setCurrentIndex(FindWinByType(11));
+	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_FINISHED_UL));
 }
 
 void MainWindowImpl::DLFinFunc()
 {
-	if (FindWinByType(10)==-1)
+	if (FindWinByType(StilUtils::WIN_TYPE_FINISHED_DL)==-1)
 		m_tabwin->setCurrentIndex(m_tabwin->addTab((new DownloadFinishedWindow(m_tabwin)),"DL_Fin"));
-	else m_tabwin->setCurrentIndex(FindWinByType(10));
+	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_FINISHED_DL));
 }
 
 void MainWindowImpl::IgnoredUsrFunc()
 {
-	if (FindWinByType(8)==-1)
+	if (FindWinByType(StilUtils::WIN_TYPE_IGNORED_USERS)==-1)
 		m_tabwin->setCurrentIndex(m_tabwin->addTab((new IgnoredUsersWindow(m_tabwin)),"Ign_Usr"));
-	else m_tabwin->setCurrentIndex(FindWinByType(8));
+	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_IGNORED_USERS));
 }
 
 void MainWindowImpl::FavUsrFunc()
 {
-	if (FindWinByType(7)==-1)
+	if (FindWinByType(StilUtils::WIN_TYPE_FAVORITE_USERS)==-1)
 		m_tabwin->setCurrentIndex(m_tabwin->addTab((new FavoriteUsersWindow(m_tabwin)),"Fav_Usr"));
-	else m_tabwin->setCurrentIndex(FindWinByType(7));
+	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_FAVORITE_USERS));
 }
 
 void MainWindowImpl::FavHubListFunc()
 {
-	if (FindWinByType(4)==-1)
+	if (FindWinByType(StilUtils::WIN_TYPE_FAVORITE_HUB_LIST)==-1)
 		m_tabwin->setCurrentIndex(m_tabwin->addTab((new FavoriteHubListWindow(m_tabwin)),"Fav_Hub"));
-	else m_tabwin->setCurrentIndex(FindWinByType(4));
+	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_FAVORITE_HUB_LIST));
 }
 
 void MainWindowImpl::PubHubFunc()
 {
-	if (FindWinByType(9)==-1)
+	if (FindWinByType(StilUtils::WIN_TYPE_PUBLIC_HUBS)==-1)
 		m_tabwin->setCurrentIndex(m_tabwin->addTab((new PublicHubWindow(m_tabwin)),"Pub Hub"));
-	else m_tabwin->setCurrentIndex(FindWinByType(9));
+	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_PUBLIC_HUBS));
 }
 
 void MainWindowImpl::DLQueueFunc()
 {
-	if (FindWinByType(6)==-1)
+	if (FindWinByType(StilUtils::WIN_TYPE_DL_QUEUE)==-1)
 		m_tabwin->setCurrentIndex(m_tabwin->addTab((new DownLoadQueueWindow(m_tabwin)),"DL Queue"));
-	else m_tabwin->setCurrentIndex(FindWinByType(6));
+	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_DL_QUEUE));
 }
 
 void MainWindowImpl::notepadFunc()
 {
-	if (FindWinByType(14)==-1)
+	if (FindWinByType(StilUtils::WIN_TYPE_NOTEPAD)==-1)
 		m_tabwin->setCurrentIndex(m_tabwin->addTab((new NotePad(m_tabwin)),"NotePad"));
-	else m_tabwin->setCurrentIndex(FindWinByType(14));
+	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_NOTEPAD));
 }
 
 void MainWindowImpl::indexingFunc()

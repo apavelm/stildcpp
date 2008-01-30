@@ -31,7 +31,7 @@ NotePad::~NotePad()
 NotePad::NotePad(QWidget *parent) : MdiChild(parent)
 {
 	setupUi(this);
-	type = 14;
+	type = StilUtils::WIN_TYPE_NOTEPAD;
 	idText = "Notepad";
 	setTabText(tr("NotePad"));
 	

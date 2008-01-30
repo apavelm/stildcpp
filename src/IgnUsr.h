@@ -22,6 +22,7 @@
 #define __IGN_USR_H__
 
 #include "mdi_c.h"
+#include "stilutils.h"
 
 #include "ui_ign_users.h"
 

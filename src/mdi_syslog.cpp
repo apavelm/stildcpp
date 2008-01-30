@@ -28,7 +28,7 @@ SysLogWindow::~SysLogWindow()
 SysLogWindow::SysLogWindow(QWidget *parent) : MdiChild(parent)
 {
 	setupUi(this);
-	type = 16;
+	type = StilUtils::WIN_TYPE_SYSTEM_LOG;
 	idText = "System Log";
 	setTabText(tr("System Log"));
 	

@@ -20,25 +20,31 @@
 
 #include "FavUsr.h"
 
+void FavoriteUsersWindow::updateVisuals(UserInfo * ui)
+{
+	cb_AutoSlot->setChecked(ui->autoslot);
+	lbl_Hub->setText(StilUtils::TstrtoQ(ui->getText(COLUMN_HUB)));
+	lbl_time->setText(StilUtils::TstrtoQ(ui->getText(COLUMN_SEEN)));
+	lbl_CID->setText(StilUtils::TstrtoQ(ui->getText(COLUMN_CID)));
+	lbl_Desc->setPlainText(StilUtils::TstrtoQ(ui->getText(COLUMN_DESCRIPTION)));
+	currentLabel->setText("<h1>" + StilUtils::TstrtoQ(ui->getText(COLUMN_NICK)) + "</h1>");
+}
+
 void FavoriteUsersWindow::on_list_currentItemChanged(QTreeWidgetItem *c, QTreeWidgetItem *)
 {
 	if (!c) return;
 	if (datalist.isEmpty()) return;
 	// Changing information in right panel
-	UserInfo *ui = datalist.at(datalistitem.indexOf(list->indexFromItem(c)));
-	cb_AutoSlot->setChecked(FavoriteUser::FLAG_GRANTSLOT);
-	lbl_Hub->setText(StilUtils::TstrtoQ(ui->getText(COLUMN_HUB)));
-	lbl_time->setText(StilUtils::TstrtoQ(ui->getText(COLUMN_SEEN)));
-	lbl_CID->setText(StilUtils::TstrtoQ(ui->getText(COLUMN_CID)));
-	lbl_Desc->setText(StilUtils::TstrtoQ(ui->getText(COLUMN_DESCRIPTION)));
-	currentLabel->setText("<h1>" + StilUtils::TstrtoQ(ui->getText(COLUMN_NICK)) + "</h1>");
+	UserInfo * ui = new UserInfo(datalist.at(datalistitem.indexOf(list->indexFromItem(c))));
+	updateVisuals(ui);
+	delete ui;
 }
 
 FavoriteUsersWindow::FavoriteUsersWindow(QWidget *parent) : MdiChild(parent)
 {
 	setupUi(this);
-	type = 7;
-	idText  = "";
+	type = StilUtils::WIN_TYPE_FAVORITE_USERS;
+	idText="";
 	setTabText(tr("Favorite Users"));
 	
 	datalist.clear();
@@ -75,7 +81,7 @@ FavoriteUsersWindow::~FavoriteUsersWindow()
 
 void FavoriteUsersWindow::addUser(const FavoriteUser& aUser) 
 {
-	datalist << new UserInfo(aUser);
+	datalist << aUser;
 	setUpdatesEnabled(false);
 	QTreeWidgetItem *it = new QTreeWidgetItem(list);
 	datalistitem << list->indexFromItem(it);
@@ -88,12 +94,13 @@ void FavoriteUsersWindow::updateUser(const UserPtr& aUser)
 {
 	for(int i = 0; i < datalist.size(); ++i) 
 	{
-		UserInfo *ui = datalist.at(i);
+		UserInfo *ui = new UserInfo(datalist[i]);
 		if(ui->user == aUser) 
 		{
 			ui->columns[COLUMN_SEEN] = aUser->isOnline() ? T_("Online") : Text::toT(Util::formatTime("%Y-%m-%d %H:%M", FavoriteManager::getInstance()->getLastSeen(aUser)));
 			lbl_time->setText(StilUtils::TstrtoQ(ui->getText(COLUMN_SEEN)));
 		}
+		delete ui;
 	}
 }
 
@@ -103,7 +110,7 @@ void FavoriteUsersWindow::slot_remove_user()
 	if (lt.isEmpty()) return;
 	for (int i = 0; i < lt.size(); i++)
 	{
-		UserInfo * ui = datalist.at(datalistitem.indexOf(list->indexFromItem(lt[0])));
+		UserInfo * ui = new UserInfo(datalist[datalistitem.indexOf(list->indexFromItem(lt[i]))]);
 		ui->remove();
 		// After deleting next in list ModelIndexes changed!!!
 		// It need to fix ModelIndexes 
@@ -114,6 +121,7 @@ void FavoriteUsersWindow::slot_remove_user()
 			datalistitem[j] = list->indexFromItem(w);
 		}
 		////////////
+		delete ui;
 	}
 }
 
@@ -121,9 +129,7 @@ void FavoriteUsersWindow::removeUser(const FavoriteUser& aUser)
 {
 	if (!datalist.isEmpty())
 		for(int i = 0; i < datalist.size(); ++i) 
-		{
-			UserInfo *ui = datalist.at(i);
-			if(ui->user == aUser.getUser()) 
+			if(datalist[i].getUser() == aUser.getUser()) 
 			{
 				// DELETING 
 				setUpdatesEnabled(false);
@@ -134,7 +140,6 @@ void FavoriteUsersWindow::removeUser(const FavoriteUser& aUser)
 				// END OF DELETING
 				return;
 			}
-		}
 }
 
 void FavoriteUsersWindow::slot_ignore_user()
@@ -144,17 +149,21 @@ void FavoriteUsersWindow::slot_ignore_user()
 
 void FavoriteUsersWindow::slot_desc_user()
 {
-	bool ok;
-	QString text = QInputDialog::getText(this, tr("Change User Description"), tr("New Description:"), QLineEdit::Normal, lbl_Desc->text() , &ok);
-	if (ok) 
-	{
-		QTreeWidgetItem *it = list->currentItem();
-		if (!it) return;
-		UserInfo *ui = datalist.at(datalistitem.indexOf(list->indexFromItem(it)));
-		lbl_Desc->setText(text);
-		
-		FavoriteManager::getInstance()->setUserDescription(ui->user, Text::fromT(StilUtils::QtoTstr(text)));
-	}
+	QTreeWidgetItem *it = list->currentItem();
+	if (!it) return;
+	int idx = datalistitem.indexOf(list->indexFromItem(it));
+	UserInfo *ui = new UserInfo(datalist[idx]);
+	FavoriteManager::getInstance()->setUserDescription(ui->user, Text::fromT(StilUtils::QtoTstr(lbl_Desc->toPlainText())));
+	// Updating in runtime
+	FavoriteManager::FavoriteMap ul = FavoriteManager::getInstance()->getFavoriteUsers();
+	for(FavoriteManager::FavoriteMap::iterator i = ul.begin(); i != ul.end(); ++i)
+		if ( StilUtils::TstrtoQ(Text::toT(i->second.getNick())) == StilUtils::TstrtoQ(Text::toT(datalist[idx].getNick())) )
+		{
+			datalist[idx] = i->second;
+			break;
+		}
+	// releasing memory
+	delete ui;
 }
 
 void FavoriteUsersWindow::onAutoGrant(int value)
@@ -162,8 +171,19 @@ void FavoriteUsersWindow::onAutoGrant(int value)
 	if (!cb_AutoSlot->isEnabled()) return;
 	QTreeWidgetItem *it = list->currentItem();
 	if (!it) return;
-	UserInfo *ui = datalist.at(datalistitem.indexOf(list->indexFromItem(it)));
-	if (ui) FavoriteManager::getInstance()->setAutoGrant(ui->user, static_cast<bool>(value));
+	int idx = datalistitem.indexOf(list->indexFromItem(it));
+	UserInfo *ui = new UserInfo(datalist[idx]);
+	FavoriteManager::getInstance()->setAutoGrant(ui->user, static_cast<bool>(value));
+	// Updating in runtime
+	FavoriteManager::FavoriteMap ul = FavoriteManager::getInstance()->getFavoriteUsers();
+	for(FavoriteManager::FavoriteMap::iterator i = ul.begin(); i != ul.end(); ++i)
+		if ( StilUtils::TstrtoQ(Text::toT(i->second.getNick())) == StilUtils::TstrtoQ(Text::toT(datalist[idx].getNick())) )
+		{
+			datalist[idx] = i->second;
+			break;
+		}
+	// releasing memory
+	delete ui;
 }
 
 void FavoriteUsersWindow::on(UserAdded, const FavoriteUser& aUser) throw() 
@@ -183,11 +203,7 @@ void FavoriteUsersWindow::speak(int a, const UserPtr& aUser)
 
 void FavoriteUsersWindow::slotSpeak(int a, const UserPtr& aUser)
 {
-	if (a == USER_UPDATED)
-	{
-		UserInfoBase uib = aUser; //FIXME
-		updateUser(uib.user);
-	}
+	if (a == USER_UPDATED) updateUser(aUser);
 }
 
 void FavoriteUsersWindow::on(StatusChanged, const UserPtr& aUser) throw() 
@@ -212,4 +228,5 @@ void FavoriteUsersWindow::UserInfo::update(const FavoriteUser& u)
 	columns[COLUMN_SEEN] = user->isOnline() ? T_("Online") : Text::toT(Util::formatTime("%Y-%m-%d %H:%M", u.getLastSeen()));
 	columns[COLUMN_DESCRIPTION] = Text::toT(u.getDescription());
 	columns[COLUMN_CID] = Text::toT(u.getUser()->getCID().toBase32());
+	autoslot = u.isSet(FavoriteUser::FLAG_GRANTSLOT); 
 }

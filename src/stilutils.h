@@ -44,6 +44,48 @@ public:
 	static int _type_time_t;
 	static int _type_tstring;
 	static int _type_UserPtr;
+	
+	/*  0 - MdiChild (NONE)
+		1 - Hub
+		2 - Private Chat
+		3 - Search
+		4 - Favorite Hub List
+		5 - FileList
+		6 - DL Queue
+		7 - Favorite Users
+		8 - Ignored Users
+		9 - Public Hubs
+		10 - Finished DL
+		11 - Finished UL
+		12 - ADL Search
+		13 - Search Spy
+		14 - NotePad
+		15 - DownLoads Frame
+		16 - System Log
+	*/
+	
+	enum tabWinTypes{
+		WIN_TYPE_FIRST
+		,WIN_TYPE_NONE = WIN_TYPE_FIRST
+		,WIN_TYPE_HUB
+		,WIN_TYPE_PRIVATE_CHAT
+		,WIN_TYPE_SEARCH
+		,WIN_TYPE_FAVORITE_HUB_LIST
+		,WIN_TYPE_FILELIST
+		,WIN_TYPE_DL_QUEUE
+		,WIN_TYPE_FAVORITE_USERS
+		,WIN_TYPE_IGNORED_USERS
+		,WIN_TYPE_PUBLIC_HUBS
+		,WIN_TYPE_FINISHED_DL
+		,WIN_TYPE_FINISHED_UL
+		,WIN_TYPE_ADL_SEARCH
+		,WIN_TYPE_SEARCH_SPY
+		,WIN_TYPE_NOTEPAD
+		,WIN_TYPE_DOWNLOADS
+		,WIN_TYPE_SYSTEM_LOG
+		,WIN_TYPE_LAST
+	};
+	
 	//StilUtils();
 	static tstring getNicks(const CID& cid);
 	static tstring getNicks(const UserPtr& user);

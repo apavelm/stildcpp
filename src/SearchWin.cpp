@@ -31,7 +31,7 @@ initialMode(initialMode_),
 initialType(initialType_)
 {	
 	setupUi(this);
-	type = 3;
+	type = StilUtils::WIN_TYPE_SEARCH;
 	idText  = what;
 	setTabText(tr("Search for: ")+what);
 

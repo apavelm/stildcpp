@@ -26,8 +26,7 @@ FileListDlg::FileListDlg(QWidget *parent, const UserPtr &aUser, int64_t aSpeed, 
 					: MdiChild(parent), shareSize(0),shareItems(0),listing(aUser)
 {	
 	setupUi(this);
-	
-	type = 5;
+	type = StilUtils::WIN_TYPE_FILELIST;
 
 	pathList.clear();
 	

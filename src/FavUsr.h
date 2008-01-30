@@ -77,10 +77,12 @@ private:
 		void remove();
 		void update(const FavoriteUser& u);
 		tstring columns[COLUMN_LAST];
+		bool autoslot;
 	};
 	
-	QList<UserInfo *> datalist;
+	QList<FavoriteUser> datalist;
 	QList<QModelIndex> datalistitem;
+	void updateVisuals(UserInfo *);
 	
 	enum { USER_UPDATED };
 

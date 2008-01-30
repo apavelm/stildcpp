@@ -25,7 +25,7 @@
 PublicHubWindow::PublicHubWindow(QWidget *parent) : MdiChild(parent)
 {	
 	setupUi(this);
-	type = 9;
-	idText  = tr("");
+	type = StilUtils::WIN_TYPE_PUBLIC_HUBS;
+	idText  = "";
 	setWindowTitle(tr("Public Hubs"));
 }

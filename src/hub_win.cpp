@@ -56,7 +56,7 @@ HubWindow::HubWindow(QWidget *parent, const dcpp::tstring& url) : MdiChild(paren
 	favShowJoins(BOOLSETTING(FAV_SHOW_JOINS))
 {	
 	setupUi(this);
-	type = 1;
+	type = StilUtils::WIN_TYPE_HUB;
 	idText = StilUtils::TstrtoQ(url);
 
 	// UserList in LeftSide

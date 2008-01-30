@@ -20,10 +20,6 @@
 
 #include "favHubLstWin.h"
 
-using namespace std;
-using namespace dcpp;
-
-
 dcpp::FavoriteHubEntryPtr FavoriteHubListWindow::GetFavHubPtr(const QString & name)
 {
 	QList<FavoriteHubEntryPtr>::iterator i;
@@ -65,8 +61,8 @@ void FavoriteHubListWindow::on_list_currentItemChanged(QTreeWidgetItem *c, QTree
 FavoriteHubListWindow::FavoriteHubListWindow(QWidget *parent) : MdiChild(parent)
 {	
 	setupUi(this);
-	type = 4;
-	idText  = tr("");
+	type = StilUtils::WIN_TYPE_FAVORITE_HUB_LIST;
+	idText  = "";
 	setTabText(tr("Favorite Hubs"));
 	
 	connect(btn_Add, SIGNAL(clicked()), this, SLOT(slot_Add()) );

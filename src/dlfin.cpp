@@ -23,7 +23,7 @@
 DownloadFinishedWindow::DownloadFinishedWindow(QWidget *parent) : MdiChild(parent)
 {	
 	setupUi(this);
-	type = 10;
-	idText  = tr("");
+	type = StilUtils::WIN_TYPE_FINISHED_DL;
+	idText  = "";
 	setWindowTitle(tr("DL Fin"));
 }

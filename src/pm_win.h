@@ -25,6 +25,7 @@
 
 #include "highlighter.h"
 #include "mdi_c.h"
+#include "stilutils.h"
 
 //
 #include "client/stdinc.h"

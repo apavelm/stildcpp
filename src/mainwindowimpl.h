@@ -216,7 +216,7 @@ private:
 	void startSocket();
 	void setShareSize(const QString &sz);
 	
-	int FindWinByType(int type);
+	int FindWinByType(StilUtils::tabWinTypes type);
 
 	QAction *showhide;
 

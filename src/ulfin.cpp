@@ -23,7 +23,7 @@
 UploadFinishedWindow::UploadFinishedWindow(QWidget *parent) : MdiChild(parent)
 {	
 	setupUi(this);
-	type = 11;
-	idText  = tr("");
+	type = StilUtils::WIN_TYPE_FINISHED_UL;
+	idText  = "";
 	setWindowTitle(tr("UL Fin"));
 }

@@ -23,7 +23,7 @@
 DownLoadQueueWindow::DownLoadQueueWindow(QWidget *parent) : MdiChild(parent)
 {	
 	setupUi(this);
-	type = 6;
-	idText  = tr("");
+	type = StilUtils::WIN_TYPE_DL_QUEUE;
+	idText  = "";
 	setWindowTitle(tr("DL Queue"));
 }
