@@ -34,3 +34,9 @@ QModelIndex QDLTreeWidget::indexFromItem(QTreeWidgetItem* it, int column) const
 {
 	return QTreeWidget::indexFromItem(it, column);
 }
+
+void QDLTreeWidget::keyPressEvent(QKeyEvent *e)
+{
+	QTreeWidget::keyPressEvent(e);
+	emit sig_KeyPressEvent(e);
+}

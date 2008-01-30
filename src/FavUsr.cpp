@@ -40,6 +40,11 @@ void FavoriteUsersWindow::on_list_currentItemChanged(QTreeWidgetItem *c, QTreeWi
 	delete ui;
 }
 
+void FavoriteUsersWindow::listkeyPressEvent(QKeyEvent *e)
+{
+	if ( e->key() == Qt::Key_Delete) slot_remove_user();
+}
+
 FavoriteUsersWindow::FavoriteUsersWindow(QWidget *parent) : MdiChild(parent)
 {
 	setupUi(this);
@@ -54,6 +59,7 @@ FavoriteUsersWindow::FavoriteUsersWindow(QWidget *parent) : MdiChild(parent)
 	list->setAlternatingRowColors(true);
 	list->sortByColumn(0,Qt::AscendingOrder);
 	
+	connect(list, SIGNAL(sig_KeyPressEvent(QKeyEvent *)), this, SLOT(listkeyPressEvent(QKeyEvent *)) );
 	connect(list, SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)), this, SLOT(on_list_currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)) );
 	connect(btn_Delete, SIGNAL(clicked()), this, SLOT(slot_remove_user()) );
 	connect(btn_Ignore, SIGNAL(clicked()), this, SLOT(slot_ignore_user()) );
@@ -86,7 +92,7 @@ void FavoriteUsersWindow::addUser(const FavoriteUser& aUser)
 	QTreeWidgetItem *it = new QTreeWidgetItem(list);
 	datalistitem << list->indexFromItem(it);
 	it->setText(0, StilUtils::TstrtoQ(Text::toT(aUser.getNick())));
-	it->setIcon(0,QIcon(":/images/icon_error.png"));
+	it->setIcon(0,QIcon(":/images/fav_user1.png")); // or "fav_user2.png" ??
 	setUpdatesEnabled(true);
 }
 
@@ -110,7 +116,8 @@ void FavoriteUsersWindow::slot_remove_user()
 	if (lt.isEmpty()) return;
 	for (int i = 0; i < lt.size(); i++)
 	{
-		UserInfo * ui = new UserInfo(datalist[datalistitem.indexOf(list->indexFromItem(lt[i]))]);
+		int idx = datalistitem.indexOf(list->indexFromItem(lt[i]));
+		UserInfo * ui = new UserInfo(datalist[idx]);
 		ui->remove();
 		// After deleting next in list ModelIndexes changed!!!
 		// It need to fix ModelIndexes 
@@ -120,6 +127,7 @@ void FavoriteUsersWindow::slot_remove_user()
 			QTreeWidgetItem *w = list->itemFromIndex(datalistitem[j]);
 			datalistitem[j] = list->indexFromItem(w);
 		}
+			list->setCurrentItem(list->topLevelItem(idx));
 		////////////
 		delete ui;
 	}

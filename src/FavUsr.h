@@ -100,6 +100,7 @@ private:
 private slots:
 	void onAutoGrant(int);
 	void on_list_currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *);
+	void listkeyPressEvent(QKeyEvent *);
 	void slot_remove_user();
 	void slot_ignore_user();
 	void slot_desc_user();

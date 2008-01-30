@@ -30,6 +30,9 @@ public:
 	QDLTreeWidget(QWidget * parent = 0);
 	QTreeWidgetItem* itemFromIndex(const QModelIndex&) const;
 	QModelIndex indexFromItem(QTreeWidgetItem* it, int column = 0) const;
+	void keyPressEvent(QKeyEvent *); 
+signals:
+	void sig_KeyPressEvent(QKeyEvent *);
 };
 
 #endif
