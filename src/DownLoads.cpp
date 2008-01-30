@@ -81,8 +81,8 @@ DownLoadsWindow::DownLoadsWindow(QWidget *parent) : MdiChild(parent), startup(tr
 	downloads->header()->setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(downloads->header(), SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showColumnMenu(const QPoint&)));
 	// ADDING LISTENERS
-	QueueManager::getInstance()->addListener(this);
-	DownloadManager::getInstance()->addListener(this);
+//	QueueManager::getInstance()->addListener(this);
+//	DownloadManager::getInstance()->addListener(this);
 }
 
 DownLoadsWindow::~DownLoadsWindow()
@@ -107,8 +107,8 @@ DownLoadsWindow::~DownLoadsWindow()
 	SettingsManager::getInstance()->set(SettingsManager::DOWNLOADSFRAME_ORDER, rr.toStdString());
 	
 	// REMOVING LISTENERS
-	QueueManager::getInstance()->removeListener(this);
-	DownloadManager::getInstance()->removeListener(this);
+//	QueueManager::getInstance()->removeListener(this);
+//	DownloadManager::getInstance()->removeListener(this);
 	
 	delete columnMenu;
 }

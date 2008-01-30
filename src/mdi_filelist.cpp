@@ -43,7 +43,9 @@ FileListDlg::FileListDlg(QWidget *parent, const UserPtr &aUser, int64_t aSpeed, 
 	contentLabels << QObject::tr("Filename") << QObject::tr("Size") << QObject::tr("Type") 
 					<< QObject::tr("TTH") << QObject::tr("Exact size");
 	contentTree -> setHeaderLabels(contentLabels);
-	
+
+	contentTree->setSelectionMode(QAbstractItemView::ExtendedSelection);
+
 	folderIcon.addPixmap(style()->standardPixmap(QStyle::SP_DirClosedIcon),
 						QIcon::Normal, QIcon::Off);
 	folderIcon.addPixmap(style()->standardPixmap(QStyle::SP_DirOpenIcon),
@@ -247,9 +249,57 @@ QTreeWidgetItem* FileListDlg::findItemFromRightPanel(QTreeWidgetItem* item)
 
 void FileListDlg::downloadClicked()
 {
-	QTreeWidgetItem *curItem = contentTree->currentItem();
+	QList<QTreeWidgetItem *> curItems = contentTree->selectedItems();
 	
-	qDebug() << "Item" << curItem->text(0) << "right clicked";
+	for (QList<QTreeWidgetItem *>::const_iterator itemIter = curItems.begin(); itemIter != curItems.end(); ++itemIter)
+	{
+		DirectoryListing::Directory* dir = getSelectedDir();
+
+		if ((*itemIter)->text(2) == "File")
+		{
+			qDebug() << "File clicked";
+
+			DirectoryListing::File::List *files = &(dir->files);
+			DirectoryListing::File* file = NULL;
+			DirectoryListing::File::Iter fileIter;
+		
+			for (fileIter = files->begin(); fileIter != files->end(); ++fileIter)
+			{
+				QString fileName(StilUtils::TstrtoQ(Text::toT(Util::getFileName((*fileIter)->getName()))));
+		
+				if (fileName == (*itemIter)->text(0))
+				{
+					file = (*fileIter);
+					break;
+				}
+			}
+		
+			if (file == NULL) return;
+
+			listing.download(file, SETTING(DOWNLOAD_DIRECTORY) + Text::fromT(StilUtils::QtoTstr((*itemIter)->text(0))), false,  false);
+		}
+		else if ((*itemIter)->text(2) == "Dir")
+		{
+			DirectoryListing::Directory::List *dirs = &(dir->directories);
+			DirectoryListing::Directory::Iter dirIter;
+			DirectoryListing::Directory *dir = NULL;
+
+			for (dirIter = dirs->begin(); dirIter != dirs->end(); ++dirIter)
+			{
+				QString dirName(StilUtils::TstrtoQ(Text::toT(Util::getFileName((*dirIter)->getName()))));
+
+				if (dirName == (*itemIter)->text(0))
+				{
+					dir = (*dirIter);
+					break;
+				}
+			}
+		
+			if (dir == NULL) return;
+		
+			listing.download(dir, SETTING(DOWNLOAD_DIRECTORY), false);
+		}
+	}
 }
 
 string FileListDlg::getNickFromFilename(const string& fileName)
