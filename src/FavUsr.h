@@ -37,7 +37,6 @@
 
 #include "ui_fav_users.h"
 
-#include <QtDebug>
 #include <QtGui>
 
 using namespace std;

@@ -22,30 +22,20 @@
 
 void FavoriteUsersWindow::on_list_currentItemChanged(QTreeWidgetItem *c, QTreeWidgetItem *)
 {
-	qDebug() << "on_list_currentItemChanged 1";
 	if (!c) return;
 	if (datalist.isEmpty()) return;
 	// Changing information in right panel
-	qDebug() << "on_list_currentItemChanged : step 1";
-	int fff = datalistitem.indexOf(list->indexFromItem(c));
-	if (fff<0) return; //DEBUG HACK. DELETE IT AFTER
-	qDebug() << "on_list_currentItemChanged : step 1.2" << fff; 
-	UserInfo *ui = datalist.at(fff);
-	qDebug() << "on_list_currentItemChanged : step 2";
+	UserInfo *ui = datalist.at(datalistitem.indexOf(list->indexFromItem(c)));
 	cb_AutoSlot->setChecked(FavoriteUser::FLAG_GRANTSLOT);
 	lbl_Hub->setText(StilUtils::TstrtoQ(ui->getText(COLUMN_HUB)));
 	lbl_time->setText(StilUtils::TstrtoQ(ui->getText(COLUMN_SEEN)));
 	lbl_CID->setText(StilUtils::TstrtoQ(ui->getText(COLUMN_CID)));
 	lbl_Desc->setText(StilUtils::TstrtoQ(ui->getText(COLUMN_DESCRIPTION)));
-	qDebug() << "on_list_currentItemChanged : step 3";
-	//
-	currentLabel->setText("<h1>" + c->text(COLUMN_NICK) + "</h1>");
-	qDebug() << "on_list_currentItemChanged 2";
+	currentLabel->setText("<h1>" + StilUtils::TstrtoQ(ui->getText(COLUMN_NICK)) + "</h1>");
 }
 
 FavoriteUsersWindow::FavoriteUsersWindow(QWidget *parent) : MdiChild(parent)
 {
-	qDebug() << "constructor 1";
 	setupUi(this);
 	type = 7;
 	idText  = "";
@@ -73,7 +63,6 @@ FavoriteUsersWindow::FavoriteUsersWindow(QWidget *parent) : MdiChild(parent)
 	FavoriteManager::getInstance()->addListener(this);
 	
 	list->setCurrentItem(list->topLevelItem(0));
-	qDebug() << "constructor 2";
 }
 
 FavoriteUsersWindow::~FavoriteUsersWindow()
@@ -86,51 +75,50 @@ FavoriteUsersWindow::~FavoriteUsersWindow()
 
 void FavoriteUsersWindow::addUser(const FavoriteUser& aUser) 
 {
-	qDebug() << "addUser 1";
 	datalist << new UserInfo(aUser);
 	setUpdatesEnabled(false);
 	QTreeWidgetItem *it = new QTreeWidgetItem(list);
+	datalistitem << list->indexFromItem(it);
 	it->setText(0, StilUtils::TstrtoQ(Text::toT(aUser.getNick())));
 	it->setIcon(0,QIcon(":/images/icon_error.png"));
-	datalistitem << list->indexFromItem(it);
 	setUpdatesEnabled(true);
-	qDebug() << "addUser 2";
 }
 
 void FavoriteUsersWindow::updateUser(const UserPtr& aUser) 
 {
-	qDebug() << "UpdateUser 1";
 	for(int i = 0; i < datalist.size(); ++i) 
 	{
 		UserInfo *ui = datalist.at(i);
 		if(ui->user == aUser) 
 		{
 			ui->columns[COLUMN_SEEN] = aUser->isOnline() ? T_("Online") : Text::toT(Util::formatTime("%Y-%m-%d %H:%M", FavoriteManager::getInstance()->getLastSeen(aUser)));
+			lbl_time->setText(StilUtils::TstrtoQ(ui->getText(COLUMN_SEEN)));
 		}
 	}
-	qDebug() << "UpdateUser 2";
 }
 
 void FavoriteUsersWindow::slot_remove_user()
 {
-	qDebug() << "SlotRemoveUser 1";
-	qDebug() << "SlotRemoveUser 1.1: was: " << datalist.size();
-	qDebug() << "SlotRemoveUser 1.2: was: " << datalistitem.size();
 	QList<QTreeWidgetItem *> lt = list->selectedItems();
 	if (lt.isEmpty()) return;
 	for (int i = 0; i < lt.size(); i++)
 	{
 		UserInfo * ui = datalist.at(datalistitem.indexOf(list->indexFromItem(lt[0])));
 		ui->remove();
+		// After deleting next in list ModelIndexes changed!!!
+		// It need to fix ModelIndexes 
+		// Qt BUG ???
+		for (int j = 0; j < datalistitem.size(); j++)
+		{
+			QTreeWidgetItem *w = list->itemFromIndex(datalistitem[j]);
+			datalistitem[j] = list->indexFromItem(w);
+		}
+		////////////
 	}
-	qDebug() << "SlotRemoveUser 1.8: now: " << datalistitem.size();
-	qDebug() << "SlotRemoveUser 1.9: now: " << datalist.size();
-	qDebug() << "SlotRemoveUser 2";
 }
 
 void FavoriteUsersWindow::removeUser(const FavoriteUser& aUser)
 {
-	qDebug() << "RemoveUser 1";
 	if (!datalist.isEmpty())
 		for(int i = 0; i < datalist.size(); ++i) 
 		{
@@ -141,20 +129,12 @@ void FavoriteUsersWindow::removeUser(const FavoriteUser& aUser)
 				setUpdatesEnabled(false);
 				delete list->itemFromIndex(datalistitem.at(i));
 				datalistitem.removeAt(i);
-				qDebug() << "TEST ";
-				qDebug() << "TEST size" << datalist.size();
-				qDebug() << "TEST :" << i;
-				qDebug() << "TEST _bool_:" << (datalist.at(i));
 				datalist.removeAt(i);
-				qDebug() << "TEST size" << datalist.size();
-				qDebug() << "TEST _bool_:" << (datalist.at(i));
 				setUpdatesEnabled(true);
 				// END OF DELETING
-				qDebug() << "RemoveUser 2";
 				return;
 			}
 		}
-	qDebug() << "RemoveUser 0";
 }
 
 void FavoriteUsersWindow::slot_ignore_user()
@@ -179,13 +159,11 @@ void FavoriteUsersWindow::slot_desc_user()
 
 void FavoriteUsersWindow::onAutoGrant(int value)
 {
-	qDebug() << "onAutoGrant 1";
 	if (!cb_AutoSlot->isEnabled()) return;
 	QTreeWidgetItem *it = list->currentItem();
 	if (!it) return;
 	UserInfo *ui = datalist.at(datalistitem.indexOf(list->indexFromItem(it)));
 	if (ui) FavoriteManager::getInstance()->setAutoGrant(ui->user, static_cast<bool>(value));
-	qDebug() << "onAutoGrant 2";
 }
 
 void FavoriteUsersWindow::on(UserAdded, const FavoriteUser& aUser) throw() 

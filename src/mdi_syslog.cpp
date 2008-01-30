@@ -49,7 +49,13 @@ SysLogWindow::SysLogWindow(QWidget *parent) : MdiChild(parent)
 
 void SysLogWindow::addLine(time_t t, const tstring& msg)
 {
-	textEdit->textCursor().insertText( "\r\n[" + StilUtils::TstrtoQ(Text::toT(Util::getShortTimeString(t))) + "] " + StilUtils::TstrtoQ(msg) );
+	QTextCursor cursor(textEdit->document());
+	int p = cursor.position();
+	cursor.movePosition(QTextCursor::End);
+	cursor.beginEditBlock();
+	cursor.insertText( "\r\n[" + StilUtils::TstrtoQ(Text::toT(Util::getShortTimeString(t))) + "] " + StilUtils::TstrtoQ(msg) );
+	cursor.endEditBlock();
+	cursor.setPosition(p);
 }
 
 void SysLogWindow::slotSpeak(time_t t, tstring s)

@@ -305,6 +305,15 @@ void DownLoadsWindow::slotSpeak(int wParam, const QString & lParam)
 					if (w) delete w;
 					datalist.removeAt(i);
 					datalistitem.removeAt(i);
+					// After deleting next in list ModelIndexes changed!!!
+					// It need to fix ModelIndexes 
+					// Qt BUG ???
+					for (int j = 0; j < datalistitem.size(); j++)
+					{
+						QTreeWidgetItem *w = downloads->itemFromIndex(datalistitem[j]);
+						datalistitem[j] = downloads->indexFromItem(w);
+					}
+					////////////
 				}
 				downloads->setUpdatesEnabled(true);
 			}

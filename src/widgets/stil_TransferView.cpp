@@ -431,6 +431,15 @@ void TransferView::IIerase(int index)
 			if (w) delete w;
 			datalist.removeAt(index);
 			datalistitem.removeAt(index);
+			// After deleting next in list ModelIndexes changed!!!
+			// It need to fix ModelIndexes 
+			// Qt BUG ???
+			for (int j = 0; j < datalistitem.size(); j++)
+			{
+				QTreeWidgetItem *w = itemFromIndex(datalistitem[j]);
+				datalistitem[j] = indexFromItem(w);
+			}
+			////////////
 		}
 	setUpdatesEnabled(true);
 }
