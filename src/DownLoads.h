@@ -32,21 +32,9 @@
 #include "client/DCPlusPlus.h"
 #include "client/Text.h"
 #include "client/DownloadManagerListener.h"
-#include "client/UploadManagerListener.h"
-#include "client/ConnectionManagerListener.h"
-#include "client/FavoriteManagerListener.h"
-#include "client/TaskQueue.h"
-#include "client/forward.h"
-#include "client/Util.h"
 #include "client/Download.h"
-#include "client/Upload.h"
-#include "client/ResourceManager.h"
-#include "client/SettingsManager.h"
-#include "client/ConnectionManager.h"
 #include "client/DownloadManager.h"
-#include "client/UploadManager.h"
 #include "client/QueueManager.h"
-#include "client/ClientManager.h"
 //
 
 #include <QtGui>
@@ -144,9 +132,6 @@ private:
 	TickInfo convQString2Tick(const QString &);
 	
 	int find(const string& path);
-
-	//bool handleContextMenu(SmartWin::ScreenCoordinate pt);
-	//LRESULT handleSpeaker(WPARAM wParam, LPARAM lParam);
 	
 	virtual void on(DownloadManagerListener::Tick, const DownloadList&) throw();
 	virtual void on(DownloadManagerListener::Complete, Download*) throw();

@@ -81,8 +81,8 @@ DownLoadsWindow::DownLoadsWindow(QWidget *parent) : MdiChild(parent), startup(tr
 	downloads->header()->setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(downloads->header(), SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showColumnMenu(const QPoint&)));
 	// ADDING LISTENERS
-//	QueueManager::getInstance()->addListener(this);
-//	DownloadManager::getInstance()->addListener(this);
+	QueueManager::getInstance()->addListener(this);
+	DownloadManager::getInstance()->addListener(this);
 }
 
 DownLoadsWindow::~DownLoadsWindow()
@@ -107,8 +107,8 @@ DownLoadsWindow::~DownLoadsWindow()
 	SettingsManager::getInstance()->set(SettingsManager::DOWNLOADSFRAME_ORDER, rr.toStdString());
 	
 	// REMOVING LISTENERS
-//	QueueManager::getInstance()->removeListener(this);
-//	DownloadManager::getInstance()->removeListener(this);
+	QueueManager::getInstance()->removeListener(this);
+	DownloadManager::getInstance()->removeListener(this);
 	
 	delete columnMenu;
 }
@@ -180,8 +180,11 @@ void DownLoadsWindow::DownloadInfo::_update()
 	} 
 	else 
 	{
-		columns[COLUMN_STATUS] = str(TFN_("Downloading from %1% user", "Downloading from %1% users", users) % users);
+		columns[COLUMN_STATUS] =  str(TFN_("Downloading from %1% user", "Downloading from %1% users", users) % users);
+		// StilUtils::QtoTstr( QString("Downloading from %1 user(s)").arg(users) );
+		
 		columns[COLUMN_TIMELEFT] = Text::toT(Util::formatSeconds(static_cast<int64_t>(timeleft())));
+		
 		columns[COLUMN_SPEED] = str(TF_("%1%/s") % Text::toT(Util::formatBytes(static_cast<int64_t>(bps))));
 	}
 	columns[COLUMN_DONE] = Text::toT(Util::formatBytes(done));
@@ -192,7 +195,8 @@ int DownLoadsWindow::find(const string& path)
 	for(int64_t i = 0; i < datalist.size(); ++i) 
 	{
 		DownloadInfo* di = datalist.at(i);
-		if(Util::stricmp(di->path, path) == 0) return i;
+		if( StilUtils::TstrtoQ(Text::toT(di->path)) == StilUtils::TstrtoQ(Text::toT(path)) ) 
+			return i;
 	}
 	return -1;
 }
@@ -222,10 +226,8 @@ void DownLoadsWindow::on(DownloadManagerListener::Tick, const DownloadList& l) t
 		ti->bps += d->getAverageSpeed();
 		ti->done += d->getPos();
 	}
-	
 	for(std::vector<TickInfo*>::iterator i = dis.begin(); i != dis.end(); ++i)
 		emit sigSpeak(SPEAKER_TICK, convTick2QString(*i));
-		
 }
 
 void DownLoadsWindow::on(DownloadManagerListener::Complete, Download* d) throw() 
@@ -248,7 +250,7 @@ void DownLoadsWindow::slotSpeak(int wParam, const QString & lParam)
 	if(wParam == SPEAKER_TICK) 
 	{
 		TickInfo ti = convQString2Tick(lParam);
-		if (strcmp(ti.path.c_str(), "") == 0) return; //check
+		if (StilUtils::TstrtoQ(Text::toT(ti.path)) == QString() ) return; //check
 		int i = find(ti.path);
 		if(i == -1) 
 		{
@@ -257,23 +259,27 @@ void DownLoadsWindow::slotSpeak(int wParam, const QString & lParam)
 			TTHValue tth;
 			if(QueueManager::getInstance()->getTTH(ti.path, tth)) 
 			{
-				datalist << new DownloadInfo(ti.path, size, tth);
+				DownloadInfo *di = new DownloadInfo(ti.path, size, tth);
+				datalist << di;
 				QStringList lst;
-				for (int j=COLUMN_FIRST; j<COLUMN_LAST; j++) 
-					lst << StilUtils::TstrtoQ(datalist.last()->getText(j));
+				for (int j=COLUMN_FIRST; j<COLUMN_LAST; j++) lst << StilUtils::TstrtoQ(di->getText(j));
 				downloads->setUpdatesEnabled(false);
 				QTreeWidgetItem *fItem = new QTreeWidgetItem(downloads, lst); // FOR FUTURE ADDING ProgressBar
+				datalistitem << downloads->indexFromItem(fItem);
 				downloads->setUpdatesEnabled(true);
 			} 
 			else return;
 		}
-		DownloadInfo* di = datalist.at(i);
-		di->_update(ti);
-				downloads->setUpdatesEnabled(false);
-				for (int j=COLUMN_FIRST; j<COLUMN_LAST; j++)
-					downloads->itemFromIndex(datalistitem[i])->setText(i, StilUtils::TstrtoQ(datalist[i]->columns[j]) );
-				downloads->setUpdatesEnabled(true);
-	} 
+		else
+		{
+			datalist[i]->_update(ti);
+			downloads->setUpdatesEnabled(false);
+			for (int j=COLUMN_FIRST; j<COLUMN_LAST; j++)
+				//if ( StilUtils::TstrtoQ(datalist[i]->getText(j)) != QString() )
+					downloads->itemFromIndex(datalistitem[i])->setText(j, StilUtils::TstrtoQ(datalist[i]->getText(j)) );
+			downloads->setUpdatesEnabled(true);
+		}
+	}
 	else 
 		if(wParam == SPEAKER_DISCONNECTED) 
 		{
@@ -281,13 +287,13 @@ void DownLoadsWindow::slotSpeak(int wParam, const QString & lParam)
 			int i = find(path);
 			if(i != -1) 
 			{
-				DownloadInfo* di = datalist.at(i);
+				DownloadInfo* di = datalist[i];
 				if(--di->users == 0) di->bps = 0;
 				di->_update();
 				
 				downloads->setUpdatesEnabled(false);
 				for (int j=COLUMN_FIRST; j<COLUMN_LAST; j++)
-					downloads->itemFromIndex(datalistitem[i])->setText(i, StilUtils::TstrtoQ(datalist[i]->columns[j]) );
+					downloads->itemFromIndex(datalistitem[i])->setText(j, StilUtils::TstrtoQ(di->getText(j)) );
 				downloads->setUpdatesEnabled(true);
 			}
 		} 
@@ -299,15 +305,16 @@ void DownLoadsWindow::slotSpeak(int wParam, const QString & lParam)
 			if(i != -1) 
 			{
 				downloads->setUpdatesEnabled(false);
-				if (datalist.at(i))
+				if (datalist[i])
 				{
 					QTreeWidgetItem *w = downloads->itemFromIndex(datalistitem[i]);
 					if (w) delete w;
 					datalist.removeAt(i);
 					datalistitem.removeAt(i);
-					// After deleting next in list ModelIndexes changed!!!
-					// It need to fix ModelIndexes 
-					// Qt BUG ???
+					/*	After deleting next in list ModelIndexes changed!!!
+						It need to fix ModelIndexes 
+						Qt BUG ???
+					*/
 					for (int j = 0; j < datalistitem.size(); j++)
 					{
 						QTreeWidgetItem *w = downloads->itemFromIndex(datalistitem[j]);
