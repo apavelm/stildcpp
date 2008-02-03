@@ -211,7 +211,7 @@ void MainWindowImpl::clientInit()
 	startSocket();
 	
 	if(BOOLSETTING(OPEN_SYSTEM_LOG)) SLogFunc();
-	if(BOOLSETTING(OPEN_DOWNLOADS)) DLoadsFunc();
+//	if(BOOLSETTING(OPEN_DOWNLOADS)) DLoadsFunc();
 	if(BOOLSETTING(OPEN_FAVORITE_USERS)) FavUsrFunc();
 	if(BOOLSETTING(OPEN_QUEUE)) DLQueueFunc();
 	if(BOOLSETTING(OPEN_FINISHED_DOWNLOADS)) DLFinFunc();

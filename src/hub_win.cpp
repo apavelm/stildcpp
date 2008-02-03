@@ -507,8 +507,8 @@ void HubWindow::on(HubUpdated, Client*) throw() {
 	speak(SET_TAB_TOOLTIP, client->getHubDescription());
 }
 
-void HubWindow::on(Message, Client*, const OnlineUser& from, const string& msg) throw() {
-	speak(ADD_CHAT_LINE, Util::formatMessage(from.getIdentity().getNick(), msg));
+void HubWindow::on(Message, Client*, const OnlineUser& from, const string& msg, bool thirdPerson) throw() {
+	speak(ADD_CHAT_LINE, Util::formatMessage(from.getIdentity().getNick(), msg,  thirdPerson));
 }
 
 void HubWindow::on(StatusMessage, Client*, const string& line) throw() {
@@ -525,8 +525,8 @@ void HubWindow::on(StatusMessage, Client*, const string& line) throw() {
 	}
 }
 
-void HubWindow::on(PrivateMessage, Client*, const OnlineUser& from, const OnlineUser& to, const OnlineUser& replyTo, const string& line) throw() {
-	speak(from, to, replyTo, Util::formatMessage(from.getIdentity().getNick(), line));
+void HubWindow::on(PrivateMessage, Client*, const OnlineUser& from, const OnlineUser& to, const OnlineUser& replyTo, const string& line, bool thirdPerson) throw() {
+	speak(from, to, replyTo, Util::formatMessage(from.getIdentity().getNick(), line, thirdPerson));
 }
 
 void HubWindow::on(NickTaken, Client*) throw() {

@@ -112,6 +112,10 @@ public:
 		}
 		return ret;
 	}
+
+	static std::string linuxSeparator(const std::string &s);
+	static std::string windowsSeparator(const std::string &s);
+
 };
 
 #endif // of StilUtils

@@ -1,6 +1,8 @@
 /***************************************************************************
  *   Copyright (C) 2007 by Pavel Andreev                                   *
  *   Mail: apavelm on gmail dot com (apavelm@gmail.com)                    *
+ *   Copyright (C) 2007 by Yakov Suraev aka BigBiker                       *
+ *   Mail: adminbsd on gmail dot com (adminbsd@gmail.com)                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,6 +24,9 @@
 
 TStringList SearchWindow::lastSearches;
 
+static QIcon folderIcon;
+static QIcon fileIcon;
+
 SearchWindow::SearchWindow(QWidget *parent, const QString &what, const tstring& initialString_, int64_t initialSize_, SearchManager::SizeModes initialMode_, SearchManager::TypeModes initialType_) : MdiChild(parent),
 isHash(false),
 onlyFree(BOOLSETTING(SEARCH_ONLY_FREE_SLOTS)),
@@ -35,13 +40,22 @@ initialType(initialType_)
 	idText  = what;
 	setTabText(tr("Search for: ")+what);
 
-	connect(searchButton, SIGNAL(pressed()), this, SLOT(SearchBtn()));
+	folderIcon.addPixmap(style()->standardPixmap(QStyle::SP_DirClosedIcon),
+						QIcon::Normal, QIcon::Off);
+	folderIcon.addPixmap(style()->standardPixmap(QStyle::SP_DirOpenIcon),
+						QIcon::Normal, QIcon::On);
+	fileIcon.addPixmap(style()->standardPixmap(QStyle::SP_FileIcon));
+
+//	connect(searchButton, SIGNAL(pressed()), this, SLOT(SearchBtn()));
 	connect(searchButton, SIGNAL(clicked()), this, SLOT(SearchBtn()));
-	connect(purgeButton, SIGNAL(pressed()), this, SLOT(purgeClicked()));
+//	connect(purgeButton, SIGNAL(pressed()), this, SLOT(purgeClicked()));
 	connect(purgeButton, SIGNAL(clicked()), this, SLOT(purgeClicked()));
 	connect(hideZeroSlots, SIGNAL(stateChanged (int)), this, SLOT(zeroStatusChanged(int)));
 	
 	connect(this, SIGNAL(speakerSignal(unsigned int, long)), this, SLOT(handleSpeaker(unsigned int, long)),Qt::QueuedConnection);
+	
+	timer = new QTimer(this);
+	connect(timer, SIGNAL(timeout()), this, SLOT(eachSecond()));
 
 	for(TStringIter i = lastSearches.begin(); i != lastSearches.end(); ++i)
 		searchCombo->insertItem(0, StilUtils::TstrtoQ(*i));
@@ -52,7 +66,8 @@ initialType(initialType_)
 	//hubs = new HubList();
 	initHubs();
 	initSearchList();
-
+	initSearchMenu();
+	
 	ClientManager* clientMgr = ClientManager::getInstance();
 	clientMgr->lock();
 	clientMgr->addListener(this);
@@ -114,6 +129,8 @@ void SearchWindow::hubStateChanged(QListWidgetItem* currentItem)
 SearchWindow::~SearchWindow()
 {
 	delete model;
+	delete timer;
+	
 	SearchManager::getInstance()->removeListener(this);
 	ClientManager::getInstance()->removeListener(this);
 
@@ -130,8 +147,6 @@ void SearchWindow::initSecond()
 		delete timer;
 	}
 */
-	timer = new QTimer(this);
-	connect(timer, SIGNAL(timeout()), this, SLOT(eachSecond()));
 	timer->start(1000);
 }
 
@@ -148,6 +163,8 @@ bool SearchWindow::eachSecond()
 	
 	setStatus(STATUS_STATUS, tr("Ready to search..."));
 	setText(tr("Search - Ready to search..."));
+	
+	timer->stop();
 	
 	return false;
 }
@@ -205,8 +222,8 @@ void SearchWindow::insertSearchResult(SearchInfo* si)
     	
     	if (i == 0)
 		{
-//			item->setIcon(*icon);
-			searchMap.insert(si, item);
+			item->setIcon(*(si->getImage()));
+			searchMap.insert(item, si);
 		}
 
     	itemList << item;
@@ -259,9 +276,9 @@ void SearchWindow::runSearch()
 		return;
 
 	tstring tsize = StilUtils::QtoTstr(sizeLineEdit->text());
-
+	
 	double lsize = Util::toDouble(Text::fromT(tsize));
-	switch(sizeModeCombo->currentIndex()) {
+	switch(sizeTypeCombo->currentIndex()) {
 	case 1:
 		lsize*=1024.0; break;
 	case 2:
@@ -296,9 +313,9 @@ void SearchWindow::runSearch()
 	}
 
 
-	SearchManager::SizeModes mode((SearchManager::SizeModes)sizeTypeCombo->currentIndex());
+	SearchManager::SizeModes searchMode((SearchManager::SizeModes)sizeModeCombo->currentIndex());
 	if(llsize == 0)
-		mode = SearchManager::SIZE_DONTCARE;
+		searchMode = SearchManager::SIZE_DONTCARE;
 
 	int ftype = typeCombo->currentIndex();
 
@@ -317,7 +334,7 @@ void SearchWindow::runSearch()
 		lastSearches.push_back(s);
 	}
 
-	setStatus(STATUS_STATUS, T_("Search for") + s + _T("..."));
+	setStatus(STATUS_STATUS, T_("Search for ") + s + _T("..."));
 	setStatus(STATUS_COUNT, Util::emptyStringT);
 	setStatus(STATUS_FILTERED, Util::emptyStringT);
 	droppedResults = 0;
@@ -325,12 +342,15 @@ void SearchWindow::runSearch()
 
 	setText(T_( "Search") + _T(" - ") + s);
 
-	if(SearchManager::getInstance()->okToSearch()) {
-		SearchManager::getInstance()->search(clients, Text::fromT(s), llsize,
-			(SearchManager::TypeModes)ftype, mode, token);
+	if(SearchManager::getInstance()->okToSearch())
+	{
+		SearchManager::getInstance()->search(clients, Text::fromT(s), llsize, (SearchManager::TypeModes)ftype, searchMode, token);
+/*		qDebug() << "llsize:" << llsize << endl << "ftype:" << ftype << endl << "mode:" << searchMode << endl << "token:" << StilUtils::TstrtoQ(Text::toT(token));*/
 		if(BOOLSETTING(CLEAR_SEARCH)) // Only clear if the search was sent
 			searchCombo->addItem(StilUtils::TstrtoQ(Util::emptyStringT));
-	} else {
+	}
+	else 
+	{
 		int32_t waitFor = SearchManager::getInstance()->timeToSearch();
 		QString msg = QString(StilUtils::TstrtoQ(T_("Searching too soon, next search in %1 seconds"))).arg(waitFor);
 
@@ -341,7 +361,7 @@ void SearchWindow::runSearch()
 		setText(T_( "Search") + _T(" - ") + StilUtils::QtoTstr(msg));
 		// Start the countdown timer
 		initSecond();
-		}
+	}
 }
 
 void SearchWindow::onHubAdded(HubInfo* info)
@@ -532,13 +552,14 @@ int SearchWindow::handleSpeaker(unsigned int wParam, long lParam)
 
 			// Check previous search results for dupes
 			int i, j;
-			QMap<SearchInfo*, QStandardItem*>::const_iterator iter;
+			QMap< QStandardItem*, SearchInfo*>::const_iterator iter;
 			
 			for(iter = searchMap.constBegin(), i = 0, j = model->rowCount(); i < j; ++i, ++iter) 
 			{
-				SearchInfo* si2 = iter.key();
+				SearchInfo* si2 = iter.value();
 				SearchResult* sr2 = si2->sr;
-				if((sr->getUser()->getCID() == sr2->getUser()->getCID()) && (sr->getFile() == sr2->getFile())) {
+				if((sr->getUser()->getCID() == sr2->getUser()->getCID()) && (sr->getFile() == sr2->getFile()))
+				{
 					delete si;
 					return 0;
 				}
@@ -565,13 +586,21 @@ int SearchWindow::handleSpeaker(unsigned int wParam, long lParam)
 	return 0;
 }
 
-void SearchWindow::SearchInfo::update() {
-	if(sr->getType() == SearchResult::TYPE_FILE) {
-		if(sr->getFile().rfind(_T('\\')) == tstring::npos) {
-			columns[COLUMN_FILENAME] = Text::toT(sr->getFile());
-		} else {
-			columns[COLUMN_FILENAME] = Text::toT(Util::getFileName(sr->getFile()));
-			columns[COLUMN_PATH] = Text::toT(Util::getFilePath(sr->getFile()));
+void SearchWindow::SearchInfo::update()
+{
+	if(sr->getType() == SearchResult::TYPE_FILE)
+	{//PORT_ME
+		string file_sep = StilUtils::linuxSeparator(sr->getFile());
+
+		if(file_sep.rfind(_T('/')) == tstring::npos)
+      /////////////
+		{
+			columns[COLUMN_FILENAME] = Text::toT(file_sep);
+		} 
+		else 
+		{
+			columns[COLUMN_FILENAME] = Text::toT(Util::getFileName(file_sep));
+			columns[COLUMN_PATH] = Text::toT(Util::getFilePath(file_sep));
 		}
 
 		columns[COLUMN_TYPE] = Text::toT(Util::getFileExt(Text::fromT(columns[COLUMN_FILENAME])));
@@ -579,11 +608,15 @@ void SearchWindow::SearchInfo::update() {
 			columns[COLUMN_TYPE].erase(0, 1);
 		columns[COLUMN_SIZE] = Text::toT(Util::formatBytes(sr->getSize()));
 		columns[COLUMN_EXACT_SIZE] = Text::toT(Util::formatExactSize(sr->getSize()));
-	} else {
-		columns[COLUMN_FILENAME] = Text::toT(sr->getFileName());
-		columns[COLUMN_PATH] = Text::toT(sr->getFile());
+	} 
+	else 
+	{//PORT_ME
+		columns[COLUMN_FILENAME] = Text::toT(StilUtils::linuxSeparator(sr->getFileName()));
+		columns[COLUMN_PATH] = Text::toT(StilUtils::linuxSeparator(sr->getFile()));
+     //////////
 		columns[COLUMN_TYPE] = StilUtils::QtoTstr(tr("Directory"));
-		if(sr->getSize() > 0) {
+		if(sr->getSize() > 0)
+		{
 			columns[COLUMN_SIZE] = Text::toT(Util::formatBytes(sr->getSize()));
 			columns[COLUMN_EXACT_SIZE] = Text::toT(Util::formatExactSize(sr->getSize()));
 		}
@@ -593,20 +626,177 @@ void SearchWindow::SearchInfo::update() {
 	columns[COLUMN_HUB] = Text::toT(sr->getHubName());
 	columns[COLUMN_SLOTS] = Text::toT(sr->getSlotString());
 	columns[COLUMN_IP] = Text::toT(sr->getIP());
-	if (!columns[COLUMN_IP].empty()) {
+	if (!columns[COLUMN_IP].empty())
+	{
 		// Only attempt to grab a country mapping if we actually have an IP address
 		tstring tmpCountry = Text::toT(Util::getIpCountry(sr->getIP()));
 		if(!tmpCountry.empty())
 			columns[COLUMN_IP] = tmpCountry + _T(" (") + columns[COLUMN_IP] + _T(")");
 	}
-	if(sr->getType() == SearchResult::TYPE_FILE) {
+
+	if(sr->getType() == SearchResult::TYPE_FILE)
+	{
         columns[COLUMN_TTH] = Text::toT(sr->getTTH().toBase32());
 	}
 	columns[COLUMN_CID] = Text::toT(sr->getUser()->getCID().toBase32());
 
 }
 
+QIcon* SearchWindow::SearchInfo::getImage() const
+{
+	return sr->getType() == SearchResult::TYPE_FILE ? &fileIcon : &folderIcon;
+}
+
+void SearchWindow::SearchInfo::Download(const tstring& tgt) 
+{
+	try {
+		if(sr->getType() == SearchResult::TYPE_FILE)
+		{
+			string target = Text::fromT(tgt + columns[COLUMN_FILENAME]);
+			QueueManager::getInstance()->add(target, sr->getSize(),
+											 sr->getTTH(), sr->getUser());
+/*
+			if(WinUtil::isShift())
+				QueueManager::getInstance()->setPriority(target, QueueItem::HIGHEST);
+*/
+		} 
+		else 
+		{
+			/*
+			QueueManager::getInstance()->addDirectory(si->sr->getFile(), si->sr->getUser(), Text::fromT(tgt),
+				WinUtil::isShift() ? QueueItem::HIGHEST : QueueItem::DEFAULT);
+			*/
+			QueueManager::getInstance()->addDirectory(sr->getFile(), sr->getUser(), 
+													  Text::fromT(tgt), QueueItem::DEFAULT);
+		}
+	} catch(const Exception&) {
+	}
+}
+
 void SearchWindow::speak(unsigned int wParam, long lParam)
 {
 	emit speakerSignal(wParam, lParam);
 }
+
+void SearchWindow::initSearchMenu()
+{
+	userMenu = new QMenu(searchView);
+	searchView->setContextMenuPolicy(Qt::CustomContextMenu);
+	connect(searchView, SIGNAL(customContextMenuRequested(const QPoint&)), 
+				this, SLOT(showUserMenu(const QPoint&)));
+
+	//connect(treeView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
+	//		this, SLOT(updateActions(const QItemSelection &, const QItemSelection &)));
+	QAction* downloadAction = new QAction(tr("Download"), this);
+	connect(downloadAction, SIGNAL(triggered()), this, SLOT(actionDownload()));
+
+	userMenu->addAction(downloadAction);
+	userMenu->setDefaultAction(downloadAction);
+	
+//	userMenu->addAction(tr("Download"), this, SLOT(actionDownload()));
+
+	userMenu->addAction(tr("Download to..."), this, SLOT(actionDownloadTo()));
+	userMenu->addAction(tr("Download whole directory"), this, SLOT(actionDownloadWholeDir()));
+	userMenu->addAction(tr("Download whole directory to..."), this, SLOT(actionDownloadWholeDirTo()));
+	userMenu->addAction(tr("View as text"), this, SLOT(actionViewAsText()));
+
+	userMenu->addSeparator();
+
+	userMenu->addAction(tr("Search for alternates"), this, SLOT(actionSearchAlt()));
+	userMenu->addAction(tr("Lookup TTH at Bitzi.com"), this, SLOT(actionBitzi()));
+	userMenu->addAction(tr("Copy magnet link to clipboard"), this, SLOT(actionCopyMagnetToClipboard()));
+
+	userMenu->addSeparator();
+
+	userMenu->addAction(tr("Get file list"), this, SLOT(actionGetFilelist()));
+	userMenu->addAction(tr("Match queue"), this, SLOT(actionMatchQueue()));
+	userMenu->addAction(tr("Send private message"), this, SLOT(actionSendPM()));
+	userMenu->addAction(tr("Add to favorites"), this, SLOT(actionAddToFavorites()));
+	userMenu->addAction(tr("Grand extra slot"), this, SLOT(actionGrandExtraSlot()));
+
+	userMenu->addSeparator();
+
+	userMenu->addAction(tr("Remove user from queue"), this, SLOT(actionRemoveUserFromQueue()));
+
+	userMenu->addSeparator();
+
+	userMenu->addAction(tr("Remove"), this, SLOT(actionRemove()));
+}
+
+void SearchWindow::showUserMenu(const QPoint &point)
+{
+    if (searchView->indexAt(point).isValid())
+        userMenu->exec(searchView->mapToGlobal(point));
+}
+
+void SearchWindow::actionDownload()
+{
+	const QModelIndexList indexes = searchView->selectionModel()->selectedRows();
+	
+	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
+	{
+		QStandardItem *item = model->itemFromIndex(*index);
+		
+//		SearchInfo::Download *d = new SearchInfo::Download(Text::toT(SETTING(DOWNLOAD_DIRECTORY)));
+		searchMap.value(item)->Download(Text::toT(SETTING(DOWNLOAD_DIRECTORY)));
+		//SearchInfo::Download(searchMap.value(item));
+		//searchMap.value(item)->();		
+	}
+}
+
+void SearchWindow::actionDownloadTo()
+{
+}
+
+void SearchWindow::actionDownloadWholeDir()
+{
+}
+
+void SearchWindow::actionDownloadWholeDirTo()
+{
+}
+
+void SearchWindow::actionViewAsText()
+{
+}
+
+void SearchWindow::actionSearchAlt()
+{
+}
+
+void SearchWindow::actionBitzi()
+{
+}
+
+void SearchWindow::actionCopyMagnetToClipboard()
+{
+}
+
+void SearchWindow::actionGetFilelist()
+{
+}
+
+void SearchWindow::actionMatchQueue()
+{
+}
+
+void SearchWindow::actionSendPM()
+{
+}
+
+void SearchWindow::actionAddToFavorites()
+{
+}
+
+void SearchWindow::actionGrandExtraSlot()
+{
+}
+
+void SearchWindow::actionRemoveUserFromQueue()
+{
+}
+
+void SearchWindow::actionRemove()
+{
+}
+

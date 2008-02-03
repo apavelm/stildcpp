@@ -1,6 +1,8 @@
 /***************************************************************************
  *   Copyright (C) 2007 by Pavel Andreev                                   *
  *   Mail: apavelm on gmail dot com (apavelm@gmail.com)                    *
+ *   Copyright (C) 2007 by Yakov Suraev aka BigBiker                       *
+ *   Mail: adminbsd on gmail dot com (adminbsd@gmail.com)                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -49,8 +51,27 @@ private slots:
 	bool eachSecond();
 	int handleSpeaker(unsigned int wParam, long lParam);
 	void hubStateChanged(QListWidgetItem * item);
+
+	void actionDownload();
+	void actionDownloadTo();
+	void actionDownloadWholeDir();
+	void	actionDownloadWholeDirTo();
+	void actionViewAsText();
+	void actionSearchAlt();
+	void actionBitzi();
+	void actionCopyMagnetToClipboard();
+	void actionGetFilelist();
+	void actionMatchQueue();
+	void actionSendPM();
+	void actionAddToFavorites();
+	void actionGrandExtraSlot();
+	void actionRemoveUserFromQueue();
+	void actionRemove();
+	void showUserMenu(const QPoint &point);
+
 signals:
 	void speakerSignal(unsigned int wParam, long lParam=0);
+	
 	
 public:
 	SearchWindow(QWidget *parent, const QString &what, const tstring& initialString_ = Util::emptyStringT, int64_t initialSize_ = 0, SearchManager::SizeModes initialMode = SearchManager::SIZE_ATLEAST, SearchManager::TypeModes initialType_ = SearchManager::TYPE_ANY);
@@ -113,6 +134,11 @@ private:
 //		void browseList();
 
 //		void view();
+		void Download(const tstring& tgt);
+//		void DownloadWhole(const tstring& aTarget);
+//		void DownloadTarget(const tstring& aTarget);
+		
+		/*
 		struct Download {
 			Download(const tstring& aTarget) : tgt(aTarget) { }
 			void operator()(SearchInfo* si);
@@ -138,9 +164,9 @@ private:
 			bool firstTTH;
 			tstring tth;
 		};
-
+		*/
 		const tstring& getText(int col) const { return columns[col]; }
-//		int getImage();
+		QIcon* getImage() const;
 
 //		static int compareItems(SearchInfo* a, SearchInfo* b, int col);
 
@@ -215,10 +241,11 @@ private:
 
 	// Use QMap for replacing TypedListView of original client
 	QMap<HubInfo*, QListWidgetItem*> hubMap;
-	QMap<SearchInfo*, QStandardItem*> searchMap;
+	QMap<QStandardItem*, SearchInfo*> searchMap;
 
 	void initHubs();
 	void initSearchList();
+	void initSearchMenu();
 	void runSearch();
 
 	void insertSearchResult(SearchInfo* si);
@@ -226,6 +253,7 @@ private:
 	
 	QStandardItemModel *model;
 	QTimer* timer;
+	QMenu *userMenu;
 	
 	//reimplemented thiz
 	void speak(unsigned int, long=0);

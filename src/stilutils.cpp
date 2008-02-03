@@ -174,4 +174,22 @@ bool StilUtils::getUCParams(QWidget *parent, const UserCommand& uc, StringMap& s
 	return true;
 }
 
+string StilUtils::linuxSeparator(const string &s)
+{
+	string str = s;
+	for (string::iterator it = str.begin(); it != str.end(); ++it)
+		if ((*it) == '\\')
+			(*it) = '/';
+	return str;
+}
+
+string StilUtils::windowsSeparator(const string &s)
+{
+	string str = s;
+	for (string::iterator it = str.begin(); it != str.end(); ++it)
+		if ((*it) == '/')
+			(*it) = '\\';
+	return str;
+}
+
 // of stilutils

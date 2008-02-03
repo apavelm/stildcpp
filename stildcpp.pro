@@ -5,6 +5,7 @@ CONFIG += qt \
  console \
  build_all \
  debug \
+ exception \
  silent
 DESTDIR = bin
 OBJECTS_DIR = build

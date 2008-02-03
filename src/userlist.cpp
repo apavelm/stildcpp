@@ -272,7 +272,6 @@ void HubUserList::initUserMenu()
 	//connect(treeView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
 	//		this, SLOT(updateActions(const QItemSelection &, const QItemSelection &)));
 	
-	//TODO: switch to core defined strings like TSTRING(GET_FILE_LIST)
 	userMenu->addAction(tr("Get file list"), this, SLOT(actionGetFilelist()));
 	userMenu->addAction(tr("Match queue"), this, SLOT(actionMatchQueue()));
 	userMenu->addAction(tr("Send private message"), this, SLOT(actionSendPM()));

@@ -244,9 +244,9 @@ private:
 	virtual void on(Failed, dcpp::Client*, const std::string&) throw();
 	virtual void on(GetPassword, Client*) throw();
 	virtual void on(HubUpdated, Client*) throw();
-	virtual void on(Message, dcpp::Client*, const OnlineUser&, const string&) throw();
+	virtual void on(Message, dcpp::Client*, const OnlineUser&, const string&, bool thirdPerson) throw();
 	virtual void on(StatusMessage, Client*, const string&) throw();
-	virtual void on(PrivateMessage, Client*, const OnlineUser&, const OnlineUser&, const OnlineUser&, const string&) throw();
+	virtual void on(PrivateMessage, Client*, const OnlineUser&, const OnlineUser&, const OnlineUser&, const string&, bool thirdPerson) throw();
 	virtual void on(NickTaken, Client*) throw();
 	virtual void on(SearchFlood, Client*, const string&) throw();
 	
