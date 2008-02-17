@@ -1,7 +1,7 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Pavel Andreev                                   *
+ *   Copyright (C) 2007, 2008 by Pavel Andreev                                   *
  *   Mail: apavelm on gmail dot com (apavelm@gmail.com)                    *
- *   Copyright (C) 2007 by Yakov Suraev aka BigBiker                       *
+ *   Copyright (C) 2007, 2008 by Yakov Suraev aka BigBiker                       *
  *   Mail: adminbsd on gmail dot com (adminbsd@gmail.com)                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -62,6 +62,7 @@ public:
 		14 - NotePad
 		15 - DownLoads Frame
 		16 - System Log
+		17 - TextWindow (view file as text)
 	*/
 	
 	enum tabWinTypes{
@@ -83,6 +84,7 @@ public:
 		,WIN_TYPE_NOTEPAD
 		,WIN_TYPE_DOWNLOADS
 		,WIN_TYPE_SYSTEM_LOG
+		,WIN_TYPE_TEXT_WINDOW
 		,WIN_TYPE_LAST
 	};
 	

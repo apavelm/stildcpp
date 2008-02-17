@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Yakov Suraev aka BigBiker                       *
+ *   Copyright (C) 2007, 2008 by Yakov Suraev aka BigBiker                       *
  *   Mail: adminbsd on gmail dot com (adminbsd@gmail.com)                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "userlist.h"
+#include "mainwindowimpl.h"
 //
 
 HubUserList::~HubUserList()
@@ -361,7 +362,8 @@ void HubUserList::actionSendPM()
 			dcpp::UserPtr user = dcpp::ClientManager::getInstance()->findUser(dcpp::CID(cid));
 			
 			if (user)
-				emit signalOpenPM(NULL, proxyModel->sibling(index->row(), 0, *index).data().toString());
+				//MainWindowImpl::getInstance()->OpenPM(proxyModel->sibling(index->row(), 0, *index).data().toString());
+				MainWindowImpl::getInstance()->OpenPM(user);
 		}
 	}
 }

@@ -1,7 +1,7 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Pavel Andreev                                   *
+ *   Copyright (C) 2007, 2008 by Pavel Andreev                                   *
  *   Mail: apavelm on gmail dot com (apavelm@gmail.com)                    *
- *   Copyright (C) 2007 by Yakov Suraev aka BigBiker                       *
+ *   Copyright (C) 2007, 2008 by Yakov Suraev aka BigBiker                       *
  *   Mail: adminbsd on gmail dot com (adminbsd@gmail.com)                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -67,14 +67,14 @@ private slots:
 	void actionGrandExtraSlot();
 	void actionRemoveUserFromQueue();
 	void actionRemove();
-	void showUserMenu(const QPoint &point);
+	void showSearchMenu(const QPoint &point);
 
 signals:
 	void speakerSignal(unsigned int wParam, long lParam=0);
 	
 	
 public:
-	SearchWindow(QWidget *parent, const QString &what, const tstring& initialString_ = Util::emptyStringT, int64_t initialSize_ = 0, SearchManager::SizeModes initialMode = SearchManager::SIZE_ATLEAST, SearchManager::TypeModes initialType_ = SearchManager::TYPE_ANY);
+	SearchWindow(QWidget *parent, const tstring& initialString_, int64_t initialSize_, SearchManager::SizeModes initialMode, SearchManager::TypeModes initialType_);
 	~SearchWindow();
 
 	enum Status
@@ -133,9 +133,9 @@ private:
 //		void getList();
 //		void browseList();
 
-//		void view();
+		void view();
 		void Download(const tstring& tgt);
-//		void DownloadWhole(const tstring& aTarget);
+		void DownloadWhole(const tstring& tgt);
 //		void DownloadTarget(const tstring& aTarget);
 		
 		/*
@@ -250,14 +250,15 @@ private:
 
 	void insertSearchResult(SearchInfo* si);
 	void clearSearchResult();
+	void removeSearchResult(QStandardItem* item);
 	
 	QStandardItemModel *model;
 	QTimer* timer;
 	QMenu *userMenu;
+	QList<QAction*> fantomActions;
 	
 	//reimplemented thiz
 	void speak(unsigned int, long=0);
-	
 };
 
 #endif // __SEARCHWIN_H__

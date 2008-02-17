@@ -1,6 +1,8 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Pavel Andreev                                   *
+ *   Copyright (C) 2007, 2008 by Pavel Andreev                                   *
  *   Mail: apavelm on gmail dot com (apavelm@gmail.com)                    *
+ *   Copyright (C) 2007, 2008 by Yakov Suraev aka BigBiker                       *
+ *   Mail: adminbsd on gmail dot com (adminbsd@gmail.com)                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,39 +20,29 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef __PM_WIN_H__
-#define __PM_WIN_H__
 
-#include <QFile>
+#ifndef __TEXTWINDOW_H__
+#define __TEXTWINDOW_H__
 
-#include "highlighter.h"
-#include "mdi_c.h"
+#include "config.h"
 #include "stilutils.h"
+#include "mdi_c.h"
 
-//
+#include <QTextStream>
+
 #include "client/stdinc.h"
 #include "client/DCPlusPlus.h"
-#include "client/Client.h"
-#include "client/forward.h"
-#include "client/ClientListener.h"
-#include "client/ClientManager.h"
-#include "client/User.h"
-//
+#include "client/Util.h"
+#include "client/File.h"
+#include "client/Text.h"
 
-#include "ui_PMWindow.h"
+#include "ui_TextWindow.h"
 
-class PMWindow : public MdiChild, private Ui::mdiPMwin
+class TextWindow : public MdiChild, private Ui::mdiTextWindow
 {
 	Q_OBJECT
-private:
-	Highlighter *highlighter;
 public:
-	PMWindow(QWidget *parent, const UserPtr& replyTo, const tstring& aMessage);
-	void setupeditor();
-private slots:
-	void send_pm_msg();
+	TextWindow(QWidget *parent, const string& fileName);
 };
 
-// PRIVATE MESSAGE WINDOW
-
-#endif // __PM_WIN_H__
+#endif // __TEXTWINDOW_H__

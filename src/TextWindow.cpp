@@ -1,6 +1,8 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Pavel Andreev                                   *
+ *   Copyright (C) 2007, 2008 by Pavel Andreev                                   *
  *   Mail: apavelm on gmail dot com (apavelm@gmail.com)                    *
+ *   Copyright (C) 2007, 2008 by Yakov Suraev aka BigBiker                       *
+ *   Mail: adminbsd on gmail dot com (adminbsd@gmail.com)                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,39 +20,39 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef __PM_WIN_H__
-#define __PM_WIN_H__
+#include "TextWindow.h"
 
-#include <QFile>
+using namespace std;
+using namespace dcpp;
 
-#include "highlighter.h"
-#include "mdi_c.h"
-#include "stilutils.h"
+static const size_t MAX_TEXT_LEN = 64*1024;
 
-//
-#include "client/stdinc.h"
-#include "client/DCPlusPlus.h"
-#include "client/Client.h"
-#include "client/forward.h"
-#include "client/ClientListener.h"
-#include "client/ClientManager.h"
-#include "client/User.h"
-//
-
-#include "ui_PMWindow.h"
-
-class PMWindow : public MdiChild, private Ui::mdiPMwin
+TextWindow::TextWindow(QWidget *parent, const string& fileName) : MdiChild(parent)
 {
-	Q_OBJECT
-private:
-	Highlighter *highlighter;
-public:
-	PMWindow(QWidget *parent, const UserPtr& replyTo, const tstring& aMessage);
-	void setupeditor();
-private slots:
-	void send_pm_msg();
-};
+	setupUi(this);
+	type = StilUtils::WIN_TYPE_TEXT_WINDOW;
+	idText = StilUtils::TstrtoQ(Text::toT(fileName));
 
-// PRIVATE MESSAGE WINDOW
+	QFont f = textEdit->font();
+	f.setPointSize(APPSETTING(i_SYSLOGFONTSIZE));
+	textEdit->setFont(f);
 
-#endif // __PM_WIN_H__
+	/*
+	QString tmp(StilUtils::TstrtoQ(Text::toT(fileName)));
+	QFile file(tmp);
+	file.open(QFile::ReadOnly | QFile::Text);
+	*/
+
+	try {
+//		textEdit->setPlainText(StilUtils::TstrtoQ(Text::toT(Text::toDOS(File(fileName, File::READ, File::OPEN).read(MAX_TEXT_LEN)))));
+		textEdit->setPlainText(StilUtils::TstrtoQ(Text::toT(File(fileName, File::READ, File::OPEN).read(MAX_TEXT_LEN))));
+	} catch(const FileException& e)
+	{
+		textEdit->setPlainText(StilUtils::TstrtoQ(Text::toT(e.getError())));
+	}
+
+//	QTextStream in(&file);
+
+//	textEdit->setPlainText(StilUtils::TstrtoQ(Text::toT(Text::toDOS(Text::fromT(StilUtils::QtoTstr(in.read(MAX_TEXT_LEN)))))));
+//	textEdit->setPlainText(in.read(MAX_TEXT_LEN));
+}

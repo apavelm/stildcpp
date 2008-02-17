@@ -1,6 +1,8 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Pavel Andreev                                   *
+ *   Copyright (C) 2007, 2008 by Pavel Andreev                                   *
  *   Mail: apavelm on gmail dot com (apavelm@gmail.com)                    *
+ *   Copyright (C) 2007, 2008 by Yakov Suraev aka BigBiker                       *
+ *   Mail: adminbsd on gmail dot com (adminbsd@gmail.com)                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,6 +21,8 @@
  ***************************************************************************/
 
 #include "mainwindowimpl.h"
+
+//TabWidget* MainWindowImpl::m_tabwin;
 
 MainWindowImpl::~MainWindowImpl()
 {
@@ -57,8 +61,10 @@ MainWindowImpl::~MainWindowImpl()
 	
 	SearchManager::getInstance()->disconnect();
 	ConnectionManager::getInstance()->disconnect();
+/* Moved to main.cpp
 	AppSettings::AppSettingsMgr::deleteInstance();
 	dcpp::shutdown();
+*/
 }
 
 void MainWindowImpl::initMain()
@@ -486,14 +492,16 @@ void MainWindowImpl::OpenHub(const dcpp::tstring& adr, QWidget *parent)
 	m_tabwin->setCurrentIndex(m_tabwin->addTab((new HubWindow(m_tabwin, adr)),"Hub"));
 }
 
-void MainWindowImpl::OpenPM(QWidget *parent, const QString &name)
+void MainWindowImpl::OpenPM(const UserPtr& replyTo, const tstring& aMessage)
 {
-	m_tabwin->setCurrentIndex(m_tabwin->addTab((new PMWindow(m_tabwin,name)),"PM"));
+	m_tabwin->setCurrentIndex(m_tabwin->addTab((new PMWindow(m_tabwin, replyTo, aMessage)),"PM"));
 }
 
-void MainWindowImpl::SearchFunc()
+void MainWindowImpl::SearchFunc(const tstring& str, int64_t size, 
+								SearchManager::SizeModes mode, SearchManager::TypeModes type)
 {
-	m_tabwin->setCurrentIndex(m_tabwin->addTab((new SearchWindow(m_tabwin,"")),"search"));
+	m_tabwin->setCurrentIndex(m_tabwin->addTab((new SearchWindow(m_tabwin, str, size, mode, type)),"search"));
+	//SearchWindow::openWindow();
 }
 
 void MainWindowImpl::SLogFunc()
@@ -834,6 +842,11 @@ void MainWindowImpl::openownfilelistFunc()
 		OpenList(this, dcpp::Text::toT(ownFileList), dcpp::ClientManager::getInstance()->getMe(), 0, StilUtils::TstrtoQ(Text::toT(SETTING(NICK))) );
 }
 
+void MainWindowImpl::openTextWindow(const string& fileName)
+{
+	m_tabwin->setCurrentIndex(m_tabwin->addTab((new TextWindow(m_tabwin, fileName)), StilUtils::TstrtoQ(Text::toT(fileName))));
+}
+
 void MainWindowImpl::RefreshOwnFileListFunc()
 {
 	// Refreshes (rehash) own filelist
@@ -925,10 +938,10 @@ int MainWindowImpl::handleSpeaker(unsigned int wParam, long lParam)
 		//parseCommandLine(GetCommandLine());
 	}
 		break;
-	case VIEW_FILE_AND_DELETE: {/*
+	case VIEW_FILE_AND_DELETE: {
 		boost::scoped_ptr<std::string> file(reinterpret_cast<std::string*>(lParam));
-		new TextFrame(this->getMDIParent(), *file);
-		File::deleteFile(*file);*/
+		openTextWindow(*file);
+		File::deleteFile(*file);
 	}
 		break;
 	case STATUS_MESSAGE: {

@@ -1,7 +1,7 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Pavel Andreev                                   *
+ *   Copyright (C) 2007, 2008 by Pavel Andreev                                   *
  *   Mail: apavelm on gmail dot com (apavelm@gmail.com)                    *
- *   Copyright (C) 2007 by Yakov Suraev aka BigBiker                       *
+ *   Copyright (C) 2007, 2008 by Yakov Suraev aka BigBiker                       *
  *   Mail: adminbsd on gmail dot com (adminbsd@gmail.com)                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -21,13 +21,14 @@
  ***************************************************************************/
 
 #include "SearchWin.h"
+#include "mainwindowimpl.h"
 
 TStringList SearchWindow::lastSearches;
 
 static QIcon folderIcon;
 static QIcon fileIcon;
 
-SearchWindow::SearchWindow(QWidget *parent, const QString &what, const tstring& initialString_, int64_t initialSize_, SearchManager::SizeModes initialMode_, SearchManager::TypeModes initialType_) : MdiChild(parent),
+SearchWindow::SearchWindow(QWidget *parent, const tstring& initialString_, int64_t initialSize_, SearchManager::SizeModes initialMode_, SearchManager::TypeModes initialType_) : MdiChild(parent),
 isHash(false),
 onlyFree(BOOLSETTING(SEARCH_ONLY_FREE_SLOTS)),
 initialString(initialString_),
@@ -37,8 +38,8 @@ initialType(initialType_)
 {	
 	setupUi(this);
 	type = StilUtils::WIN_TYPE_SEARCH;
-	idText  = what;
-	setTabText(tr("Search for: ")+what);
+	idText  = StilUtils::TstrtoQ(initialString);
+	setTabText(tr("Search for: ")+StilUtils::TstrtoQ(initialString));
 
 	folderIcon.addPixmap(style()->standardPixmap(QStyle::SP_DirClosedIcon),
 						QIcon::Normal, QIcon::Off);
@@ -231,6 +232,15 @@ void SearchWindow::insertSearchResult(SearchInfo* si)
 
     parentItem->appendRow(itemList);
 
+}
+
+void SearchWindow::removeSearchResult(QStandardItem* item)
+{
+	QStandardItem *parentItem = model->invisibleRootItem();
+
+	parentItem->removeRow(item->row());
+	
+	searchMap.remove(item);
 }
 
 void SearchWindow::clearSearchResult()
@@ -647,6 +657,17 @@ QIcon* SearchWindow::SearchInfo::getImage() const
 	return sr->getType() == SearchResult::TYPE_FILE ? &fileIcon : &folderIcon;
 }
 
+void SearchWindow::SearchInfo::view()
+{
+	try {
+		if(sr->getType() == SearchResult::TYPE_FILE)
+		{
+			QueueManager::getInstance()->add(Util::getTempPath() + sr->getFileName(), sr->getSize(), 
+											 sr->getTTH(), sr->getUser(), QueueItem::FLAG_CLIENT_VIEW | QueueItem::FLAG_TEXT);
+		}
+	} catch(const Exception&) {}
+}
+
 void SearchWindow::SearchInfo::Download(const tstring& tgt) 
 {
 	try {
@@ -673,6 +694,23 @@ void SearchWindow::SearchInfo::Download(const tstring& tgt)
 	}
 }
 
+void SearchWindow::SearchInfo::DownloadWhole(const tstring& tgt)
+{
+	try {
+		//QueueItem::Priority prio = WinUtil::isShift() ? QueueItem::HIGHEST : QueueItem::DEFAULT;
+		QueueItem::Priority prio = QueueItem::DEFAULT;
+		if(sr->getType() == SearchResult::TYPE_FILE) 
+		{
+			QueueManager::getInstance()->addDirectory(StilUtils::windowsSeparator(Text::fromT(columns[COLUMN_PATH])), 
+				sr->getUser(), Text::fromT(tgt), prio);
+		} 
+		else
+		{
+			QueueManager::getInstance()->addDirectory(sr->getFile(), sr->getUser(), Text::fromT(tgt), prio);
+		}
+	} catch(const Exception&) {}
+}
+
 void SearchWindow::speak(unsigned int wParam, long lParam)
 {
 	emit speakerSignal(wParam, lParam);
@@ -683,17 +721,12 @@ void SearchWindow::initSearchMenu()
 	userMenu = new QMenu(searchView);
 	searchView->setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(searchView, SIGNAL(customContextMenuRequested(const QPoint&)), 
-				this, SLOT(showUserMenu(const QPoint&)));
+				this, SLOT(showSearchMenu(const QPoint&)));
 
 	//connect(treeView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
 	//		this, SLOT(updateActions(const QItemSelection &, const QItemSelection &)));
-	QAction* downloadAction = new QAction(tr("Download"), this);
-	connect(downloadAction, SIGNAL(triggered()), this, SLOT(actionDownload()));
 
-	userMenu->addAction(downloadAction);
-	userMenu->setDefaultAction(downloadAction);
-	
-//	userMenu->addAction(tr("Download"), this, SLOT(actionDownload()));
+	userMenu->setDefaultAction(userMenu->addAction(tr("Download"), this, SLOT(actionDownload())));
 
 	userMenu->addAction(tr("Download to..."), this, SLOT(actionDownloadTo()));
 	userMenu->addAction(tr("Download whole directory"), this, SLOT(actionDownloadWholeDir()));
@@ -702,9 +735,9 @@ void SearchWindow::initSearchMenu()
 
 	userMenu->addSeparator();
 
-	userMenu->addAction(tr("Search for alternates"), this, SLOT(actionSearchAlt()));
-	userMenu->addAction(tr("Lookup TTH at Bitzi.com"), this, SLOT(actionBitzi()));
-	userMenu->addAction(tr("Copy magnet link to clipboard"), this, SLOT(actionCopyMagnetToClipboard()));
+	fantomActions.append(userMenu->addAction(tr("Search for alternates"), this, SLOT(actionSearchAlt())));
+	fantomActions.append(userMenu->addAction(tr("Lookup TTH at Bitzi.com"), this, SLOT(actionBitzi())));
+	fantomActions.append(userMenu->addAction(tr("Copy magnet link to clipboard"), this, SLOT(actionCopyMagnetToClipboard())));
 
 	userMenu->addSeparator();
 
@@ -723,10 +756,15 @@ void SearchWindow::initSearchMenu()
 	userMenu->addAction(tr("Remove"), this, SLOT(actionRemove()));
 }
 
-void SearchWindow::showUserMenu(const QPoint &point)
+void SearchWindow::showSearchMenu(const QPoint &point)
 {
-    if (searchView->indexAt(point).isValid())
-        userMenu->exec(searchView->mapToGlobal(point));
+	if (searchView->indexAt(point).isValid())
+	{
+		foreach (QAction *action, fantomActions)
+			action->setVisible(searchView->selectionModel()->selectedRows().size() <= 1 ? true : false);
+
+		userMenu->exec(searchView->mapToGlobal(point));
+	}
 }
 
 void SearchWindow::actionDownload()
@@ -736,11 +774,8 @@ void SearchWindow::actionDownload()
 	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
 	{
 		QStandardItem *item = model->itemFromIndex(*index);
-		
-//		SearchInfo::Download *d = new SearchInfo::Download(Text::toT(SETTING(DOWNLOAD_DIRECTORY)));
+
 		searchMap.value(item)->Download(Text::toT(SETTING(DOWNLOAD_DIRECTORY)));
-		//SearchInfo::Download(searchMap.value(item));
-		//searchMap.value(item)->();		
 	}
 }
 
@@ -750,6 +785,14 @@ void SearchWindow::actionDownloadTo()
 
 void SearchWindow::actionDownloadWholeDir()
 {
+	const QModelIndexList indexes = searchView->selectionModel()->selectedRows();
+	
+	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
+	{
+		QStandardItem *item = model->itemFromIndex(*index);
+		
+		searchMap.value(item)->DownloadWhole(Text::toT(SETTING(DOWNLOAD_DIRECTORY)));
+	}
 }
 
 void SearchWindow::actionDownloadWholeDirTo()
@@ -758,45 +801,154 @@ void SearchWindow::actionDownloadWholeDirTo()
 
 void SearchWindow::actionViewAsText()
 {
+	const QModelIndexList indexes = searchView->selectionModel()->selectedRows();
+	
+	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
+	{
+		QStandardItem *item = model->itemFromIndex(*index);
+		
+		searchMap.value(item)->view();                                              ;
+	}
 }
 
 void SearchWindow::actionSearchAlt()
 {
+	const QModelIndex index = searchView->selectionModel()->selectedRows().first();
+	
+	QStandardItem *item = model->itemFromIndex(index);
+
+	const tstring tth = searchMap.value(item)->columns[COLUMN_TTH];
+
+	if (tth != Util::emptyStringT)
+		MainWindowImpl::getInstance()->SearchFunc(tth, 0, SearchManager::SIZE_DONTCARE, SearchManager::TYPE_TTH);
 }
 
 void SearchWindow::actionBitzi()
 {
+	const QModelIndex index = searchView->selectionModel()->selectedRows().first();
+	
+	QStandardItem *item = model->itemFromIndex(index);
+
+	const tstring tth = searchMap.value(item)->columns[COLUMN_TTH];
+
+	if (tth != Util::emptyStringT)
+	{
+		QUrl url = QUrl("http://bitzi.com/lookup/tree:tiger:" + StilUtils::TstrtoQ(tth));
+		QDesktopServices::openUrl(url);
+	}
 }
 
 void SearchWindow::actionCopyMagnetToClipboard()
 {
+	const QModelIndex index = searchView->selectionModel()->selectedRows().first();
+	
+	QStandardItem *item = model->itemFromIndex(index);
+
+	const tstring tth = searchMap.value(item)->columns[COLUMN_TTH];
+	const tstring fileName = searchMap.value(item)->columns[COLUMN_FILENAME];
+
+	if(!fileName.empty())
+	{
+		QString magnet = StilUtils::TstrtoQ(_T("magnet:?xt=urn:tree:tiger:") + tth + 
+											_T("&dn=") +Text::toT(Util::encodeURI(Text::fromT(fileName))));
+		
+		QApplication::clipboard()->setText(magnet, QClipboard::Clipboard);
+	
+		if(QApplication::clipboard()->supportsSelection())
+			QApplication::clipboard()->setText(magnet, QClipboard::Selection);	
+	}
 }
 
 void SearchWindow::actionGetFilelist()
 {
+	const QModelIndexList indexes = searchView->selectionModel()->selectedRows();
+	
+	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
+	{
+		QStandardItem *item = model->itemFromIndex(*index);
+
+		try {
+			QueueManager::getInstance()->addList(searchMap.value(item)->getUser(), QueueItem::FLAG_CLIENT_VIEW);
+		} catch(const Exception& e) {
+			LogManager::getInstance()->message(e.getError());
+		}
+	}
 }
 
 void SearchWindow::actionMatchQueue()
 {
+	const QModelIndexList indexes = searchView->selectionModel()->selectedRows();
+	
+	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
+	{
+		QStandardItem *item = model->itemFromIndex(*index);
+		
+		try {
+			QueueManager::getInstance()->addList(searchMap.value(item)->getUser(), QueueItem::FLAG_MATCH_QUEUE);
+		} catch(const Exception& e) {
+			LogManager::getInstance()->message(e.getError());
+		}
+	}
 }
 
 void SearchWindow::actionSendPM()
 {
+	const QModelIndexList indexes = searchView->selectionModel()->selectedRows();
+	
+	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
+	{
+		QStandardItem *item = model->itemFromIndex(*index);
+
+		MainWindowImpl::getInstance()->OpenPM(searchMap.value(item)->getUser());
+	}
 }
 
 void SearchWindow::actionAddToFavorites()
 {
+	const QModelIndexList indexes = searchView->selectionModel()->selectedRows();
+	
+	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
+	{
+		QStandardItem *item = model->itemFromIndex(*index);
+
+		FavoriteManager::getInstance()->addFavoriteUser(searchMap.value(item)->getUser());
+	}
 }
 
 void SearchWindow::actionGrandExtraSlot()
 {
+	const QModelIndexList indexes = searchView->selectionModel()->selectedRows();
+	
+	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
+	{
+		QStandardItem *item = model->itemFromIndex(*index);
+
+		UploadManager::getInstance()->reserveSlot(searchMap.value(item)->getUser());
+	}
 }
 
 void SearchWindow::actionRemoveUserFromQueue()
 {
+	const QModelIndexList indexes = searchView->selectionModel()->selectedRows();
+	
+	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
+	{
+		QStandardItem *item = model->itemFromIndex(*index);
+
+		QueueManager::getInstance()->removeSource(searchMap.value(item)->getUser(), QueueItem::Source::FLAG_REMOVED);
+	}
 }
 
 void SearchWindow::actionRemove()
 {
+	QList<QStandardItem *> items;
+	
+	const QModelIndexList indexes = searchView->selectionModel()->selectedRows();
+
+	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
+		items.append( model->itemFromIndex(*index));
+		
+	for (QList<QStandardItem *>::const_iterator item = items.constBegin(); item != items.constEnd(); ++item)
+		removeSearchResult(*item);
 }
 

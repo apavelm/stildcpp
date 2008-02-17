@@ -1,6 +1,8 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Pavel Andreev                                   *
+ *   Copyright (C) 2007, 2008 by Pavel Andreev                                   *
  *   Mail: apavelm on gmail dot com (apavelm@gmail.com)                    *
+ *   Copyright (C) 2007, 2008 by Yakov Suraev aka BigBiker                       *
+ *   Mail: adminbsd on gmail dot com (adminbsd@gmail.com)                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -67,6 +69,7 @@
 #include "widgets/tabwidget.h"
 #include "widgets/stil_TransferView.h"
 #include "mdi_syslog.h"
+#include "TextWindow.h"
 
 #include "stilutils.h"
 
@@ -100,6 +103,7 @@
 #include "client/QueueManager.h"
 #include "client/ClientManager.h"
 
+#include "client/Singleton.h"
 //
 
 #include "ui_mainwindow.h"
@@ -128,12 +132,14 @@ class MainWindowImpl : public QMainWindow, public Ui::MainWindow
 	,private dcpp::TimerManagerListener
 	,private dcpp::QueueManagerListener
 	,private dcpp::LogManagerListener
+	,public dcpp::Singleton<MainWindowImpl>
 {
 Q_OBJECT
 public:
 	void initMain();
-	MainWindowImpl( QWidget * parent = 0, Qt::WFlags f = 0 );
-	~MainWindowImpl();
+//	MainWindowImpl( QWidget * parent = 0, Qt::WFlags f = 0 );
+//	~MainWindowImpl();
+//	static TabWidget* getTabWidget() { return m_tabwin; }
 	
 	enum Status {
 		STATUS_STATUS,
@@ -185,7 +191,7 @@ private slots:
 	void HomepageFunc();
 	void FavUsrFunc();
 	void IgnoredUsrFunc();
-	void SearchFunc();
+//	void SearchFunc(); // moved to public
 	void qcdconFunc(QString);
 	void show_tthFunc();
 	void showhideFunc();
@@ -204,10 +210,16 @@ signals:
 	
 public slots:
 	void OpenList(QWidget *, const dcpp::tstring & , const dcpp::UserPtr & , int64_t, const QString);
-	void OpenPM(QWidget *parent, const QString &);
+	void OpenPM(const UserPtr& replyTo, const tstring& aMessage = Util::emptyStringT);
 	void OpenHub(const dcpp::tstring& adr, QWidget *parent = 0);
+	void SearchFunc(const tstring& str = Util::emptyStringT, int64_t size = 0, SearchManager::SizeModes mode = SearchManager::SIZE_ATLEAST, SearchManager::TypeModes type = SearchManager::TYPE_ANY);
 
 private:
+	friend class dcpp::Singleton<MainWindowImpl>;
+
+	MainWindowImpl( QWidget * parent = 0, Qt::WFlags f = 0 );
+	~MainWindowImpl();
+
 	void createActions();
 	void createTrayIcon();
 	void createToolBars();
@@ -215,7 +227,8 @@ private:
 	void clientInit();
 	void startSocket();
 	void setShareSize(const QString &sz);
-	
+	void openTextWindow(const string& fileName);
+
 	int FindWinByType(StilUtils::tabWinTypes type);
 
 	QAction *showhide;

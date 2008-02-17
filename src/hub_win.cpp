@@ -1,7 +1,7 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Pavel Andreev                                   *
+ *   Copyright (C) 2007, 2008 by Pavel Andreev                                   *
  *   Mail: apavelm on gmail dot com (apavelm@gmail.com)                    *
- *   Copyright (C) 2007 by Yakov Suraev aka BigBiker                       *
+ *   Copyright (C) 2007, 2008 by Yakov Suraev aka BigBiker                       *
  *   Mail: adminbsd on gmail dot com (adminbsd@gmail.com)
  *                                                                         *
  *	 Thanks to Jacek Sieka (arnetheduck on gmail point com) for original   *
@@ -84,10 +84,7 @@ HubWindow::HubWindow(QWidget *parent, const dcpp::tstring& url) : MdiChild(paren
 	setHubEncoding();
 	
 	connect(lineEdit, SIGNAL( SendText(const QString &) ), this, SLOT(sendFunc(const QString &)) );
-	
-	MainWindowImpl *mw = qobject_cast<MainWindowImpl *>(parent->parent());
-	connect(UList, SIGNAL(signalOpenPM(QWidget *,const QString &)), mw, SLOT(OpenPM(QWidget *, const QString &)));
-	
+
 	FavoriteManager::getInstance()->addListener(this);
 	
 	editor->setHubAddress(idText);

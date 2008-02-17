@@ -1,6 +1,8 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Pavel Andreev                                   *
+ *   Copyright (C) 2007, 2008 by Pavel Andreev                                   *
  *   Mail: apavelm on gmail dot com (apavelm@gmail.com)                    *
+ *   Copyright (C) 2007, 2008 by Yakov Suraev aka BigBiker                       *
+ *   Mail: adminbsd on gmail dot com (adminbsd@gmail.com)                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -79,13 +81,21 @@ int main(int argc, char ** argv)
 			}
 	}
 	
-	MainWindowImpl win;
+	MainWindowImpl::newInstance();
 
 	app.connect( &app, SIGNAL( lastWindowClosed() ), &app, SLOT( quit() ) ); 
 	if (APPSETTING(i_SHOWSPLASH)) 
 		{
-			splash->finish(&win);
+			splash->finish(MainWindowImpl::getInstance());
 			delete splash;
 		}
-	return app.exec();
+
+	int exit_code = app.exec();
+
+	MainWindowImpl::deleteInstance();
+	dcpp::shutdown();
+	AppSettings::AppSettingsMgr::deleteInstance();
+
+	return exit_code;
+	
 }

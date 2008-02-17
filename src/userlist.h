@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Yakov Suraev aka BigBiker                       *
+ *   Copyright (C) 2007, 2008 by Yakov Suraev aka BigBiker                       *
  *   Mail: adminbsd on gmail dot com (adminbsd@gmail.com)                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -78,9 +78,7 @@ private slots:
 	void actionRemoveUserFromQueue();
 	void actionCopyNickToClipboard();
 	void showUserMenu(const QPoint &point);
-	
-signals:
-	void signalOpenPM(QWidget *parent, const QString &);
+
 private:
 	const int totalColumns;
 	bool topOp;
