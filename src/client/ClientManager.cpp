@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2007 Jacek Sieka, arnetheduck on gmail point com
+ * Copyright (C) 2001-2008 Jacek Sieka, arnetheduck on gmail point com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -290,12 +290,12 @@ void ClientManager::connect(const UserPtr& p, const string& token) {
 	}
 }
 
-void ClientManager::privateMessage(const UserPtr& p, const string& msg) {
+void ClientManager::privateMessage(const UserPtr& p, const string& msg, bool thirdPerson) {
 	Lock l(cs);
 	OnlineIter i = onlineUsers.find(p->getCID());
 	if(i != onlineUsers.end()) {
 		OnlineUser* u = i->second;
-		u->getClient().privateMessage(*u, msg);
+		u->getClient().privateMessage(*u, msg, thirdPerson);
 	}
 }
 

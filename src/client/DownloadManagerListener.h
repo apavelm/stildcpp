@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2007 Jacek Sieka, arnetheduck on gmail point com
+ * Copyright (C) 2001-2008 Jacek Sieka, arnetheduck on gmail point com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,10 +45,16 @@ public:
 	typedef X<1> Failed;
 	typedef X<2> Starting;
 	typedef X<3> Tick;
+	typedef X<3> Requesting;
 
 	/**
 	 * This is the first message sent before a download starts.
-	 * No other messages will be sent before.
+	 * No other messages will be sent before this.
+	 */
+	virtual void on(Requesting, Download*) throw() { }
+
+	/**
+	 * This is the first message sent before a download starts.
 	 */
 	virtual void on(Starting, Download*) throw() { }
 

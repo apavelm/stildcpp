@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2007 Jacek Sieka, arnetheduck on gmail point com
+ * Copyright (C) 2001-2008 Jacek Sieka, arnetheduck on gmail point com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ const string SettingsManager::settingTags[] =
 {
 	// Strings
 	"Nick", "UploadSpeed", "Description", "DownloadDirectory", "EMail", "ExternalIp",
-	"Font", "MainFrameOrder", "MainFrameWidths", "HubFrameOrder", "HubFrameWidths",
+	"Font", "ConnectionsOrder", "ConnectionsWidths", "HubFrameOrder", "HubFrameWidths",
 	"SearchFrameOrder", "SearchFrameWidths", "FavHubsFrameOrder", "FavHubsFrameWidths",
 	"HublistServers", "QueueFrameOrder", "QueueFrameWidths", "PublicHubsFrameOrder", "PublicHubsFrameWidths",
 	"UsersFrameOrder", "UsersFrameWidths", "HttpProxy", "LogDirectory", "LogFormatPostDownload",
@@ -46,7 +46,7 @@ const string SettingsManager::settingTags[] =
 	"LogFilePrivateChat", "LogFileStatus", "LogFileUpload", "LogFileDownload", "LogFileSystem",
 	"LogFormatSystem", "LogFormatStatus", "DirectoryListingFrameOrder", "DirectoryListingFrameWidths",
 	"TLSPrivateKeyFile", "TLSCertificateFile", "TLSTrustedCertificatesPath", "BeepFile",
-	"Language", "DownloadsFrameOrder", "DownloadsFrameWidth",
+	"Language", "DownloadsOrder", "DownloadsWidth",
 	"SENTRY",
 	// Ints
 	"IncomingConnections", "InPort", "Slots", "AutoFollow", "ClearSearch",
@@ -77,7 +77,7 @@ const string SettingsManager::settingTags[] =
 	"UseTLS", "AutoSearchLimit", "AltSortOrder", "AutoKickNoFavs", "PromptPassword", "SpyFrameIgnoreTthSearches",
 	"DontDlAlreadyQueued", "MaxCommandLength", "AllowUntrustedHubs", "AllowUntrustedClients",
 	"TLSPort", "FastHash", "SortFavUsersFirst", "ShowShellMenu", "MinSegmentSize", "FollowLinks",
-	"SendBloom", "OpenDownloads",
+	"SendBloom", "OwnerDrawnMenus",
 	"SENTRY",
 	// Int64
 	"TotalUpload", "TotalDownload",
@@ -136,7 +136,7 @@ SettingsManager::SettingsManager()
 	setDefault(IGNORE_BOT_PMS, false);
 	setDefault(LIST_DUPES, true);
 	setDefault(BUFFER_SIZE, 64);
-	setDefault(HUBLIST_SERVERS, "http://hublist.hubtracker.com/hublist.xml.bz2;http://dchublist.com/hublist.xml.bz2;http://adchublist.com/hublist.xml.bz2;http://www.hublist.org/PublicHubList.xml.bz2;http://dclist.eu/hublist.xml.bz2;http://download.hublist.cz/hublist.xml.bz2;http://hublist.awenet.info/PublicHubList.xml.bz2;http://hublist.hubtracker.com.nyud.net/hublist.xml.bz2;http://dchublist.com.nyud.net/hublist.xml.bz2;http://adchublist.com.nyud.net/hublist.xml.bz2;http://www.hublist.org.nyud.net/PublicHubList.xml.bz2;http://dclist.eu.nyud.net/hublist.xml.bz2;http://download.hublist.cz.nyud.net/hublist.xml.bz2;http://hublist.awenet.info.nyud.net/PublicHubList.xml.bz2");
+	setDefault(HUBLIST_SERVERS, "http://hublist.hubtracker.com.nyud.net/hublist.xml.bz2;http://dchublist.com.nyud.net/hublist.xml.bz2;http://adchublist.com.nyud.net/hublist.xml.bz2;http://www.hublist.org.nyud.net/PublicHubList.xml.bz2;http://dclist.eu.nyud.net/hublist.xml.bz2;http://download.hublist.cz.nyud.net/hublist.xml.bz2;http://hublist.awenet.info.nyud.net/PublicHubList.xml.bz2");
 	setDefault(DOWNLOAD_SLOTS, 3);
 	setDefault(MAX_DOWNLOAD_SPEED, 0);
 	setDefault(LOG_DIRECTORY, Util::getConfigPath() + "Logs" PATH_SEPARATOR_STR);
@@ -273,7 +273,7 @@ SettingsManager::SettingsManager()
 	setDefault(MIN_SEGMENT_SIZE, 1024);
 	setDefault(FOLLOW_LINKS, false);
 	setDefault(SEND_BLOOM, true);
-	setDefault(OPEN_DOWNLOADS, true);
+	setDefault(OWNER_DRAWN_MENUS, true);
 
 #ifdef _WIN32
 	setDefault(MAIN_WINDOW_STATE, SW_SHOWNORMAL);

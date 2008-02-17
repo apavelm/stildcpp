@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2007 Jacek Sieka, arnetheduck on gmail point com
+ * Copyright (C) 2001-2008 Jacek Sieka, arnetheduck on gmail point com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -169,14 +169,8 @@ extern void startup(void (*f)(void*, const string&), void* p);
 extern void shutdown();
 
 #ifdef BUILDING_DCPP
-
-#define PACKAGE "dcpp"
+#define PACKAGE "libdcpp"
 #define LOCALEDIR Util::getLocalePath().c_str()
-/*
-#define _(String) dgettext(PACKAGE, String)
-#define F_(String) boost::format(dgettext(PACKAGE, String))
-#define FN_(String1,String2, N) boost::format(dngettext(PACKAGE, String1, String2, N))
-*/
 #define _(String) gettext(String)
 #define gettext_noop(String) String
 #define N_(String) gettext_noop (String)
@@ -184,6 +178,7 @@ extern void shutdown();
 #define CT_(String) T_(String).c_str()
 #define F_(String) boost::format(gettext(String))
 #define FN_(String1,String2, N) boost::format(ngettext(String1, String2, N))
+
 #ifdef UNICODE
 #define TF_(String) boost::wformat(Text::toT(gettext(String)))
 #define TFN_(String1,String2, N) boost::wformat(Text::toT(ngettext(String1, String2, N)))
@@ -192,12 +187,12 @@ extern void shutdown();
 #define TFN_(String1,String2, N) boost::format(Text::toT(ngettext(String1, String2, N)))
 #endif
 
-#endif
-
 #if defined(UNICODE) && defined(_UNICODE)
 #define _T(s) L ## s 
 #else
 #define _T(s) ## s
+#endif
+
 #endif
 
 } // namespace dcpp

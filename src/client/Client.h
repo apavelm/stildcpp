@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2007 Jacek Sieka, arnetheduck on gmail point com
+ * Copyright (C) 2001-2008 Jacek Sieka, arnetheduck on gmail point com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,8 +38,8 @@ public:
 	virtual void disconnect(bool graceless);
 
 	virtual void connect(const OnlineUser& user, const string& token) = 0;
-	virtual void hubMessage(const string& aMessage) = 0;
-	virtual void privateMessage(const OnlineUser& user, const string& aMessage) = 0;
+	virtual void hubMessage(const string& aMessage, bool thirdPerson = false) = 0;
+	virtual void privateMessage(const OnlineUser& user, const string& aMessage, bool thirdPerson = false) = 0;
 	virtual void sendUserCmd(const string& aUserCmd) = 0;
 	virtual void search(int aSizeMode, int64_t aSize, int aFileType, const string& aString, const string& aToken) = 0;
 	virtual void password(const string& pwd) = 0;

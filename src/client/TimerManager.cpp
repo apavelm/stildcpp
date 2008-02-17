@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2007 Jacek Sieka, arnetheduck on gmail point com
+ * Copyright (C) 2001-2008 Jacek Sieka, arnetheduck on gmail point com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@ namespace dcpp {
 #ifdef _WIN32
 DWORD TimerManager::lastTick = 0;
 uint32_t TimerManager::cycles = 0;
+FastCriticalSection TimerManager::cs;
 #else
 timeval TimerManager::tv;
 #endif
@@ -52,6 +53,8 @@ int TimerManager::run() {
 
 uint64_t TimerManager::getTick() {
 #ifdef _WIN32
+	FastLock l(cs);
+
 	DWORD tick = ::GetTickCount();
 	if(tick < lastTick) {
 		cycles++;

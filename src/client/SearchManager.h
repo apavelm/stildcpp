@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2007 Jacek Sieka, arnetheduck on gmail point com
+ * Copyright (C) 2001-2008 Jacek Sieka, arnetheduck on gmail point com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,7 +56,7 @@ public:
 		int64_t aSize, const string& aFile, const string& aHubName,
 		const string& aHubURL, const string& ip, TTHValue aTTH, const string& aToken) :
 	file(aFile), hubName(aHubName), hubURL(aHubURL), user(aUser),
-		 size(aSize), type(aType), Slots(aSlots), freeSlots(aFreeSlots), IP(ip),
+		size(aSize), type(aType), Slots(aSlots), freeSlots(aFreeSlots), IP(ip),
 		tth(aTTH), token(aToken), ref(1) { }
 
 	string getFileName() const;

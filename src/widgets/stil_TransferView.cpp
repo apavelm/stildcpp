@@ -85,13 +85,13 @@ void TransferView::preClose()
 	QStringList w;
 	for (int i=0; i<COLUMN_LAST; i++) w << QString::number(columnWidth(i));
 	QString r = w.join(",");
-	SettingsManager::getInstance()->set(SettingsManager::MAINFRAME_WIDTHS, r.toStdString());
+//	SettingsManager::getInstance()->set(SettingsManager::MAINFRAME_WIDTHS, r.toStdString());
 	
 	//SAVING COLUMN ORDER
 	QStringList ww;
 	for (int i=0; i<COLUMN_LAST; i++) ww << QString::number(header()->visualIndex(i));
 	QString rr = ww.join(",");
-	SettingsManager::getInstance()->set(SettingsManager::MAINFRAME_ORDER, rr.toStdString());
+//	SettingsManager::getInstance()->set(SettingsManager::MAINFRAME_ORDER, rr.toStdString());
 	
 	// REMOVING LISTENERS
 	DownloadManager::getInstance()->removeListener(this);
@@ -181,7 +181,7 @@ TransferView::TransferView(QWidget *parent) : QTreeWidget(parent)
 	
 	
 	// COLUMN WIDTHs
-	QStringList clist = StilUtils::TstrtoQ(Text::toT(SETTING(MAINFRAME_WIDTHS))).split(",");
+/*	QStringList clist = StilUtils::TstrtoQ(Text::toT(SETTING(MAINFRAME_WIDTHS))).split(",");
 	if (clist.size() != COLUMN_LAST)
 		for (int i=0; i<COLUMN_LAST; i++) setColumnWidth(i, columnSizes[i]);
 	else 
@@ -191,16 +191,17 @@ TransferView::TransferView(QWidget *parent) : QTreeWidget(parent)
 				else setColumnWidth(i, clist[i].toInt());
 			}
 			
+*/
 	// SETTING COLUMNS VISIBILITY
 	QStringList vlist = APPSTRING(s_TRANSVIEW_COLUMN_VISIBILITY).split(",");
 	if (vlist.size() == COLUMN_LAST)
 		for (int i=0; i<COLUMN_LAST; i++) header()->setSectionHidden(i, vlist[i].toInt());
 			
 	// COLUMNS ORDER SET
-	QStringList olist = StilUtils::TstrtoQ(Text::toT(SETTING(MAINFRAME_ORDER))).split(",");
+/*	QStringList olist = StilUtils::TstrtoQ(Text::toT(SETTING(MAINFRAME_ORDER))).split(",");
 	if (olist.size() == COLUMN_LAST)
 		for (int j=0; j<COLUMN_LAST; j++) header()->swapSections(header()->visualIndex(olist[j].toInt()), j);
-	// END OF COLUMNS ORDER SET
+*/	// END OF COLUMNS ORDER SET
 	
 	
 	// COLUMN (HEADER) MENU
@@ -310,20 +311,20 @@ void TransferView::handleAddToFav()
 
 void TransferView::handleSearchAlternates()
 {
-	QList<QTreeWidgetItem *> lt = selectedItems();
-	if (lt.isEmpty()) return;
-	for (int i = 0; i < lt.size(); i++)
-	{
-		ItemInfo* ii = getItemInfoFromItem(lt[i]); 
+//	QList<QTreeWidgetItem *> lt = selectedItems();
+//	if (lt.isEmpty()) return;
+//	for (int i = 0; i < lt.size(); i++)
+//	{
+//		ItemInfo* ii = getItemInfoFromItem(lt[i]); 
 //		string target = Text::fromT(ii->getText(COLUMN_PATH) + ii->getText(COLUMN_FILE));
-		TTHValue tth;
+//		TTHValue tth;
 //		if(QueueManager::getInstance()->getTTH(target, tth))
 //			; 
 			//WinUtil::searchHash(tth);
 			// - --- - - - - - OR - - - - --  - -- - - -
 			// TTHValue aHash = TTH;
 			// SearchFrame::openWindow(mainWindow->getMDIParent(), Text::toT(aHash.toBase32()), 0, SearchManager::SIZE_DONTCARE, SearchManager::TYPE_TTH);
-	}
+//	}
 }
 
 void TransferView::keyPressEvent(QKeyEvent *e)
@@ -364,10 +365,9 @@ int TransferView::ItemInfo::compareItems(ItemInfo* a, ItemInfo* b, int col)
 TransferView::ItemInfo * TransferView::getItemInfoFromItem(QTreeWidgetItem * item)
 {
 	if (datalistitem.isEmpty()) return NULL;
-	QModelIndex mi = indexFromItem(item);
-	for (int i = 0; i < datalistitem.size(); i++) 
-		if ( datalistitem[i] == mi ) return datalist[i];
-	return NULL;
+	int idx = datalistitem.indexOf(indexFromItem(item));
+	if (idx != -1) return datalist[idx];
+		else return NULL;
 }
 
 void TransferView::IIinsert(ItemInfo* ii)

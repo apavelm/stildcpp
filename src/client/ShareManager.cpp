@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2007 Jacek Sieka, arnetheduck on gmail point com
+ * Copyright (C) 2001-2008 Jacek Sieka, arnetheduck on gmail point com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -507,11 +507,7 @@ int64_t ShareManager::getShareSize() const throw() {
 
 size_t ShareManager::getSharedFiles() const throw() {
 	Lock l(cs);
-	size_t tmp = 0;
-	for(Directory::Map::const_iterator i = directories.begin(); i != directories.end(); ++i) {
-		tmp += i->second->countFiles();
-	}
-	return tmp;
+	return tthIndex.size();
 }
 
 class FileFindIter {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2007 Jacek Sieka, arnetheduck on gmail point com
+ * Copyright (C) 2001-2008 Jacek Sieka, arnetheduck on gmail point com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -195,6 +195,14 @@ void NmdcHub::onLine(const string& aLine) throw() {
 			message = line.substr(i+2);
 		} else {
 			fire(ClientListener::StatusMessage(), this, unescape(line));
+			return;
+		}
+
+		if((line.find("Hub-Security") != string::npos) && (line.find("was kicked by") != string::npos)) {
+			fire(ClientListener::StatusMessage(), this, unescape(line), ClientListener::FLAG_IS_SPAM);
+			return;
+		} else if((line.find("is kicking") != string::npos) && (line.find("because:") != string::npos)) {
+			fire(ClientListener::StatusMessage(), this, unescape(line), ClientListener::FLAG_IS_SPAM);
 			return;
 		}
 
@@ -748,9 +756,9 @@ void NmdcHub::revConnectToMe(const OnlineUser& aUser) {
 	send("$RevConnectToMe " + fromUtf8(getMyNick()) + " " + fromUtf8(aUser.getIdentity().getNick()) + "|");
 }
 
-void NmdcHub::hubMessage(const string& aMessage) {
+void NmdcHub::hubMessage(const string& aMessage, bool thirdPerson) {
 	checkstate();
-	send(fromUtf8( "<" + getMyNick() + "> " + escape(aMessage) + "|" ) );
+	send(fromUtf8( "<" + getMyNick() + "> " + escape(thirdPerson ? "/me " + aMessage : aMessage) + "|" ) );
 }
 
 void NmdcHub::myInfo(bool alwaysSend) {
@@ -870,7 +878,7 @@ string NmdcHub::validateMessage(string tmp, bool reverse) {
 	return tmp;
 }
 
-void NmdcHub::privateMessage(const OnlineUser& aUser, const string& aMessage) {
+void NmdcHub::privateMessage(const OnlineUser& aUser, const string& aMessage, bool /*thirdPerson*/) {
 	checkstate();
 
 	send("$To: " + fromUtf8(aUser.getIdentity().getNick()) + " From: " + fromUtf8(getMyNick()) + " $" + fromUtf8(escape("<" + getMyNick() + "> " + aMessage)) + "|");

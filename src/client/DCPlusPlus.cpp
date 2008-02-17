@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2007 Jacek Sieka, arnetheduck on gmail point com
+ * Copyright (C) 2001-2008 Jacek Sieka, arnetheduck on gmail point com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -84,8 +84,9 @@ void startup(void (*f)(void*, const string&), void* p) {
 	SettingsManager::getInstance()->load();
 	
 	if(!SETTING(LANGUAGE).empty()) {
-		string language = SETTING(LANGUAGE);
-		setenv("LANGUAGE", language.c_str(), true);
+		setenv("LANGUAGE", SETTING(LANGUAGE).c_str(), true);
+		//string language = "LANGUAGE=" + SETTING(LANGUAGE);
+		//putenv(language.c_str());
 		// Apparently this is supposted to make gettext reload the message catalog...
 		_nl_msg_cat_cntr++;
 	}

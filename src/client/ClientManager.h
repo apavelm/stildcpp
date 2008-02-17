@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2007 Jacek Sieka, arnetheduck on gmail point com
+ * Copyright (C) 2001-2008 Jacek Sieka, arnetheduck on gmail point com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -80,7 +80,7 @@ public:
 
 	void connect(const UserPtr& p, const string& token);
 	void send(AdcCommand& c, const CID& to);
-	void privateMessage(const UserPtr& p, const string& msg);
+	void privateMessage(const UserPtr& p, const string& msg, bool thirdPerson);
 
 	void userCommand(const UserPtr& p, const UserCommand& uc, StringMap& params, bool compatibility);
 

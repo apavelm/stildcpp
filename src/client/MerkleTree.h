@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2007 Jacek Sieka, arnetheduck on gmail point com
+ * Copyright (C) 2001-2008 Jacek Sieka, arnetheduck on gmail point com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -114,6 +114,10 @@ public:
 	}
 
 	uint8_t* finalize() {
+		// No updates yet, make sure we have at least one leaf for 0-length files...
+		if(leaves.empty() && blocks.empty()) {
+			update(0, 0);
+		}
 		while(blocks.size() > 1) {
 			MerkleBlock& a = blocks[blocks.size()-2];
 			MerkleBlock& b = blocks[blocks.size()-1];

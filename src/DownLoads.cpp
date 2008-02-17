@@ -49,7 +49,7 @@ DownLoadsWindow::DownLoadsWindow(QWidget *parent) : MdiChild(parent), startup(tr
 	downloads->setHeaderLabels(columns);
 	
 	// COLUMN WIDTHs
-	QStringList clist = StilUtils::TstrtoQ(Text::toT(SETTING(DOWNLOADSFRAME_WIDTHS))).split(",");
+/*	QStringList clist = StilUtils::TstrtoQ(Text::toT(SETTING(DOWNLOADSFRAME_WIDTHS))).split(",");
 	if (clist.size() != COLUMN_LAST)
 		for (int i=0; i<COLUMN_LAST; i++) downloads->setColumnWidth(i, columnSizes[i]);
 	else 
@@ -58,18 +58,18 @@ DownLoadsWindow::DownLoadsWindow(QWidget *parent) : MdiChild(parent), startup(tr
 				if ( (clist[i]==QString()) || (clist[i].toInt() <= 0)) downloads->setColumnWidth(i, columnSizes[i]);
 				else downloads->setColumnWidth(i, clist[i].toInt());
 			}
-			
+*/			
 	// SETTING COLUMNS VISIBILITY
 	QStringList vlist = APPSTRING(s_DLWINDOW_COLUMN_VISIBILITY).split(",");
 	if (vlist.size() == COLUMN_LAST)
 		for (int i=0; i<COLUMN_LAST; i++) downloads->header()->setSectionHidden(i, vlist[i].toInt());
 			
 	// COLUMNS ORDER SET
-	QStringList olist = StilUtils::TstrtoQ(Text::toT(SETTING(DOWNLOADSFRAME_ORDER))).split(",");
+/*	QStringList olist = StilUtils::TstrtoQ(Text::toT(SETTING(DOWNLOADSFRAME_ORDER))).split(",");
 	if (olist.size() == COLUMN_LAST)
 		for (int j=0; j<COLUMN_LAST; j++) 
 			downloads->header()->swapSections(downloads->header()->visualIndex(olist[j].toInt()), j);
-	// END OF COLUMNS ORDER SET
+*/	// END OF COLUMNS ORDER SET
 	
 	startup = false;
 	
@@ -98,13 +98,13 @@ DownLoadsWindow::~DownLoadsWindow()
 	QStringList w;
 	for (int i=0; i<COLUMN_LAST; i++) w << QString::number(downloads->columnWidth(i));
 	QString r = w.join(",");
-	SettingsManager::getInstance()->set(SettingsManager::DOWNLOADSFRAME_WIDTHS, r.toStdString());
+//	SettingsManager::getInstance()->set(SettingsManager::DOWNLOADSFRAME_WIDTHS, r.toStdString());
 	
 	//SAVING COLUMN ORDER
 	QStringList ww;
 	for (int i=0; i<COLUMN_LAST; i++) ww << QString::number(downloads->header()->visualIndex(i));
 	QString rr = ww.join(",");
-	SettingsManager::getInstance()->set(SettingsManager::DOWNLOADSFRAME_ORDER, rr.toStdString());
+//	SettingsManager::getInstance()->set(SettingsManager::DOWNLOADSFRAME_ORDER, rr.toStdString());
 	
 	// REMOVING LISTENERS
 	QueueManager::getInstance()->removeListener(this);
