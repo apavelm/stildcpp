@@ -32,7 +32,6 @@ FORMS = ui/mainwindow.ui \
  ui/notepad.ui \
  ui/TextWindow.ui \
  ui/syslog.ui \
- ui/DownLoads.ui \
  ui/hashman.ui
 HEADERS = src/mainwindowimpl.h \
  src/frmAbout.h \
@@ -77,7 +76,6 @@ HEADERS = src/mainwindowimpl.h \
  src/client/CryptoManager.h \
  src/client/DCPlusPlus.h \
  src/client/DirectoryListing.h \
- src/client/Download.h \
  src/client/DownloadManager.h \
  src/client/DownloadManagerListener.h \
  src/client/Encoder.h \
@@ -159,7 +157,6 @@ HEADERS = src/mainwindowimpl.h \
  src/userlistsortingmodel.h \
  src/widgets/stil_TransferView.h \
  src/widgets/myprogress.h \
- src/DownLoads.h \
  src/widgets/stil_qdltreewidget.h
 SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
@@ -262,5 +259,4 @@ DEFINES += _DEBUG \
  _UNICODE \
  BUILDING_DCPP \
  DEBUG \
- USE_SYS_STL=1 \
- BUILDING_DCPP
+ USE_SYS_STL =  1  BUILDING_DCPP

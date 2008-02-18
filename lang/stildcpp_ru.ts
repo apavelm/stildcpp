@@ -48,25 +48,45 @@
 <context>
     <name>FavoriteHubListWindow</name>
     <message>
-        <location filename="../src/favHubLstWin.cpp" line="66"/>
+        <location filename="../src/favHubLstWin.cpp" line="147"/>
         <source>Favorite Hubs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/favHubLstWin.cpp" line="139"/>
+        <location filename="../src/favHubLstWin.cpp" line="251"/>
         <source>StilDC++</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/favHubLstWin.cpp" line="139"/>
-        <source>Do you realy want to delete?</source>
+        <location filename="../src/favHubLstWin.cpp" line="210"/>
+        <source>Hub address cannot be empty</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/favHubLstWin.cpp" line="205"/>
+        <source>Input name of new hub:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/favHubLstWin.cpp" line="207"/>
+        <source>Input address of new hub:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/favHubLstWin.cpp" line="227"/>
+        <source>Please enter a nickname in the settings dialog!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/favHubLstWin.cpp" line="251"/>
+        <source>Do you realy want to delete hub: &quot;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>FavoriteUsersWindow</name>
     <message>
-        <location filename="../src/FavUsr.cpp" line="48"/>
+        <location filename="../src/FavUsr.cpp" line="53"/>
         <source>Favorite Users</source>
         <translation type="unfinished"></translation>
     </message>
@@ -74,17 +94,17 @@
 <context>
     <name>FileListDlg</name>
     <message>
-        <location filename="../src/mdi_filelist.cpp" line="83"/>
+        <location filename="../src/mdi_filelist.cpp" line="85"/>
         <source>Download</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mdi_filelist.cpp" line="228"/>
+        <location filename="../src/mdi_filelist.cpp" line="230"/>
         <source>Dir</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mdi_filelist.cpp" line="149"/>
+        <location filename="../src/mdi_filelist.cpp" line="151"/>
         <source>File</source>
         <translation type="unfinished"></translation>
     </message>
@@ -100,12 +120,12 @@
 <context>
     <name>HubUserList</name>
     <message>
-        <location filename="../src/userlist.cpp" line="189"/>
+        <location filename="../src/userlist.cpp" line="190"/>
         <source>Classic sort</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/userlist.cpp" line="192"/>
+        <location filename="../src/userlist.cpp" line="193"/>
         <source>Op on top</source>
         <translation type="unfinished"></translation>
     </message>
@@ -148,7 +168,7 @@
 <context>
     <name>HubWindow</name>
     <message>
-        <location filename="../src/hub_win.cpp" line="75"/>
+        <location filename="../src/hub_win.cpp" line="72"/>
         <source>Hub: </source>
         <translation type="unfinished"></translation>
     </message>
@@ -462,52 +482,52 @@
 <context>
     <name>MainWindowImpl</name>
     <message>
-        <location filename="../src/mainwindowimpl.cpp" line="271"/>
+        <location filename="../src/mainwindowimpl.cpp" line="277"/>
         <source>StilDC++</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindowimpl.cpp" line="271"/>
+        <location filename="../src/mainwindowimpl.cpp" line="277"/>
         <source>Do you realy want to exit?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindowimpl.cpp" line="323"/>
+        <location filename="../src/mainwindowimpl.cpp" line="329"/>
         <source>Show / Hide</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindowimpl.cpp" line="325"/>
+        <location filename="../src/mainwindowimpl.cpp" line="331"/>
         <source>Show / Hide application window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindowimpl.cpp" line="810"/>
+        <location filename="../src/mainwindowimpl.cpp" line="818"/>
         <source>Select File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindowimpl.cpp" line="778"/>
+        <location filename="../src/mainwindowimpl.cpp" line="786"/>
         <source>All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindowimpl.cpp" line="405"/>
+        <location filename="../src/mainwindowimpl.cpp" line="411"/>
         <source>Ctrl+2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindowimpl.cpp" line="408"/>
+        <location filename="../src/mainwindowimpl.cpp" line="414"/>
         <source>Ctrl+3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindowimpl.cpp" line="810"/>
+        <location filename="../src/mainwindowimpl.cpp" line="818"/>
         <source>File lists (*.xml.bz2);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindowimpl.cpp" line="120"/>
+        <location filename="../src/mainwindowimpl.cpp" line="126"/>
         <source> AWAY </source>
         <translation type="unfinished"></translation>
     </message>
@@ -523,7 +543,7 @@
 <context>
     <name>PMWindow</name>
     <message>
-        <location filename="../src/pm_win.cpp" line="28"/>
+        <location filename="../src/pm_win.cpp" line="29"/>
         <source>Private Chat with: </source>
         <translation type="unfinished"></translation>
     </message>
@@ -1024,22 +1044,22 @@ Default: %H:%M</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/main.cpp" line="57"/>
+        <location filename="../src/main.cpp" line="59"/>
         <source>Starting...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="73"/>
+        <location filename="../src/main.cpp" line="75"/>
         <source>Creating tray icon...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="76"/>
+        <location filename="../src/main.cpp" line="78"/>
         <source>Systray</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="76"/>
+        <location filename="../src/main.cpp" line="78"/>
         <source>I couldn&apos;t detect any system tray on this system.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1080,105 +1100,180 @@ Default: %H:%M</source>
 <context>
     <name>SearchWindow</name>
     <message>
-        <location filename="../src/SearchWin.cpp" line="36"/>
+        <location filename="../src/SearchWin.cpp" line="42"/>
         <source>Search for: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/SearchWin.cpp" line="143"/>
+        <location filename="../src/SearchWin.cpp" line="159"/>
         <source>Searching too soon, next search in %1 second(s)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/SearchWin.cpp" line="145"/>
+        <location filename="../src/SearchWin.cpp" line="161"/>
         <source>Search - %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/SearchWin.cpp" line="149"/>
+        <location filename="../src/SearchWin.cpp" line="165"/>
         <source>Ready to search...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/SearchWin.cpp" line="150"/>
+        <location filename="../src/SearchWin.cpp" line="166"/>
         <source>Search - Ready to search...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/SearchWin.cpp" line="168"/>
+        <location filename="../src/SearchWin.cpp" line="186"/>
         <source>File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/SearchWin.cpp" line="168"/>
+        <location filename="../src/SearchWin.cpp" line="186"/>
         <source>User</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/SearchWin.cpp" line="168"/>
+        <location filename="../src/SearchWin.cpp" line="186"/>
         <source>Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/SearchWin.cpp" line="168"/>
+        <location filename="../src/SearchWin.cpp" line="186"/>
         <source>Size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/SearchWin.cpp" line="169"/>
+        <location filename="../src/SearchWin.cpp" line="187"/>
         <source>Path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/SearchWin.cpp" line="169"/>
+        <location filename="../src/SearchWin.cpp" line="187"/>
         <source>Slots</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/SearchWin.cpp" line="169"/>
+        <location filename="../src/SearchWin.cpp" line="187"/>
         <source>Connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/SearchWin.cpp" line="169"/>
+        <location filename="../src/SearchWin.cpp" line="187"/>
         <source>Hub</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/SearchWin.cpp" line="169"/>
+        <location filename="../src/SearchWin.cpp" line="187"/>
         <source>Exact size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/SearchWin.cpp" line="170"/>
+        <location filename="../src/SearchWin.cpp" line="188"/>
         <source>IP</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/SearchWin.cpp" line="170"/>
+        <location filename="../src/SearchWin.cpp" line="188"/>
         <source>TTH Root</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/SearchWin.cpp" line="170"/>
+        <location filename="../src/SearchWin.cpp" line="188"/>
         <source>CID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/SearchWin.cpp" line="548"/>
+        <location filename="../src/SearchWin.cpp" line="579"/>
         <source>%1 item(s)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/SearchWin.cpp" line="553"/>
+        <location filename="../src/SearchWin.cpp" line="584"/>
         <source>%1 filtered</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/SearchWin.cpp" line="729"/>
+        <source>Download</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/SearchWin.cpp" line="731"/>
+        <source>Download to...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/SearchWin.cpp" line="732"/>
+        <source>Download whole directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/SearchWin.cpp" line="733"/>
+        <source>Download whole directory to...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/SearchWin.cpp" line="734"/>
+        <source>View as text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/SearchWin.cpp" line="738"/>
+        <source>Search for alternates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/SearchWin.cpp" line="739"/>
+        <source>Lookup TTH at Bitzi.com</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/SearchWin.cpp" line="740"/>
+        <source>Copy magnet link to clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/SearchWin.cpp" line="744"/>
+        <source>Get file list</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/SearchWin.cpp" line="745"/>
+        <source>Match queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/SearchWin.cpp" line="746"/>
+        <source>Send private message</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/SearchWin.cpp" line="747"/>
+        <source>Add to favorites</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/SearchWin.cpp" line="748"/>
+        <source>Grand extra slot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/SearchWin.cpp" line="752"/>
+        <source>Remove user from queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/SearchWin.cpp" line="756"/>
+        <source>Remove</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>SearchWindow::SearchInfo</name>
     <message>
-        <location filename="../src/SearchWin.cpp" line="585"/>
+        <location filename="../src/SearchWin.cpp" line="627"/>
         <source>Directory</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1378,63 +1473,73 @@ Default: %H:%M</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/favhublist.ui" line="49"/>
+        <location filename="../ui/favhublist.ui" line="55"/>
         <source>Connect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/favhublist.ui" line="69"/>
+        <location filename="../ui/favhublist.ui" line="75"/>
         <source>Add</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/favhublist.ui" line="76"/>
+        <location filename="../ui/favhublist.ui" line="82"/>
         <source>Remove</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/favhublist.ui" line="39"/>
+        <location filename="../ui/favhublist.ui" line="45"/>
         <source>Hubs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/favhublist.ui" line="103"/>
+        <location filename="../ui/favhublist.ui" line="109"/>
         <source>Hub Properties</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/favhublist.ui" line="244"/>
+        <location filename="../ui/favhublist.ui" line="264"/>
         <source>Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/favhublist.ui" line="139"/>
+        <location filename="../ui/favhublist.ui" line="159"/>
         <source>Address</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/favhublist.ui" line="284"/>
+        <location filename="../ui/favhublist.ui" line="326"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/favhublist.ui" line="179"/>
+        <location filename="../ui/favhublist.ui" line="186"/>
         <source>Charset encoding</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/favhublist.ui" line="198"/>
+        <location filename="../ui/favhublist.ui" line="117"/>
         <source>Auto Connect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/favhublist.ui" line="210"/>
+        <location filename="../ui/favhublist.ui" line="248"/>
         <source>Identity (leave blank for defaults)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/favhublist.ui" line="264"/>
+        <location filename="../ui/favhublist.ui" line="295"/>
         <source>Password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/favhublist.ui" line="340"/>
+        <source>Store</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/favhublist.ui" line="222"/>
+        <source>Save description</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1582,6 +1687,19 @@ Default: %H:%M</source>
     <message>
         <location filename="../ui/search.ui" line="284"/>
         <source>Hubs</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>mdiTextWindow</name>
+    <message>
+        <location filename="../ui/TextWindow.ui" line="13"/>
+        <source>NotePad</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/TextWindow.ui" line="27"/>
+        <source>StilDC++ notes</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

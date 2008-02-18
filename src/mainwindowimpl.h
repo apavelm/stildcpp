@@ -1,8 +1,8 @@
 /***************************************************************************
- *   Copyright (C) 2007, 2008 by Pavel Andreev                                   *
- *   Mail: apavelm on gmail dot com (apavelm@gmail.com)                    *
- *   Copyright (C) 2007, 2008 by Yakov Suraev aka BigBiker                       *
- *   Mail: adminbsd on gmail dot com (adminbsd@gmail.com)                  *
+ *   Copyright (C) 2007 - 2008 by Pavel Andreev                            *
+ *   Mail: apavelm on gmail point com (apavelm@gmail.com)                  *
+ *   Copyright (C) 2007 -, 2008 by Yakov Suraev aka BigBiker               *
+ *   Mail: adminbsd on gmail point com (adminbsd@gmail.com)                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -64,7 +64,6 @@
 #include "mdi_filelist.h"
 #include "sspy.h"
 #include "tthdial.h"
-#include "DownLoads.h"
 #include "quickconnectdlg.h"
 #include "widgets/tabwidget.h"
 #include "widgets/stil_TransferView.h"
@@ -186,7 +185,6 @@ private slots:
 	void SSFunc();
 	void ULFinFunc();
 	void DLFinFunc();
-	void DLoadsFunc();
 	void PubHubFunc();
 	void HomepageFunc();
 	void FavUsrFunc();

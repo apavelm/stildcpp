@@ -1,8 +1,8 @@
 /***************************************************************************
- *   Copyright (C) 2007, 2008 by Pavel Andreev                                   *
- *   Mail: apavelm on gmail dot com (apavelm@gmail.com)                    *
- *   Copyright (C) 2007, 2008 by Yakov Suraev aka BigBiker                       *
- *   Mail: adminbsd on gmail dot com (adminbsd@gmail.com)                  *
+ *   Copyright (C) 2007 - 2008 by Pavel Andreev                            *
+ *   Mail: apavelm on gmail point com (apavelm@gmail.com)                  *
+ *   Copyright (C) 2007 -, 2008 by Yakov Suraev aka BigBiker               *
+ *   Mail: adminbsd on gmail point com (adminbsd@gmail.com)                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -28,7 +28,7 @@ MainWindowImpl::~MainWindowImpl()
 {
 	thrdGetTTh.stop();
 	
-	trans_view->preClose();
+//	trans_view->preClose();
 	
 	dcpp::SettingsManager::getInstance()->set(SettingsManager::MAIN_WINDOW_POS_X, static_cast<int>(this->x()));
 	dcpp::SettingsManager::getInstance()->set(SettingsManager::MAIN_WINDOW_POS_Y, static_cast<int>(this->y()));
@@ -217,7 +217,6 @@ void MainWindowImpl::clientInit()
 	startSocket();
 	
 	if(BOOLSETTING(OPEN_SYSTEM_LOG)) SLogFunc();
-//	if(BOOLSETTING(OPEN_DOWNLOADS)) DLoadsFunc();
 	if(BOOLSETTING(OPEN_FAVORITE_USERS)) FavUsrFunc();
 	if(BOOLSETTING(OPEN_QUEUE)) DLQueueFunc();
 	if(BOOLSETTING(OPEN_FINISHED_DOWNLOADS)) DLFinFunc();
@@ -342,7 +341,6 @@ void MainWindowImpl::createActions()
 	connect(aboutqtact, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
 	connect(actionStatusBar, SIGNAL(triggered()), this, SLOT(statusbarcheck()));
-	connect(actionDownloads, SIGNAL(triggered()), this, SLOT(DLoadsFunc()));
 	connect(actionSysLog, SIGNAL(triggered()), this, SLOT(SLogFunc()));
 
 	
@@ -509,13 +507,6 @@ void MainWindowImpl::SLogFunc()
 	if (FindWinByType(StilUtils::WIN_TYPE_SYSTEM_LOG)==-1)
 		m_tabwin->setCurrentIndex(m_tabwin->addTab((new SysLogWindow(m_tabwin)),"System Log"));
 	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_SYSTEM_LOG));
-}
-
-void MainWindowImpl::DLoadsFunc()
-{
-	if (FindWinByType(StilUtils::WIN_TYPE_DOWNLOADS)==-1)
-		m_tabwin->setCurrentIndex(m_tabwin->addTab((new DownLoadsWindow(m_tabwin)),"Downloads"));
-	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_DOWNLOADS));
 }
 
 void MainWindowImpl::ADLFunc()

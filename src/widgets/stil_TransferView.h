@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Pavel Andreev                                   *
- *   Mail: apavelm on gmail dot com (apavelm@gmail.com)                    *
+ *   Copyright (C) 2007 - 2008 by Pavel Andreev                            *
+ *   Mail: apavelm on gmail point com (apavelm@gmail.com)                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -45,6 +45,10 @@
 #include "../UserInfoBase.h"
 #include "../stilutils.h"
 #include "../config.h"
+#include "tabwidget.h"
+#include "stil_qdltreewidget.h"
+
+#include <boost/scoped_ptr.hpp>
 
 #include <QClipboard>
 #include <QtGui>
@@ -55,11 +59,11 @@ using namespace dcpp;
 using namespace std;
 
 
-class TransferView : public QTreeWidget 
-	,private dcpp::DownloadManagerListener
-	,private dcpp::UploadManagerListener
-	,private dcpp::ConnectionManagerListener
-	//,private dcpp::FavoriteManagerListener
+class TransferView : public QWidget 
+	,private DownloadManagerListener
+	,private UploadManagerListener
+	,private ConnectionManagerListener
+	,private QueueManagerListener
 {
 	Q_OBJECT
 public:
@@ -69,36 +73,55 @@ public:
 private:
 	QMenu * cnxtMenu;
 	QMenu * columnMenu;
-	bool speak();
+	QDLTreeWidget * connections;
+	QDLTreeWidget * downloads;
+	TabWidget * tabs;
 	
 	enum {
-		ADD_ITEM,
-		REMOVE_ITEM,
-		UPDATE_ITEM,
+		DOWNLOAD_COLUMN_FIRST,
+		DOWNLOAD_COLUMN_FILE = DOWNLOAD_COLUMN_FIRST,
+		DOWNLOAD_COLUMN_PATH,
+		DOWNLOAD_COLUMN_STATUS,
+		DOWNLOAD_COLUMN_TIMELEFT,
+		DOWNLOAD_COLUMN_SPEED,
+		DOWNLOAD_COLUMN_DONE,
+		DOWNLOAD_COLUMN_SIZE,
+		DOWNLOAD_COLUMN_LAST
+	};
+	
+	enum {
+		DOWNLOADS_ADD_USER,
+		DOWNLOADS_TICK,
+		DOWNLOADS_REMOVE_USER,
+		DOWNLOADS_REMOVED,
+		CONNECTIONS_ADD,
+		CONNECTIONS_REMOVE,
+		CONNECTIONS_UPDATE
 	};
 
 	enum {
-		COLUMN_FIRST,
-		COLUMN_USER = COLUMN_FIRST,
-		COLUMN_STATUS,
-		COLUMN_SPEED,
-		COLUMN_CHUNK,
-		COLUMN_TRANSFERED,
-		COLUMN_QUEUED,
-		COLUMN_CIPHER,
-		COLUMN_IP,
-		COLUMN_LAST
+		CONNECTION_COLUMN_FIRST,
+		CONNECTION_COLUMN_USER = CONNECTION_COLUMN_FIRST,
+		CONNECTION_COLUMN_STATUS,
+		CONNECTION_COLUMN_SPEED,
+		CONNECTION_COLUMN_CHUNK,
+		CONNECTION_COLUMN_TRANSFERED,
+		CONNECTION_COLUMN_QUEUED,
+		CONNECTION_COLUMN_CIPHER,
+		CONNECTION_COLUMN_IP,
+		CONNECTION_COLUMN_LAST
 	};
 
 	struct UpdateInfo;
-	class ItemInfo : public UserInfoBase {
+	
+	class ConnectionInfo : public UserInfoBase {
 	public:
 		enum Status {
-			STATUS_RUNNING,		///< Transfering
+			STATUS_RUNNING,	///< Transfering
 			STATUS_WAITING		///< Idle
 		};
 
-		ItemInfo(const UserPtr& u, bool aDownload);
+		ConnectionInfo(const UserPtr& u, bool aDownload);
 
 		bool download;
 		bool transferFailed;
@@ -112,8 +135,9 @@ private:
 		int64_t queued;
 		int64_t speed;
 		int64_t chunk;
+		int64_t chunkPos;
 		
-		tstring columns[COLUMN_LAST];
+		tstring columns[CONNECTION_COLUMN_LAST];
 		void update(const UpdateInfo& ui);
 
 		void disconnect();
@@ -124,7 +148,7 @@ private:
 			return columns[col];
 		}
 
-		static int compareItems(ItemInfo* a, ItemInfo* b, int col);
+		static int compareItems(ConnectionInfo* a, ConnectionInfo* b, int col);
 	};
 
 	struct UpdateInfo : public Task {
@@ -138,7 +162,7 @@ private:
 			MASK_CHUNK = 1 << 6
 		};
 
-		bool operator==(const ItemInfo& ii) { return download == ii.download && user == ii.user; }
+		bool operator==(const ConnectionInfo& ii) { return download == ii.download && user == ii.user; }
 
 		UpdateInfo(const UserPtr& aUser, bool isDownload, bool isTransferFailed = false) : updateMask(0), user(aUser), download(isDownload), transferFailed(isTransferFailed) { }
 
@@ -148,8 +172,8 @@ private:
 		bool download;
 		bool transferFailed;
 		
-		void setStatus(ItemInfo::Status aStatus) { status = aStatus; updateMask |= MASK_STATUS; }
-		ItemInfo::Status status;
+		void setStatus(ConnectionInfo::Status aStatus) { status = aStatus; updateMask |= MASK_STATUS; }
+		ConnectionInfo::Status status;
 		void setTransfered(int64_t aTransfered, int64_t aActual) {
 			transfered = aTransfered; actual = aActual; updateMask |= MASK_TRANSFERED; 
 		}
@@ -159,7 +183,8 @@ private:
 		int64_t speed;
 		void setStatusString(const tstring& aStatusString) { statusString = aStatusString; updateMask |= MASK_STATUS_STRING; }
 		tstring statusString;
-		void setChunk(int64_t aChunk) { chunk = aChunk; updateMask |= MASK_CHUNK; }
+		void setChunk(int64_t aChunkPos, int64_t aChunk) { chunkPos = aChunkPos; chunk = aChunk; updateMask |= MASK_CHUNK; }
+		int64_t chunkPos;
 		int64_t chunk;
 		
 		void setIP(const tstring& aIp) { ip = aIp; updateMask |= MASK_IP; }
@@ -168,27 +193,62 @@ private:
 		tstring cipher;
 	};
 
-	static int columnIndexes[];
-	static int columnSizes[];
+	struct TickInfo : public Task {
+		TickInfo(const string& path_) : path(path_), done(0), bps(0) { }
+		
+		string path;
+		int64_t done;
+		double bps;
+	};
+
+	static int connectionIndexes[CONNECTION_COLUMN_LAST];
+	static int connectionSizes[CONNECTION_COLUMN_LAST];
+	
+	class DownloadInfo {
+	public:
+		DownloadInfo(const string& filename, int64_t size, const TTHValue& tth);
+		
+		const tstring& getText(int col) const {
+			return columns[col];
+		}
+
+		static int compareItems(DownloadInfo* a, DownloadInfo* b, int col) {
+			switch(col) {
+			case DOWNLOAD_COLUMN_STATUS: return compare(a->users, b->users);
+			case DOWNLOAD_COLUMN_TIMELEFT: return compare(a->timeleft(), b->timeleft());
+			case DOWNLOAD_COLUMN_SPEED: return compare(a->bps, b->bps);
+			case DOWNLOAD_COLUMN_SIZE: return compare(a->size, b->size);
+			case DOWNLOAD_COLUMN_DONE: return compare(a->done, b->done);
+			default: return QString::compare(StilUtils::TstrtoQ(a->columns[col]), StilUtils::TstrtoQ(b->columns[col]),  Qt::CaseInsensitive) ;
+			}
+		}
+		
+		void update();
+		void update(const TickInfo& ti);
+		
+		int64_t timeleft() { return bps == 0 ? 0 : (size - done) / bps; }
+		string path;
+		int64_t done;
+		int64_t size;
+		double bps;
+		int users;
+		TTHValue tth;
+		
+		tstring columns[DOWNLOAD_COLUMN_LAST];
+	};
+	
+
+	static int downloadIndexes[DOWNLOAD_COLUMN_LAST];
+	static int downloadSizes[DOWNLOAD_COLUMN_LAST];
 
 	TaskQueue tasks;
 	StringMap ucLineParams;
 
-	// workarounds
-	void IIinsert(ItemInfo*);
-	void IIupdate(int);
-	void IIerase(int);
-	
-	QList<ItemInfo*> datalist;
-	QList<QModelIndex> datalistitem;
-	//
-	
 	void makeContextMenu();
+	int find(const string& path);
 
 
-	void speak(int type, UpdateInfo* ui) { tasks.add(type, ui); speak(); }
-	ItemInfo * getItemInfoFromItem(QTreeWidgetItem *);
-
+	void speak(int type = 0, UpdateInfo* ui = 0) { tasks.add(type, ui); speak(); }
 
 // Listeners
 	virtual void on(ConnectionManagerListener::Added, ConnectionQueueItem* aCqi) throw();
@@ -196,20 +256,20 @@ private:
 	virtual void on(ConnectionManagerListener::Removed, ConnectionQueueItem* aCqi) throw();
 	virtual void on(ConnectionManagerListener::StatusChanged, ConnectionQueueItem* aCqi) throw();
 
-	virtual void on(DownloadManagerListener::Complete, Download* aDownload) throw() { onTransferComplete(aDownload, false);}
+	virtual void on(DownloadManagerListener::Requesting, Download* aDownload) throw();
+	virtual void on(DownloadManagerListener::Complete, Download* aDownload) throw();
 	virtual void on(DownloadManagerListener::Failed, Download* aDownload, const string& aReason) throw();
 	virtual void on(DownloadManagerListener::Starting, Download* aDownload) throw();
 	virtual void on(DownloadManagerListener::Tick, const DownloadList& aDownload) throw();
 
 	virtual void on(UploadManagerListener::Starting, Upload* aUpload) throw();
 	virtual void on(UploadManagerListener::Tick, const UploadList& aUpload) throw();
-	virtual void on(UploadManagerListener::Complete, Upload* aUpload) throw() { onTransferComplete(aUpload, true); }
+	virtual void on(UploadManagerListener::Complete, Upload* aUpload) throw();
+
+	virtual void on(QueueManagerListener::Removed, QueueItem*) throw();
 
 	void onTransferComplete(Transfer* aTransfer, bool isUpload);
-// FavoriteManager
-	//void on(FavoriteManagerListener::UserAdded, const FavoriteUser& /*aUser*/) throw(); 
-	//void on(FavoriteManagerListener::UserRemoved, const FavoriteUser& /*aUser*/) throw();
-	
+	void onTransferTick(Transfer* aTransfer);
 	void starting(UpdateInfo* ui, Transfer* t);
 	
 protected:

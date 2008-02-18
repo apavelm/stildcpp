@@ -1,11 +1,8 @@
 /***************************************************************************
- *   Copyright (C) 2007, 2008 by Pavel Andreev                                   *
- *   Mail: apavelm on gmail dot com (apavelm@gmail.com)                    *
- *   Copyright (C) 2007, 2008 by Yakov Suraev aka BigBiker                       *
- *   Mail: adminbsd on gmail dot com (adminbsd@gmail.com)
- *                                                                         *
- *	 Thanks to Jacek Sieka (arnetheduck on gmail point com) for original   *
- *   code from original client (dcplusplus)                                *
+ *   Copyright (C) 2007 - 2008 by Pavel Andreev                            *
+ *   Mail: apavelm on gmail point com (apavelm@gmail.com)                  *
+ *   Copyright (C) 2007 - 2008 by Yakov Suraev aka BigBiker                *
+ *   Mail: adminbsd on gmail point com (adminbsd@gmail.com)                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *

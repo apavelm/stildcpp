@@ -22,7 +22,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>28</height>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFiles" >
@@ -58,7 +58,6 @@
     <addaction name="actionSearch_Spy" />
     <addaction name="separator" />
     <addaction name="actionSysLog" />
-    <addaction name="actionDownloads" />
     <addaction name="actionIndexing_Progress" />
     <addaction name="actionNotePad" />
     <addaction name="separator" />
@@ -124,27 +123,18 @@
    <widget class="QWidget" name="dockWidgetContents" >
     <layout class="QVBoxLayout" >
      <item>
-      <widget class="TransferView" name="trans_view" >
-       <property name="autoFillBackground" >
-        <bool>false</bool>
+      <widget class="QWidget" native="1" name="trans_view" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-       <property name="editTriggers" >
-        <set>QAbstractItemView::NoEditTriggers</set>
-       </property>
-       <property name="indentation" >
-        <number>2</number>
-       </property>
-       <property name="uniformRowHeights" >
-        <bool>true</bool>
-       </property>
-       <property name="itemsExpandable" >
-        <bool>false</bool>
-       </property>
-       <property name="sortingEnabled" >
-        <bool>true</bool>
-       </property>
-       <property name="allColumnsShowFocus" >
-        <bool>true</bool>
+       <property name="minimumSize" >
+        <size>
+         <width>10</width>
+         <height>20</height>
+        </size>
        </property>
       </widget>
      </item>
@@ -438,24 +428,12 @@
     <string>Ctrl+N</string>
    </property>
   </action>
-  <action name="actionDownloads" >
-   <property name="text" >
-    <string>Downloads</string>
-   </property>
-  </action>
   <action name="actionSysLog" >
    <property name="text" >
     <string>System Log</string>
    </property>
   </action>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>TransferView</class>
-   <extends>QTreeWidget</extends>
-   <header>../src/widgets/stil_TransferView.h</header>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="../src/stildcpp.qrc" />
  </resources>
