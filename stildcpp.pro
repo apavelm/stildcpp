@@ -248,7 +248,6 @@ SOURCES = src/mainwindowimpl.cpp \
  src/userlistsortingmodel.cpp \
  src/widgets/stil_TransferView.cpp \
  src/widgets/myprogress.cpp \
- src/DownLoads.cpp \
  src/widgets/stil_qdltreewidget.cpp
 RESOURCES += src/stildcpp.qrc src/langs.qrc
 LIBS += -lssl -lbz2 -lcrypto
@@ -259,4 +258,5 @@ DEFINES += _DEBUG \
  _UNICODE \
  BUILDING_DCPP \
  DEBUG \
- USE_SYS_STL =  1  BUILDING_DCPP
+ USE_SYS_STL=1 \
+ BUILDING_DCPP
