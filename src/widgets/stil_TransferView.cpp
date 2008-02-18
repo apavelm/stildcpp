@@ -109,6 +109,7 @@ TransferView::TransferView(QWidget *parent) : QWidget(parent)
 	connect(this, SIGNAL(sigSpeak()), this, SLOT(slotSpeak()), Qt::QueuedConnection);
 	
 	tabs = new TabWidget( this );
+
 	//connect(tabs, SIGNAL(currentChanged(int)), this, SLOT(slotCurrentTabChanged(int)) );
 	tabs->setOpt(0);
 	
@@ -255,8 +256,9 @@ void TransferView::showCnxtMenu(const QPoint& point)
 
 TransferView::~TransferView() 
 {
-	delete cnxtMenu;
-	delete columnMenu;
+	//FIXME: segfaults here
+	//delete cnxtMenu;
+	//delete columnMenu;
 	delete connections;
 	delete downloads;
 	delete tabs;

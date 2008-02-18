@@ -121,9 +121,18 @@
     <number>8</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents" >
+    <property name="sizePolicy" >
+     <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="autoFillBackground" >
+     <bool>false</bool>
+    </property>
     <layout class="QVBoxLayout" >
      <item>
-      <widget class="QWidget" native="1" name="trans_view" >
+      <widget class="TransferView" native="1" name="trans_view" >
        <property name="sizePolicy" >
         <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
          <horstretch>0</horstretch>
@@ -135,6 +144,9 @@
          <width>10</width>
          <height>20</height>
         </size>
+       </property>
+       <property name="autoFillBackground" >
+        <bool>false</bool>
        </property>
       </widget>
      </item>
@@ -434,6 +446,14 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>TransferView</class>
+   <extends>QWidget</extends>
+   <header>../src/widgets/stil_TransferView.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../src/stildcpp.qrc" />
  </resources>
