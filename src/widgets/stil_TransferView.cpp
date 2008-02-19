@@ -20,6 +20,7 @@
 
 #include "stil_TransferView.h"
 #include "myprogress.h"
+#include "../mainwindowimpl.h"
 
 int TransferView::connectionSizes[] = { 125, 375, 100, 125, 125, 75, 100, 100 };
 int TransferView::downloadSizes[] = { 200, 300, 150, 200, 125, 100, 100 };
@@ -103,25 +104,12 @@ void TransferView::preClose()
 
 TransferView::TransferView(QWidget *parent) : QWidget(parent)
 {
+	setupUi(this);
 	datalist1.clear();
 	datalist2.clear();
 	datalistitem1.clear();
 	datalistitem2.clear();
 	connect(this, SIGNAL(sigSpeak()), this, SLOT(slotSpeak()), Qt::QueuedConnection);
-		
-	tabs = new QTabWidget( this );
-	tabs->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-	connections = new QDLTreeWidget(this);
-	downloads = new QDLTreeWidget(this);
-	connections->setRootIsDecorated(false);
-	downloads->setRootIsDecorated(false);
-	connections->setSortingEnabled(true);
-	downloads->setSortingEnabled(true);
-	
-	tabs->addTab( connections, tr("Connections") );
-	tabs->addTab( downloads, tr("Downloads") );
-	
-	//tabs->setGeometry(0,0, 800,600);
 	
 	// CONNECTIONS
 	// labels
@@ -276,25 +264,34 @@ void TransferView::showColumnMenu2(const QPoint &point)
 void TransferView::makeContextMenu1() 
 {
 	cnxtMenu->clear();
+	
+	ConnectionInfo::UserTraits traits;
+	
 	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Get file list")) ,this ,SLOT(handleGetFL()) );
+	if(traits.adcOnly)
+		cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Browse file list")) ,this ,SLOT(handleBrowse()) );
+	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Match queue")) ,this ,SLOT(handleMatch()) );
+	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Send private message")) ,this ,SLOT(handleSendPM()) );
+//	if(!traits.favOnly)
+		cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Add To Favorites")) ,this ,SLOT(handleAddToFav()) );
+	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Grant extra slot")) ,this ,SLOT(handleGrantSlot()) );
+	if(!traits.nonFavOnly)
+		cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Connect to hub")) ,this ,SLOT(handleConHub()) );
+	cnxtMenu->addSeparator();
+	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Remove user from queue")) ,this ,SLOT(handleRemoveUserQueue()) );
 	cnxtMenu->addSeparator();
 	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Force attempt")) ,this ,SLOT(handleForce()) );
-	cnxtMenu->addSeparator();
-	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Add To Favorites")) ,this ,SLOT(handleAddToFav()) );
-	cnxtMenu->addSeparator();
-	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Search for alternates")) ,this ,SLOT(handleSearchAlternates()) );
-	cnxtMenu->addSeparator();
 	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Copy nick to clipboard")) ,this ,SLOT(handleCopyNick()) );
 	cnxtMenu->addSeparator();
-	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Close connection")) ,this ,SLOT(handleRemove()) );
+	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Disconnect")) ,this ,SLOT(handleRemove()) );
 }
 
 void TransferView::makeContextMenu2() 
 {
 	cnxtMenu->clear();
-	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Get file list")) ,this ,SLOT(handleGetFL()) );
-	cnxtMenu->addSeparator();
-	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Get file list")) ,this ,SLOT(handleGetFL()) );
+	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Search for alternates")) ,this ,SLOT(handleSearchAlternates()) );
+	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Lookup TTH at Bitzi.com")), this, SLOT( handleBitzi() ) );
+	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Copy magnet link to clipboard")) ,this ,SLOT(handleCopyMagnet()) );
 }
 
 void TransferView::showCnxtMenu1(const QPoint& point)
@@ -313,48 +310,210 @@ void TransferView::showCnxtMenu2(const QPoint& point)
 
 TransferView::~TransferView() 
 {
-	preClose();
 	delete cnxtMenu;
 	delete columnMenu1;
 	delete columnMenu2;
-	delete connections;
-	delete downloads;
-	delete tabs;
 }
 
 void TransferView::handleGetFL()
 {
-	
+	QList<QTreeWidgetItem *> lt = connections->selectedItems();
+	if (lt.isEmpty()) return;
+	for (int i = 0; i < lt.size(); i++)
+	{
+		ConnectionInfo* ii = datalist1.at(datalistitem1.indexOf(lt[i])); 
+		// ii->getList();
+		// OR
+		try
+		{
+			if (ii->user)
+				QueueManager::getInstance()->addList(ii->user, dcpp::QueueItem::FLAG_CLIENT_VIEW);
+		}
+		catch (const dcpp::Exception &e)
+		{
+			LogManager::getInstance()->message(e.getError());
+		}
+	}
 }
 
 void TransferView::handleRemove() 
 {
-	
+	QList<QTreeWidgetItem *> lt = connections->selectedItems();
+	if (lt.isEmpty()) return;
+	for (int i = 0; i < lt.size(); i++)
+	{
+		ConnectionInfo* ii = datalist1.at(datalistitem1.indexOf(lt[i])); 
+		ii->disconnect();
+	}
 }
 
 void TransferView::runUserCommand(const UserCommand& uc) 
 {
-	
+	if(!StilUtils::getUCParams(this, uc, ucLineParams)) return;
+
+	StringMap ucParams = ucLineParams;
+
+	QList<QTreeWidgetItem *> lt = connections->selectedItems();
+	if (lt.isEmpty()) return;
+	for (int i = 0; i < lt.size(); i++)
+	{
+		ConnectionInfo* ii = datalist1.at(datalistitem1.indexOf(lt[i])); 
+		if(!ii->user->isOnline()) continue;
+		StringMap tmp = ucParams;
+		/// @todo tmp["fileFN"] = Text::fromT(ii->path + ii->file);
+		// compatibility with 0.674 and earlier
+		ucParams["file"] = ucParams["fileFN"];
+		ClientManager::getInstance()->userCommand(ii->user, uc, tmp, true);
+	}
 }
 
 void TransferView::handleForce()
 {
-	
+	QList<QTreeWidgetItem *> lt = connections->selectedItems();
+	if (lt.isEmpty()) return;
+	for (int i = 0; i < lt.size(); i++)
+	{
+		connections_getData(i)->columns[CONNECTION_COLUMN_STATUS] = T_("Connecting (forced)");
+		connections_update(i);
+		ConnectionManager::getInstance()->force(connections_getData(i)->user);
+	}
+}
+
+void TransferView::handleMatch()
+{
+	QList<QTreeWidgetItem *> lt = connections->selectedItems();
+	if (lt.isEmpty()) return;
+	for (int i = 0; i < lt.size(); i++)
+	{
+		ConnectionInfo *ii = datalist1.at(datalistitem1.indexOf(lt[i]));
+		ii->matchQueue();
+		qDebug() << "You press MatchQueue... I don't know would it work!";
+	}
+}
+
+void TransferView::handleSendPM()
+{
+	QList<QTreeWidgetItem *> lt = connections->selectedItems();
+	if (lt.isEmpty()) return;
+	for (int i = 0; i < lt.size(); i++)
+	{
+		ConnectionInfo *ii = datalist1.at(datalistitem1.indexOf(lt[i]));
+		//ii->pm(this);
+		MainWindowImpl::getInstance()->OpenPM(ii->getUser());
+	}
+}
+
+void TransferView::handleGrantSlot()
+{
+	QList<QTreeWidgetItem *> lt = connections->selectedItems();
+	if (lt.isEmpty()) return;
+	for (int i = 0; i < lt.size(); i++)
+	{
+		ConnectionInfo *ii = datalist1.at(datalistitem1.indexOf(lt[i]));
+		ii->grant();
+		qDebug() << "You press GrantSlot... I don't know : if it works!";
+	}
+}
+
+void TransferView::handleBrowse()
+{
+	QList<QTreeWidgetItem *> lt = connections->selectedItems();
+	if (lt.isEmpty()) return;
+	for (int i = 0; i < lt.size(); i++)
+	{
+		ConnectionInfo *ii = datalist1.at(datalistitem1.indexOf(lt[i]));
+		//ii->browseList();
+		qDebug() << "You press BrowseList... I don't know would it work!";
+	}
+}
+
+void TransferView::handleConHub()
+{
+	QList<QTreeWidgetItem *> lt = connections->selectedItems();
+	if (lt.isEmpty()) return;
+	for (int i = 0; i < lt.size(); i++)
+	{
+		ConnectionInfo *ii = datalist1.at(datalistitem1.indexOf(lt[i]));
+		//ii->connectFav(this);
+		//MainWindowImpl::getInstance()->OpenHub(ii->user->hub);
+		qDebug() << "You press ConnectHub... I don't know if it works!";
+	}
+}
+
+void TransferView::handleRemoveUserQueue()
+{
+	QList<QTreeWidgetItem *> lt = connections->selectedItems();
+	if (lt.isEmpty()) return;
+	for (int i = 0; i < lt.size(); i++)
+	{
+		ConnectionInfo *ii = datalist1.at(datalistitem1.indexOf(lt[i]));
+		ii->removeAll();
+		qDebug() << "You press RemoveUserFromQueue... I don't know : if it works!";
+	}
 }
 
 void TransferView::handleCopyNick()
 {
-	
+	QApplication::clipboard()->setText(connections->currentItem()->text(CONNECTION_COLUMN_USER), QClipboard::Clipboard);
+	if(QApplication::clipboard()->supportsSelection())
+		QApplication::clipboard()->setText(connections->currentItem()->text(CONNECTION_COLUMN_USER), QClipboard::Selection);
 }
 
 void TransferView::handleAddToFav()
 {
-
+	QList<QTreeWidgetItem *> lt = connections->selectedItems();
+	if (lt.isEmpty()) return;
+	for (int i = 0; i < lt.size(); i++)
+	{
+		ConnectionInfo* ii = datalist1.at(datalistitem1.indexOf(lt[i])); 
+		FavoriteManager::getInstance()->addFavoriteUser(ii->user);
+	}
 }
 
 void TransferView::handleSearchAlternates()
 {
+	QList<QTreeWidgetItem *> lt = downloads->selectedItems();
+	if (lt.isEmpty()) return;
+	for (int i = 0; i < lt.size(); i++)
+	{
+		DownloadInfo* ii = datalist2.at(datalistitem2.indexOf(lt[i])); 
+		string target = Text::fromT(ii->getText(DOWNLOAD_COLUMN_PATH) + ii->getText(DOWNLOAD_COLUMN_FILE));
+		TTHValue tth;
+		if(QueueManager::getInstance()->getTTH(target, tth))
+			MainWindowImpl::getInstance()->SearchFunc(Text::toT(tth.toBase32()), 0, SearchManager::SIZE_DONTCARE, SearchManager::TYPE_TTH);
+	}
+}
 
+void TransferView::handleCopyMagnet()
+{
+	QList<QTreeWidgetItem *> lt = downloads->selectedItems();
+	if (lt.isEmpty()) return;
+	for (int i = 0; i < lt.size(); i++)
+	{
+		DownloadInfo* ii = datalist2.at(datalistitem2.indexOf(lt[i])); 
+		string target = Text::fromT(ii->getText(DOWNLOAD_COLUMN_PATH) + ii->getText(DOWNLOAD_COLUMN_FILE));
+		QString b(ii->tth.toBase32().c_str());
+		QString txt = QString("magnet:?xt=urn:tree:tiger:") + b + QString("&xl=") + QString::number(ii->size) + QString("&dn=") + StilUtils::TstrtoQ( Text::toT(Util::getFileName(ii->path)));
+		QApplication::clipboard()->setText(txt, QClipboard::Clipboard);
+		if(QApplication::clipboard()->supportsSelection())
+			QApplication::clipboard()->setText(txt, QClipboard::Selection);
+	}
+}
+
+void TransferView::handleBitzi()
+{
+	QList<QTreeWidgetItem *> lt = downloads->selectedItems();
+	if (lt.isEmpty()) return;
+	for (int i = 0; i < lt.size(); i++)
+	{
+		DownloadInfo* ii = datalist2.at(datalistitem2.indexOf(lt[i])); 
+		const tstring tth = Text::toT( ii->tth.toBase32() );
+		if (tth != Util::emptyStringT)
+		{
+			QUrl url = QUrl("http://bitzi.com/lookup/tree:tiger:" + StilUtils::TstrtoQ(tth));
+			QDesktopServices::openUrl(url);
+		}
+	}
 }
 
 void TransferView::slotSpeak()
@@ -835,7 +994,24 @@ void TransferView::connections_insert(ConnectionInfo* ci)
 	for (int i = 0; i < CONNECTION_COLUMN_LAST; i++) 
 		lst << StilUtils::TstrtoQ(ci->getText(i));
 	QTreeWidgetItem *it = new QTreeWidgetItem(connections, lst);
-	if (ci->download) it->setIcon(0,QIcon(":/images/trans_DL.png")); else it->setIcon(0,QIcon(":/images/trans_UL.png"));
+	it->setIcon(0,QIcon( (ci->download ? ":/images/trans_DL.png" : ":/images/trans_UL.png") ));
+	
+	//if (SETTING(SHOW_PROGRESS_BARS))
+	//{
+	// creating ProgressBar
+	//MyProgressBar *pb = new MyProgressBar();
+	//pb->setMaximum(ii->size);
+	//pb->setTextVisible(true);
+	//pb->setFormat(StilUtils::TstrtoQ(ii->columns[COLUMN_STATUS]));
+	//pb->setValue(0);
+
+	// Setting up color
+	//if (ii->download) pb->SetBarColor(QPalette::Highlight,SETTING(DOWNLOAD_BAR_COLOR)); 
+	//	else pb->SetBarColor(QPalette::Highlight,SETTING(UPLOAD_BAR_COLOR));
+	// inserting widget
+	//setItemWidget ( fItem, COLUMN_STATUS, pb );
+	//}
+	
 	datalistitem1 << it;
 	//ci->download ? SETTING(DOWNLOAD_BAR_COLOR) : SETTING(UPLOAD_BAR_COLOR)
 	setUpdatesEnabled(true);
@@ -850,6 +1026,23 @@ void TransferView::downloads_insert(DownloadInfo* di)
 		lst << StilUtils::TstrtoQ(di->getText(i));
 	QTreeWidgetItem *it = new QTreeWidgetItem(downloads, lst);
 	it->setIcon(0,QIcon(":/images/hub.png"));
+	
+	//if (SETTING(SHOW_PROGRESS_BARS))
+	//{
+	// creating ProgressBar
+	//MyProgressBar *pb = new MyProgressBar();
+	//pb->setMaximum(ii->size);
+	//pb->setTextVisible(true);
+	//pb->setFormat(StilUtils::TstrtoQ(ii->columns[COLUMN_STATUS]));
+	//pb->setValue(0);
+
+	// Setting up color
+	//if (ii->download) pb->SetBarColor(QPalette::Highlight,SETTING(DOWNLOAD_BAR_COLOR)); 
+	//	else pb->SetBarColor(QPalette::Highlight,SETTING(UPLOAD_BAR_COLOR));
+	// inserting widget
+	//setItemWidget ( fItem, COLUMN_STATUS, pb );
+	//}
+	
 	datalistitem2 << it;
 	setUpdatesEnabled(true);
 }

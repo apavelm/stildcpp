@@ -219,7 +219,7 @@ void FavoriteHubListWindow::slot_Add()
 
 void FavoriteHubListWindow::slot_Connect()
 {
-QList<QTreeWidgetItem *> lt = list->selectedItems();
+	QList<QTreeWidgetItem *> lt = list->selectedItems();
 	if (lt.isEmpty()) return;
 	for (int i = 0; i < lt.size(); i++)
 	{

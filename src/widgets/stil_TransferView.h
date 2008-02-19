@@ -45,8 +45,9 @@
 #include "../UserInfoBase.h"
 #include "../stilutils.h"
 #include "../config.h"
-#include "tabwidget.h"
 #include "stil_qdltreewidget.h"
+
+#include "ui_transview.h"
 
 #include <boost/scoped_ptr.hpp>
 
@@ -59,7 +60,7 @@ using namespace dcpp;
 using namespace std;
 
 
-class TransferView : public QWidget 
+class TransferView : public QWidget, private Ui::tr_view
 	,private DownloadManagerListener
 	,private UploadManagerListener
 	,private ConnectionManagerListener
@@ -74,10 +75,6 @@ private:
 	QMenu * cnxtMenu;
 	QMenu * columnMenu1;
 	QMenu * columnMenu2;
-
-	QDLTreeWidget * connections;
-	QDLTreeWidget * downloads;
-	QTabWidget * tabs;
 	
 	class ConnectionInfo;
 	class DownloadInfo;
@@ -304,7 +301,15 @@ private slots:
 	void handleAddToFav();
 	void handleGetFL();
 	void handleSearchAlternates();
+	void handleBitzi();
+	void handleMatch();
+	void handleSendPM();
+	void handleBrowse();
+	void handleConHub();
+	void handleGrantSlot();
+	void handleRemoveUserQueue();
 	void handleCopyNick();
+	void handleCopyMagnet();
 	void handleRemove();
 	void runUserCommand(const UserCommand& uc);
 	void handleDblClicked(const QModelIndex &);

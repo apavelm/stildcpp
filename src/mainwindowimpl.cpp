@@ -27,7 +27,7 @@
 MainWindowImpl::~MainWindowImpl()
 {
 	thrdGetTTh.stop();
-	
+	trans_view->preClose();
 	dcpp::SettingsManager::getInstance()->set(SettingsManager::MAIN_WINDOW_POS_X, static_cast<int>(this->x()));
 	dcpp::SettingsManager::getInstance()->set(SettingsManager::MAIN_WINDOW_POS_Y, static_cast<int>(this->y()));
 	dcpp::SettingsManager::getInstance()->set(SettingsManager::MAIN_WINDOW_SIZE_X, static_cast<int>(this->size().width()));
@@ -755,7 +755,7 @@ void ThreadGetTTH::run()
 			} else tth.update("", 0);
 			tth.finalize();
 
-			b = tr(tth.getRoot().toBase32().c_str());
+			b = QString(tth.getRoot().toBase32().c_str());
 			
 			c = "magnet:?xt=urn:tree:tiger:" + b + "&xl=" + QString::number(fi.size()) + "&dn=" + (Util::encodeURI(fi.fileName().toLocal8Bit().data())).c_str();
 			f.close();
