@@ -23,6 +23,7 @@
 
 #include "mdi_c.h"
 #include "stilutils.h"
+#include "mainwindowimpl.h"
 
 #include "ui_favhublist.h"
 
@@ -63,7 +64,7 @@ private:
 	bool startup;
 	
 	QList<FavoriteHubEntryPtr> datalist;
-	QList<QModelIndex> datalistitem;
+	QList<QTreeWidgetItem*> datalistitem;
 	void addEntry(const dcpp::FavoriteHubEntryPtr entry);
 	
 	// Listner

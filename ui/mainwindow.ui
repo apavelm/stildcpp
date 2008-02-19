@@ -22,7 +22,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>30</height>
+     <height>31</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFiles" >
@@ -132,23 +132,7 @@
     </property>
     <layout class="QVBoxLayout" >
      <item>
-      <widget class="TransferView" native="1" name="trans_view" >
-       <property name="sizePolicy" >
-        <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize" >
-        <size>
-         <width>10</width>
-         <height>20</height>
-        </size>
-       </property>
-       <property name="autoFillBackground" >
-        <bool>false</bool>
-       </property>
-      </widget>
+      <widget class="TransferView" native="1" name="trans_view" />
      </item>
     </layout>
    </widget>

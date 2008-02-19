@@ -81,7 +81,7 @@ private:
 	};
 	
 	QList<FavoriteUser> datalist;
-	QList<QModelIndex> datalistitem;
+	QList<QTreeWidgetItem*> datalistitem;
 	void updateVisuals(UserInfo *);
 	
 	enum { USER_UPDATED };
@@ -90,9 +90,8 @@ private:
 	void updateUser(const UserPtr& aUser);
 	void removeUser(const FavoriteUser& aUser);
 	
-	// hack
 	void speak(int, const UserPtr& aUser);
-	
+
 	// FavoriteManagerListener
 	virtual void on(UserAdded, const FavoriteUser& aUser) throw();
 	virtual void on(UserRemoved, const FavoriteUser& aUser) throw();

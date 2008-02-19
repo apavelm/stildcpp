@@ -207,9 +207,9 @@ signals:
 	int speakerSignal(unsigned int, long=0);
 	
 public slots:
-	void OpenList(QWidget *, const dcpp::tstring & , const dcpp::UserPtr & , int64_t, const QString);
+	void OpenList(QWidget *, const tstring & , const UserPtr & , int64_t, const QString);
 	void OpenPM(const UserPtr& replyTo, const tstring& aMessage = Util::emptyStringT);
-	void OpenHub(const dcpp::tstring& adr, QWidget *parent = 0);
+	void OpenHub(const tstring& adr, QWidget *parent = 0);
 	void SearchFunc(const tstring& str = Util::emptyStringT, int64_t size = 0, SearchManager::SizeModes mode = SearchManager::SIZE_ATLEAST, SearchManager::TypeModes type = SearchManager::TYPE_ANY);
 
 private:

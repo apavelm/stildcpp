@@ -35,7 +35,7 @@ void FavoriteUsersWindow::slot_list_currentItemChanged(QTreeWidgetItem *c, QTree
 	if (!c) return;
 	if (datalist.isEmpty()) return;
 	// Changing information in right panel
-	UserInfo * ui = new UserInfo(datalist.at(datalistitem.indexOf(list->indexFromItem(c))));
+	UserInfo * ui = new UserInfo(datalist.at(datalistitem.indexOf(c)));
 	updateVisuals(ui);
 	delete ui;
 }
@@ -90,7 +90,7 @@ void FavoriteUsersWindow::addUser(const FavoriteUser& aUser)
 	datalist << aUser;
 	setUpdatesEnabled(false);
 	QTreeWidgetItem *it = new QTreeWidgetItem(list);
-	datalistitem << list->indexFromItem(it);
+	datalistitem << it;
 	it->setText(0, StilUtils::TstrtoQ(Text::toT(aUser.getNick())));
 	it->setIcon(0,QIcon(":/images/fav_user1.png")); // or "fav_user2.png" ??
 	setUpdatesEnabled(true);
@@ -116,19 +116,9 @@ void FavoriteUsersWindow::slot_remove_user()
 	if (lt.isEmpty()) return;
 	for (int i = 0; i < lt.size(); i++)
 	{
-		int idx = datalistitem.indexOf(list->indexFromItem(lt[i]));
+		int idx = datalistitem.indexOf(lt[i]);
 		UserInfo * ui = new UserInfo(datalist[idx]);
 		ui->remove();
-		// After deleting next in list ModelIndexes changed!!!
-		// It need to fix ModelIndexes 
-		// Qt BUG ???
-		for (int j = 0; j < datalistitem.size(); j++)
-		{
-			QTreeWidgetItem *w = list->itemFromIndex(datalistitem[j]);
-			datalistitem[j] = list->indexFromItem(w);
-		}
-			list->setCurrentItem(list->topLevelItem(idx));
-		////////////
 		delete ui;
 	}
 }
@@ -141,7 +131,7 @@ void FavoriteUsersWindow::removeUser(const FavoriteUser& aUser)
 			{
 				// DELETING 
 				setUpdatesEnabled(false);
-				delete list->itemFromIndex(datalistitem.at(i));
+				delete datalistitem.at(i);
 				datalistitem.removeAt(i);
 				datalist.removeAt(i);
 				setUpdatesEnabled(true);
@@ -159,7 +149,7 @@ void FavoriteUsersWindow::slot_desc_user()
 {
 	QTreeWidgetItem *it = list->currentItem();
 	if (!it) return;
-	int idx = datalistitem.indexOf(list->indexFromItem(it));
+	int idx = datalistitem.indexOf(it);
 	UserInfo *ui = new UserInfo(datalist[idx]);
 	FavoriteManager::getInstance()->setUserDescription(ui->user, Text::fromT(StilUtils::QtoTstr(lbl_Desc->toPlainText())));
 	// Updating in runtime
@@ -179,7 +169,7 @@ void FavoriteUsersWindow::onAutoGrant(int value)
 	if (!cb_AutoSlot->isEnabled()) return;
 	QTreeWidgetItem *it = list->currentItem();
 	if (!it) return;
-	int idx = datalistitem.indexOf(list->indexFromItem(it));
+	int idx = datalistitem.indexOf(it);
 	UserInfo *ui = new UserInfo(datalist[idx]);
 	FavoriteManager::getInstance()->setAutoGrant(ui->user, static_cast<bool>(value));
 	// Updating in runtime

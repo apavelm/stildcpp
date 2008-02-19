@@ -29,8 +29,8 @@ void FavoriteHubListWindow::slot_list_currentItemChanged(QTreeWidgetItem *c, QTr
 {
 	if (!c) return;
 	// Changing information in right panel
-	int idx = datalistitem.indexOf(list->indexFromItem(c));
-	FavoriteHubEntryPtr entry = datalist.at(idx);//GetFavHubPtr(c->text(COLUMN_NAME));
+	int idx = datalistitem.indexOf(c);
+	FavoriteHubEntryPtr entry = datalist.at(idx);
 	if (!entry) return;
 	
 	edt_hubName->setText( StilUtils::TstrtoQ(Text::toT(entry->getName())) );
@@ -49,7 +49,7 @@ void FavoriteHubListWindow::slot_list_currentItemChanged(QTreeWidgetItem *c, QTr
 
 void FavoriteHubListWindow::slot_autoconn(int value)
 {
-	int idx = datalistitem.indexOf(list->currentIndex());
+	int idx = datalistitem.indexOf(list->currentItem());
 	if (idx < 0) return;
 	datalist[idx]->setConnect(static_cast<bool>(value));
 	FavoriteManager::getInstance()->save();
@@ -57,7 +57,7 @@ void FavoriteHubListWindow::slot_autoconn(int value)
 
 void FavoriteHubListWindow::slotStore_1()
 {
-	int idx = datalistitem.indexOf(list->currentIndex());
+	int idx = datalistitem.indexOf(list->currentItem());
 	if (idx < 0) return;
 	datalist[idx]->setName(Text::fromT(StilUtils::QtoTstr(edt_hubName->text())));
 	FavoriteManager::getInstance()->save();
@@ -71,7 +71,7 @@ void FavoriteHubListWindow::slotStore_2()
 		QMessageBox::information(this, tr("StilDC++"), tr("Hub address cannot be empty"), QMessageBox::Ok);
 		return;
 	}
-	int idx = datalistitem.indexOf(list->currentIndex());
+	int idx = datalistitem.indexOf(list->currentItem());
 	if (idx < 0) return;
 	datalist[idx]->setServer(Text::fromT(addressText));
 	FavoriteManager::getInstance()->save();
@@ -79,7 +79,7 @@ void FavoriteHubListWindow::slotStore_2()
 
 void FavoriteHubListWindow::slotStore_3()
 {
-	int idx = datalistitem.indexOf(list->currentIndex());
+	int idx = datalistitem.indexOf(list->currentItem());
 	if (idx < 0) return;
 	datalist[idx]->setDescription(Text::fromT(StilUtils::QtoTstr(edt_hubDesc->toPlainText())));
 	FavoriteManager::getInstance()->save();
@@ -87,7 +87,7 @@ void FavoriteHubListWindow::slotStore_3()
 
 void FavoriteHubListWindow::slotStore_4()
 {
-	int idx = datalistitem.indexOf(list->currentIndex());
+	int idx = datalistitem.indexOf(list->currentItem());
 	if (idx < 0) return;
 	datalist[idx]->setNick(Text::fromT(StilUtils::QtoTstr(edt_Login->text())));
 	FavoriteManager::getInstance()->save();
@@ -95,7 +95,7 @@ void FavoriteHubListWindow::slotStore_4()
 
 void FavoriteHubListWindow::slotStore_5()
 {
-	int idx = datalistitem.indexOf(list->currentIndex());
+	int idx = datalistitem.indexOf(list->currentItem());
 	if (idx < 0) return;
 	datalist[idx]->setPassword(Text::fromT(StilUtils::QtoTstr(edt_Pass->text())));
 	FavoriteManager::getInstance()->save();
@@ -103,7 +103,7 @@ void FavoriteHubListWindow::slotStore_5()
 
 void FavoriteHubListWindow::slotStore_6()
 {
-	int idx = datalistitem.indexOf(list->currentIndex());
+	int idx = datalistitem.indexOf(list->currentItem());
 	if (idx < 0) return;
 	datalist[idx]->setUserDescription(Text::fromT(StilUtils::QtoTstr(edt_Desc->text())));
 	FavoriteManager::getInstance()->save();
@@ -193,7 +193,7 @@ void FavoriteHubListWindow::addEntry(const FavoriteHubEntryPtr entry)
 	datalist << entry;
 	setUpdatesEnabled(false);
 	QTreeWidgetItem *it = new QTreeWidgetItem(list);
-	datalistitem << list->indexFromItem(it);
+	datalistitem << it;
 	it->setText(0, StilUtils::TstrtoQ(Text::toT(entry->getName())));
 	it->setIcon(0,QIcon(":/images/hub.png"));
 	setUpdatesEnabled(true);
@@ -219,20 +219,13 @@ void FavoriteHubListWindow::slot_Add()
 
 void FavoriteHubListWindow::slot_Connect()
 {
-	QTreeWidgetItem *it = list->currentItem();
-	if (!it) return;
-
-	if(SETTING(NICK).empty())
+QList<QTreeWidgetItem *> lt = list->selectedItems();
+	if (lt.isEmpty()) return;
+	for (int i = 0; i < lt.size(); i++)
 	{
-		QMessageBox::critical(this, tr("StilDC++"), tr("Please enter a nickname in the settings dialog!"), QMessageBox::Ok);
-		return;
+		FavoriteHubEntryPtr f = datalist.at(datalistitem.indexOf(lt[i]));
+		MainWindowImpl::getInstance()->OpenHub(Text::toT(f->getServer().c_str()));
 	}
-
-//	std::vector<unsigned> items = hubs->getSelected();
-//	for(std::vector<unsigned>::iterator i = items.begin(); i != items.end(); ++i) {
-//		FavoriteHubEntryPtr entry = reinterpret_cast<FavoriteHubEntryPtr>(hubs->getData(*i));
-//		HubFrame::openWindow(getParent(), entry->getServer());
-//	}
 }
 
 void FavoriteHubListWindow::slot_Remove()
@@ -241,7 +234,7 @@ void FavoriteHubListWindow::slot_Remove()
 	if (lt.isEmpty()) return;
 	for (int i = 0; i < lt.size(); i++)
 	{
-		int idx = datalistitem.indexOf(list->indexFromItem(lt[i]));
+		int idx = datalistitem.indexOf(lt[i]);
 		bool b;
 		if (!BOOLSETTING(CONFIRM_HUB_REMOVAL) ) b = true;
 		else
@@ -253,17 +246,6 @@ void FavoriteHubListWindow::slot_Remove()
 		}
 	
 		if (b) FavoriteManager::getInstance()->removeFavorite(datalist[idx]);
-		
-		// After deleting next in list ModelIndexes changed!!!
-		// It need to fix ModelIndexes 
-		// Qt BUG ???
-		for (int j = 0; j < datalistitem.size(); j++)
-		{
-			QTreeWidgetItem *w = list->itemFromIndex(datalistitem[j]);
-			datalistitem[j] = list->indexFromItem(w);
-		}
-			list->setCurrentItem(list->topLevelItem(idx));
-		////////////
 	}
 }
 
@@ -273,7 +255,7 @@ void FavoriteHubListWindow::on(FavoriteAdded, const FavoriteHubEntryPtr e) throw
 	if (!startup)
 	{
 		int idx = datalist.indexOf(e);
-		list->setCurrentIndex(datalistitem[idx]);
+		list->setCurrentItem(datalistitem[idx], 0);
 		edt_hubAddress->setFocus(Qt::OtherFocusReason);
 		startup = true;
 	}
@@ -282,10 +264,9 @@ void FavoriteHubListWindow::on(FavoriteAdded, const FavoriteHubEntryPtr e) throw
 void FavoriteHubListWindow::on(FavoriteRemoved, const FavoriteHubEntryPtr e) throw() 
 {
 	int idx = datalist.indexOf(e);
-	QTreeWidgetItem *w = list->itemFromIndex(datalistitem[idx]);
 	// DELETING 
 	setUpdatesEnabled(false);
-	delete w;
+	delete datalistitem[idx];
 	datalistitem.removeAt(idx);
 	datalist.removeAt(idx);
 	setUpdatesEnabled(true);

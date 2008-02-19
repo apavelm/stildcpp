@@ -21,10 +21,7 @@
 #include "stil_TransferView.h"
 #include "myprogress.h"
 
-int TransferView::connectionIndexes[] = { CONNECTION_COLUMN_USER, CONNECTION_COLUMN_STATUS, CONNECTION_COLUMN_SPEED, CONNECTION_COLUMN_CHUNK, CONNECTION_COLUMN_TRANSFERED, CONNECTION_COLUMN_QUEUED, CONNECTION_COLUMN_CIPHER, CONNECTION_COLUMN_IP };
 int TransferView::connectionSizes[] = { 125, 375, 100, 125, 125, 75, 100, 100 };
-
-int TransferView::downloadIndexes[] = { DOWNLOAD_COLUMN_FILE, DOWNLOAD_COLUMN_PATH, DOWNLOAD_COLUMN_STATUS, DOWNLOAD_COLUMN_TIMELEFT, DOWNLOAD_COLUMN_SPEED, DOWNLOAD_COLUMN_DONE, DOWNLOAD_COLUMN_SIZE };
 int TransferView::downloadSizes[] = { 200, 300, 150, 200, 125, 100, 100 };
 
 static const char* connectionNames[] = {
@@ -106,18 +103,25 @@ void TransferView::preClose()
 
 TransferView::TransferView(QWidget *parent) : QWidget(parent)
 {
+	datalist1.clear();
+	datalist2.clear();
+	datalistitem1.clear();
+	datalistitem2.clear();
 	connect(this, SIGNAL(sigSpeak()), this, SLOT(slotSpeak()), Qt::QueuedConnection);
-	
-	tabs = new TabWidget( this );
-
-	//connect(tabs, SIGNAL(currentChanged(int)), this, SLOT(slotCurrentTabChanged(int)) );
-	tabs->setOpt(0);
-	
-	connections = new QDLTreeWidget(tabs);
-	downloads = new QDLTreeWidget(tabs);
+		
+	tabs = new QTabWidget( this );
+	tabs->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	connections = new QDLTreeWidget(this);
+	downloads = new QDLTreeWidget(this);
+	connections->setRootIsDecorated(false);
+	downloads->setRootIsDecorated(false);
+	connections->setSortingEnabled(true);
+	downloads->setSortingEnabled(true);
 	
 	tabs->addTab( connections, tr("Connections") );
 	tabs->addTab( downloads, tr("Downloads") );
+	
+	//tabs->setGeometry(0,0, 800,600);
 	
 	// CONNECTIONS
 	// labels
@@ -173,17 +177,22 @@ TransferView::TransferView(QWidget *parent) : QWidget(parent)
 		for (int j=0; j<DOWNLOAD_COLUMN_LAST; j++) 
 			downloads->header()->swapSections(downloads->header()->visualIndex(olist[j].toInt()), j);
 	
-	
-	// COLUMN (HEADER) MENU
-	//columnMenu = new QMenu();
-	//connect(columnMenu, SIGNAL(triggered(QAction*)), this, SLOT(chooseColumn(QAction *)));
-	//header()->setContextMenuPolicy(Qt::CustomContextMenu);
-	//connect(header(), SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showColumnMenu(const QPoint&)));
+	// COLUMN (HEADER) MENUS
+	columnMenu1 = new QMenu();
+	columnMenu2 = new QMenu();
+	connect(columnMenu1, SIGNAL(triggered(QAction*)), this, SLOT(chooseColumn1(QAction *)));
+	connect(columnMenu2, SIGNAL(triggered(QAction*)), this, SLOT(chooseColumn2(QAction *)));
+	connections->header()->setContextMenuPolicy(Qt::CustomContextMenu);
+	downloads->header()->setContextMenuPolicy(Qt::CustomContextMenu);
+	connect(connections->header(), SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showColumnMenu1(const QPoint&)));
+	connect(downloads->header(), SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showColumnMenu2(const QPoint&)));
 	
 	// CONTEXT MENU
-	//cnxtMenu = new QMenu();
-	//setContextMenuPolicy(Qt::CustomContextMenu);
-	//connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showCnxtMenu(const QPoint&)));
+	cnxtMenu = new QMenu();
+	connections->setContextMenuPolicy(Qt::CustomContextMenu);
+	downloads->setContextMenuPolicy(Qt::CustomContextMenu);
+	connect(connections, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showCnxtMenu1(const QPoint&)));
+	connect(downloads, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showCnxtMenu2(const QPoint&)));
 	
 	//connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(handleDblClicked(QModelIndex)) );
 	
@@ -194,27 +203,35 @@ TransferView::TransferView(QWidget *parent) : QWidget(parent)
 	QueueManager::getInstance()->addListener(this);
 }
 
-void TransferView::chooseColumn(QAction *action)
+void TransferView::chooseColumn1(QAction *action)
 {
 	int index = action->data().toInt();
 
-//	if(index < 0) hideColumn(-index-1);
-//	else showColumn(index);
+	if(index < 0) connections->hideColumn(-index-1);
+	else connections->showColumn(index);
 }
 
-void TransferView::showColumnMenu(const QPoint &point)
+void TransferView::chooseColumn2(QAction *action)
 {
-	columnMenu->clear();
-/*	
+	int index = action->data().toInt();
+
+	if(index < 0) downloads->hideColumn(-index-1);
+	else downloads->showColumn(index);
+}
+
+void TransferView::showColumnMenu1(const QPoint &point)
+{
+	columnMenu1->clear();
+	
 	QStringList columns;
-	foreach(tstring name, StilUtils::getStrings(columnNames))
+	foreach(tstring name, StilUtils::getStrings(connectionNames))
 		columns << StilUtils::TstrtoQ(name);
 	
-	for(int i = 0; i < COLUMN_LAST; i++)
+	for(int i = 0; i < CONNECTION_COLUMN_LAST; i++)
 	{
-		QAction *action = new QAction(columns[i], columnMenu);
+		QAction *action = new QAction(columns[i], columnMenu1);
 		
-		bool isHidden = header()->isSectionHidden(i);
+		bool isHidden = connections->header()->isSectionHidden(i);
 		
 		if (!isHidden)
 			action->setData(-i-1);
@@ -223,15 +240,44 @@ void TransferView::showColumnMenu(const QPoint &point)
 		
 		action->setCheckable(true);
 		action->setChecked(!isHidden);
-		columnMenu->addAction(action);
+		columnMenu1->addAction(action);
 	}
 	
-	columnMenu->exec(header()->mapToGlobal(point));
-*/
+	columnMenu1->exec(connections->header()->mapToGlobal(point));
 }
 
-void TransferView::makeContextMenu() 
+void TransferView::showColumnMenu2(const QPoint &point)
 {
+	columnMenu2->clear();
+	
+	QStringList columns;
+	foreach(tstring name, StilUtils::getStrings(downloadNames))
+		columns << StilUtils::TstrtoQ(name);
+	
+	for(int i = 0; i < DOWNLOAD_COLUMN_LAST; i++)
+	{
+		QAction *action = new QAction(columns[i], columnMenu2);
+		
+		bool isHidden = downloads->header()->isSectionHidden(i);
+		
+		if (!isHidden)
+			action->setData(-i-1);
+		else
+			action->setData(i);
+		
+		action->setCheckable(true);
+		action->setChecked(!isHidden);
+		columnMenu2->addAction(action);
+	}
+	
+	columnMenu2->exec(downloads->header()->mapToGlobal(point));
+}
+
+void TransferView::makeContextMenu1() 
+{
+	cnxtMenu->clear();
+	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Get file list")) ,this ,SLOT(handleGetFL()) );
+	cnxtMenu->addSeparator();
 	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Force attempt")) ,this ,SLOT(handleForce()) );
 	cnxtMenu->addSeparator();
 	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Add To Favorites")) ,this ,SLOT(handleAddToFav()) );
@@ -240,25 +286,37 @@ void TransferView::makeContextMenu()
 	cnxtMenu->addSeparator();
 	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Copy nick to clipboard")) ,this ,SLOT(handleCopyNick()) );
 	cnxtMenu->addSeparator();
-	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Get file list")) ,this ,SLOT(handleGetFL()) );
-	cnxtMenu->addSeparator();
 	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Close connection")) ,this ,SLOT(handleRemove()) );
 }
 
-void TransferView::showCnxtMenu(const QPoint& point)
+void TransferView::makeContextMenu2() 
 {
 	cnxtMenu->clear();
-	// NEED TO GENERATE MENU FORM ITEMINFO CLASS
-	makeContextMenu();
-	// SHOW MENU
-	//if (indexAt(point).isValid()) cnxtMenu->exec(mapToGlobal(point));
+	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Get file list")) ,this ,SLOT(handleGetFL()) );
+	cnxtMenu->addSeparator();
+	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Get file list")) ,this ,SLOT(handleGetFL()) );
+}
+
+void TransferView::showCnxtMenu1(const QPoint& point)
+{
+	makeContextMenu1();
+	if (connections->indexAt(point).isValid()) 
+		cnxtMenu->exec(mapToGlobal(point));
+}
+
+void TransferView::showCnxtMenu2(const QPoint& point)
+{
+	makeContextMenu2();
+	if (downloads->indexAt(point).isValid()) 
+		cnxtMenu->exec(mapToGlobal(point));
 }
 
 TransferView::~TransferView() 
 {
-	//FIXME: segfaults here
-	//delete cnxtMenu;
-	//delete columnMenu;
+	preClose();
+	delete cnxtMenu;
+	delete columnMenu1;
+	delete columnMenu2;
 	delete connections;
 	delete downloads;
 	delete tabs;
@@ -299,12 +357,6 @@ void TransferView::handleSearchAlternates()
 
 }
 
-void TransferView::keyPressEvent(QKeyEvent *e)
-{
-	QWidget::keyPressEvent(e);
-	if ( e->key() == Qt::Key_Delete) handleRemove();
-}
-
 void TransferView::slotSpeak()
 {
 	TaskQueue::List t;
@@ -317,32 +369,30 @@ void TransferView::slotSpeak()
 			boost::scoped_ptr<UpdateInfo> ui(static_cast<UpdateInfo*>(i->second));
 			ConnectionInfo* ii = new ConnectionInfo(ui->user, ui->download);
 			ii->update(*ui);
-//			connections->insert(ii);
+			connections_insert(ii);
 		} else if(i->first == CONNECTIONS_REMOVE) 
 		{
 			auto_ptr<UpdateInfo> ui(static_cast<UpdateInfo*>(i->second));
-//			int ic = connections->size();
-//			for(int i = 0; i < ic; ++i) 
-//			{
-//				ConnectionInfo* ii = connections->getData(i);
-//				if(*ui == *ii) 
-//				{
-//					connections->erase(i);
-//					break;
-//				}
-//			}
+			for(int i = 0; i < connections_size(); ++i) 
+			{
+				ConnectionInfo* ii = connections_getData(i);
+				if(*ui == *ii) 
+				{
+					connections_erase(i);
+					break;
+				}
+			}
 		} else if(i->first == CONNECTIONS_UPDATE) {
 			boost::scoped_ptr<UpdateInfo> ui(static_cast<UpdateInfo*>(i->second));
-//			int ic = connections->size();
-//			for(int i = 0; i < ic; ++i) 
+			for(int i = 0; i < connections_size(); ++i) 
 			{
-//				ConnectionInfo* ii = connections->getData(i);
-//				if(ii->download == ui->download && ii->user == ui->user) 
-//					{
-//					ii->update(*ui);
-//					connections->update(i);
-//					break;
-//					}
+				ConnectionInfo* ii = connections_getData(i);
+				if(ii->download == ui->download && ii->user == ui->user) 
+					{
+					ii->update(*ui);
+					connections_update(i);
+					break;
+					}
 			}
 		} else if(i->first == DOWNLOADS_ADD_USER) {
 			boost::scoped_ptr<TickInfo> ti(static_cast<TickInfo*>(i->second));
@@ -350,20 +400,19 @@ void TransferView::slotSpeak()
 			if(i == -1) {
 				int64_t size = QueueManager::getInstance()->getSize(ti->path);
 				TTHValue tth;
-				if(size != -1 && QueueManager::getInstance()->getTTH(ti->path, tth)) {
-//					i = downloads->insert(new DownloadInfo(ti->path, size, tth));
-				}
+				if(size != -1 && QueueManager::getInstance()->getTTH(ti->path, tth))
+					downloads_insert(new DownloadInfo(ti->path, size, tth));
 			} else {
-//				downloads->getData(i)->users++;
-//				downloads->update(i);
+				downloads_getData(i)->users++;
+				downloads_update(i);
 			}
 		} else if(i->first == DOWNLOADS_TICK) {
 			boost::scoped_ptr<TickInfo> ti(static_cast<TickInfo*>(i->second));
 			int i = find(ti->path);
 			if(i != -1) {
-//				DownloadInfo* di = downloads->getData(i);
-//				di->update(*ti);
-//				downloads->update(i);
+				DownloadInfo* di = downloads_getData(i);
+				di->update(*ti);
+				downloads_update(i);
 			}
 		} else if(i->first == DOWNLOADS_REMOVE_USER) 
 			{
@@ -372,13 +421,13 @@ void TransferView::slotSpeak()
 			
 			if(i != -1)
 				{
-//				DownloadInfo* di = downloads->getData(i);
-//				if(--di->users == 0) 
-//				{
-//					di->bps = 0;
-//				}
-//				di->update();
-//				downloads->update(i);
+				DownloadInfo* di = downloads_getData(i);
+				if(--di->users == 0) 
+				{
+					di->bps = 0;
+				}
+				di->update();
+				downloads_update(i);
 				}
 			} 
 		else if(i->first == DOWNLOADS_REMOVED) 
@@ -386,25 +435,24 @@ void TransferView::slotSpeak()
 			boost::scoped_ptr<TickInfo> ti(static_cast<TickInfo*>(i->second));
 			int i = find(ti->path);
 			if(i != -1) {
-				//downloads->erase(i);
+				downloads_erase(i);
 			}
 		}
 	
 	}
-
 //	if(!t.empty()) connections->resort();
 	setUpdatesEnabled(true);
 }
 
 int TransferView::find(const string& path)
 {
-/*	for(size_t i = 0; i < downloads->size(); ++i) {
-		DownloadInfo* di = downloads->getData(i);
+	for(int i = 0; i < downloads_size(); ++i) {
+		DownloadInfo* di = downloads_getData(i);
 		if(Util::stricmp(di->path, path) == 0) {
 			return i;
 		}
 	}
-*/	return -1;
+	return -1;
 }
 
 void TransferView::ConnectionInfo::disconnect() 
@@ -635,7 +683,7 @@ void TransferView::on(DownloadManagerListener::Requesting, Download* d) throw()
 
 	speak(CONNECTIONS_UPDATE, ui);
 	
-//	speak(DOWNLOADS_ADD_USER, new TickInfo(d->getPath()));
+	speak(DOWNLOADS_ADD_USER, new TickInfo(d->getPath()));
 }
 
 void TransferView::on(DownloadManagerListener::Starting, Download* d) throw()
@@ -709,7 +757,7 @@ void TransferView::on(DownloadManagerListener::Failed, Download* d, const string
 
 	speak(CONNECTIONS_UPDATE, ui);
 	
-//	speak(DOWNLOADS_REMOVE_USER, new TickInfo(d->getPath()));
+	speak(DOWNLOADS_REMOVE_USER, new TickInfo(d->getPath()));
 }
 
 void TransferView::on(UploadManagerListener::Starting, Upload* u) throw()
@@ -753,7 +801,7 @@ void TransferView::on(DownloadManagerListener::Complete, Download* d) throw()
 { 
 	onTransferComplete(d, false);
 
-//	speak(DOWNLOADS_REMOVE_USER, new TickInfo(d->getPath()));
+	speak(DOWNLOADS_REMOVE_USER, new TickInfo(d->getPath()));
 }
 
 void TransferView::on(UploadManagerListener::Complete, Upload* aUpload) throw()
@@ -774,6 +822,48 @@ void TransferView::onTransferComplete(Transfer* aTransfer, bool isUpload)
 
 void TransferView::on(QueueManagerListener::Removed, QueueItem* qi) throw() 
 {
-//	speak(DOWNLOADS_REMOVED, new TickInfo(qi->getTarget()));
+	speak(DOWNLOADS_REMOVED, new TickInfo(qi->getTarget()));
 }
 
+//////////////////////////////////
+
+void TransferView::connections_insert(ConnectionInfo* ci)
+{
+	datalist1 << ci;
+	setUpdatesEnabled(false);
+	QStringList lst;
+	for (int i = 0; i < CONNECTION_COLUMN_LAST; i++) 
+		lst << StilUtils::TstrtoQ(ci->getText(i));
+	QTreeWidgetItem *it = new QTreeWidgetItem(connections, lst);
+	if (ci->download) it->setIcon(0,QIcon(":/images/trans_DL.png")); else it->setIcon(0,QIcon(":/images/trans_UL.png"));
+	datalistitem1 << it;
+	//ci->download ? SETTING(DOWNLOAD_BAR_COLOR) : SETTING(UPLOAD_BAR_COLOR)
+	setUpdatesEnabled(true);
+}
+
+void TransferView::downloads_insert(DownloadInfo* di)
+{
+	datalist2 << di;
+	setUpdatesEnabled(false);
+	QStringList lst;
+	for (int i = 0; i < DOWNLOAD_COLUMN_LAST; i++) 
+		lst << StilUtils::TstrtoQ(di->getText(i));
+	QTreeWidgetItem *it = new QTreeWidgetItem(downloads, lst);
+	it->setIcon(0,QIcon(":/images/hub.png"));
+	datalistitem2 << it;
+	setUpdatesEnabled(true);
+}
+
+void TransferView::connections_update(int x)
+{
+	if (x > connections_size()) return;
+	QTreeWidgetItem *w = datalistitem1[x];
+	for (int i = 0; i < CONNECTION_COLUMN_LAST; i++) w->setText(i, StilUtils::TstrtoQ(datalist1[x]->getText(i)));
+}
+
+void TransferView::downloads_update(int x)
+{
+	if (x > downloads_size()) return;
+	QTreeWidgetItem *w = datalistitem2[x];
+	for (int i = 0; i < DOWNLOAD_COLUMN_LAST; i++) w->setText(i, StilUtils::TstrtoQ(datalist2[x]->getText(i)));
+}

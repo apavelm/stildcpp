@@ -72,10 +72,29 @@ public:
 	void preClose();
 private:
 	QMenu * cnxtMenu;
-	QMenu * columnMenu;
+	QMenu * columnMenu1;
+	QMenu * columnMenu2;
+
 	QDLTreeWidget * connections;
 	QDLTreeWidget * downloads;
-	TabWidget * tabs;
+	QTabWidget * tabs;
+	
+	class ConnectionInfo;
+	class DownloadInfo;
+	QList<ConnectionInfo*> datalist1;
+	QList<DownloadInfo*> datalist2;
+	QList<QTreeWidgetItem*> datalistitem1, datalistitem2;
+	
+	inline DownloadInfo* downloads_getData(int x) const { return datalist2[x]; }
+	inline ConnectionInfo* connections_getData(int x) const { return datalist1[x]; }
+	inline int connections_size() const { return datalist1.size(); }
+	inline int downloads_size() const { return datalist2.size(); }
+	void connections_erase(int x) { delete datalistitem1[x]; datalistitem1.removeAt(x); datalist1.removeAt(x); }
+	void downloads_erase(int x) { delete datalistitem2[x]; datalistitem2.removeAt(x); datalist2.removeAt(x); }
+	void connections_update(int x);
+	void downloads_update(int x);
+	void connections_insert(ConnectionInfo* ci);
+	void downloads_insert(DownloadInfo* di);
 	
 	enum {
 		DOWNLOAD_COLUMN_FIRST,
@@ -201,7 +220,6 @@ private:
 		double bps;
 	};
 
-	static int connectionIndexes[CONNECTION_COLUMN_LAST];
 	static int connectionSizes[CONNECTION_COLUMN_LAST];
 	
 	class DownloadInfo {
@@ -238,17 +256,19 @@ private:
 	};
 	
 
-	static int downloadIndexes[DOWNLOAD_COLUMN_LAST];
 	static int downloadSizes[DOWNLOAD_COLUMN_LAST];
 
 	TaskQueue tasks;
 	StringMap ucLineParams;
 
-	void makeContextMenu();
 	int find(const string& path);
-
-
-	void speak(int type = 0, UpdateInfo* ui = 0) { tasks.add(type, ui); speak(); }
+	
+	void makeContextMenu1();
+	void makeContextMenu2();
+	
+	void speak() { emit sigSpeak(); }
+	void speak(int type, UpdateInfo* ui) { tasks.add(type, ui); speak(); }
+	void speak(int type, TickInfo* ti) { tasks.add(type, ti); speak(); }
 
 // Listeners
 	virtual void on(ConnectionManagerListener::Added, ConnectionQueueItem* aCqi) throw();
@@ -271,14 +291,14 @@ private:
 	void onTransferComplete(Transfer* aTransfer, bool isUpload);
 	void onTransferTick(Transfer* aTransfer);
 	void starting(UpdateInfo* ui, Transfer* t);
-	
-protected:
-	void keyPressEvent(QKeyEvent *);
 private slots:
 	void slotSpeak();
-	void chooseColumn(QAction *action);
-	void showColumnMenu(const QPoint &point);
-	void showCnxtMenu(const QPoint &point);
+	void chooseColumn1(QAction *action);
+	void showColumnMenu1(const QPoint &point);
+	void chooseColumn2(QAction *action);
+	void showColumnMenu2(const QPoint &point);
+	void showCnxtMenu1(const QPoint &point);
+	void showCnxtMenu2(const QPoint &point);
 	// handlers
 	void handleForce();
 	void handleAddToFav();
@@ -288,6 +308,7 @@ private slots:
 	void handleRemove();
 	void runUserCommand(const UserCommand& uc);
 	void handleDblClicked(const QModelIndex &);
+	//
 signals:
 	void sigSpeak();
 };

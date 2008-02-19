@@ -28,8 +28,6 @@ MainWindowImpl::~MainWindowImpl()
 {
 	thrdGetTTh.stop();
 	
-//	trans_view->preClose();
-	
 	dcpp::SettingsManager::getInstance()->set(SettingsManager::MAIN_WINDOW_POS_X, static_cast<int>(this->x()));
 	dcpp::SettingsManager::getInstance()->set(SettingsManager::MAIN_WINDOW_POS_Y, static_cast<int>(this->y()));
 	dcpp::SettingsManager::getInstance()->set(SettingsManager::MAIN_WINDOW_SIZE_X, static_cast<int>(this->size().width()));
@@ -476,7 +474,7 @@ void MainWindowImpl::HomepageFunc()
 	QDesktopServices::openUrl(url);
 }
 
-void MainWindowImpl::OpenList(QWidget *parent, const dcpp::tstring & aFile, const dcpp::UserPtr & aUser, int64_t aSpeed, const QString aTitle)
+void MainWindowImpl::OpenList(QWidget *parent, const tstring & aFile, const UserPtr & aUser, int64_t aSpeed, const QString aTitle)
 {
 	// Function to open filelists
 	tstring t = aFile;
@@ -485,7 +483,7 @@ void MainWindowImpl::OpenList(QWidget *parent, const dcpp::tstring & aFile, cons
 	m_tabwin->setCurrentIndex( m_tabwin->addTab( (new FileListDlg(parent, u, aSpeed, t) ), aTitle ) );
 }
 
-void MainWindowImpl::OpenHub(const dcpp::tstring& adr, QWidget *parent)
+void MainWindowImpl::OpenHub(const tstring& adr, QWidget *parent)
 {
 	m_tabwin->setCurrentIndex(m_tabwin->addTab((new HubWindow(m_tabwin, adr)),"Hub"));
 }
