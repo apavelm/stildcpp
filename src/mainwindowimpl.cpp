@@ -33,9 +33,7 @@ MainWindowImpl::~MainWindowImpl()
 	dcpp::SettingsManager::getInstance()->set(SettingsManager::MAIN_WINDOW_SIZE_X, static_cast<int>(this->size().width()));
 	dcpp::SettingsManager::getInstance()->set(SettingsManager::MAIN_WINDOW_SIZE_Y, static_cast<int>(this->size().height()));
 	dcpp::SettingsManager::getInstance()->set(SettingsManager::MAIN_WINDOW_STATE, (int)this->isMaximized());
-	
-	dcpp::SettingsManager::getInstance()->save();
-	AppSettings::AppSettingsMgr::getInstance()->save();
+
 	QueueManager::getInstance()->saveQueue();
 	
 	delete showhide;
@@ -59,10 +57,12 @@ MainWindowImpl::~MainWindowImpl()
 	
 	SearchManager::getInstance()->disconnect();
 	ConnectionManager::getInstance()->disconnect();
+
 /* Moved to main.cpp
 	AppSettings::AppSettingsMgr::deleteInstance();
 	dcpp::shutdown();
 */
+
 }
 
 void MainWindowImpl::initMain()

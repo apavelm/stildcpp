@@ -93,8 +93,12 @@ int main(int argc, char ** argv)
 	int exit_code = app.exec();
 
 	MainWindowImpl::deleteInstance();
-	dcpp::shutdown();
+
+	dcpp::SettingsManager::getInstance()->save();
+	AppSettings::AppSettingsMgr::getInstance()->save();
+
 	AppSettings::AppSettingsMgr::deleteInstance();
+	dcpp::shutdown();
 
 	return exit_code;
 	

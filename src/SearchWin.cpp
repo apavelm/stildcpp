@@ -23,6 +23,8 @@
 #include "SearchWin.h"
 #include "mainwindowimpl.h"
 
+int SearchWindow::columnSizes[] = { 200, 100, 50, 80, 100, 40, 100, 150, 80, 100, 125, 125 };
+
 TStringList SearchWindow::lastSearches;
 
 static QIcon folderIcon;
@@ -67,7 +69,9 @@ initialType(initialType_)
 	//hubs = new HubList();
 	initHubs();
 	initSearchList();
+	readSettings();
 	initSearchMenu();
+	initColumnMenu();
 	
 	ClientManager* clientMgr = ClientManager::getInstance();
 	clientMgr->lock();
@@ -129,6 +133,9 @@ void SearchWindow::hubStateChanged(QListWidgetItem* currentItem)
 
 SearchWindow::~SearchWindow()
 {
+	saveSettings();
+	
+	delete proxyModel;
 	delete model;
 	delete timer;
 	
@@ -185,7 +192,7 @@ void SearchWindow::initSearchList()
 	QStringList columns;
 	columns << tr("File") << tr("User") << tr("Type") << tr("Size") << tr("Path")
 			<< tr("Slots") << tr("Connection") << tr("Hub") << tr("Exact size") << tr("IP")
-			<< tr("TTH Root") << tr("CID");
+			<< tr("TTH Root") << tr("CID") << tr("Hidden size");
 
 	int totalColumns =  columns.size();
 	
@@ -196,15 +203,23 @@ void SearchWindow::initSearchList()
 
 	searchView->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	searchView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+	proxyModel = new searchSortingModel();
 	
-	searchView->setModel(model);
+	proxyModel->setDynamicSortFilter(true);
+	proxyModel->setSourceModel(model);
+
+	searchView->setModel(proxyModel);
+
 	//proxyModel -> setSortCaseSensitivity(Qt::CaseInsensitive);
 	searchView->setSortingEnabled(true);
 	searchView->sortByColumn(0, Qt::AscendingOrder);
 
 	searchView->setRootIsDecorated(false);
 	searchView->setAlternatingRowColors(true);
-	
+
+	//hide size of item (without units of measurement)
+	searchView->hideColumn(totalColumns - 1);
 }
 
 
@@ -217,7 +232,8 @@ void SearchWindow::insertSearchResult(SearchInfo* si)
 
 	QStandardItem *item;
     
-    for (int i = 0; i<COLUMN_LAST;i++)
+	//also fill hidden column
+    for (int i = 0; i<COLUMN_LAST+1;i++)
     {
     	item = new QStandardItem(StilUtils::TstrtoQ(si->getText(i)));
     	
@@ -237,10 +253,11 @@ void SearchWindow::insertSearchResult(SearchInfo* si)
 void SearchWindow::removeSearchResult(QStandardItem* item)
 {
 	QStandardItem *parentItem = model->invisibleRootItem();
-
+	
 	parentItem->removeRow(item->row());
 	
-	searchMap.remove(item);
+	Q_ASSERT(searchMap.remove(item) > 0);
+	
 }
 
 void SearchWindow::clearSearchResult()
@@ -614,11 +631,15 @@ void SearchWindow::SearchInfo::update()
 		}
 
 		columns[COLUMN_TYPE] = Text::toT(Util::getFileExt(Text::fromT(columns[COLUMN_FILENAME])));
+
 		if(!columns[COLUMN_TYPE].empty() && columns[COLUMN_TYPE][0] == _T('.'))
 			columns[COLUMN_TYPE].erase(0, 1);
+
 		columns[COLUMN_SIZE] = Text::toT(Util::formatBytes(sr->getSize()));
 		columns[COLUMN_EXACT_SIZE] = Text::toT(Util::formatExactSize(sr->getSize()));
-	} 
+		//hidden column
+		columns[COLUMN_LAST] = Text::toT(Util::toString(sr->getSize()));
+} 
 	else 
 	{//PORT_ME
 		columns[COLUMN_FILENAME] = Text::toT(StilUtils::linuxSeparator(sr->getFileName()));
@@ -629,6 +650,8 @@ void SearchWindow::SearchInfo::update()
 		{
 			columns[COLUMN_SIZE] = Text::toT(Util::formatBytes(sr->getSize()));
 			columns[COLUMN_EXACT_SIZE] = Text::toT(Util::formatExactSize(sr->getSize()));
+			//hidden column
+			columns[COLUMN_LAST] = Text::toT(Util::toString(sr->getSize()));
 		}
 	}
 	columns[COLUMN_NICK] = StilUtils::getNicks(sr->getUser());
@@ -716,6 +739,52 @@ void SearchWindow::speak(unsigned int wParam, long lParam)
 	emit speakerSignal(wParam, lParam);
 }
 
+void SearchWindow::initColumnMenu()
+{
+	columnMenu = new QMenu(searchView->header());
+
+	connect(columnMenu, SIGNAL(triggered(QAction*)), this, SLOT(chooseColumn(QAction *)));
+
+	searchView->header()->setContextMenuPolicy(Qt::CustomContextMenu);
+
+	connect(searchView->header(), SIGNAL(customContextMenuRequested(const QPoint&)), 
+				this, SLOT(showColumnMenu(const QPoint&)));
+}
+
+void SearchWindow::chooseColumn(QAction *action)
+{
+	int index = action->data().toInt();
+
+	if(index < 0)
+		searchView->hideColumn(-index-1);
+	else
+		searchView->showColumn(index);
+}
+
+void SearchWindow::showColumnMenu(const QPoint &point)
+{
+	columnMenu->clear();
+	
+	for(int i = 0; i < COLUMN_LAST; i++)
+	{
+		QAction *action = new QAction(columnMenu);
+		action->setText(proxyModel->headerData(i, Qt::Horizontal, Qt::DisplayRole).toString());
+		
+		bool isHidden = searchView->header()->isSectionHidden(i);
+
+		if (!isHidden)
+			action->setData(-i-1);
+		else
+			action->setData(i);
+			
+		action->setCheckable(true);
+		action->setChecked(!isHidden);
+		columnMenu->addAction(action);
+	}
+	
+	columnMenu->exec(searchView->header()->mapToGlobal(point));	
+}
+
 void SearchWindow::initSearchMenu()
 {
 	userMenu = new QMenu(searchView);
@@ -773,7 +842,7 @@ void SearchWindow::actionDownload()
 	
 	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
 	{
-		QStandardItem *item = model->itemFromIndex(*index);
+		QStandardItem *item = model->itemFromIndex(proxyModel->mapToSource(*index));
 
 		searchMap.value(item)->Download(Text::toT(SETTING(DOWNLOAD_DIRECTORY)));
 	}
@@ -789,7 +858,7 @@ void SearchWindow::actionDownloadWholeDir()
 	
 	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
 	{
-		QStandardItem *item = model->itemFromIndex(*index);
+		QStandardItem *item = model->itemFromIndex(proxyModel->mapToSource(*index));
 		
 		searchMap.value(item)->DownloadWhole(Text::toT(SETTING(DOWNLOAD_DIRECTORY)));
 	}
@@ -805,7 +874,7 @@ void SearchWindow::actionViewAsText()
 	
 	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
 	{
-		QStandardItem *item = model->itemFromIndex(*index);
+		QStandardItem *item = model->itemFromIndex(proxyModel->mapToSource(*index));
 		
 		searchMap.value(item)->view();                                              ;
 	}
@@ -813,7 +882,7 @@ void SearchWindow::actionViewAsText()
 
 void SearchWindow::actionSearchAlt()
 {
-	const QModelIndex index = searchView->selectionModel()->selectedRows().first();
+	const QModelIndex index = proxyModel->mapToSource(searchView->selectionModel()->selectedRows().first());
 	
 	QStandardItem *item = model->itemFromIndex(index);
 
@@ -825,7 +894,7 @@ void SearchWindow::actionSearchAlt()
 
 void SearchWindow::actionBitzi()
 {
-	const QModelIndex index = searchView->selectionModel()->selectedRows().first();
+	const QModelIndex index = proxyModel->mapToSource(searchView->selectionModel()->selectedRows().first());
 	
 	QStandardItem *item = model->itemFromIndex(index);
 
@@ -840,7 +909,7 @@ void SearchWindow::actionBitzi()
 
 void SearchWindow::actionCopyMagnetToClipboard()
 {
-	const QModelIndex index = searchView->selectionModel()->selectedRows().first();
+	const QModelIndex index = proxyModel->mapToSource(searchView->selectionModel()->selectedRows().first());
 	
 	QStandardItem *item = model->itemFromIndex(index);
 
@@ -865,7 +934,7 @@ void SearchWindow::actionGetFilelist()
 	
 	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
 	{
-		QStandardItem *item = model->itemFromIndex(*index);
+		QStandardItem *item = model->itemFromIndex(proxyModel->mapToSource(*index));
 
 		try {
 			QueueManager::getInstance()->addList(searchMap.value(item)->getUser(), QueueItem::FLAG_CLIENT_VIEW);
@@ -881,7 +950,7 @@ void SearchWindow::actionMatchQueue()
 	
 	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
 	{
-		QStandardItem *item = model->itemFromIndex(*index);
+		QStandardItem *item = model->itemFromIndex(proxyModel->mapToSource(*index));
 		
 		try {
 			QueueManager::getInstance()->addList(searchMap.value(item)->getUser(), QueueItem::FLAG_MATCH_QUEUE);
@@ -897,7 +966,7 @@ void SearchWindow::actionSendPM()
 	
 	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
 	{
-		QStandardItem *item = model->itemFromIndex(*index);
+		QStandardItem *item = model->itemFromIndex(proxyModel->mapToSource(*index));
 
 		MainWindowImpl::getInstance()->OpenPM(searchMap.value(item)->getUser());
 	}
@@ -909,7 +978,7 @@ void SearchWindow::actionAddToFavorites()
 	
 	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
 	{
-		QStandardItem *item = model->itemFromIndex(*index);
+		QStandardItem *item = model->itemFromIndex(proxyModel->mapToSource(*index));
 
 		FavoriteManager::getInstance()->addFavoriteUser(searchMap.value(item)->getUser());
 	}
@@ -921,7 +990,7 @@ void SearchWindow::actionGrandExtraSlot()
 	
 	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
 	{
-		QStandardItem *item = model->itemFromIndex(*index);
+		QStandardItem *item = model->itemFromIndex(proxyModel->mapToSource(*index));
 
 		UploadManager::getInstance()->reserveSlot(searchMap.value(item)->getUser());
 	}
@@ -933,7 +1002,7 @@ void SearchWindow::actionRemoveUserFromQueue()
 	
 	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
 	{
-		QStandardItem *item = model->itemFromIndex(*index);
+		QStandardItem *item = model->itemFromIndex(proxyModel->mapToSource(*index));
 
 		QueueManager::getInstance()->removeSource(searchMap.value(item)->getUser(), QueueItem::Source::FLAG_REMOVED);
 	}
@@ -946,9 +1015,113 @@ void SearchWindow::actionRemove()
 	const QModelIndexList indexes = searchView->selectionModel()->selectedRows();
 
 	for (QModelIndexList::const_iterator index = indexes.constBegin(); index != indexes.constEnd(); ++index)
-		items.append( model->itemFromIndex(*index));
+		items.append(model->itemFromIndex(proxyModel->mapToSource(*index)));
 		
 	for (QList<QStandardItem *>::const_iterator item = items.constBegin(); item != items.constEnd(); ++item)
 		removeSearchResult(*item);
 }
 
+void SearchWindow::saveSettings()
+{
+	QStringList visibilityList, widthList, orderList;
+
+	for (int i=0; i<COLUMN_LAST; i++)
+	{
+		visibilityList << QString::number(searchView->header()->isSectionHidden(i));
+		widthList << QString::number(searchView->columnWidth(i));
+		orderList << QString::number(searchView->header()->visualIndex(i));
+	}
+	
+	SETAPPSTRING(s_SEARCHWINDOW_COLUMN_VISIBILITY, visibilityList.join(","));
+	
+	QString width = widthList.join(",");
+	SettingsManager::getInstance()->set(SettingsManager::SEARCHFRAME_WIDTHS, width.toStdString());
+
+	QString order = orderList.join(",");
+	SettingsManager::getInstance()->set(SettingsManager::SEARCHFRAME_ORDER, order.toStdString());
+/*
+		// CONNECTIONS
+	// visibility
+	QStringList vv;
+	for (int i=0; i<COLUMN_LAST; i++) 
+		vv << QString::number(searchView->header()->isSectionHidden(i));
+	SETAPPSTRING(s_SEARCHWINDOW_COLUMN_VISIBILITY, vv.join(","));
+	// width
+	QStringList w;
+	for (int i=0; i<COLUMN_LAST; i++) 
+		w << QString::number(searchView->columnWidth(i));
+	SettingsManager::getInstance()->set(SettingsManager::SEARCHFRAME_WIDTHS, w.join(",").toStdString());
+	// order
+	QStringList ww;
+	for (int i=0; i<COLUMN_LAST; i++) 
+		ww << QString::number(searchView->header()->visualIndex(i));
+	SettingsManager::getInstance()->set(SettingsManager::SEARCHFRAME_ORDER, ww.join(",").toStdString());
+	
+	qDebug() << vv.join(",") << endl << w.join(",") << endl << ww.join(",");
+	
+	//AppSettings::AppSettingsMgr::getInstance()->save();
+	//SettingsManager::getInstance()->save();
+	*/
+}
+
+void SearchWindow::readSettings()
+{
+	QStringList clist = StilUtils::TstrtoQ(Text::toT(SETTING(SEARCHFRAME_WIDTHS))).split(",");
+
+	if (clist.size() != COLUMN_LAST)
+	{
+		for (int i=0; i<COLUMN_LAST; i++)
+			searchView->setColumnWidth(i, columnSizes[i]);
+	}
+	else 
+	{
+		for (int i=0; i<COLUMN_LAST; i++)
+		{
+			if ( clist.at(i).isEmpty() || (clist.at(i).toInt() <= 0))
+				searchView->setColumnWidth(i, columnSizes[i]);
+			else 
+				searchView->setColumnWidth(i, clist.at(i).toInt());
+		}
+	}
+	
+	// SETTING COLUMNS VISIBILITY
+	QStringList vlist = APPSTRING(s_SEARCHWINDOW_COLUMN_VISIBILITY).split(",");
+
+	if (vlist.size() == COLUMN_LAST)
+		for (int i=0; i<COLUMN_LAST; i++) 
+			searchView->header()->setSectionHidden(i, vlist.at(i).toInt());
+			
+	// COLUMNS ORDER SET
+	QStringList olist = StilUtils::TstrtoQ(Text::toT(SETTING(SEARCHFRAME_ORDER))).split(",");
+
+	if (olist.size() == COLUMN_LAST)
+		for (int j=0; j<COLUMN_LAST; j++) 
+			searchView->header()->swapSections(searchView->header()->visualIndex(olist.at(j).toInt()), j);
+}
+
+searchSortingModel::searchSortingModel(QObject *parent) : QSortFilterProxyModel(parent)
+{
+}
+
+bool searchSortingModel::lessThan( const QModelIndex &left, const QModelIndex &right ) const
+{
+	QString leftString = sourceModel()->data(left).toString();
+	QString rightString = sourceModel()->data(right).toString();
+	
+	int col = left.column();
+	
+	int64_t leftSize = getSize(left);
+	int64_t rightSize = getSize(right);
+	
+	if (col == SearchWindow::COLUMN_SIZE || col == SearchWindow::COLUMN_EXACT_SIZE)
+		return leftSize < rightSize;
+	
+	return (QString::compare(leftString, rightString, Qt::CaseInsensitive) < 0);
+}
+
+int64_t searchSortingModel::getSize(const QModelIndex &index) const
+{
+	// read data from hidden column
+	QString sizeString = sourceModel()->data(index.sibling(index.row(), SearchWindow::COLUMN_LAST)).toString();	
+	return sizeString.toULongLong();
+}

@@ -40,6 +40,9 @@
 
 #include <QTimer>
 #include <QStandardItemModel>
+#include <QSortFilterProxyModel>
+
+class searchSortingModel;
 
 class SearchWindow : public MdiChild, private Ui::mdiSEARCHwin, private SearchManagerListener, private ClientManagerListener
 {
@@ -68,6 +71,8 @@ private slots:
 	void actionRemoveUserFromQueue();
 	void actionRemove();
 	void showSearchMenu(const QPoint &point);
+	void chooseColumn(QAction *action);
+	void showColumnMenu(const QPoint &point);
 
 signals:
 	void speakerSignal(unsigned int wParam, long lParam=0);
@@ -174,7 +179,8 @@ private:
 
 		SearchResult* sr;
 
-		tstring columns[COLUMN_LAST];
+		//and hidden column
+		tstring columns[COLUMN_LAST+1];
 	};
 
 	struct HubInfo : public FastAlloc<HubInfo> {
@@ -207,6 +213,8 @@ private:
 	size_t droppedResults;
 	TStringList currentSearch;
 	static TStringList lastSearches;
+
+	static int columnSizes[COLUMN_LAST];
 
 	tstring initialString;
 	int64_t initialSize;
@@ -246,6 +254,7 @@ private:
 	void initHubs();
 	void initSearchList();
 	void initSearchMenu();
+	void initColumnMenu();
 	void runSearch();
 
 	void insertSearchResult(SearchInfo* si);
@@ -253,12 +262,32 @@ private:
 	void removeSearchResult(QStandardItem* item);
 	
 	QStandardItemModel *model;
+	searchSortingModel *proxyModel;
 	QTimer* timer;
 	QMenu *userMenu;
+	QMenu *columnMenu;
 	QList<QAction*> fantomActions;
 	
 	//reimplemented thiz
 	void speak(unsigned int, long=0);
+
+	void saveSettings();
+	void readSettings();
+
+	friend class searchSortingModel;
+};
+
+class searchSortingModel : public QSortFilterProxyModel
+{
+Q_OBJECT
+public:
+	searchSortingModel(QObject *parent = 0);
+	
+protected:
+	bool lessThan( const QModelIndex &left, const QModelIndex &right ) const;
+
+private:
+	int64_t getSize(const QModelIndex &index) const;
 };
 
 #endif // __SEARCHWIN_H__
