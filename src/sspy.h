@@ -23,15 +23,67 @@
 #define __SEARCHSPY_H__
 
 #include "mdi_c.h"
+#include "config.h"
 #include "stilutils.h"
+
+#include "client/stdinc.h"
+#include "client/DCPlusPlus.h"
+#include "client/ClientManagerListener.h"
+#include "client/ShareManager.h"
+#include "client/ClientManager.h"
 
 #include "ui_searchspy.h"
 
-class SearchSpyWindow : public MdiChild, private Ui::mdi_searchspy
+using namespace std;
+using namespace dcpp;
+
+class SearchSpyWindow : public MdiChild, private Ui::mdi_searchspy, private ClientManagerListener
 {
 	Q_OBJECT
 public:
 	SearchSpyWindow(QWidget *parent);
+	~SearchSpyWindow();
+private:
+	static const size_t AVG_TIME = 60;
+
+	enum {
+		SPEAK_SEARCH
+	};
+
+	enum {
+		COLUMN_FIRST,
+		COLUMN_STRING = COLUMN_FIRST,
+		COLUMN_COUNT,
+		COLUMN_TIME,
+		COLUMN_LAST
+	};
+
+	static int columnSizes[COLUMN_LAST];
+
+	bool bIgnoreTTH;
+
+	size_t total, cur, perSecond[AVG_TIME];
+
+	void initSecond();
+	
+	void speak(int a, tstring s) { emit sigSpeak(a, s); }
+	QMenu * columnMenu;
+	QMenu * cnxtMenu;
+	QList<QTreeWidgetItem*> datalistitem;
+
+	// ClientManagerListener
+	virtual void on(ClientManagerListener::IncomingSearch, const string& s) throw();
+private slots:
+	void slotSpeak(int, tstring);
+	void chooseColumn(QAction *action);
+	void showColumnMenu(const QPoint &point);
+	void showCnxtMenu(const QPoint& point);
+	void makeContextMenu();
+	void slotSearch();
+	void slotIgnore(int);
+	bool eachSecond();
+signals:
+	void sigSpeak(int, tstring);
 };
 
 #endif // __SEARCHSPY_H__
