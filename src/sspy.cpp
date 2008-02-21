@@ -21,7 +21,7 @@
 #include "sspy.h"
 #include "mainwindowimpl.h"
 
-int SearchSpyWindow::columnSizes[] = { 350, 50, 75 };
+int SearchSpyWindow::columnSizes[] = { 420, 50, 75 };
 const size_t SearchSpyWindow::AVG_TIME; // TODO gcc needs this - why?
 
 static const char* columnNames[] = {
@@ -35,6 +35,7 @@ SearchSpyWindow::SearchSpyWindow(QWidget *parent) : MdiChild(parent),
 	total(0),
 	cur(0)
 {	
+	memset(perSecond, 0, sizeof(perSecond));
 	setupUi(this);
 	type = StilUtils::WIN_TYPE_SEARCH_SPY;
 	datalistitem.clear();

@@ -44,6 +44,7 @@ public:
 	static int _type_time_t;
 	static int _type_tstring;
 	static int _type_UserPtr;
+	static int _type_FinishedItemPtr;
 	
 	/*  0 - MdiChild (NONE)
 		1 - Hub

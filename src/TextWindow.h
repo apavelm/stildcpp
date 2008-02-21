@@ -42,7 +42,7 @@ class TextWindow : public MdiChild, private Ui::mdiTextWindow
 {
 	Q_OBJECT
 public:
-	TextWindow(QWidget *parent, const string& fileName);
+	TextWindow(QWidget *parent, const QString& fileName);
 };
 
 #endif // __TEXTWINDOW_H__

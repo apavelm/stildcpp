@@ -28,6 +28,7 @@ using namespace dcpp;
 int StilUtils::_type_time_t = qRegisterMetaType<time_t>("time_t");
 int StilUtils::_type_tstring = qRegisterMetaType<tstring>("tstring");
 int StilUtils::_type_UserPtr = qRegisterMetaType<UserPtr>("UserPtr");
+int StilUtils::_type_FinishedItemPtr = qRegisterMetaType<FinishedItemPtr>("FinishedItemPtr");
 
 
 tstring StilUtils::getNicks(const CID& cid)

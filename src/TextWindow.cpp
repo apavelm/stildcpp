@@ -27,11 +27,12 @@ using namespace dcpp;
 
 static const size_t MAX_TEXT_LEN = 64*1024;
 
-TextWindow::TextWindow(QWidget *parent, const string& fileName) : MdiChild(parent)
+TextWindow::TextWindow(QWidget *parent, const QString& fileName) : MdiChild(parent)
 {
 	setupUi(this);
 	type = StilUtils::WIN_TYPE_TEXT_WINDOW;
-	idText = StilUtils::TstrtoQ(Text::toT(fileName));
+	idText = fileName;
+	setTabText(tr("View As Text : ") + fileName);
 
 	QFont f = textEdit->font();
 	f.setPointSize(APPSETTING(i_SYSLOGFONTSIZE));
@@ -42,10 +43,12 @@ TextWindow::TextWindow(QWidget *parent, const string& fileName) : MdiChild(paren
 	QFile file(tmp);
 	file.open(QFile::ReadOnly | QFile::Text);
 	*/
+	
+	std::string s = Text::fromT(StilUtils::QtoTstr(fileName));
 
 	try {
 //		textEdit->setPlainText(StilUtils::TstrtoQ(Text::toT(Text::toDOS(File(fileName, File::READ, File::OPEN).read(MAX_TEXT_LEN)))));
-		textEdit->setPlainText(StilUtils::TstrtoQ(Text::toT(File(fileName, File::READ, File::OPEN).read(MAX_TEXT_LEN))));
+		textEdit->setPlainText(StilUtils::TstrtoQ(Text::toT(File(s, File::READ, File::OPEN).read(MAX_TEXT_LEN))));
 	} catch(const FileException& e)
 	{
 		textEdit->setPlainText(StilUtils::TstrtoQ(Text::toT(e.getError())));

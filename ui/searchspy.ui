@@ -5,7 +5,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>966</width>
+    <width>857</width>
     <height>545</height>
    </rect>
   </property>
@@ -17,6 +17,9 @@
     <layout class="QVBoxLayout" >
      <item>
       <widget class="QDLTreeWidget" name="searches" >
+       <property name="alternatingRowColors" >
+        <bool>true</bool>
+       </property>
        <property name="rootIsDecorated" >
         <bool>false</bool>
        </property>
@@ -41,6 +44,19 @@
           <string>Ignore TTH Searches</string>
          </property>
         </widget>
+       </item>
+       <item>
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" >
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
        <item>
         <widget class="QLabel" name="lbl_status" >
@@ -73,10 +89,29 @@
        </item>
        <item>
         <widget class="QLabel" name="lbl_total" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="text" >
-          <string>Total:  0</string>
+          <string>Total: 0</string>
          </property>
         </widget>
+       </item>
+       <item>
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" >
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
        <item>
         <widget class="QLabel" name="lbl_ave" >
@@ -87,21 +122,59 @@
           </sizepolicy>
          </property>
          <property name="text" >
-          <string>Average/s:            0</string>
+          <string>Average/s: 0</string>
          </property>
         </widget>
+       </item>
+       <item>
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" >
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
        <item>
         <widget class="QLabel" name="lbl_hits" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="text" >
-          <string>Hits:  0</string>
+          <string>Hits: 0</string>
          </property>
         </widget>
        </item>
        <item>
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" >
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
         <widget class="QLabel" name="lbl_hitratio" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="text" >
-          <string>Hit Ration:  0</string>
+          <string>Hit Ration: 0</string>
          </property>
         </widget>
        </item>

@@ -211,6 +211,9 @@ public slots:
 	void OpenPM(const UserPtr& replyTo, const tstring& aMessage = Util::emptyStringT);
 	void OpenHub(const tstring& adr, QWidget *parent = 0);
 	void SearchFunc(const tstring& str = Util::emptyStringT, int64_t size = 0, SearchManager::SizeModes mode = SearchManager::SIZE_ATLEAST, SearchManager::TypeModes type = SearchManager::TYPE_ANY);
+	void openTextWindow(const string& fileName);
+	void openTextWindow(const tstring& fileName);
+	void openTextWindow(const QString& fileName);
 
 private:
 	friend class dcpp::Singleton<MainWindowImpl>;
@@ -225,7 +228,6 @@ private:
 	void clientInit();
 	void startSocket();
 	void setShareSize(const QString &sz);
-	void openTextWindow(const string& fileName);
 
 	int FindWinByType(StilUtils::tabWinTypes type);
 

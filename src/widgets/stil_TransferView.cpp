@@ -264,26 +264,34 @@ void TransferView::showColumnMenu2(const QPoint &point)
 void TransferView::makeContextMenu1() 
 {
 	cnxtMenu->clear();
-	
+
 	ConnectionInfo::UserTraits traits;
 	
-	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Get file list")) ,this ,SLOT(handleGetFL()) );
+	QAction * f = cnxtMenu->addAction(StilUtils::TstrtoQ(T_("&Get file list")) ,this ,SLOT(handleGetFL()) );
 	if(traits.adcOnly)
-		cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Browse file list")) ,this ,SLOT(handleBrowse()) );
-	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Match queue")) ,this ,SLOT(handleMatch()) );
-	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Send private message")) ,this ,SLOT(handleSendPM()) );
+		cnxtMenu->addAction(StilUtils::TstrtoQ(T_("&Browse file list")) ,this ,SLOT(handleBrowse()) );
+	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("&Match queue")) ,this ,SLOT(handleMatch()) );
+	QAction * a = cnxtMenu->addAction(StilUtils::TstrtoQ(T_("&Send private message")) ,this ,SLOT(handleSendPM()) );
 //	if(!traits.favOnly)
-		cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Add To Favorites")) ,this ,SLOT(handleAddToFav()) );
-	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Grant extra slot")) ,this ,SLOT(handleGrantSlot()) );
+		cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Add To &Favorites")) ,this ,SLOT(handleAddToFav()) );
+	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Grant &extra slot")) ,this ,SLOT(handleGrantSlot()) );
 	if(!traits.nonFavOnly)
 		cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Connect to hub")) ,this ,SLOT(handleConHub()) );
 	cnxtMenu->addSeparator();
 	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Remove user from queue")) ,this ,SLOT(handleRemoveUserQueue()) );
 	cnxtMenu->addSeparator();
-	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Force attempt")) ,this ,SLOT(handleForce()) );
-	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Copy nick to clipboard")) ,this ,SLOT(handleCopyNick()) );
+	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("&Force attempt")) ,this ,SLOT(handleForce()) );
+	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Copy &nick to clipboard")) ,this ,SLOT(handleCopyNick()) );
 	cnxtMenu->addSeparator();
-	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("Disconnect")) ,this ,SLOT(handleRemove()) );
+	cnxtMenu->addAction(StilUtils::TstrtoQ(T_("&Disconnect")) ,this ,SLOT(handleRemove()) );
+	
+	switch (APPSETTING(i_ACT_ON_DBLCLICK_TRANSFERVIEW))
+	{
+		case 0: cnxtMenu->setDefaultAction(a);
+		case 2: cnxtMenu->setDefaultAction(f);
+	
+		default : cnxtMenu->setDefaultAction(a);
+	}
 }
 
 void TransferView::makeContextMenu2() 

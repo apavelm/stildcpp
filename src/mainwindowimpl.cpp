@@ -831,9 +831,19 @@ void MainWindowImpl::openownfilelistFunc()
 		OpenList(this, dcpp::Text::toT(ownFileList), dcpp::ClientManager::getInstance()->getMe(), 0, StilUtils::TstrtoQ(Text::toT(SETTING(NICK))) );
 }
 
+void MainWindowImpl::openTextWindow(const QString& fileName)
+{
+	m_tabwin->setCurrentIndex(m_tabwin->addTab((new TextWindow(m_tabwin, fileName)), "ViewAsText"));
+}
+
+void MainWindowImpl::openTextWindow(const tstring& fileName)
+{
+	openTextWindow(StilUtils::TstrtoQ(fileName));
+}
+
 void MainWindowImpl::openTextWindow(const string& fileName)
 {
-	m_tabwin->setCurrentIndex(m_tabwin->addTab((new TextWindow(m_tabwin, fileName)), StilUtils::TstrtoQ(Text::toT(fileName))));
+	openTextWindow(Text::toT(fileName));
 }
 
 void MainWindowImpl::RefreshOwnFileListFunc()

@@ -30,12 +30,15 @@ const char * AppSettingsMgr::intTags[] =
 {
 	"HideOnClose", "ShowSplash", "UseTray", "StartHidden", "PromptOnClose", "TabPosition"
 	,"NotePadFontSize", "UpdateIPonStartup", "ShowSmiles", "SwapUserListHub", "MainToolBarIconSize"
-	,"MainToolBarStyle", "OPsGoesFirst", "ClassicSort", "ActionOnTransferDblClick", "SysLogFontSize", "TextWindowFontSize"
+	,"MainToolBarStyle", "OPsGoesFirst", "ClassicSort", "ActionOnTransferDblClick", "SysLogFontSize"
+	, "TextWindowFontSize"
 };
 
 const char * AppSettingsMgr::strTags[] = 
 {
-	"IconSetPath", "DefaultHubEncoding", "TransferViewColumnVisibility", "DLWindowColumnVisibility", "SearchWindowColumnVisibility", "SearchSpyWindowColumnVisibility"
+	"IconSetPath", "DefaultHubEncoding", "TransferViewColumnVisibility", "DLWindowColumnVisibility"
+	,"SearchWindowColumnVisibility", "SearchSpyWindowColumnVisibility", "FinishedDLColumnVisibility"
+	,"FinishedULColumnVisibility"
 };
 
 void AppSettingsMgr::writeDefs()
@@ -47,6 +50,8 @@ void AppSettingsMgr::writeDefs()
 	strDefaults << "0,0,0,0,0,0,0,0,0,0,0,0";
 	strDefaults << "0,0,0,0,0,0,0,0,0,0,0,0";
 	strDefaults << "0,0,0";
+	strDefaults << "0,0,0,0,0,0,0,0";
+	strDefaults << "0,0,0,0,0,0,0,0";
 	intSettings = intDefaults;
 	strSettings = strDefaults;
 }
