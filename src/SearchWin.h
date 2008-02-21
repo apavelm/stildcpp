@@ -245,7 +245,7 @@ private:
 	void onHubChanged(HubInfo* info);
 	void onHubRemoved(HubInfo* info);
 
-	void speak(Speakers s, Client* aClient){};
+	void speak(Speakers s, Client* aClient);
 
 	// Use QMap for replacing TypedListView of original client
 	QMap<HubInfo*, QListWidgetItem*> hubMap;

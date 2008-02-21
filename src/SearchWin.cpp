@@ -739,6 +739,12 @@ void SearchWindow::speak(unsigned int wParam, long lParam)
 	emit speakerSignal(wParam, lParam);
 }
 
+void SearchWindow::speak(Speakers s, Client* aClient)
+{
+	HubInfo* hubInfo = new HubInfo(Text::toT(aClient->getHubUrl()), Text::toT(aClient->getHubName()), aClient->getMyIdentity().isOp());
+	speak(s, reinterpret_cast<unsigned int>(hubInfo));
+}
+
 void SearchWindow::initColumnMenu()
 {
 	columnMenu = new QMenu(searchView->header());
