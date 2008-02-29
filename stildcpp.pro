@@ -32,6 +32,7 @@ FORMS = ui/mainwindow.ui \
  ui/notepad.ui \
  ui/TextWindow.ui \
  ui/syslog.ui \
+ ui/stats.ui \
  ui/transview.ui \
  ui/hashman.ui
 HEADERS = src/mainwindowimpl.h \
@@ -155,8 +156,10 @@ HEADERS = src/mainwindowimpl.h \
  src/useractmenu.h \
  src/client/HashBloom.h \
  src/userlist.h \
+ src/stats.h \
  src/userlistsortingmodel.h \
  src/widgets/stil_TransferView.h \
+ src/widgets/stil_stats.h \
  src/widgets/myprogress.h \
  src/widgets/stil_qdltreewidget.h
 SOURCES = src/mainwindowimpl.cpp \
@@ -246,9 +249,11 @@ SOURCES = src/mainwindowimpl.cpp \
  src/useractmenu.cpp \
  src/client/HashBloom.cpp \
  src/userlist.cpp \
+ src/stats.cpp \
  src/userlistsortingmodel.cpp \
  src/widgets/stil_TransferView.cpp \
  src/widgets/myprogress.cpp \
+ src/widgets/stil_stats.cpp \
  src/widgets/stil_qdltreewidget.cpp
 RESOURCES += src/stildcpp.qrc src/langs.qrc
 LIBS += -lssl -lbz2 -lcrypto

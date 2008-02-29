@@ -221,7 +221,7 @@ void MainWindowImpl::clientInit()
 	//if(BOOLSETTING(OPEN_WAITING_USERS)) postMessage(WM_COMMAND, IDC_WAITING_USERS);
 	if(BOOLSETTING(OPEN_FINISHED_UPLOADS)) ULFinFunc();
 	if(BOOLSETTING(OPEN_SEARCH_SPY)) SSFunc();
-	//if(BOOLSETTING(OPEN_NETWORK_STATISTICS)) postMessage(WM_COMMAND, IDC_NET_STATS);
+	if(BOOLSETTING(OPEN_NETWORK_STATISTICS)) StatsFunc();
 	if(BOOLSETTING(OPEN_NOTEPAD)) notepadFunc();
 	if(BOOLSETTING(OPEN_PUBLIC)) PubHubFunc();
 	if(BOOLSETTING(OPEN_FAVORITE_HUBS)) FavHubListFunc();
@@ -361,6 +361,7 @@ void MainWindowImpl::createActions()
 	connect(actionFinished_downloads, SIGNAL(triggered()), this, SLOT(DLFinFunc()));
 	connect(actionFinished_Uploads, SIGNAL(triggered()), this, SLOT(ULFinFunc()));
 	connect(actionNotePad, SIGNAL(triggered()), this, SLOT(notepadFunc()));
+	connect(actionNetStats, SIGNAL(triggered()), this, SLOT(StatsFunc()));
 	connect(actionIndexing_Progress, SIGNAL(triggered()), this, SLOT(indexingFunc()));
 	
 	
@@ -505,6 +506,14 @@ void MainWindowImpl::SLogFunc()
 	if (FindWinByType(StilUtils::WIN_TYPE_SYSTEM_LOG)==-1)
 		m_tabwin->setCurrentIndex(m_tabwin->addTab((new SysLogWindow(m_tabwin)),"System Log"));
 	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_SYSTEM_LOG));
+}
+
+
+void MainWindowImpl::StatsFunc()
+{
+	if (FindWinByType(StilUtils::WIN_TYPE_NETWORK_STATS)==-1)
+		m_tabwin->setCurrentIndex(m_tabwin->addTab( (new StatsWindow(m_tabwin)), "Net_Stats"));
+	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_NETWORK_STATS));
 }
 
 void MainWindowImpl::ADLFunc()

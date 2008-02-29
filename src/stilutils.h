@@ -64,6 +64,7 @@ public:
 		15 - DownLoads Frame
 		16 - System Log
 		17 - TextWindow (view file as text)
+		18 - Network Statistics
 	*/
 	
 	enum tabWinTypes{
@@ -86,6 +87,7 @@ public:
 		,WIN_TYPE_DOWNLOADS
 		,WIN_TYPE_SYSTEM_LOG
 		,WIN_TYPE_TEXT_WINDOW
+		,WIN_TYPE_NETWORK_STATS
 		,WIN_TYPE_LAST
 	};
 	

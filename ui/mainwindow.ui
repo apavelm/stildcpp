@@ -22,7 +22,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>31</height>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFiles" >
@@ -58,6 +58,7 @@
     <addaction name="actionSearch_Spy" />
     <addaction name="separator" />
     <addaction name="actionSysLog" />
+    <addaction name="actionNetStats" />
     <addaction name="actionIndexing_Progress" />
     <addaction name="actionNotePad" />
     <addaction name="separator" />
@@ -427,6 +428,11 @@
   <action name="actionSysLog" >
    <property name="text" >
     <string>System Log</string>
+   </property>
+  </action>
+  <action name="actionNetStats" >
+   <property name="text" >
+    <string>Network Statistics</string>
    </property>
   </action>
  </widget>

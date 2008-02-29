@@ -69,6 +69,7 @@
 #include "widgets/stil_TransferView.h"
 #include "mdi_syslog.h"
 #include "TextWindow.h"
+#include "stats.h"
 
 #include "stilutils.h"
 
@@ -188,6 +189,7 @@ private slots:
 	void PubHubFunc();
 	void HomepageFunc();
 	void FavUsrFunc();
+	void StatsFunc();
 	void IgnoredUsrFunc();
 //	void SearchFunc(); // moved to public
 	void qcdconFunc(QString);
@@ -301,4 +303,3 @@ private:
 };
 
 #endif
-

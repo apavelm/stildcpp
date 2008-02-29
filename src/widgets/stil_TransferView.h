@@ -285,8 +285,8 @@ private:
 
 	virtual void on(QueueManagerListener::Removed, QueueItem*) throw();
 
-	void onTransferComplete(Transfer* aTransfer, bool isUpload);
-	void onTransferTick(Transfer* aTransfer);
+	void onTransferComplete(Transfer* aTransfer, bool idDownload);
+	void onTransferTick(Transfer* aTransfer, bool isDownload);
 	void starting(UpdateInfo* ui, Transfer* t);
 private slots:
 	void slotSpeak();

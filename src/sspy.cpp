@@ -91,6 +91,7 @@ SearchSpyWindow::~SearchSpyWindow()
 	searches->clear();
 	delete cnxtMenu;
 	delete columnMenu;
+	delete timer;
 	
 	// visibility
 	QStringList vv;
@@ -172,7 +173,7 @@ void SearchSpyWindow::slotSearch()
 
 void SearchSpyWindow::initSecond()
 {
-	QTimer *timer = new QTimer(this);
+	timer = new QTimer(this);
 	connect(timer, SIGNAL(timeout()), this, SLOT(eachSecond()));
 	timer->start(1000);
 }
