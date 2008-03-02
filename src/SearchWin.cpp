@@ -117,7 +117,7 @@ void SearchWindow::zeroStatusChanged(int state)
 
 void SearchWindow::hubStateChanged(QListWidgetItem* currentItem)
 {
-	if (hubListWidget->row(currentItem) == 0)
+	if (hubListWidget->row(currentItem) != 0)
 	{
 		for(int i = 1; i<hubListWidget->count(); i++)
 		{
@@ -254,9 +254,9 @@ void SearchWindow::removeSearchResult(QStandardItem* item)
 {
 	QStandardItem *parentItem = model->invisibleRootItem();
 	
-	parentItem->removeRow(item->row());
-	
 	Q_ASSERT(searchMap.remove(item) > 0);
+
+	parentItem->removeRow(item->row());
 	
 }
 

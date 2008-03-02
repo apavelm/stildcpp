@@ -183,7 +183,7 @@ void BufferedSocket::threadRead() throw(SocketException) {
 					const int BufSize = 1024;
 					// Special to autodetect nmdc connections...
 					string::size_type pos = 0;
-					AutoArray<uint8_t> buffer (BufSize);
+					boost::scoped_array<uint8_t> buffer (new uint8_t[BufSize]);
 					size_t in;
 					l = line;
 					// decompress all input data and store in l.
@@ -411,30 +411,34 @@ bool BufferedSocket::checkEvents() {
 			continue;
 		}
 
-		switch(p.first) {
-			case SEND_DATA:
-				threadSendData(); break;
-			case SEND_FILE:
-				threadSendFile(((SendFileInfo*)p.second)->stream); break;
-			case CONNECT:
-				{
-					ConnectInfo* ci = (ConnectInfo*)p.second;
-					threadConnect(ci->addr, ci->port, ci->proxy);
+		try {
+			switch(p.first) {
+				case SEND_DATA:
+					threadSendData(); break;
+				case SEND_FILE:
+					threadSendFile(((SendFileInfo*)p.second)->stream); break;
+				case CONNECT:
+					{
+						ConnectInfo* ci = (ConnectInfo*)p.second;
+						threadConnect(ci->addr, ci->port, ci->proxy);
+						break;
+					}
+				case DISCONNECT:
+					if(isConnected())
+						fail(_("Disconnected"));
 					break;
-				}
-			case DISCONNECT:
-				if(isConnected())
-					fail(_("Disconnected"));
-				break;
-			case SHUTDOWN:
-				return false;
-			case ACCEPTED:
-				break;
-			case UPDATED:
-				fire(BufferedSocketListener::Updated());
-				break;
+				case SHUTDOWN:
+					return false;
+				case ACCEPTED:
+					break;
+				case UPDATED:
+					fire(BufferedSocketListener::Updated());
+					break;
+			}
+		} catch(...) {
+			delete p.second;
+			throw;
 		}
-
 		delete p.second;
 	}
 	return true;

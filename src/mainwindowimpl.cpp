@@ -745,7 +745,8 @@ void ThreadGetTTH::run()
 	b="";
 	c="";
 	if (!a.isEmpty()) {
-		AutoArray<char> buf(512*1024);
+//		AutoArray<char> buf(512*1024);
+		boost::scoped_array<char> buf(new char[512*1024]);
 
 		try {
 			QFile f(a);
@@ -755,9 +756,9 @@ void ThreadGetTTH::run()
 			f.open(QIODevice::ReadOnly);
 			if (fi.size() > 0) {
 				qint64 n = 512*1024;
-				while( (n = f.read(buf, n)) > 0) {
+				while( (n = f.read(&buf[0], n)) > 0) {
 					if (_stp) break;
-					tth.update(buf, n);
+					tth.update(&buf[0], n);
 					n = 512*1024;
 					if (_stp) break;
 				}
