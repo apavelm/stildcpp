@@ -28,11 +28,11 @@ MainWindowImpl::~MainWindowImpl()
 {
 	thrdGetTTh.stop();
 	trans_view->preClose();
-	dcpp::SettingsManager::getInstance()->set(SettingsManager::MAIN_WINDOW_POS_X, static_cast<int>(this->x()));
-	dcpp::SettingsManager::getInstance()->set(SettingsManager::MAIN_WINDOW_POS_Y, static_cast<int>(this->y()));
-	dcpp::SettingsManager::getInstance()->set(SettingsManager::MAIN_WINDOW_SIZE_X, static_cast<int>(this->size().width()));
-	dcpp::SettingsManager::getInstance()->set(SettingsManager::MAIN_WINDOW_SIZE_Y, static_cast<int>(this->size().height()));
-	dcpp::SettingsManager::getInstance()->set(SettingsManager::MAIN_WINDOW_STATE, (int)this->isMaximized());
+	SettingsManager::getInstance()->set(SettingsManager::MAIN_WINDOW_POS_X, static_cast<int>(this->x()));
+	SettingsManager::getInstance()->set(SettingsManager::MAIN_WINDOW_POS_Y, static_cast<int>(this->y()));
+	SettingsManager::getInstance()->set(SettingsManager::MAIN_WINDOW_SIZE_X, static_cast<int>(this->size().width()));
+	SettingsManager::getInstance()->set(SettingsManager::MAIN_WINDOW_SIZE_Y, static_cast<int>(this->size().height()));
+	SettingsManager::getInstance()->set(SettingsManager::MAIN_WINDOW_STATE, (int)this->isMaximized());
 
 	QueueManager::getInstance()->saveQueue();
 	

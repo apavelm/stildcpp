@@ -26,6 +26,7 @@
 #include "../client/Socket.h"
 #include "../client/TimerManager.h"
 #include "../client/SettingsManager.h"
+#include "../client/Util.h"
 
 #include <QtGui>
 
@@ -42,37 +43,11 @@ public:
 	QSize sizeHint() const;
 private:
 	QTimer * timer;
-	void initSecond();
-	
-	enum { PIX_PER_SEC = 2 }; // Pixels per second
-	enum { LINE_HEIGHT = 10 };
-	enum { AVG_SIZE = 5 };
-	
-	struct Stat {
-		Stat() : scroll(0), speed(0) { }
-		Stat(uint32_t aScroll, int64_t aSpeed) : scroll(aScroll), speed(aSpeed) { }
-		uint32_t scroll;
-		int64_t speed;
-	};
-	typedef QList<Stat> StatList;
-	typedef StatList::iterator StatIter;
-	typedef QList<int64_t> AvgList;
-	typedef AvgList::iterator AvgIter;
-	StatList up;
-	StatList down;
-	AvgList upAvg;
-	AvgList downAvg;
+	QList<int64_t> dlist, uplist;
 
-	long width;
-	long height;
-	long twidth;
 	uint32_t lastTick;
-	uint32_t scrollTick;
 	int64_t lastUp;
 	int64_t lastDown;
-	int64_t max;
-	
-	void addTick(int64_t bdiff, int64_t tdiff, StatList& lst, AvgList& avg, int scroll);
 	
 private slots:
 	bool eachSecond();
@@ -80,11 +55,9 @@ private slots:
 protected:
 	void paintEvent(QPaintEvent *);
 	void paintBorder();
-	void setZoomPoint(int);
-	void paintFreq();
+	void paintGraph();
 	void paintScale();
-	void paintControl();
-	void initValue();
+	void setMaxValue(int64_t);
 	
 private:
 	QColor col_up;
@@ -99,21 +72,6 @@ private:
 	int64_t speed4;
 	int64_t speed5;
 	int64_t speed6;
-
-	int zoom_point;
-	int start_point;
-	int end_point;
-	int typeFFT;
-	double *magnitudeLin;
-	double *magnitudeLog;
-	double min_val_lin;
-	double max_val_lin;
-	double min_val_log;
-	double max_val_log;
-	double range_freq;
-	bool lockFFT;
-	QString wavFile;
-
 };
 
 #endif
