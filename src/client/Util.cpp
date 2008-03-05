@@ -721,7 +721,7 @@ string Util::formatTime(const string &msg, const time_t t) {
 		while(buf.empty()) {
 			bufsize+=64;
 			buf.resize(bufsize);
-			strftime(&buf[0], bufsize-1, msg.c_str(), loc);
+			buf.resize(strftime(&buf[0], bufsize-1, msg.c_str(), loc));
 		}
 
 		return Text::toUtf8(buf);

@@ -1,16 +1,16 @@
-# Romanian translations for the DC++ package.
-# Copyright (C) 2008 The translators
-# This file is distributed under the same license as the DC++ package.
-#  <muntealb@users.sourceforge.net>, 2008.
+# Malay translation for dcplusplus
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# This file is distributed under the same license as the dcplusplus package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: dcpp\n"
+"Project-Id-Version: dcplusplus\n"
 "Report-Msgid-Bugs-To: dcplusplus-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2008-03-04 23:00+0100\n"
-"PO-Revision-Date: 2008-02-05 23:01+0000\n"
-"Last-Translator: Muntealb-users <Unknown>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2008-03-02 23:07+0000\n"
+"Last-Translator: Tian Seng Leong <tleong@andrew.cmu.edu>\n"
+"Language-Team: Malay <ms@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -55,18 +55,20 @@ msgstr ""
 #: dcpp/NmdcHub.cpp:281
 #, boost-format
 msgid "%1% (Nick unknown)"
-msgstr ""
+msgstr "%1% (nama timangan tidak diketahui)"
 
 #: dcpp/HashManager.cpp:767
 #, boost-format
 msgid ""
 "%1% not shared; calculated CRC32 does not match the one found in SFV file."
 msgstr ""
+"%1% tidak dikongsi; kiraan CRC32 tidak sama dengan objek yang dijumpai di "
+"fail SFV"
 
 #: dcpp/QueueManager.cpp:325
 #, boost-format
 msgid "%1% renamed to %2%"
-msgstr ""
+msgstr "%1% ditukar kepada %2%"
 
 #: dcpp/AdcHub.cpp:281
 #, boost-format
@@ -79,9 +81,9 @@ msgid "%1% was kicked: %2%"
 msgstr ""
 
 #: dcpp/DownloadManager.cpp:530
-#, fuzzy, boost-format
+#, boost-format
 msgid "%1%: File not available"
-msgstr "Fișierul nu e disponibil"
+msgstr "%1%: Tidak ada fail"
 
 #: dcpp/Util.cpp:337
 #, c-format, boost-format
@@ -96,63 +98,63 @@ msgstr "%s B"
 #: dcpp/QueueManager.cpp:532
 msgid "A file of equal or larger size already exists at the target location"
 msgstr ""
-"Un fișier cu o mărime egală sau mai mare există deja la destinația-țintă"
+"Fail ini mempunyai fail yang lebih besar atau sama size di lokasi target"
 
 #: dcpp/QueueManager.cpp:475
 msgid "A file with a different size already exists in the queue"
-msgstr "Un fișier cu o mărime diferită există deja în coadă"
+msgstr "Fail yang saiznya berlainan sudah wujud dalam barisan"
 
 #: dcpp/QueueManager.cpp:478
 msgid "A file with different tth root already exists in the queue"
-msgstr "Un fișier cu o rădăcina TTH diferită există deja în coadă"
+msgstr "Fail dengan tth root yang berlainan sudah wujud dalam barisan"
 
 #: dcpp/QueueManager.cpp:442
 msgid "A file with the same hash already exists in your share"
-msgstr "Un fișier cu haș identic există deja în partajul dv."
+msgstr "Fail dengan hash yang sama sudah wujud dalam kongsian anda"
 
 #: dcpp/ConnectionManager.cpp:176
 msgid "All download slots taken"
-msgstr "Toate sloturile de descărcare sînt ocupate"
+msgstr "Semua slot muat turun sudah diambil"
 
 #: dcpp/DownloadManager.cpp:376
 msgid "CRC32 inconsistency (SFV-Check)"
-msgstr "Inconsistență CRC32 (Verificare SFV)"
+msgstr "Inkonsistensi CRC32 (SFV-Check)"
 
 #: dcpp/DownloadManager.cpp:374
-#, fuzzy, boost-format
+#, boost-format
 msgid "CRC32 inconsistency (SFV-Check) (File: %1%)"
-msgstr "Inconsistență CRC32 (Verificare SFV)"
+msgstr "Inkonsistensi CRC32 (SFV-Check) (File: %1%)"
 
 #: dcpp/ConnectionManager.cpp:376
 msgid "Certificate not trusted, unable to connect"
-msgstr "Certificatul nu e de încredere, conectarea nu e posibilă"
+msgstr "Sijil tidak dipercayai, tidak boleh menyambung"
 
 #: dcpp/Socket.cpp:154 dcpp/ConnectionManager.cpp:182
 #: dcpp/BufferedSocket.cpp:154
 msgid "Connection timeout"
-msgstr "Conexiune Expirată"
+msgstr "Masa untuk sambungan telah habis"
 
 #: dcpp/DownloadManager.cpp:232
 #, boost-format
 msgid "Could not open target file: %1%"
-msgstr ""
+msgstr "Tidak boleh buka fail target: %1%"
 
 #: dcpp/ShareManager.cpp:418
 msgid "Directory already shared"
-msgstr "Dosar partajat deja"
+msgstr "Direktori sudah dikongsi"
 
 #: dcpp/BufferedSocket.cpp:407 dcpp/BufferedSocket.cpp:426
 msgid "Disconnected"
-msgstr "Deconectat"
+msgstr "Terputus"
 
 #: dcpp/UploadManager.cpp:450
 #, boost-format
 msgid "Disconnected user leaving the hub: %1%"
-msgstr ""
+msgstr "Pengguna terputus meninggalkan hub: %1%"
 
 #: dcpp/DCPlusPlus.cpp:103
 msgid "Download Queue"
-msgstr "Coada de Descărcare"
+msgstr "Barisan Muat turun"
 
 #: dcpp/ShareManager.cpp:741
 #, boost-format
@@ -160,47 +162,49 @@ msgid ""
 "Duplicate file will not be shared: %1%%2% (Size: %3% B) Dupe matched "
 "against: %4%%5%"
 msgstr ""
+"Fail yang mempunyai duplikasi tidak akan dikongsi : %1%%2% (Saiz: %3% B) "
+"Duplikasi disahkan dengan: %4%%5%"
 
 #: dcpp/QueueManager.cpp:545 dcpp/QueueManager.cpp:549
 #, boost-format
 msgid "Duplicate source: %1%"
-msgstr ""
+msgstr "Duplikasi Sumber: %1%"
 
 #: dcpp/HashManager.cpp:456
-#, fuzzy, boost-format
+#, boost-format
 msgid "Error creating hash data file: %1%"
-msgstr "Citirea fișierului cu date de hașare nu e posibilă"
+msgstr "Ralat mencipta data hash fail: %1%"
 
 #: dcpp/ZUtils.cpp:33 dcpp/ZUtils.cpp:54 dcpp/ZUtils.cpp:76 dcpp/ZUtils.cpp:86
 #: dcpp/BZUtils.cpp:31 dcpp/BZUtils.cpp:52 dcpp/BZUtils.cpp:60
 msgid "Error during compression"
-msgstr "Eroare în cursul comprimării"
+msgstr "Ralat semasa kompresi"
 
 #: dcpp/ZUtils.cpp:100 dcpp/ZUtils.cpp:123 dcpp/BZUtils.cpp:72
 #: dcpp/BZUtils.cpp:94 dcpp/BZUtils.cpp:97 dcpp/CryptoManager.cpp:342
 #: dcpp/CryptoManager.cpp:361 dcpp/CryptoManager.cpp:375
 msgid "Error during decompression"
-msgstr "Eroare în cursul decomprimării"
+msgstr "Ralat semasa dikompresi"
 
 #: dcpp/HashManager.cpp:772
 #, boost-format
 msgid "Error hashing %1%: %2%"
-msgstr ""
+msgstr "Ralat hashing %1%: %2%"
 
 #: dcpp/HashManager.cpp:118 dcpp/HashManager.cpp:333
 #, boost-format
 msgid "Error saving hash data: %1%"
-msgstr ""
+msgstr "Ralat menyimpan data hash: %1%"
 
 #: dcpp/CryptoManager.cpp:226 dcpp/CryptoManager.cpp:230
 #: dcpp/CryptoManager.cpp:235 dcpp/CryptoManager.cpp:239
 msgid "Failed to load certificate file"
-msgstr "Incărcarea fișierului certificat a eșuat"
+msgstr "Gagal muat sijil fail"
 
 #: dcpp/CryptoManager.cpp:244 dcpp/CryptoManager.cpp:248
 #: dcpp/CryptoManager.cpp:253 dcpp/CryptoManager.cpp:257
 msgid "Failed to load private key"
-msgstr "Incărcarea cheii private a eșuat"
+msgstr "Gagal muat kunci persendirian"
 
 #: dcpp/AdcHub.cpp:206
 msgid "Failed to negotiate base protocol"
@@ -211,60 +215,64 @@ msgid ""
 "Failed to set up the socks server for UDP relay (check socks address and "
 "port)"
 msgstr ""
+"Gatal untuk menyediakan server socks untuk relay UDP (semak alamat dan port "
+"socks)"
 
 #: dcpp/ShareManager.cpp:776
-#, fuzzy, boost-format
+#, boost-format
 msgid "File list refresh failed: %1%"
-msgstr "Reîmprospătarea listei de fișiere s-a încheiat"
+msgstr "Senarai fail yang hendak diperbaharui telah gagal: %1%"
 
 #: dcpp/ShareManager.cpp:820
 msgid "File list refresh finished"
-msgstr "Reîmprospătarea listei de fișiere s-a încheiat"
+msgstr "Senarai fail telah diperbaharui"
 
 #: dcpp/ShareManager.cpp:756
 msgid ""
 "File list refresh in progress, please wait for it to finish before trying to "
 "refresh again"
 msgstr ""
+"Senarai fail sedang diperbaharui, sila tunggu sehingga habis sebelum cuba "
+"untuk memperbaharui semula."
 
 #: dcpp/ShareManager.cpp:798
 msgid "File list refresh initiated"
-msgstr "Reîmprospătarea listei de fișiere a fost inițiată"
+msgstr "Perbaharui Senarai fail sedang dimulakan"
 
 #: dcpp/DirectoryListing.cpp:102
 msgid "File not available"
-msgstr "Fișierul nu e disponibil"
+msgstr "Tiada fail"
 
 #: dcpp/HashManager.cpp:89
 #, boost-format
 msgid "Finished hashing: %1%"
-msgstr ""
+msgstr "Habis process hashing: %1%"
 
 #: dcpp/HashManager.cpp:87
 #, boost-format
 msgid "Finished hashing: %1% (%2%/s)"
-msgstr ""
+msgstr "Habis process hashing: %1% (%2%/s)"
 
 #: dcpp/DownloadManager.cpp:308
 msgid "Full tree does not match TTH root"
-msgstr "Arborele complet nu se potrivește cu rădacina TTH"
+msgstr "Pokok penuh tidak sama dengan TTH root"
 
 #: dcpp/CryptoManager.cpp:219
 msgid "Generated new TLS certificate"
-msgstr "Generează certificat TLS nou"
+msgstr "Certifikasi TLS telah diperbaharui"
 
 #: dcpp/DCPlusPlus.cpp:97
 msgid "Hash database"
-msgstr "Hașează baza de date"
+msgstr "Pangakalan Data hash"
 
 #: dcpp/HashManager.cpp:677
 msgid "Hash database rebuilt"
-msgstr "Baza de date de hașare a fost reclădită"
+msgstr "Pangakalan Data hash dibina semula"
 
 #: dcpp/HashManager.cpp:73 dcpp/HashManager.cpp:277
 #, boost-format
 msgid "Hashing failed: %1%"
-msgstr ""
+msgstr "Hashing telah gagal: %1%"
 
 #: dcpp/AdcHub.cpp:212
 msgid ""
@@ -274,154 +282,152 @@ msgstr ""
 
 #: dcpp/DownloadManager.cpp:220
 msgid "Invalid size"
-msgstr "Mărime invalidă"
+msgstr "Saiz tidak sah"
 
 #: dcpp/QueueManager.cpp:515 dcpp/QueueManager.cpp:523
 msgid ""
 "Invalid target file (missing directory, check default download directory "
 "setting)"
 msgstr ""
+"Target fail tidak sah (direktori tidak wujud, semak direktori muat turun)"
 
 #: dcpp/FavoriteManager.cpp:438
 msgid "Kick user(s)"
-msgstr "Izgonește utilizator(i)"
+msgstr "Tendang pengguna"
 
 #: dcpp/ConnectionManager.cpp:230
-#, boost-format
+#, fuzzy, boost-format
 msgid "Listening socket failed (you need to restart %1%): %2%"
-msgstr ""
+msgstr "Pendengaran Socket telah gagal (anda kena mulakan DC++ semula): %1%"
 
 #: dcpp/BufferedSocket.cpp:261
 msgid "Maximum command length exceeded"
-msgstr "Depășire lungime maximă a comenzii"
+msgstr "Saiz maximum untuk Kommand telah melebihi"
 
 #: dcpp/DownloadManager.cpp:280
 msgid "More data was sent than was expected"
-msgstr "Au fost transmise mai multe date decît se aștepta"
+msgstr "Lebih data dihantar dari yang sepatutnya"
 
 #: dcpp/ShareManager.cpp:403
 msgid "No directory specified"
-msgstr "Nici un dosar specificat"
+msgstr "Tiada direktori dispecifikasikan"
 
 #: dcpp/DownloadManager.cpp:419
 msgid "No slots available"
-msgstr "Nici un slot disponibil"
+msgstr "Tidak ada slot"
 
 #: dcpp/AdcHub.cpp:576
 #, fuzzy, boost-format
 msgid "Not listening for connections - please restart %1%"
-msgstr "Nu sînt ascultate conexiunile - reporniți DC++"
+msgstr "Tidak mendenggar untuk sambungan - sila memulakan semula DC++"
 
 #: dcpp/Transfer.cpp:63 dcpp/Transfer.cpp:67 dcpp/ClientManager.cpp:115
 #: dcpp/SearchManager.cpp:267 dcpp/SearchManager.cpp:329
 #: dcpp/SearchManager.cpp:331
 msgid "Offline"
-msgstr "Neconectat"
+msgstr "Offline"
 
 #: dcpp/FavoriteManager.cpp:442
 msgid "Redirect user(s)"
-msgstr "Redirectionează utilizatorul(ii)"
+msgstr "Sila hantar pengguna ke tempat lain"
 
 #: dcpp/ShareManager.cpp:421
 msgid "Remove all subdirectories before adding this one"
-msgstr "Înlătură toate dosarele înainte de a-l adăuga pe acesta"
+msgstr "Menyingkirkan semua subdirektori semula tambah direktori ini"
 
 #: dcpp/DownloadManager.cpp:225
 #, fuzzy
 msgid "Response does not match request"
-msgstr "Arborele complet nu se potrivește cu rădacina TTH"
+msgstr "Pokok penuh tidak sama dengan TTH root"
 
 #: dcpp/DCPlusPlus.cpp:100
 msgid "Shared Files"
-msgstr "Fișiere Partajate"
+msgstr "Fail Kongsian"
 
 #: dcpp/Socket.cpp:269 dcpp/Socket.cpp:273
 msgid "Socks server authentication failed (bad login / password?)"
 msgstr ""
-"Autentificarea serverului de socluri [socks] a eșuat (logare greșită / "
-"parola?)"
+"Pengesahan Server socks telah gagal (salah kata name/salah kata kunci?)"
 
 #: dcpp/CryptoManager.cpp:221
-#, fuzzy, boost-format
+#, boost-format
 msgid "TLS disabled, failed to generate certificate: %1%"
-msgstr "TLS e dezactivat, nu e setat fișierul-certificat"
+msgstr "TLS telah ditutup, gagal untuk memperbaharui certifikasi: %1%"
 
 #: dcpp/CryptoManager.cpp:211
 msgid "TLS disabled, no certificate file set"
-msgstr "TLS e dezactivat, nu e setat fișierul-certificat"
+msgstr "TLS telah ditutup, tiada fail certifikasi"
 
 #: dcpp/QueueManager.cpp:510 dcpp/QueueManager.cpp:519
 msgid "Target filename too long"
-msgstr "Numele fișierului-țintă e prea lung"
+msgstr "Nama fail target terlalu panjang"
 
 #: dcpp/QueueManager.cpp:798
 msgid "Target removed"
-msgstr "Țintă înlăturată"
+msgstr "Target disingkirkan"
 
 #: dcpp/Socket.cpp:255
 msgid "The socks server doesn't support login / password authentication"
-msgstr "Serverul de socluri nu suportă logarea / autentificarea parolei"
+msgstr ""
+"Server socks tidak memberi bantuan untuk pengesahan kata nama dan kata kunci"
 
 #: dcpp/Socket.cpp:162 dcpp/Socket.cpp:173 dcpp/Socket.cpp:206
 #: dcpp/Socket.cpp:210 dcpp/Socket.cpp:237 dcpp/Socket.cpp:252
 msgid "The socks server failed establish a connection"
-msgstr "Serverul de socluri a eșuat în stabilirea unei conexiuni"
+msgstr "Server socks gagal memulakan hubungan"
 
 #: dcpp/Socket.cpp:241
 msgid "The socks server requires authentication"
-msgstr "Serverul de socluri [socks] necesită autentificare"
+msgstr "Server socks perlukan pengesahan"
 
 #: dcpp/ShareManager.cpp:407
 msgid "The temporary download directory cannot be shared"
-msgstr "Dosarul de descărcare temporară nu poate fi partajat"
+msgstr "Direktori muat turun sementara tidak boleh dikongsi"
 
 #: dcpp/QueueManager.cpp:465
 msgid "This file is already queued"
-msgstr "Acest fișier există deja în coadă"
+msgstr "Fail ini sudah dalam barisan"
 
 #: dcpp/Thread.cpp:34 dcpp/Thread.cpp:42
 msgid "Unable to create thread"
-msgstr "Nu reușesc să creez firul"
+msgstr "Tidak boleh mencipta thread"
 
 #: dcpp/QueueManager.cpp:995
 #, boost-format
 msgid "Unable to open filelist: %1%"
-msgstr "Nu se poate deschide lista de fişiere: %1%"
+msgstr "Tidak boleh buka senarai fail: %1%"
 
 #: dcpp/HashManager.cpp:131
 msgid "Unable to read hash data file"
-msgstr "Citirea fișierului cu date de hașare nu e posibilă"
+msgstr "Tidak boleh baca data hash fail"
 
 #: dcpp/QueueManager.cpp:327
 #, boost-format
 msgid "Unable to rename %1%: %2%"
-msgstr "Nu se poate redenumi %1%: %2%"
+msgstr "Tidak boleh menama semula %1%: %2%"
 
 #: dcpp/UploadManager.cpp:149
 #, boost-format
 msgid "Unable to send file %1%: %2%"
-msgstr "Nu se poate trimite fişierul %1%:%2%"
+msgstr "Gagal hantar fail %1%: %2%"
 
 #: dcpp/Socket.cpp:54
 #, c-format, boost-format
 msgid "Unknown error: 0x%1$x"
-msgstr ""
+msgstr "Ralat tidak ketahui : 0x%1$x"
 
 #: dcpp/ShareManager.cpp:426 dcpp/ShareManager.cpp:468
 msgid "Virtual directory name already exists"
-msgstr "Numele dosarului virtual există deja"
+msgstr "Nama direktori virtual sudah wujud"
 
 #: dcpp/QueueManager.cpp:412 dcpp/QueueManager.cpp:436
 msgid "You're trying to download from yourself!"
-msgstr "Încercați să descărcați de la dv. înșivă!"
+msgstr "Kamu sedang cuba untuk muat turun dari sendiri!!!"
 
 #: dcpp/SettingsManager.cpp:156
 msgid "downloaded from"
-msgstr ""
+msgstr "Dimuat turun dari"
 
 #: dcpp/SettingsManager.cpp:157
 msgid "uploaded to"
-msgstr ""
-
-#~ msgid "Unknown error: 0x%1%"
-#~ msgstr "Eroare necunoscută: 0x%1%"
+msgstr "Dimuat naik ke"
