@@ -34,6 +34,8 @@
 #include "config.h"
 #include "stilutils.h"
 
+#include "indexing.h"
+
 //
 #include "client/stdinc.h"
 #include "client/DCPlusPlus.h"

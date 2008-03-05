@@ -437,6 +437,9 @@ void PreferencesDialog::SharingPageAdd()
 			
 			ShareManager::getInstance()->setDirty();
 			lbl_TotalSize->setText(StilUtils::fmtBytes(ShareManager::getInstance()->getShareSize() ));
+			
+			HashDlg::newInstance();
+			HashDlg::getInstance()->show();
 		}
 	}
 }

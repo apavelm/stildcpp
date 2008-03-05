@@ -221,14 +221,14 @@ void QMyStats::paintGraph(QPainter *painter)
 {
 	painter->save();
 	// down traffic
-	painter->setPen(QPen(col_down, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+	painter->setPen(QPen(col_down, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 	painter->drawPolyline(d_p, dlist.count() + 1);
 	
 	painter->restore();
 	painter->save();
 	
 	// up traffic
-	painter->setPen(QPen(col_up, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+	painter->setPen(QPen(col_up, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 	painter->drawPolyline(u_p, uplist.count() + 1);
 	
 	painter->restore();
@@ -254,12 +254,12 @@ void QMyStats::paintScale(QPainter *painter)
 	
 	painter->save();
 	// draw vertical dot lines
-	painter->setPen(QPen(col_scale, 2, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
+	painter->setPen(QPen(col_scale, 1, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
 	int vc = (size().width() - 2*BORDER_MARGIN - LEFT_PANEL_MARGIN - PANEL_MARGIN) / HORIZONTAL_GRIP_SNAP;
 	for (int i = 1; i <= vc; i++) painter->drawLine(BORDER_MARGIN + LEFT_PANEL_MARGIN + i*HORIZONTAL_GRIP_SNAP, BORDER_MARGIN + PANEL_MARGIN, BORDER_MARGIN + LEFT_PANEL_MARGIN +i*HORIZONTAL_GRIP_SNAP, size().height() - 2*BORDER_MARGIN);
 
 	// Vertiaval dot-lines white color (main-lines)
-	painter->setPen(QPen(Qt::white, 2, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
+	painter->setPen(QPen(Qt::white, 1, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
 	for (int i = 0; i <= 4; i++)
 	{
 	painter->drawLine(BORDER_MARGIN + LEFT_PANEL_MARGIN +(i*HORIZONTAL_GRIP_MAIN_SNAP), BORDER_MARGIN + PANEL_MARGIN, BORDER_MARGIN + LEFT_PANEL_MARGIN +(i*HORIZONTAL_GRIP_MAIN_SNAP), size().height() - 2*BORDER_MARGIN);

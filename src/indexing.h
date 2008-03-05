@@ -31,34 +31,33 @@
 //
 #include "client/stdinc.h"
 #include "client/DCPlusPlus.h"
-#include "client/TimerManager.h"
 #include "client/HashManager.h"
+#include "client/Singleton.h"
 //
 
 #include "ui_hashman.h"
 
-class HashDlg: public QDialog, private Ui::dlgIndexing 
-	,public TimerManagerListener
+using namespace std;
+using namespace dcpp;
+
+class HashDlg: public QDialog
+			,private Ui::dlgIndexing
+			,public Singleton<HashDlg>
 {
 	Q_OBJECT
 public:
-	HashDlg(QWidget *parent, bool aAutoClose);
+	HashDlg(QWidget *parent = 0, bool aAutoClose = true);
 	~HashDlg();
-
-	//int run() { return createDialog(IDD_HASH_PROGRESS); }
+	void setAutoHide(bool value = true) { autoClose = value; }
+private slots:
+	void updateStats();
 private:
-	// GUI functions
-	void updateStats(std::string file, int64_t bytes, size_t files, uint32_t tick);
-
-	// Client callbacks
-	virtual void on(TimerManagerListener::Second, uint32_t tics) throw();
+	QTimer * timer;
 	
 	bool autoClose;
 	int64_t startBytes;
 	size_t startFiles;
 	uint32_t startTime;
 };
-
-
 
 #endif // __INDEXING_H__

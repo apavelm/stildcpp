@@ -22,84 +22,83 @@
 
 #include "indexing.h"
 
-using namespace std;
-using namespace dcpp;
-
 HashDlg::HashDlg(QWidget *parent, bool aAutoClose) : QDialog(parent), autoClose(aAutoClose)
 {
 	setupUi(this);
-	//setAttribute(Qt::WA_DeleteOnClose, true);
-	//setWindowIcon(QIcon(":/images/pref_icon.png"));
-	
+	setWindowTitle(StilUtils::TstrtoQ(T_("Creating file index...")));
+	lbl_title->setText(StilUtils::TstrtoQ(CT_("Please wait while DC++ indexes your files (they won't be shared until they've been indexed)...")));
+
+	connect(inback_btn, SIGNAL(clicked()), this, SLOT(accept()) );
+
 	string tmp;
 	startTime = GET_TICK();
 	HashManager::getInstance()->getStats(tmp, startBytes, startFiles);
-	HashManager::getInstance()->setPriority(Thread::NORMAL);
-	updateStats("", 0, 0, 0);
 
-	TimerManager::getInstance()->addListener(this);
+	updateStats();
+
+	HashManager::getInstance()->setPriority(Thread::NORMAL);
+
+	timer = new QTimer(this);
+	connect(timer, SIGNAL(timeout()), this, SLOT(updateStats()));
+	timer->start(1000);
 }
 
 HashDlg::~HashDlg()
 {
 	HashManager::getInstance()->setPriority(Thread::IDLE);
-	TimerManager::getInstance()->removeListener(this);
+	delete timer;
 }
 
-void HashDlg::updateStats(string file, int64_t bytes, size_t files, uint32_t tick)
-{
-	if (bytes > startBytes) startBytes = bytes;
-	if (files > startFiles) startFiles = files;
-
-	double diff = tick - startTime;
-	if (diff < 1000 || files == 0 || bytes == 0)
-	{
-		lbl_stat1->setText("-.-- B/s, " + StilUtils::fmtBytes(bytes) + " left");
-		lbl_stat1->setText("-:--:-- left");
-		progress->setValue(0);
-	}
-	else
-	{
-		double speedStat = (((double)(startBytes - bytes)) * 1000) / diff;
-
-		lbl_stat1->setText( StilUtils::fmtBytes((int64_t)speedStat) + "/s, " + StilUtils::fmtBytes(bytes) + " left") ;
-		if (speedStat == 0)
-			lbl_stat1->setText("-:--:-- left");
-		else
-		{
-			double ss = (double)bytes / speedStat;
-			lbl_stat1->setText( string(Util::formatSeconds((int64_t)ss) + " left").c_str() );
-		}
-	}
-
-	if (files == 0)
-		lbl_Filename->setText( tr("Done") );
-	else
-		lbl_Filename->setText( file.c_str() );
-
-	if (startFiles == 0 || startBytes == 0)
-	{
-		progress->setValue(0);
-	}
-	else
-	{
-		double progres = ((0.5 * (double)(startFiles - files)/(double)startFiles) + (0.5 * (double)(startBytes - bytes)/(double)startBytes));
-		char buf[24];
-		snprintf(buf, sizeof(buf), "%.0lf%%", progres * 100);
-		progress->setValue(floor(progres));
-		//gtk_progress_bar_set_text(GTK_PROGRESS_BAR(getWidget("progressbar")), buf);
-	}
-}
-
-void HashDlg::on(TimerManagerListener::Second, uint32_t tics) throw()
+void HashDlg::updateStats()
 {
 	string file;
 	int64_t bytes = 0;
 	size_t files = 0;
+	uint32_t tick = GET_TICK();
 
 	HashManager::getInstance()->getStats(file, bytes, files);
+	if(bytes > startBytes) startBytes = bytes;
+	if(files > startFiles) startFiles = files;
 
-	//typedef Func4<Hash, string, int64_t, size_t, uint32_t> F4;
-	//F4 *func = new F4(this, &Hash::updateStats_gui, file, bytes, files, GET_TICK());
-	//WulforManager::get()->dispatchGuiFunc(func);
+	if(autoClose && files == 0) 
+	{
+		accept();
+		return;
+	}
+	
+	double diff = tick - startTime;
+	if(diff < 1000 || files == 0 || bytes == 0) 
+	{
+		lbl_stat0->setText(StilUtils::TstrtoQ( str(TF_("-.-- files/h, %1% files left") % (uint32_t)files).c_str()) );
+		lbl_stat1->setText(StilUtils::TstrtoQ( str(TF_("-.-- B/s, %1% left") % Text::toT(Util::formatBytes(bytes))).c_str()) );
+		lbl_stat2->setText(StilUtils::TstrtoQ( CT_("-:--:-- left")) );
+		progress->setValue(0);
+	} else {
+		double filestat = (((double)(startFiles - files)) * 60 * 60 * 1000) / diff;
+		double speedStat = (((double)(startBytes - bytes)) * 1000) / diff;
+
+		lbl_stat0->setText(StilUtils::TstrtoQ( str(TF_("%1% files/h, %2% files left") % filestat % (uint32_t)files).c_str()));
+		lbl_stat1->setText(StilUtils::TstrtoQ( str(TF_("%1%/s, %2% left") % Text::toT(Util::formatBytes((int64_t)speedStat)) % Text::toT(Util::formatBytes(bytes))).c_str()));
+
+		if(filestat == 0 || speedStat == 0) {
+			lbl_stat2->setText(StilUtils::TstrtoQ( CT_("-:--:-- left")));
+		} else {
+			double fs = files * 60 * 60 / filestat;
+			double ss = bytes / speedStat;
+
+			lbl_stat2->setText(StilUtils::TstrtoQ( str(TF_("%1% left") % Text::toT(Util::formatSeconds((int64_t)(fs + ss) / 2))).c_str()));
+		}
+	}
+
+	if(files == 0) {
+		lbl_Filename->setText(StilUtils::TstrtoQ( CT_("Done")));
+	} else {
+		lbl_Filename->setText(StilUtils::TstrtoQ( Text::toT(file).c_str()));
+	}
+
+	if(startFiles == 0 || startBytes == 0) {
+		progress->setValue(0);
+	} else {
+		progress->setValue((int)(10000 * ((0.5 * (startFiles - files)/startFiles) + 0.5 * (startBytes - bytes) / startBytes)));
+	}
 }

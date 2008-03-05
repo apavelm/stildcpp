@@ -588,8 +588,9 @@ void MainWindowImpl::notepadFunc()
 
 void MainWindowImpl::indexingFunc()
 {
-	HashDlg *hd = new HashDlg(this, false);
-	hd->show();
+	HashDlg::newInstance();
+	HashDlg::getInstance()->setAutoHide(false);
+	HashDlg::getInstance()->show();
 }
 
 void MainWindowImpl::qcdconFunc(QString adr)
