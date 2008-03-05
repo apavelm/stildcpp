@@ -29,6 +29,7 @@
 #include "../client/Util.h"
 
 #include <QtGui>
+#include <QtCore>
 
 using namespace std;
 using namespace dcpp;
@@ -43,21 +44,27 @@ public:
 	QSize sizeHint() const;
 private:
 	QTimer * timer;
+	QPixmap pixmap;
 	QList<int64_t> dlist, uplist;
+	QPointF *d_p, *u_p;
 
 	uint32_t lastTick;
 	int64_t lastUp;
 	int64_t lastDown;
 	
 private slots:
-	bool eachSecond();
+	void eachSecond();
 
 protected:
 	void paintEvent(QPaintEvent *);
-	void paintBorder();
-	void paintGraph();
-	void paintScale();
+	void resizeEvent(QResizeEvent *);
+	void paintBorder(QPainter *painter);
+	void paintGraph(QPainter *painter);
+	void paintScale(QPainter *painter);
 	void setMaxValue(int64_t);
+	void refreshPixmap();
+	void calcCoord();
+	int64_t findMax(const QList<int64_t> & lst);
 	
 private:
 	QColor col_up;
@@ -66,12 +73,7 @@ private:
 	QColor col_axis;
 	QColor col_scale;
 	
-	int64_t speed1;
-	int64_t speed2;
-	int64_t speed3;
-	int64_t speed4;
-	int64_t speed5;
-	int64_t speed6;
+	int64_t speed[7];
 };
 
 #endif

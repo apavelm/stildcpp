@@ -1,0 +1,79 @@
+<ui version="4.0" >
+ <class>SizeEdit</class>
+ <widget class="QWidget" name="SizeEdit" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>221</width>
+    <height>31</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>SizeEdit</string>
+  </property>
+  <layout class="QGridLayout" >
+   <property name="leftMargin" >
+    <number>0</number>
+   </property>
+   <property name="topMargin" >
+    <number>0</number>
+   </property>
+   <property name="rightMargin" >
+    <number>0</number>
+   </property>
+   <property name="bottomMargin" >
+    <number>0</number>
+   </property>
+   <item row="0" column="0" >
+    <layout class="QHBoxLayout" >
+     <item>
+      <widget class="QLineEdit" name="edt" />
+     </item>
+     <item>
+      <widget class="QComboBox" name="cmb" >
+       <property name="maxCount" >
+        <number>20</number>
+       </property>
+       <property name="minimumContentsLength" >
+        <number>5</number>
+       </property>
+       <item>
+        <property name="text" >
+         <string>B</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>KiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>MiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>GiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>TiB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>YiB</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -23,15 +23,68 @@
 #define __ADLSEARCH_H__
 
 #include "mdi_c.h"
+#include "config.h"
 #include "stilutils.h"
 
+#include "client/ADLSearch.h"
+#include "client/Client.h"
+
 #include "ui_adl.h"
+#include "ui_sizeedit.h"
+
+#include <QtGui>
+#include <QtCore>
+
+using namespace std;
+using namespace dcpp;
+
+class MySizeEdit: public QWidget, private Ui::SizeEdit
+{
+	Q_OBJECT
+public:
+	MySizeEdit(QWidget * parent): QWidget(parent) {setupUi(this);}
+};
 
 class ADLSearchWindow : public MdiChild, private Ui::mdi_adl
 {
 	Q_OBJECT
 public:
 	ADLSearchWindow(QWidget *parent);
+	~ADLSearchWindow();
+	
+	enum Status {
+		STATUS_STATUS,
+		STATUS_LAST
+	};
+	
+private:
+	QList<QTreeWidgetItem *> datalistitem;
+	QMenu * columnMenu;
+	QMenu * cnxtMenu;
+	
+	enum {
+		COLUMN_FIRST,
+		COLUMN_ACTIVE_SEARCH_STRING = COLUMN_FIRST,
+		COLUMN_SOURCE_TYPE,
+		COLUMN_DEST_DIR,
+		COLUMN_MIN_FILE_SIZE,
+		COLUMN_MAX_FILE_SIZE,
+		COLUMN_LAST
+	};
+
+	static int columnSizes[COLUMN_LAST];
+	
+	void addEntry(ADLSearch& search);
+	
+private slots:
+	void slotAdd();
+	void slotRemove();
+	
+	void chooseColumn(QAction *action);
+	void showColumnMenu(const QPoint &point);
+	void showCnxtMenu(const QPoint& point);
+	void makeContextMenu();
+
 };
 
 #endif // __ADLSEARCH_H__

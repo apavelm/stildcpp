@@ -21,6 +21,14 @@
 
 #include "stil_stats.h"
 
+const int MAX_ELEMENTS = 500;
+const int BORDER_MARGIN = 20;
+const int PANEL_MARGIN = 20;
+const int LEFT_PANEL_MARGIN = 70;
+const int FNT_SIZE = 8;
+const int HORIZONTAL_GRIP_SNAP = 50;
+const int HORIZONTAL_GRIP_MAIN_SNAP = 125;
+
 QMyStats::QMyStats(QWidget *parent) : QWidget(parent),
 	lastTick(GET_TICK()),
 	lastUp(Socket::getTotalUp()),
@@ -31,7 +39,18 @@ QMyStats::QMyStats(QWidget *parent) : QWidget(parent),
 	col_axis(Qt::yellow),
 	col_scale(Qt::darkGray)
 {
-	setMaxValue( (lastUp > lastDown ? lastUp : lastDown) );
+	setBackgroundRole(QPalette::Window);
+	setAutoFillBackground(true);
+	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	
+	dlist.clear();
+	uplist.clear();
+	speed[0] = 0;
+	d_p = new QPointF[MAX_ELEMENTS+2];
+	u_p = new QPointF[MAX_ELEMENTS+2];
+	int64_t a = findMax(dlist);
+	int64_t b = findMax(uplist);
+	setMaxValue( (a > b ? a : b) );
 
 	timer = new QTimer(this);
 	connect(timer, SIGNAL(timeout()), this, SLOT(eachSecond()));
@@ -40,175 +59,232 @@ QMyStats::QMyStats(QWidget *parent) : QWidget(parent),
 
 QMyStats::~QMyStats()
 {
+	dlist.clear();
+	uplist.clear();
+	delete d_p;
+	delete u_p;
 	delete timer;
 }
 
-bool QMyStats::eachSecond()
+void QMyStats::refreshPixmap()
+{
+	pixmap = QPixmap(size());
+	pixmap.fill(this, 0, 0);
+
+	QPainter painter(&pixmap);
+	painter.initFrom(this);
+	painter.setRenderHint(QPainter::Antialiasing);
+	paintBorder(&painter);
+	paintScale(&painter);
+	paintGraph(&painter);
+	update();
+}
+
+int64_t QMyStats::findMax(const QList<int64_t> & lst)
+{
+	QList<int64_t>::const_iterator i;
+	int64_t mx = 0;
+	for (i = lst.begin(); i!= lst.end(); ++i)
+		mx = qMax(mx, (*i));
+	return mx;
+}
+
+void QMyStats::eachSecond()
 {
 	uint32_t tick = GET_TICK();
 	uint32_t tdiff = tick - lastTick;
-	if(tdiff == 0)
-		return true;
+	if(tdiff == 0) return;
 
 	int64_t d = Socket::getTotalDown();
 	int64_t ddiff = d - lastDown;
 	int64_t u = Socket::getTotalUp();
 	int64_t udiff = u - lastUp;
 	
-	// 334 = 668 /2; 2 pixel per 1 line minimum
-	if ( dlist.count() >= 334) dlist.removeAt(0);
+	if ( dlist.count() >= MAX_ELEMENTS) 
+		{
+			int64_t tmp = dlist.at(0);
+			dlist.removeAt(0);
+			if (tmp == speed[6])
+			{
+				int64_t a = findMax(dlist);
+				int64_t b = findMax(uplist);
+				setMaxValue( (a > b ? a : b) );
+			}
+		}
 	dlist.append(ddiff);
 	
-	if ( uplist.count() >= 334) uplist.removeAt(0);
+	if ( uplist.count() >= MAX_ELEMENTS)
+		{
+			int64_t tmp = uplist.at(0);
+			uplist.removeAt(0);
+			if (tmp == speed[6])
+			{
+				int64_t a = findMax(dlist);
+				int64_t b = findMax(uplist);
+				setMaxValue( (a > b ? a : b) );
+			}
+		}
 	uplist.append(udiff);
 	
 	lastTick = tick;
 	lastUp = u;
 	lastDown = d;
 	
-	if ( (ddiff > speed6) || (udiff > speed6) ) 
+	if ( (ddiff > speed[6]) || (udiff > speed[6]) ) 
 		{
 			setMaxValue( (ddiff > udiff ? ddiff : udiff) );
 		}
-
-	return true;
+	calcCoord();
+	refreshPixmap();
 }
 
 void QMyStats::setMaxValue(int64_t value)
 {
-	speed6 = value;
-	speed3 = value / 2;
-	speed1 = speed3 / 3;
-	speed2 = speed1 + speed1;
-	speed4 = speed3 + speed1;
-	speed5 = speed6 - speed1;
-	update();
+	if (value < 6) speed[6] = 6; 
+	else
+		speed[6] = value;
+	speed[3] = speed[6] / 2;
+	speed[1] = speed[3] / 3;
+	speed[2] = speed[1] + speed[1];
+	speed[4] = speed[3] + speed[1];
+	speed[5] = speed[6] - speed[1];
 }
 
 void QMyStats::paintEvent(QPaintEvent *)
 {
-	setUpdatesEnabled(false);
-	paintBorder();
-	paintScale();
-	paintGraph();
-	setUpdatesEnabled(true);
+	QStylePainter painter(this);
+	painter.drawPixmap(0, 0, pixmap);
 }
 
-void QMyStats::paintBorder()
+void QMyStats::paintBorder(QPainter *painter)
 {
-	QPainter painter(this);
-	painter.setWindow(0, 0, 800, 600);
-	painter.setRenderHint(QPainter::Antialiasing);
-	
-	painter.save();
-
+	painter->save();
 	QLinearGradient linGrad(20, 50, 180, 250);
 	linGrad.setColorAt(0, Qt::gray);
 	linGrad.setColorAt(1, Qt::white);
 	linGrad.setSpread(QGradient::ReflectSpread);
-	painter.setBrush(linGrad);
-	QRectF border(0, 0, 800, 600);
-	painter.drawRoundRect(border, 5, 5);
+	painter->setBrush(linGrad);
+	QRectF border(0, 0, size().width(), size().height());
+	painter->drawRoundRect(border, 5, 5);
+	
+	painter->restore();
+	painter->save();
 
-	QLinearGradient linGrad1(20, 300, 457, 300);
+	QLinearGradient linGrad1(BORDER_MARGIN, size().height() /2 , size().width()-BORDER_MARGIN, size().height() /2 );
 	linGrad1.setColorAt(0, QColor(80,80,80));
 	linGrad1.setColorAt(1, Qt::white);
 	linGrad1.setSpread(QGradient::PadSpread);
-	painter.setBrush(linGrad1);
+	painter->setBrush(linGrad1);
 
-	painter.setPen(QPen(col_bg, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+	painter->setPen(QPen(col_bg, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 
-	QRectF border1(20, 20, 760, 560);
-	painter.drawRect(border1);
+	QRectF border1(BORDER_MARGIN, BORDER_MARGIN, size().width()-2*BORDER_MARGIN, size().height()-2*BORDER_MARGIN);
+	painter->drawRect(border1);
 
-	painter.setBrush(Qt::black);
-	QRectF panel(82, 43, 668, 517);
-	painter.drawRect(panel);
-	painter.restore();
-	painter.end();
+	painter->setBrush(Qt::black);
+	QRectF panel(BORDER_MARGIN + LEFT_PANEL_MARGIN , BORDER_MARGIN + PANEL_MARGIN, size().width() - LEFT_PANEL_MARGIN - PANEL_MARGIN - 2*BORDER_MARGIN, size().height()-2*PANEL_MARGIN - 2*BORDER_MARGIN);
+	painter->drawRect(panel);
+	painter->restore();
 }
 
-
-void QMyStats::paintGraph()
+void QMyStats::calcCoord()
 {
-	QPainter painter(this);
-	painter.setWindow(0, 0, 800, 600);
-	painter.setRenderHint(QPainter::Antialiasing);
-	painter.save();
+	qreal t_x, t_y;
+	int d_p_c = dlist.count();
+	int u_p_c = uplist.count();
+	int left_start = BORDER_MARGIN + LEFT_PANEL_MARGIN + 1;
+	int up_start = size().height()- PANEL_MARGIN - BORDER_MARGIN;
+	int panel_width = size().width() - 2*BORDER_MARGIN - PANEL_MARGIN - LEFT_PANEL_MARGIN;
+	int panel_height = size().height() - 2*PANEL_MARGIN - 2*BORDER_MARGIN;
+	d_p[0] = QPointF(left_start, up_start);
+	u_p[0] = d_p[0];
+	qreal prop1, prop2;
+	// DOWN-LINE
+	for (int i = 0; i < d_p_c; i++)
+	{
+		prop1 = qreal(dlist.at(i))/qreal(speed[6]);
+		t_x = left_start + panel_width*(i+1)/d_p_c;
+		t_y = up_start - panel_height*prop1;
+		d_p[i+1] = QPointF(t_x, t_y);
+	}
+	// UP-LINE
+	for (int i = 0; i < u_p_c; i++)
+	{
+		prop2 = qreal(uplist.at(i))/qreal(speed[6]);
+		t_x = left_start + panel_width*(i+1)/u_p_c;
+		t_y = up_start - panel_height*prop2;
+		u_p[i+1] = QPointF(t_x, t_y);
+	}
+}
+
+void QMyStats::paintGraph(QPainter *painter)
+{
+	painter->save();
 	// down traffic
-	painter.setPen(QPen(col_down, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));	
-	for (int i = 0; i < dlist.count()-1; i++ )
-	{
-		painter.drawLine(82 + (668*i)/dlist.count(), 551 - 498*dlist.at(i)/speed6 , 82 + (668*(i+1))/dlist.count() , 551 - 498*dlist.at(i+1)/speed6 );
-	}
-	painter.restore();
-	painter.save();
+	painter->setPen(QPen(col_down, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+	painter->drawPolyline(d_p, dlist.count() + 1);
+	
+	painter->restore();
+	painter->save();
+	
 	// up traffic
-	painter.setPen(QPen(col_up, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-	for (int i = 0; i < uplist.count()-1; i++ )
-	{
-		painter.drawLine(82 + (668*i)/uplist.count(), 551 - 498*uplist.at(i)/speed6 , 82 + (668*(i+1))/uplist.count() , 551 - 498*uplist.at(i+1)/speed6 );
-	}
-	painter.restore();
-	painter.end();
+	painter->setPen(QPen(col_up, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+	painter->drawPolyline(u_p, uplist.count() + 1);
+	
+	painter->restore();
 }
 
 
-void QMyStats::paintScale()
+void QMyStats::paintScale(QPainter *painter)
 {
-	QPainter painter(this);
-	painter.setWindow(0, 0, 800, 600);
-	painter.setRenderHint(QPainter::Antialiasing);
-	
-	// draw vertical dot line
-	painter.save();
-	
-	painter.setPen(QPen(col_scale, 1, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
-	// Vertical dot-lines gray
-	for (int i = 1; i <= 22; i++) painter.drawLine(82+i*30, 43, 82+i*30, 560);
-
-	// Vertiaval dot-lines white color (main-lines)
-	painter.setPen(QPen(Qt::white, 1, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
-	for (int i = 0; i <= 4; i++)
-	{
-	painter.drawLine(82+(i*75), 43, 82+(i*75), 560);
-	painter.translate(75,0);
-	}
-	
-	painter.restore();
-	painter.save();
-
-	// draw horizontal dot line
-	painter.setPen(QPen(col_scale, 1, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
+	painter->save();
+	// draw horizontal dot lines
+	qreal wh = (size().height() - 2*BORDER_MARGIN - 2*PANEL_MARGIN) / 6;
+	painter->setPen(QPen(col_scale, 1, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
 	for (int i = 0; i <=6 ; i++) 
 		{
-			painter.drawLine(82, 53+(i*83), 750, 53+(i*83));
+			QLineF ql(BORDER_MARGIN + LEFT_PANEL_MARGIN,
+					BORDER_MARGIN + PANEL_MARGIN + i*wh,
+					size().width() - PANEL_MARGIN - BORDER_MARGIN,
+					BORDER_MARGIN + PANEL_MARGIN + i*wh);
+			painter->drawLine(ql);
 		}
+	painter->restore();
 	
-	painter.setPen(QPen(col_axis, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-	// draw zero-speed label
-	painter.drawText(QRectF(50, 542, 20, 20), Qt::AlignRight, "0");
-	// draw speed value
-	QRectF a(22, 44, 58, 20);
-	QRectF b(22, 125, 58, 20);
-	QRectF c(22, 210, 58, 20);
-	QRectF d(22, 293, 58, 20);
-	QRectF e(22, 376, 58, 20);
-	QRectF f(22, 459, 58, 20);
 	
+	painter->save();
+	// draw vertical dot lines
+	painter->setPen(QPen(col_scale, 2, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
+	int vc = (size().width() - 2*BORDER_MARGIN - LEFT_PANEL_MARGIN - PANEL_MARGIN) / HORIZONTAL_GRIP_SNAP;
+	for (int i = 1; i <= vc; i++) painter->drawLine(BORDER_MARGIN + LEFT_PANEL_MARGIN + i*HORIZONTAL_GRIP_SNAP, BORDER_MARGIN + PANEL_MARGIN, BORDER_MARGIN + LEFT_PANEL_MARGIN +i*HORIZONTAL_GRIP_SNAP, size().height() - 2*BORDER_MARGIN);
+
+	// Vertiaval dot-lines white color (main-lines)
+	painter->setPen(QPen(Qt::white, 2, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin));
+	for (int i = 0; i <= 4; i++)
+	{
+	painter->drawLine(BORDER_MARGIN + LEFT_PANEL_MARGIN +(i*HORIZONTAL_GRIP_MAIN_SNAP), BORDER_MARGIN + PANEL_MARGIN, BORDER_MARGIN + LEFT_PANEL_MARGIN +(i*HORIZONTAL_GRIP_MAIN_SNAP), size().height() - 2*BORDER_MARGIN);
+	painter->translate(HORIZONTAL_GRIP_MAIN_SNAP,0);
+	}
+	painter->restore();
+
+
+	painter->setPen(QPen(col_axis, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 	QFont fnt;
-	fnt.setPointSize(8);
-	painter.setFont(fnt);
-	
-	painter.drawText(a, Qt::AlignRight, QString::fromStdString(Util::formatBytes(speed6)));
-	painter.drawText(b, Qt::AlignRight, QString::fromStdString(Util::formatBytes(speed5)));
-	painter.drawText(c, Qt::AlignRight, QString::fromStdString(Util::formatBytes(speed4)));
-	painter.drawText(d, Qt::AlignRight, QString::fromStdString(Util::formatBytes(speed3)));
-	painter.drawText(e, Qt::AlignRight, QString::fromStdString(Util::formatBytes(speed2)));
-	painter.drawText(f, Qt::AlignRight, QString::fromStdString(Util::formatBytes(speed1)));
-	
-	painter.restore();
-	painter.end();
+	fnt.setPointSize(FNT_SIZE);
+	painter->setFont(fnt);
+	// draw speed value
+	QRectF _R[7];
+	for (int i=6; i>=0; i--)
+	{
+		_R[i] = QRectF(BORDER_MARGIN + 2, BORDER_MARGIN + PANEL_MARGIN +3 - (FNT_SIZE + 1) + (6-i)*wh, LEFT_PANEL_MARGIN - 5, FNT_SIZE*2);
+		painter->drawText(_R[i], Qt::AlignRight, QString::fromStdString(Util::formatBytes(speed[i])));
+	}
+}
+
+
+void QMyStats::resizeEvent(QResizeEvent *)
+{
+	refreshPixmap();
 }
 
 QSize QMyStats::minimumSizeHint() const

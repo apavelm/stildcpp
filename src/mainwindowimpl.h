@@ -129,10 +129,10 @@ signals:
 };
 
 class MainWindowImpl : public QMainWindow, public Ui::MainWindow 
-	,private dcpp::TimerManagerListener
-	,private dcpp::QueueManagerListener
-	,private dcpp::LogManagerListener
-	,public dcpp::Singleton<MainWindowImpl>
+	,private TimerManagerListener
+	,private QueueManagerListener
+	,private LogManagerListener
+	,public  Singleton<MainWindowImpl>
 {
 Q_OBJECT
 public:

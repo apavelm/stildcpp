@@ -33,6 +33,7 @@ FORMS = ui/mainwindow.ui \
  ui/TextWindow.ui \
  ui/syslog.ui \
  ui/stats.ui \
+ ui/sizeedit.ui \
  ui/transview.ui \
  ui/hashman.ui
 HEADERS = src/mainwindowimpl.h \
