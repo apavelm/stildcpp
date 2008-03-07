@@ -115,9 +115,11 @@ void SearchWindow::zeroStatusChanged(int state)
 			onlyFree = false;
 }
 
+//update hulist, if op checkbox changed
+
 void SearchWindow::hubStateChanged(QListWidgetItem* currentItem)
 {
-	if (hubListWidget->row(currentItem) != 0)
+	if (hubListWidget->row(currentItem) == 0)
 	{
 		for(int i = 1; i<hubListWidget->count(); i++)
 		{
