@@ -22,34 +22,47 @@
 
 #include "indexing.h"
 
-HashDlg::HashDlg(QWidget *parent, bool aAutoClose) : QDialog(parent), autoClose(aAutoClose)
+HashDlg * hashDlgInstance = NULL;
+
+HashDlg::HashDlg(QWidget *parent) : QDialog(parent)
 {
+	if (hashDlgInstance) 
+		delete hashDlgInstance;
+	hashDlgInstance = this;
+
 	setupUi(this);
 	setWindowTitle(StilUtils::TstrtoQ(T_("Creating file index...")));
 	lbl_title->setText(StilUtils::TstrtoQ(CT_("Please wait while DC++ indexes your files (they won't be shared until they've been indexed)...")));
+	lbl_stat0->setText(StilUtils::TstrtoQ( str(TF_("-.-- files/h, %1% files left") % 0).c_str()) );
+	lbl_stat1->setText(StilUtils::TstrtoQ( str(TF_("-.-- B/s, %1% left") % Text::toT(Util::formatBytes(0))).c_str()) );
+	lbl_stat2->setText(StilUtils::TstrtoQ( CT_("-:--:-- left")) );
+	lbl_Filename->setText(StilUtils::TstrtoQ( CT_("Done")));
+		
+	setAttribute(Qt::WA_DeleteOnClose, true);
 
-	connect(inback_btn, SIGNAL(clicked()), this, SLOT(accept()) );
+	connect(inback_btn, SIGNAL(clicked()), this, SLOT(close()) );
 
 	string tmp;
 	startTime = GET_TICK();
 	HashManager::getInstance()->getStats(tmp, startBytes, startFiles);
 
-	updateStats();
-
 	HashManager::getInstance()->setPriority(Thread::NORMAL);
-
-	timer = new QTimer(this);
-	connect(timer, SIGNAL(timeout()), this, SLOT(updateStats()));
-	timer->start(1000);
+	startTimer(1000);
 }
 
 HashDlg::~HashDlg()
 {
 	HashManager::getInstance()->setPriority(Thread::IDLE);
-	delete timer;
+	hashDlgInstance = NULL;
 }
 
-void HashDlg::updateStats()
+void HashDlg::sshow(bool sAutoClose)
+{
+	autoClose = sAutoClose;
+	show();
+}
+
+void HashDlg::timerEvent(QTimerEvent *)
 {
 	string file;
 	int64_t bytes = 0;
@@ -60,11 +73,7 @@ void HashDlg::updateStats()
 	if(bytes > startBytes) startBytes = bytes;
 	if(files > startFiles) startFiles = files;
 
-	if(autoClose && files == 0) 
-	{
-		accept();
-		return;
-	}
+	if(autoClose && files == 0) close();
 	
 	double diff = tick - startTime;
 	if(diff < 1000 || files == 0 || bytes == 0) 

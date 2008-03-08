@@ -207,6 +207,7 @@ private slots:
 	
 signals:
 	int speakerSignal(unsigned int, long=0);
+	void signalForceCloseHashDialog();
 	
 public slots:
 	void OpenList(QWidget *, const tstring & , const UserPtr & , int64_t, const QString);
@@ -216,6 +217,7 @@ public slots:
 	void openTextWindow(const string& fileName);
 	void openTextWindow(const tstring& fileName);
 	void openTextWindow(const QString& fileName);
+	void ShowHashDlg(bool autoClose = false);
 
 private:
 	friend class dcpp::Singleton<MainWindowImpl>;

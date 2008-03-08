@@ -33,7 +33,7 @@
 
 #include "config.h"
 #include "stilutils.h"
-
+#include "mainwindowimpl.h"
 #include "indexing.h"
 
 //
@@ -47,8 +47,6 @@
 
 #include "ui_preferencesdialog.h"
 
-
-class PreferencesDialogPrivate;
 
 class PreferencesDialog : public QDialog, private Ui::PreferencesDialog 
 {

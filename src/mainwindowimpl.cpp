@@ -51,18 +51,12 @@ MainWindowImpl::~MainWindowImpl()
 	delete m_tabwin;
 	thrdGetTTh.wait();
 	
-	dcpp::LogManager::getInstance()->removeListener(this);
-	dcpp::QueueManager::getInstance()->removeListener(this);
-	dcpp::TimerManager::getInstance()->removeListener(this);	
+	LogManager::getInstance()->removeListener(this);
+	QueueManager::getInstance()->removeListener(this);
+	TimerManager::getInstance()->removeListener(this);	
 	
 	SearchManager::getInstance()->disconnect();
 	ConnectionManager::getInstance()->disconnect();
-
-/* Moved to main.cpp
-	AppSettings::AppSettingsMgr::deleteInstance();
-	dcpp::shutdown();
-*/
-
 }
 
 void MainWindowImpl::initMain()
@@ -205,12 +199,12 @@ void MainWindowImpl::clientInit()
 
 	updateStatus();
 	
-	dcpp::QueueManager::getInstance()->addListener(this);
-	dcpp::LogManager::getInstance()->addListener(this);
+	QueueManager::getInstance()->addListener(this);
+	LogManager::getInstance()->addListener(this);
 	
 	TimerManager::getInstance()->start();
 	
-	dcpp::TimerManager::getInstance()->addListener(this);
+	TimerManager::getInstance()->addListener(this);
 	
 	startSocket();
 	
@@ -239,13 +233,13 @@ void MainWindowImpl::clientInit()
 
 void MainWindowImpl::startSocket() 
 {
-	dcpp::SearchManager::getInstance()->disconnect();
-	dcpp::ConnectionManager::getInstance()->disconnect();
+	SearchManager::getInstance()->disconnect();
+	ConnectionManager::getInstance()->disconnect();
 
-	if (dcpp::ClientManager::getInstance()->isActive()) 
+	if (ClientManager::getInstance()->isActive()) 
 	{
-		dcpp::ConnectionManager::getInstance()->listen();
-		dcpp::SearchManager::getInstance()->listen();
+		ConnectionManager::getInstance()->listen();
+		SearchManager::getInstance()->listen();
 	}
 
 }
@@ -274,11 +268,13 @@ void MainWindowImpl::closeEvent(QCloseEvent *event)
 				reply = QMessageBox::question(this, tr("StilDC++"), tr("Do you realy want to exit?"), QMessageBox::Yes | QMessageBox::No);
 				if (reply == QMessageBox::Yes)
 				{
+					emit signalForceCloseHashDialog();
 					event->accept();
 				}
 				else event->ignore();
 			} else
 			{
+				emit signalForceCloseHashDialog();
 				event->accept();
 			}
 		}
@@ -479,7 +475,7 @@ void MainWindowImpl::OpenList(QWidget *parent, const tstring & aFile, const User
 {
 	// Function to open filelists
 	tstring t = aFile;
-	dcpp::UserPtr u = aUser;
+	UserPtr u = aUser;
 		
 	m_tabwin->setCurrentIndex( m_tabwin->addTab( (new FileListDlg(parent, u, aSpeed, t) ), aTitle ) );
 }
@@ -487,6 +483,13 @@ void MainWindowImpl::OpenList(QWidget *parent, const tstring & aFile, const User
 void MainWindowImpl::OpenHub(const tstring& adr, QWidget *parent)
 {
 	m_tabwin->setCurrentIndex(m_tabwin->addTab((new HubWindow(m_tabwin, adr)),"Hub"));
+}
+
+void MainWindowImpl::ShowHashDlg(bool autoClose)
+{
+	HashDlg * h = new HashDlg(this);
+	connect(MainWindowImpl::getInstance(), SIGNAL(signalForceCloseHashDialog()), h, SLOT(close()));
+	h->sshow(autoClose);
 }
 
 void MainWindowImpl::OpenPM(const UserPtr& replyTo, const tstring& aMessage)
@@ -588,9 +591,7 @@ void MainWindowImpl::notepadFunc()
 
 void MainWindowImpl::indexingFunc()
 {
-	HashDlg::newInstance();
-	HashDlg::getInstance()->setAutoHide(false);
-	HashDlg::getInstance()->show();
+	ShowHashDlg(false);
 }
 
 void MainWindowImpl::qcdconFunc(QString adr)
@@ -818,11 +819,11 @@ void MainWindowImpl::openfilelistFunc()
 	QString fn = QFileDialog::getOpenFileName(this, tr("Select File"),"", tr("File lists (*.xml.bz2);;All Files (*)"), &selectedFilter, options);
 	if (!fn.isEmpty()) 
 	{
-		dcpp::tstring strFile(StilUtils::QtoTstr(fn));
+		tstring strFile(StilUtils::QtoTstr(fn));
 		
 		if (Text::fromT(strFile) == ShareManager::getInstance()->getOwnListFile()) openownfilelistFunc();
 		
-		dcpp::UserPtr u = dcpp::DirectoryListing::getUserFromFilename(dcpp::Text::fromT(strFile));
+		UserPtr u = DirectoryListing::getUserFromFilename(Text::fromT(strFile));
 		
 		if(u) 
 		{
@@ -836,10 +837,10 @@ void MainWindowImpl::openfilelistFunc()
 
 void MainWindowImpl::openownfilelistFunc()
 {
-	const string ownFileList = dcpp::ShareManager::getInstance()->getOwnListFile();
+	const string ownFileList = ShareManager::getInstance()->getOwnListFile();
 	
 	if(!ownFileList.empty())
-		OpenList(this, dcpp::Text::toT(ownFileList), dcpp::ClientManager::getInstance()->getMe(), 0, StilUtils::TstrtoQ(Text::toT(SETTING(NICK))) );
+		OpenList(this, Text::toT(ownFileList), ClientManager::getInstance()->getMe(), 0, StilUtils::TstrtoQ(Text::toT(SETTING(NICK))) );
 }
 
 void MainWindowImpl::openTextWindow(const QString& fileName)
@@ -860,8 +861,8 @@ void MainWindowImpl::openTextWindow(const string& fileName)
 void MainWindowImpl::RefreshOwnFileListFunc()
 {
 	// Refreshes (rehash) own filelist
-	dcpp::ShareManager::getInstance()->setDirty();
-	dcpp::ShareManager::getInstance()->refresh(true);
+	ShareManager::getInstance()->setDirty();
+	ShareManager::getInstance()->refresh(true);
 }
 
 void MainWindowImpl::OpenDownloadsFolderFunc()

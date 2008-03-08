@@ -43,7 +43,6 @@ public:
 	QSize minimumSizeHint() const;
 	QSize sizeHint() const;
 private:
-	QTimer * timer;
 	QPixmap pixmap;
 	QList<int64_t> dlist, uplist;
 	QPointF *d_p, *u_p;
@@ -51,10 +50,6 @@ private:
 	uint32_t lastTick;
 	int64_t lastUp;
 	int64_t lastDown;
-	
-private slots:
-	void eachSecond();
-
 protected:
 	void paintEvent(QPaintEvent *);
 	void resizeEvent(QResizeEvent *);
@@ -65,6 +60,8 @@ protected:
 	void refreshPixmap();
 	void calcCoord();
 	int64_t findMax(const QList<int64_t> & lst);
+	
+	void timerEvent(QTimerEvent *event);
 	
 private:
 	QColor col_up;

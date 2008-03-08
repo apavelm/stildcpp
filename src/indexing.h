@@ -32,7 +32,6 @@
 #include "client/stdinc.h"
 #include "client/DCPlusPlus.h"
 #include "client/HashManager.h"
-#include "client/Singleton.h"
 //
 
 #include "ui_hashman.h"
@@ -40,20 +39,17 @@
 using namespace std;
 using namespace dcpp;
 
-class HashDlg: public QDialog
-			,private Ui::dlgIndexing
-			,public Singleton<HashDlg>
+
+class HashDlg: public QDialog, private Ui::dlgIndexing
 {
 	Q_OBJECT
 public:
-	HashDlg(QWidget *parent = 0, bool aAutoClose = true);
+	HashDlg(QWidget *parent = 0);
 	~HashDlg();
-	void setAutoHide(bool value = true) { autoClose = value; }
-private slots:
-	void updateStats();
+	void sshow(bool sAutoClose = false);
+protected:
+	void timerEvent(QTimerEvent *);
 private:
-	QTimer * timer;
-	
 	bool autoClose;
 	int64_t startBytes;
 	size_t startFiles;

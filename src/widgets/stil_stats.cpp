@@ -51,10 +51,7 @@ QMyStats::QMyStats(QWidget *parent) : QWidget(parent),
 	int64_t a = findMax(dlist);
 	int64_t b = findMax(uplist);
 	setMaxValue( (a > b ? a : b) );
-
-	timer = new QTimer(this);
-	connect(timer, SIGNAL(timeout()), this, SLOT(eachSecond()));
-	timer->start(1000);
+	startTimer(1000);
 }
 
 QMyStats::~QMyStats()
@@ -63,7 +60,6 @@ QMyStats::~QMyStats()
 	uplist.clear();
 	delete d_p;
 	delete u_p;
-	delete timer;
 }
 
 void QMyStats::refreshPixmap()
@@ -87,55 +83,6 @@ int64_t QMyStats::findMax(const QList<int64_t> & lst)
 	for (i = lst.begin(); i!= lst.end(); ++i)
 		mx = qMax(mx, (*i));
 	return mx;
-}
-
-void QMyStats::eachSecond()
-{
-	uint32_t tick = GET_TICK();
-	uint32_t tdiff = tick - lastTick;
-	if(tdiff == 0) return;
-
-	int64_t d = Socket::getTotalDown();
-	int64_t ddiff = d - lastDown;
-	int64_t u = Socket::getTotalUp();
-	int64_t udiff = u - lastUp;
-	
-	if ( dlist.count() >= MAX_ELEMENTS) 
-		{
-			int64_t tmp = dlist.at(0);
-			dlist.removeAt(0);
-			if (tmp == speed[6])
-			{
-				int64_t a = findMax(dlist);
-				int64_t b = findMax(uplist);
-				setMaxValue( (a > b ? a : b) );
-			}
-		}
-	dlist.append(ddiff);
-	
-	if ( uplist.count() >= MAX_ELEMENTS)
-		{
-			int64_t tmp = uplist.at(0);
-			uplist.removeAt(0);
-			if (tmp == speed[6])
-			{
-				int64_t a = findMax(dlist);
-				int64_t b = findMax(uplist);
-				setMaxValue( (a > b ? a : b) );
-			}
-		}
-	uplist.append(udiff);
-	
-	lastTick = tick;
-	lastUp = u;
-	lastDown = d;
-	
-	if ( (ddiff > speed[6]) || (udiff > speed[6]) ) 
-		{
-			setMaxValue( (ddiff > udiff ? ddiff : udiff) );
-		}
-	calcCoord();
-	refreshPixmap();
 }
 
 void QMyStats::setMaxValue(int64_t value)
@@ -295,4 +242,53 @@ QSize QMyStats::minimumSizeHint() const
 QSize QMyStats::sizeHint() const
 {
 	return QSize(800, 600);
+}
+
+void QMyStats::timerEvent(QTimerEvent *event)
+{
+	uint32_t tick = GET_TICK();
+	uint32_t tdiff = tick - lastTick;
+	if(tdiff == 0) return;
+
+	int64_t d = Socket::getTotalDown();
+	int64_t ddiff = d - lastDown;
+	int64_t u = Socket::getTotalUp();
+	int64_t udiff = u - lastUp;
+	
+	if ( dlist.count() >= MAX_ELEMENTS) 
+		{
+			int64_t tmp = dlist.at(0);
+			dlist.removeAt(0);
+			if (tmp == speed[6])
+			{
+				int64_t a = findMax(dlist);
+				int64_t b = findMax(uplist);
+				setMaxValue( (a > b ? a : b) );
+			}
+		}
+	dlist.append(ddiff);
+	
+	if ( uplist.count() >= MAX_ELEMENTS)
+		{
+			int64_t tmp = uplist.at(0);
+			uplist.removeAt(0);
+			if (tmp == speed[6])
+			{
+				int64_t a = findMax(dlist);
+				int64_t b = findMax(uplist);
+				setMaxValue( (a > b ? a : b) );
+			}
+		}
+	uplist.append(udiff);
+	
+	lastTick = tick;
+	lastUp = u;
+	lastDown = d;
+	
+	if ( (ddiff > speed[6]) || (udiff > speed[6]) ) 
+		{
+			setMaxValue( (ddiff > udiff ? ddiff : udiff) );
+		}
+	calcCoord();
+	refreshPixmap();
 }
