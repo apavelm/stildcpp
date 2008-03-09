@@ -20,16 +20,20 @@
 
 #include "pm_win.h"
 
-PMWindow::PMWindow(QWidget *parent, const UserPtr& replyTo, const tstring& aMessage) : MdiChild(parent)
+PMWindow::PMWindow(QWidget *parent, const UserPtr& replyTo, const tstring& aMessage) : MdiChild(parent), usr(replyTo)
 {
 	setupUi(this);
 	type = StilUtils::WIN_TYPE_PRIVATE_CHAT;
 	idText  = StilUtils::TstrtoQ(StilUtils::getNicks(replyTo));
-//	setWindowTitle(tr("Private Chat with: ")+StilUtils::TstrtoQ(StilUtils::getNicks(replyTo)));
 	setTabText(tr("Private Chat with: ")+StilUtils::TstrtoQ(StilUtils::getNicks(replyTo)));
 	editor->clear();
 	setupeditor();
 	connect(SendBtn,SIGNAL(pressed()),this,SLOT(send_pm_msg()));
+}
+
+bool PMWindow::isOnline()
+{
+	return usr->isOnline();
 }
 
 void PMWindow::setupeditor()

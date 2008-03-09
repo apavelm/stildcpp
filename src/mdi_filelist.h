@@ -40,7 +40,6 @@
 #include <QList>
 #include <QtDebug>
 
-#include <iostream> // delete it
 using namespace dcpp;
 
 class FileListDlg : public MdiChild, private Ui::DialogFileList
@@ -48,10 +47,9 @@ class FileListDlg : public MdiChild, private Ui::DialogFileList
 	Q_OBJECT
 public:
 	FileListDlg(QWidget *parent, const UserPtr &, int64_t, tstring &);
-	int type;
-	QString idText;
 	void loadFile(const UserPtr &aUser, int64_t aSpeed);
 	static string getNickFromFilename(const string& fileName);
+	bool isConnected() { return usr->isOnline(); }
 	
 private slots:
 	void dirSelected();
@@ -75,6 +73,7 @@ private:
 	QIcon fileIcon;
 	DirectoryListing listing;
 	QList<QTreeWidgetItem *> pathList;
+	UserPtr usr;
 	
 };
 

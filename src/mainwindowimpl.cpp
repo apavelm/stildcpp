@@ -22,8 +22,6 @@
 
 #include "mainwindowimpl.h"
 
-//TabWidget* MainWindowImpl::m_tabwin;
-
 MainWindowImpl::~MainWindowImpl()
 {
 	thrdGetTTh.stop();
@@ -500,11 +498,9 @@ void MainWindowImpl::OpenPM(const UserPtr& replyTo, const tstring& aMessage)
 	m_tabwin->setCurrentIndex(m_tabwin->addTab((new PMWindow(m_tabwin, replyTo, aMessage)),"PM"));
 }
 
-void MainWindowImpl::SearchFunc(const tstring& str, int64_t size, 
-								SearchManager::SizeModes mode, SearchManager::TypeModes type)
+void MainWindowImpl::SearchFunc(const tstring& str, int64_t size, SearchManager::SizeModes mode, SearchManager::TypeModes type)
 {
-	m_tabwin->setCurrentIndex(m_tabwin->addTab((new SearchWindow(m_tabwin, str, size, mode, type)),"search"));
-	//SearchWindow::openWindow();
+	m_tabwin->setCurrentIndex(m_tabwin->addTab((new SearchWindow(m_tabwin, str, size, mode, type)),"Search"));
 }
 
 void MainWindowImpl::SLogFunc()
@@ -627,8 +623,8 @@ void MainWindowImpl::setShareSize(const QString &sz)
 void MainWindowImpl::updateWindowMenu()
 {
 	if (!m_tabwin) return;
-	int tst[20]; // 20 for reserv - Count of type mdi_child. see "mdi_c.h" for details
-	for (int i=0; i<20; i++) tst[i]=0;
+	int tst[StilUtils::WIN_TYPE_LAST];
+	for (int i=0; i<StilUtils::WIN_TYPE_LAST; i++) tst[i]=0;
 	actionClose_All->setEnabled(m_tabwin->count()>0);
 	actionClose_All_Hub_Windows->setEnabled(m_tabwin->count()>0);
 	actionClose_All_Private_Chat_Windows->setEnabled(m_tabwin->count()>0);
@@ -644,16 +640,16 @@ void MainWindowImpl::updateWindowMenu()
 		tst[p->type]++;
 	}
 	
-	actionClose_All_Hub_Windows->setEnabled(tst[1]!=0);
-	actionClose_Disconnected_Hub_Windows->setEnabled(tst[1]!=0);
+	actionClose_All_Hub_Windows->setEnabled(tst[StilUtils::WIN_TYPE_HUB]!=0);
+	actionClose_Disconnected_Hub_Windows->setEnabled(tst[StilUtils::WIN_TYPE_HUB]!=0);
 	
-	actionClose_All_Private_Chat_Windows->setEnabled(tst[2]!=0);
-	actionClose_Private_Chat_with_Offline_Users->setEnabled(tst[2]!=0);
+	actionClose_All_Private_Chat_Windows->setEnabled(tst[StilUtils::WIN_TYPE_PRIVATE_CHAT]!=0);
+	actionClose_Private_Chat_with_Offline_Users->setEnabled(tst[StilUtils::WIN_TYPE_PRIVATE_CHAT]!=0);
 	
-	actionClose_All_Search_Windows->setEnabled(tst[3]!=0);
+	actionClose_All_Search_Windows->setEnabled(tst[StilUtils::WIN_TYPE_SEARCH]!=0);
 	
-	actionClose_All_FileList_Windows->setEnabled(tst[5]!=0);
-	actionClose_FileLists_Offline_Users->setEnabled(tst[5]!=0);
+	actionClose_All_FileList_Windows->setEnabled(tst[StilUtils::WIN_TYPE_FILELIST]!=0);
+	actionClose_FileLists_Offline_Users->setEnabled(tst[StilUtils::WIN_TYPE_FILELIST]!=0);
 }
 
 void MainWindowImpl::slotCloseOfflineLists()
@@ -664,7 +660,7 @@ void MainWindowImpl::slotCloseOfflineLists()
 		if (p->type==5)
 		{
 			FileListDlg *v = qobject_cast<FileListDlg *>(p);
-			//if (!v->isConnected()) delete m_tabwin->widget(i);
+			if (!v->isConnected()) delete m_tabwin->widget(i);
 		}
 	}
 }
@@ -677,7 +673,7 @@ void MainWindowImpl::slotCloseOfflineChat()
 		if (p->type==2)
 		{
 			PMWindow *v = qobject_cast<PMWindow *>(p);
-			//if (!v->isOnline()) delete m_tabwin->widget(i);
+			if (!v->isOnline()) delete m_tabwin->widget(i);
 		}
 	}
 }
@@ -723,31 +719,6 @@ void MainWindowImpl::slotCloseWinTypeSearch()
 void MainWindowImpl::slotCloseWinTypeFL()
 {
 	slotCloseWinType(5);
-}
-
-const QString & ThreadGetTTH::getA()
-{
-	return a;
-}
-
-void ThreadGetTTH::setA(QString s)
-{
-	a=s;
-}
-
-const QString & ThreadGetTTH::getB()
-{
-	return b;
-}
-
-const QString & ThreadGetTTH::getC()
-{
-	return c;
-}
-
-void ThreadGetTTH::stop()
-{
-	 _stp = true;
 }
 
 void ThreadGetTTH::run()

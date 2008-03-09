@@ -59,12 +59,14 @@ int main(int argc, char ** argv)
 		splash->showMessage(QObject::tr("Starting..."), alignBC, Qt::black);
 	}
 	
-	// Translate qt
+	// Translate qt	
 	QTranslator *qtTranslator = new QTranslator(&app);
 	QString ql = QLocale::system().name();
+	if (APPSETTING(i_SHOWSPLASH)) splash->showMessage(QObject::tr("Loading translations (system)..."), alignBC, Qt::black);
 	qtTranslator->load("qt_" + ql, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
 	app.installTranslator(qtTranslator);
 	
+	if (APPSETTING(i_SHOWSPLASH)) splash->showMessage(QObject::tr("Loading translations (application)..."), alignBC, Qt::black);
 	QTranslator *translator = new QTranslator(&app);
 	translator->load(QString("stildcpp_") + ql, ":/lang/", QString(), ".qm");
 	app.installTranslator(translator); 

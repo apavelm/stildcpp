@@ -44,9 +44,11 @@ class PMWindow : public MdiChild, private Ui::mdiPMwin
 	Q_OBJECT
 private:
 	Highlighter *highlighter;
+	UserPtr usr;
 public:
 	PMWindow(QWidget *parent, const UserPtr& replyTo, const tstring& aMessage);
 	void setupeditor();
+	bool isOnline();
 private slots:
 	void send_pm_msg();
 };

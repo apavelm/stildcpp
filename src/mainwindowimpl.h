@@ -117,11 +117,11 @@ class ThreadGetTTH : public QThread
 	Q_OBJECT
 public:
 	void run();
-	void stop();
-	const QString & getA();
-	void setA(QString);
-	const QString & getB();
-	const QString & getC();
+	void stop() { _stp = true; }
+	const QString & getA() { return a; }
+	void setA(QString s) { a = s; }
+	const QString & getB() { return b; }
+	const QString & getC() { return c; }
 private:
 	volatile bool _stp;
 	QString a,b,c;
@@ -138,8 +138,6 @@ class MainWindowImpl : public QMainWindow, public Ui::MainWindow
 Q_OBJECT
 public:
 	void initMain();
-//	MainWindowImpl( QWidget * parent = 0, Qt::WFlags f = 0 );
-//	~MainWindowImpl();
 	
 	enum Status {
 		STATUS_STATUS,
