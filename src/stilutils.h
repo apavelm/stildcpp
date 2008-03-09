@@ -32,9 +32,13 @@
 #include "client/ResourceManager.h"
 
 #include <QtCore>
+#include <QClipboard>
+#include <QApplication>
 #include <QInputDialog>
 #include <QString>
 #include <QObject>
+
+#include "defs.h"
 
 using namespace dcpp;
 
@@ -65,6 +69,7 @@ public:
 		16 - System Log
 		17 - TextWindow (view file as text)
 		18 - Network Statistics
+		19 - Waiting Users
 	*/
 	
 	enum tabWinTypes{
@@ -88,6 +93,7 @@ public:
 		,WIN_TYPE_SYSTEM_LOG
 		,WIN_TYPE_TEXT_WINDOW
 		,WIN_TYPE_NETWORK_STATS
+		,WIN_TYPE_WAITING_USERS
 		,WIN_TYPE_LAST
 	};
 	
@@ -120,7 +126,9 @@ public:
 
 	static std::string linuxSeparator(const std::string &s);
 	static std::string windowsSeparator(const std::string &s);
-
+	
+	static void copy2Clipboard(const QString & txt);
+	static void copy2Clipboard(const tstring & txt);
 };
 
 #endif // of StilUtils

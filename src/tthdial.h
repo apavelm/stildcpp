@@ -22,7 +22,7 @@
 #define __TTHDIAL_H__
 
 #include <QDialog>
-#include <QClipboard>
+#include "stilutils.h"
 
 #include "ui_tthdialog.h"
 

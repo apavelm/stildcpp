@@ -31,9 +31,6 @@
 #include <QAction>
 #include <QHeaderView>
 #include <QMenu>
-#include <QClipboard>
-#include <QApplication>
-#include <QDebug>
 
 #include "userlistsortingmodel.h"
 #include "pm_win.h"

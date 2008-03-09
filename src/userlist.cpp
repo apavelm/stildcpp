@@ -443,10 +443,7 @@ void HubUserList::actionCopyNickToClipboard()
 	//Remove last space
 	nicks.chop(1);
 	
-	QApplication::clipboard()->setText(nicks, QClipboard::Clipboard);
-	
-	if(QApplication::clipboard()->supportsSelection())
-		QApplication::clipboard()->setText(nicks, QClipboard::Selection);	
+	StilUtils::copy2Clipboard(nicks);
 }
 
 /*

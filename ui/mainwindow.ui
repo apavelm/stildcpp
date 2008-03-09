@@ -71,6 +71,7 @@
     <addaction name="actionDownload_Queue" />
     <addaction name="actionFinished_downloads" />
     <addaction name="separator" />
+    <addaction name="actionWaiting" />
     <addaction name="actionFinished_Uploads" />
    </widget>
    <widget class="QMenu" name="menuWindow" >
@@ -433,6 +434,11 @@
   <action name="actionNetStats" >
    <property name="text" >
     <string>Network Statistics</string>
+   </property>
+  </action>
+  <action name="actionWaiting" >
+   <property name="text" >
+    <string>Waiting Users</string>
    </property>
   </action>
  </widget>

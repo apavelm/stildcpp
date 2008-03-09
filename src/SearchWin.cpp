@@ -926,13 +926,8 @@ void SearchWindow::actionCopyMagnetToClipboard()
 
 	if(!fileName.empty())
 	{
-		QString magnet = StilUtils::TstrtoQ(_T("magnet:?xt=urn:tree:tiger:") + tth + 
-											_T("&dn=") +Text::toT(Util::encodeURI(Text::fromT(fileName))));
-		
-		QApplication::clipboard()->setText(magnet, QClipboard::Clipboard);
-	
-		if(QApplication::clipboard()->supportsSelection())
-			QApplication::clipboard()->setText(magnet, QClipboard::Selection);	
+		QString magnet = StilUtils::TstrtoQ(_T("magnet:?xt=urn:tree:tiger:") + tth + _T("&dn=") +Text::toT(Util::encodeURI(Text::fromT(fileName))));
+		StilUtils::copy2Clipboard(magnet);
 	}
 }
 

@@ -212,7 +212,7 @@ void MainWindowImpl::clientInit()
 	if(BOOLSETTING(OPEN_FAVORITE_USERS)) FavUsrFunc();
 	if(BOOLSETTING(OPEN_QUEUE)) DLQueueFunc();
 	if(BOOLSETTING(OPEN_FINISHED_DOWNLOADS)) DLFinFunc();
-	//if(BOOLSETTING(OPEN_WAITING_USERS)) postMessage(WM_COMMAND, IDC_WAITING_USERS);
+	if(BOOLSETTING(OPEN_WAITING_USERS)) WaitingFunc();
 	if(BOOLSETTING(OPEN_FINISHED_UPLOADS)) ULFinFunc();
 	if(BOOLSETTING(OPEN_SEARCH_SPY)) SSFunc();
 	if(BOOLSETTING(OPEN_NETWORK_STATISTICS)) StatsFunc();
@@ -356,6 +356,8 @@ void MainWindowImpl::createActions()
 	
 	connect(actionFinished_downloads, SIGNAL(triggered()), this, SLOT(DLFinFunc()));
 	connect(actionFinished_Uploads, SIGNAL(triggered()), this, SLOT(ULFinFunc()));
+	connect(actionWaiting, SIGNAL(triggered()), this, SLOT(WaitingFunc()));
+	
 	connect(actionNotePad, SIGNAL(triggered()), this, SLOT(notepadFunc()));
 	connect(actionNetStats, SIGNAL(triggered()), this, SLOT(StatsFunc()));
 	connect(actionIndexing_Progress, SIGNAL(triggered()), this, SLOT(indexingFunc()));
@@ -418,6 +420,7 @@ void MainWindowImpl::createToolBars()
 	toolBar->addSeparator();
 	toolBar->addAction(actionDownload_Queue);
 	toolBar->addAction(actionFinished_downloads);
+	toolBar->addAction(actionWaiting);
 	toolBar->addAction(actionFinished_Uploads);
 	toolBar->addSeparator();
 	toolBar->addAction(actionSearch);
@@ -511,6 +514,12 @@ void MainWindowImpl::SLogFunc()
 	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_SYSTEM_LOG));
 }
 
+void MainWindowImpl::WaitingFunc()
+{
+	if (FindWinByType(StilUtils::WIN_TYPE_WAITING_USERS)==-1)
+		m_tabwin->setCurrentIndex(m_tabwin->addTab((new WaitingUsersWindow(m_tabwin)),"Waiting Users"));
+	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_WAITING_USERS));
+}
 
 void MainWindowImpl::StatsFunc()
 {

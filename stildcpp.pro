@@ -35,6 +35,7 @@ FORMS = ui/mainwindow.ui \
  ui/stats.ui \
  ui/sizeedit.ui \
  ui/transview.ui \
+ ui/waitingusers.ui \
  ui/hashman.ui
 HEADERS = src/mainwindowimpl.h \
  src/frmAbout.h \
@@ -158,6 +159,7 @@ HEADERS = src/mainwindowimpl.h \
  src/client/HashBloom.h \
  src/userlist.h \
  src/stats.h \
+ src/waitusr.h \
  src/userlistsortingmodel.h \
  src/widgets/stil_TransferView.h \
  src/widgets/stil_stats.h \
@@ -251,6 +253,7 @@ SOURCES = src/mainwindowimpl.cpp \
  src/client/HashBloom.cpp \
  src/userlist.cpp \
  src/stats.cpp \
+ src/waitusr.cpp \
  src/userlistsortingmodel.cpp \
  src/widgets/stil_TransferView.cpp \
  src/widgets/myprogress.cpp \

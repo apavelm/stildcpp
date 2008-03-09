@@ -51,7 +51,6 @@
 
 #include <boost/scoped_ptr.hpp>
 
-#include <QClipboard>
 #include <QtGui>
 #include <QtCore>
 

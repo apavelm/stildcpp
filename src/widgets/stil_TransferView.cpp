@@ -462,9 +462,7 @@ void TransferView::handleRemoveUserQueue()
 
 void TransferView::handleCopyNick()
 {
-	QApplication::clipboard()->setText(connections->currentItem()->text(CONNECTION_COLUMN_USER), QClipboard::Clipboard);
-	if(QApplication::clipboard()->supportsSelection())
-		QApplication::clipboard()->setText(connections->currentItem()->text(CONNECTION_COLUMN_USER), QClipboard::Selection);
+	StilUtils::copy2Clipboard(connections->currentItem()->text(CONNECTION_COLUMN_USER));
 }
 
 void TransferView::handleAddToFav()
@@ -502,9 +500,7 @@ void TransferView::handleCopyMagnet()
 		string target = Text::fromT(ii->getText(DOWNLOAD_COLUMN_PATH) + ii->getText(DOWNLOAD_COLUMN_FILE));
 		QString b(ii->tth.toBase32().c_str());
 		QString txt = QString("magnet:?xt=urn:tree:tiger:") + b + QString("&xl=") + QString::number(ii->size) + QString("&dn=") + StilUtils::TstrtoQ( Text::toT(Util::getFileName(ii->path)));
-		QApplication::clipboard()->setText(txt, QClipboard::Clipboard);
-		if(QApplication::clipboard()->supportsSelection())
-			QApplication::clipboard()->setText(txt, QClipboard::Selection);
+		StilUtils::copy2Clipboard(txt);
 	}
 }
 

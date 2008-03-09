@@ -1,0 +1,43 @@
+<ui version="4.0" >
+ <class>mdi_wait_users</class>
+ <widget class="QDialog" name="mdi_wait_users" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>599</width>
+    <height>559</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Waiting Users</string>
+  </property>
+  <layout class="QGridLayout" >
+   <item row="0" column="0" >
+    <layout class="QVBoxLayout" >
+     <item>
+      <widget class="QDLTreeWidget" name="queued" >
+       <property name="alternatingRowColors" >
+        <bool>true</bool>
+       </property>
+       <column>
+        <property name="text" >
+         <string>List</string>
+        </property>
+       </column>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QDLTreeWidget</class>
+   <extends>QTreeWidget</extends>
+   <header>../src/widgets/stil_qdltreewidget.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

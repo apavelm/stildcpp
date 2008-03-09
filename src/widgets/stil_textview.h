@@ -65,10 +65,7 @@ public slots:
 	void popupAction(QString lnk) { emit openURL(lnk); }
 	void popupCopy(QString lnk)
 	{
-		QApplication::clipboard()->setText( copyString(lnk), QClipboard::Clipboard );
-		if(QApplication::clipboard()->supportsSelection())
-			QApplication::clipboard()->setText( copyString(lnk), QClipboard::Selection );
-	
+		StilUtils::copy2Clipboard(copyString(lnk));
 	}
 
 	void popupCopy() { popupCopy(_link); }

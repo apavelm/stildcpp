@@ -44,6 +44,7 @@
 #include "defs.h"
 
 #include "config.h"
+#include "waitusr.h"
 #include "iconset.h"
 #include "frmAbout.h"
 #include "preferencesdialog.h"
@@ -139,7 +140,6 @@ public:
 	void initMain();
 //	MainWindowImpl( QWidget * parent = 0, Qt::WFlags f = 0 );
 //	~MainWindowImpl();
-//	static TabWidget* getTabWidget() { return m_tabwin; }
 	
 	enum Status {
 		STATUS_STATUS,
@@ -185,6 +185,7 @@ private slots:
 	void ADLFunc();
 	void SSFunc();
 	void ULFinFunc();
+	void WaitingFunc();
 	void DLFinFunc();
 	void PubHubFunc();
 	void HomepageFunc();
@@ -220,7 +221,7 @@ public slots:
 	void ShowHashDlg(bool autoClose = false);
 
 private:
-	friend class dcpp::Singleton<MainWindowImpl>;
+	friend class Singleton<MainWindowImpl>;
 
 	MainWindowImpl( QWidget * parent = 0, Qt::WFlags f = 0 );
 	~MainWindowImpl();

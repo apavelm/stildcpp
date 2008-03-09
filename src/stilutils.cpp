@@ -193,4 +193,16 @@ string StilUtils::windowsSeparator(const string &s)
 	return str;
 }
 
+void StilUtils::copy2Clipboard(const QString & txt)
+{
+	QApplication::clipboard()->setText(txt, QClipboard::Clipboard);
+	if(QApplication::clipboard()->supportsSelection())
+		QApplication::clipboard()->setText(txt, QClipboard::Selection);
+}
+
+void StilUtils::copy2Clipboard(const tstring & txt)
+{
+	copy2Clipboard(TstrtoQ(txt));
+}
+
 // of stilutils
