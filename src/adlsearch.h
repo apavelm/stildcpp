@@ -26,24 +26,18 @@
 #include "config.h"
 #include "stilutils.h"
 
+#include "adlprop.h"
+
 #include "client/ADLSearch.h"
 #include "client/Client.h"
 
 #include "ui_adl.h"
-#include "ui_sizeedit.h"
 
 #include <QtGui>
 #include <QtCore>
 
 using namespace std;
 using namespace dcpp;
-
-class MySizeEdit: public QWidget, private Ui::SizeEdit
-{
-	Q_OBJECT
-public:
-	MySizeEdit(QWidget * parent): QWidget(parent) {setupUi(this);}
-};
 
 class ADLSearchWindow : public MdiChild, private Ui::mdi_adl
 {
@@ -58,6 +52,7 @@ public:
 	};
 	
 private:
+	QList<ADLSearch *> datalist;
 	QList<QTreeWidgetItem *> datalistitem;
 	QMenu * columnMenu;
 	QMenu * cnxtMenu;
@@ -74,17 +69,16 @@ private:
 
 	static int columnSizes[COLUMN_LAST];
 	
-	void addEntry(ADLSearch& search);
+	void addEntry(ADLSearch& , int index = -1);
 	
 private slots:
 	void slotAdd();
 	void slotRemove();
+	void slotProp();
 	
 	void chooseColumn(QAction *action);
 	void showColumnMenu(const QPoint &point);
 	void showCnxtMenu(const QPoint& point);
-	void makeContextMenu();
-
 };
 
 #endif // __ADLSEARCH_H__

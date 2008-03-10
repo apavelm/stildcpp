@@ -37,7 +37,9 @@ ADLSearchWindow::ADLSearchWindow(QWidget *parent) : MdiChild(parent)
 	setTabText(tr("Automatic Directory Listing Search"));
 	connect(btn_add, SIGNAL(clicked()), this, SLOT(slotAdd()) );
 	connect(btn_remove, SIGNAL(clicked()), this, SLOT(slotRemove()) );
+	connect(btn_properties, SIGNAL(clicked()), this, SLOT(slotProp()) );
 	
+	datalist.clear();
 	datalistitem.clear();
 	
 	// labels
@@ -79,6 +81,8 @@ ADLSearchWindow::ADLSearchWindow(QWidget *parent) : MdiChild(parent)
 	ADLSearchManager::SearchCollection& collection = ADLSearchManager::getInstance()->collection;
 	for(ADLSearchManager::SearchCollection::iterator i = collection.begin(); i != collection.end(); ++i)
 		addEntry(*i);
+	
+	list->setCurrentItem(list->topLevelItem(0));
 }
 
 ADLSearchWindow::~ADLSearchWindow()
@@ -103,6 +107,7 @@ ADLSearchWindow::~ADLSearchWindow()
 	
 	list->clear();
 	
+	datalist.clear();
 	datalistitem.clear();
 	delete cnxtMenu;
 	delete columnMenu;
@@ -110,7 +115,51 @@ ADLSearchWindow::~ADLSearchWindow()
 
 void ADLSearchWindow::slotAdd()
 {
-	
+	ADLSearch * _search = new ADLSearch();
+	ADLPropertiesDialog * dlg = new ADLPropertiesDialog(this, _search);
+	int rslt = dlg->exec();
+	if (rslt == QDialog::Accepted)
+	{
+		ADLSearchManager::SearchCollection& collection = ADLSearchManager::getInstance()->collection;
+		int index;
+		// Add new search to the end or if selected, just before
+		
+		if (list->currentItem())
+			index = datalistitem.indexOf(list->currentItem());
+		else index = -1;
+		
+		if (datalistitem.count() > 0)
+			collection.insert(collection.begin() + index, *_search);
+		else 
+			collection.push_back(*_search);
+
+		addEntry(*_search, index);
+	}
+	else delete _search;
+}
+
+void ADLSearchWindow::slotProp()
+{
+	if (!list->currentItem()) return;
+	int dx = datalistitem.indexOf(list->currentItem());
+	if (dx < 0) return;
+	ADLSearch * search = datalist.at(dx);
+	ADLPropertiesDialog * h = new ADLPropertiesDialog(this, search);
+	int rslt = h->exec();
+	if (rslt == QDialog::Accepted)
+	{
+		QStringList l;
+		l << StilUtils::TstrtoQ(Text::toT(search->searchString));
+		l << StilUtils::TstrtoQ(Text::toT(search->SourceTypeToString(search->sourceType)));
+		l << StilUtils::TstrtoQ(Text::toT(search->destDir));
+		l << StilUtils::TstrtoQ((search->minFileSize >= 0) ? Text::toT(Util::toString(search->minFileSize)) + _T(" ") + Text::toT(search->SizeTypeToString(search->typeFileSize)) : Util::emptyStringT);
+		l << StilUtils::TstrtoQ((search->maxFileSize >= 0) ? Text::toT(Util::toString(search->maxFileSize)) + _T(" ") + Text::toT(search->SizeTypeToString(search->typeFileSize)) : Util::emptyStringT);
+		
+		for (int i = 0; i < COLUMN_LAST; i++)
+			datalistitem.at(dx)->setText(i, l.at(i));
+			
+		datalistitem.at(dx)->setCheckState(0, ( search->isActive ? Qt::Checked : Qt::Unchecked) );
+	}
 }
 
 void ADLSearchWindow::slotRemove()
@@ -123,12 +172,18 @@ void ADLSearchWindow::slotRemove()
 	{
 		int dx = datalistitem.indexOf(lt.at(i));
 		collection.erase(collection.begin() + dx);
+		delete datalist.at(dx);
 		delete datalistitem.at(dx);
+		datalist.removeAt(dx);
 		datalistitem.removeAt(dx);
-	}	
+		if (dx < datalistitem.count())
+			list->setCurrentItem(datalistitem.at(dx));
+		else 
+			if (datalistitem.count() > 0) list->setCurrentItem(datalistitem.at(datalistitem.count()-1));
+	}
 }
 
-void ADLSearchWindow::addEntry(ADLSearch& search)
+void ADLSearchWindow::addEntry(ADLSearch& search, int index)
 {
 	QStringList l;
 	l << StilUtils::TstrtoQ(Text::toT(search.searchString));
@@ -137,16 +192,21 @@ void ADLSearchWindow::addEntry(ADLSearch& search)
 	l << StilUtils::TstrtoQ((search.minFileSize >= 0) ? Text::toT(Util::toString(search.minFileSize)) + _T(" ") + Text::toT(search.SizeTypeToString(search.typeFileSize)) : Util::emptyStringT);
 	l << StilUtils::TstrtoQ((search.maxFileSize >= 0) ? Text::toT(Util::toString(search.maxFileSize)) + _T(" ") + Text::toT(search.SizeTypeToString(search.typeFileSize)) : Util::emptyStringT);
 	
-	QTreeWidgetItem *it = new QTreeWidgetItem(list, l);
-	it->setCheckState(0, ( search.isActive ? Qt::Checked : Qt::Unchecked) );
-	
-	MySizeEdit *w1 = new MySizeEdit(this);
-	list->setItemWidget(it,4,w1);
-	
-	MySizeEdit *w2 = new MySizeEdit(this);
-	list->setItemWidget(it,3,w2);
-	
-	datalistitem << it;
+	if (index == -1)
+	{
+		QTreeWidgetItem *it = new QTreeWidgetItem(list, l);
+		it->setCheckState(0, ( search.isActive ? Qt::Checked : Qt::Unchecked) );
+		datalist << new ADLSearch(search);
+		datalistitem << it;
+	}
+	else
+	{
+		QTreeWidgetItem *it = new QTreeWidgetItem(l);
+		it->setCheckState(0, ( search.isActive ? Qt::Checked : Qt::Unchecked) );
+		list->insertTopLevelItem(index, it);		
+		datalist.insert(index, new ADLSearch(search) );
+		datalistitem.insert(index, it);
+	}
 }
 
 
@@ -185,20 +245,26 @@ void ADLSearchWindow::showColumnMenu(const QPoint &point)
 	columnMenu->exec(list->header()->mapToGlobal(point));
 }
 
-void ADLSearchWindow::makeContextMenu() 
-{
-	cnxtMenu->clear();
-
-//	QAction * t = cnxtMenu->addAction(/*QIcon(":/images/search.png"),*/ StilUtils::TstrtoQ(T_("&Open")) ,this ,SLOT(slotOpen()) );
-
-//	cnxtMenu->setDefaultAction(t);
-}
-
 void ADLSearchWindow::showCnxtMenu(const QPoint& point)
 {
-	if (list->indexAt(point).isValid())
-	{
-		makeContextMenu();
-		cnxtMenu->exec(mapToGlobal(point));
+	QModelIndex mi = list->indexAt(point);
+	QAction *a, *b, *c;
+	
+		cnxtMenu->clear();
+		a = cnxtMenu->addAction(/*QIcon(":/images/add.png"),*/ StilUtils::TstrtoQ(T_("&New...")) ,this ,SLOT(slotAdd()) );
+		b = cnxtMenu->addAction(/*QIcon(":/images/properties.png"),*/ StilUtils::TstrtoQ(T_("&Properties")) ,this ,SLOT(slotProp()) );
+		c = cnxtMenu->addAction(/*QIcon(":/images/remove.png"),*/ StilUtils::TstrtoQ(T_("&Remove")) ,this ,SLOT(slotRemove()) );
+		b->setEnabled(false);
+		c->setEnabled(false);
+	
+	if (mi.isValid())
+	{	
+		QTreeWidgetItem * w = list->itemFromIndex(mi);
+		if (w)
+		{
+			b->setEnabled(true);
+			c->setEnabled(true);
+		}
 	}
+	cnxtMenu->exec(mapToGlobal(point));
 }

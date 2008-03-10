@@ -24,7 +24,8 @@
 int SearchSpyWindow::columnSizes[] = { 420, 50, 75 };
 const size_t SearchSpyWindow::AVG_TIME; // TODO gcc needs this - why?
 
-static const char* columnNames[] = {
+static const char* columnNames[] = 
+{
 	N_("Search String"),
 	N_("Count"),
 	N_("Time")
@@ -81,7 +82,7 @@ SearchSpyWindow::SearchSpyWindow(QWidget *parent) : MdiChild(parent),
 	ShareManager::getInstance()->setHits(0);
 	ClientManager::getInstance()->addListener(this);
 
-	initSecond();
+	startTimer(1000);
 }
 
 SearchSpyWindow::~SearchSpyWindow()
@@ -91,7 +92,6 @@ SearchSpyWindow::~SearchSpyWindow()
 	searches->clear();
 	delete cnxtMenu;
 	delete columnMenu;
-	delete timer;
 	
 	// visibility
 	QStringList vv;
@@ -147,19 +147,11 @@ void SearchSpyWindow::showColumnMenu(const QPoint &point)
 	columnMenu->exec(searches->header()->mapToGlobal(point));
 }
 
-void SearchSpyWindow::makeContextMenu() 
+void SearchSpyWindow::showCnxtMenu(const QPoint& point)
 {
 	cnxtMenu->clear();
 	cnxtMenu->addAction(QIcon(":/images/search.png"), StilUtils::TstrtoQ(T_("Search")) ,this ,SLOT(slotSearch()) );
-}
-
-void SearchSpyWindow::showCnxtMenu(const QPoint& point)
-{
-	if (searches->indexAt(point).isValid())
-	{
-		makeContextMenu();
-		cnxtMenu->exec(mapToGlobal(point));
-	}
+	cnxtMenu->exec(mapToGlobal(point));
 }
 
 void SearchSpyWindow::slotSearch()
@@ -171,14 +163,7 @@ void SearchSpyWindow::slotSearch()
 		MainWindowImpl::getInstance()->SearchFunc(searchString);
 }
 
-void SearchSpyWindow::initSecond()
-{
-	timer = new QTimer(this);
-	connect(timer, SIGNAL(timeout()), this, SLOT(eachSecond()));
-	timer->start(1000);
-}
-
-bool SearchSpyWindow::eachSecond()
+void SearchSpyWindow::timerEvent(QTimerEvent *)
 {
 	size_t tot = std::accumulate(perSecond, perSecond + AVG_TIME, 0u);
 	size_t t = std::max(1u, std::min(cur, AVG_TIME));
@@ -188,7 +173,6 @@ bool SearchSpyWindow::eachSecond()
 	cur++;
 	perSecond[cur % AVG_TIME] = 0;
 	lbl_ave->setText(StilUtils::TstrtoQ(str(TF_("Average/s: %1%") % x)));
-	return true;
 }
 
 void SearchSpyWindow::slotIgnore(int)

@@ -33,7 +33,7 @@ FORMS = ui/mainwindow.ui \
  ui/TextWindow.ui \
  ui/syslog.ui \
  ui/stats.ui \
- ui/sizeedit.ui \
+ ui/adl_prop.ui \
  ui/transview.ui \
  ui/waitingusers.ui \
  ui/hashman.ui
@@ -164,6 +164,7 @@ HEADERS = src/mainwindowimpl.h \
  src/widgets/stil_TransferView.h \
  src/widgets/stil_stats.h \
  src/widgets/myprogress.h \
+ src/adlprop.h \
  src/widgets/stil_qdltreewidget.h
 SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
@@ -254,6 +255,7 @@ SOURCES = src/mainwindowimpl.cpp \
  src/userlist.cpp \
  src/stats.cpp \
  src/waitusr.cpp \
+ src/adlprop.cpp \
  src/userlistsortingmodel.cpp \
  src/widgets/stil_TransferView.cpp \
  src/widgets/myprogress.cpp \

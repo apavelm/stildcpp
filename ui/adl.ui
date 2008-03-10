@@ -20,8 +20,8 @@
        <property name="alternatingRowColors" >
         <bool>true</bool>
        </property>
-       <property name="selectionBehavior" >
-        <enum>QAbstractItemView::SelectItems</enum>
+       <property name="selectionMode" >
+        <enum>QAbstractItemView::ExtendedSelection</enum>
        </property>
        <property name="indentation" >
         <number>5</number>
@@ -32,11 +32,8 @@
        <property name="itemsExpandable" >
         <bool>false</bool>
        </property>
-       <property name="sortingEnabled" >
-        <bool>true</bool>
-       </property>
        <property name="allColumnsShowFocus" >
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
        <column>
         <property name="text" >
