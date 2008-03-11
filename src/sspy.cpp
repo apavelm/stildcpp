@@ -78,6 +78,8 @@ SearchSpyWindow::SearchSpyWindow(QWidget *parent) : MdiChild(parent),
 	cnxtMenu = new QMenu();
 	searches->setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(searches, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showCnxtMenu(const QPoint&)));
+	cnxtMenu->clear();
+	cnxtMenu->addAction(QIcon(":/images/search.png"), StilUtils::TstrtoQ(T_("Search")) ,this ,SLOT(slotSearch()) );
 	
 	ShareManager::getInstance()->setHits(0);
 	ClientManager::getInstance()->addListener(this);
@@ -149,8 +151,6 @@ void SearchSpyWindow::showColumnMenu(const QPoint &point)
 
 void SearchSpyWindow::showCnxtMenu(const QPoint& point)
 {
-	cnxtMenu->clear();
-	cnxtMenu->addAction(QIcon(":/images/search.png"), StilUtils::TstrtoQ(T_("Search")) ,this ,SLOT(slotSearch()) );
 	cnxtMenu->exec(mapToGlobal(point));
 }
 

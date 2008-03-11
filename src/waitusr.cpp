@@ -54,8 +54,9 @@ WaitingUsersWindow::WaitingUsersWindow(QWidget *parent) : MdiChild(parent)
 		UploadManager::FileSet files = UploadManager::getInstance()->getWaitingUserFiles(*uit);
 		for (UploadManager::FileSet::const_iterator fit = files.begin(); fit != files.end(); ++fit) 
 		{
-			QTreeWidgetItem * w = new QTreeWidgetItem(queued, lastInserted);
+			QTreeWidgetItem * w = new QTreeWidgetItem();
 			w->setText(0, StilUtils::TstrtoQ(Text::toT(*fit)) );
+			lastInserted->addChild(w);
 			datalist << *uit;
 			datalist2 << StilUtils::TstrtoQ(Text::toT(*fit));
 			datalistitem << w;
@@ -63,12 +64,46 @@ WaitingUsersWindow::WaitingUsersWindow(QWidget *parent) : MdiChild(parent)
 	}
 }
 
+void WaitingUsersWindow::onAddFile(const UserPtr& aUser, const QString& aFile)
+{
+	int idx = datalist.indexOf(aUser);
+	if ( idx >= 0 )
+	{
+		// found User-root item
+		QTreeWidgetItem * w = datalistitem.at(idx);
+		QTreeWidgetItem * w2 = w->parent();
+		if (w2) w = w2;
+		idx = datalistitem.indexOf(w);
+		
+		QTreeWidgetItem * n = new QTreeWidgetItem();
+		n->setText(0, aFile);
+		w->addChild(n);
+		datalist << aUser;
+		datalist2 << aFile;
+		datalistitem << n;
+	}
+	else // if such aUser is new User
+	{
+		QTreeWidgetItem * n = new QTreeWidgetItem(queued);
+		n->setText(0, StilUtils::TstrtoQ(StilUtils::getNicks(aUser) + _T(" - ") + StilUtils::getHubNames(aUser).first) );
+		datalist << aUser;
+		datalist2 << QString();
+		datalistitem << n;
+		QTreeWidgetItem * n2 = new QTreeWidgetItem();
+		n->addChild(n2);
+		n2->setText(0, aFile);
+		datalist << aUser;
+		datalist2 << aFile;
+		datalistitem << n2;
+	}
+}
+
 WaitingUsersWindow::~WaitingUsersWindow()
 {
-	queued->clear();
 	datalist.clear();
 	datalist2.clear();
 	datalistitem.clear();
+	queued->clear();
 	UploadManager::getInstance()->removeListener(this);
 	delete cnxtMenu;
 }
@@ -130,39 +165,6 @@ void WaitingUsersWindow::onRemoveUser(const UserPtr& aUser)
 	datalist2.removeAt(idx);
 	datalistitem.removeAt(idx);
 	delete w;
-}
-
-void WaitingUsersWindow::onAddFile(const UserPtr& aUser, const QString& aFile)
-{
-	int idx = datalist.indexOf(aUser);
-	if ( idx >= 0 )
-	{
-		// found User-root item
-		QTreeWidgetItem * w = datalistitem.at(idx);
-		QTreeWidgetItem * w2 = w->parent();
-		if (w2) w = w2;
-		idx = datalistitem.indexOf(w);
-		
-		QTreeWidgetItem * n = new QTreeWidgetItem(w);
-		n->setText(0, aFile);
-		datalist << aUser;
-		datalist2 << aFile;
-		datalistitem << n;
-	}
-	else // if such aUser is new User
-	{
-		QTreeWidgetItem * n = new QTreeWidgetItem(queued);
-		n->setText(0, StilUtils::TstrtoQ(StilUtils::getNicks(aUser) + _T(" - ") + StilUtils::getHubNames(aUser).first) );
-		datalist << aUser;
-		datalist2 << QString();
-		datalistitem << n;
-		QTreeWidgetItem * n2 = new QTreeWidgetItem(queued, n);
-		n2->setText(0, aFile);
-		datalist << aUser;
-		datalist2 << aFile;
-		datalistitem << n2;
-	}
-	
 }
 
 // UploadManagerListener

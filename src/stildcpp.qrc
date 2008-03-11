@@ -19,7 +19,6 @@
 		<file>images/icon_error.png</file>
 		<file>images/icon_mail.png</file>
 		<file>images/splash.png</file>
-		<file>images/search.png</file>
 		<file>images/pref_colors_n_fonts.png</file>
 		<file>images/pref_icons.png</file>
 		<file>images/pref_icon.png</file>
@@ -42,5 +41,9 @@
 		<file>images/status/yellow-green-star_16.png</file>
 		<file>images/status/yellow-red_16.png</file>
 		<file>images/status/yellow-red-star_16.png</file>
+		<file>images/actions/search.png</file>
+		<file>images/actions/adlsearch.png</file>
+		<file>images/actions/searchspy.png</file>
+		<file>images/actions/redirect.png</file>
 	</qresource>
 </RCC>

@@ -222,6 +222,9 @@
    </property>
   </action>
   <action name="actionFollow_last_redirect" >
+   <property name="icon" >
+    <iconset resource="../src/stildcpp.qrc" >:/images/actions/redirect.png</iconset>
+   </property>
    <property name="text" >
     <string>Follow last redirect</string>
    </property>
@@ -293,18 +296,24 @@
   </action>
   <action name="actionSearch" >
    <property name="icon" >
-    <iconset resource="../src/stildcpp.qrc" >:/images/search.png</iconset>
+    <iconset resource="../src/stildcpp.qrc" >:/images/actions/search.png</iconset>
    </property>
    <property name="text" >
     <string>Search</string>
    </property>
   </action>
   <action name="actionADL_Search" >
+   <property name="icon" >
+    <iconset resource="../src/stildcpp.qrc" >:/images/actions/adlsearch.png</iconset>
+   </property>
    <property name="text" >
     <string>ADL Search</string>
    </property>
   </action>
   <action name="actionSearch_Spy" >
+   <property name="icon" >
+    <iconset resource="../src/stildcpp.qrc" >:/images/actions/searchspy.png</iconset>
+   </property>
    <property name="text" >
     <string>Search Spy</string>
    </property>

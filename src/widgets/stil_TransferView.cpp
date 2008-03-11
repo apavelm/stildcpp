@@ -46,7 +46,7 @@ static const char* downloadNames[] = {
 	N_("Size")
 };
 
-void TransferView::handleDblClicked(const QModelIndex & mi)
+void TransferView::handleDblClicked(const QModelIndex &/* mi*/)
 {
 	// case of "i_ACT_ON_DBLCLICK_TRANSFERVIEW"
 	// 0 - Private Message
@@ -59,7 +59,7 @@ void TransferView::handleDblClicked(const QModelIndex & mi)
 	// 7 - Search For alternates
 	// 8 - Add User To Favorites
 	
-		int ua = APPSETTING(i_ACT_ON_DBLCLICK_TRANSFERVIEW);
+		//int ua = APPSETTING(i_ACT_ON_DBLCLICK_TRANSFERVIEW);
 }
 
 void TransferView::preClose()
@@ -430,8 +430,8 @@ void TransferView::handleBrowse()
 	for (int i = 0; i < lt.size(); i++)
 	{
 		ConnectionInfo *ii = datalist1.at(datalistitem1.indexOf(lt[i]));
-		//ii->browseList();
-		qDebug() << "You press BrowseList... I don't know would it work!";
+		ii->browseList();
+		qDebug() << "You press BrowseList... I don't know if it works!";
 	}
 }
 
@@ -441,10 +441,10 @@ void TransferView::handleConHub()
 	if (lt.isEmpty()) return;
 	for (int i = 0; i < lt.size(); i++)
 	{
-		ConnectionInfo *ii = datalist1.at(datalistitem1.indexOf(lt[i]));
+		//ConnectionInfo *ii = datalist1.at(datalistitem1.indexOf(lt[i]));
 		//ii->connectFav(this);
 		//MainWindowImpl::getInstance()->OpenHub(ii->user->hub);
-		qDebug() << "You press ConnectHub... I don't know if it works!";
+		qDebug() << "You press ConnectHub... It doesn't work!";
 	}
 }
 

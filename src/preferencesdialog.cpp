@@ -312,7 +312,7 @@ void PreferencesDialog::initDownloadsFavPage()
 	{
 		QStringList lst;
 		lst << StilUtils::TstrtoQ(Text::toT(j->second)) << StilUtils::TstrtoQ(Text::toT(j->first));
-		QTreeWidgetItem *fItem = new QTreeWidgetItem(FavDLDir_tree, lst);
+		/*QTreeWidgetItem *fItem = */new QTreeWidgetItem(FavDLDir_tree, lst);
 	}
 	
 	FavDLDir_tree->sortByColumn(0,Qt::AscendingOrder);
@@ -360,7 +360,7 @@ void PreferencesDialog::DownloadsFavPageAdd()
 		{
 			QStringList lt;
 			lt << text << directory;
-			QTreeWidgetItem *fItm = new QTreeWidgetItem(FavDLDir_tree, lt);
+			/*QTreeWidgetItem *fItm = */new QTreeWidgetItem(FavDLDir_tree, lt);
 		}
 	}
 }
@@ -377,7 +377,7 @@ void PreferencesDialog::initSharingPage()
 	{
 		QStringList row;
 		row << StilUtils::TstrtoQ(Text::toT(j->first)) << StilUtils::TstrtoQ(Text::toT(j->second)) << StilUtils::fmtBytes(ShareManager::getInstance()->getShareSize(j->second));
-		QTreeWidgetItem *fItm = new QTreeWidgetItem(SharedDir_tree, row);
+		/*QTreeWidgetItem *fItm = */new QTreeWidgetItem(SharedDir_tree, row);
 	}
 	
 	lbl_TotalSize->setText(tr("Total Size: ")+StilUtils::fmtBytes(ShareManager::getInstance()->getShareSize()));
@@ -433,7 +433,7 @@ void PreferencesDialog::SharingPageAdd()
 			ShareManager::getInstance()->addDirectory(Text::fromT(StilUtils::QtoTstr(directory) ), Text::fromT(StilUtils::QtoTstr(text)));
 			QStringList lt;
 			lt << text << directory << StilUtils::fmtBytes(ShareManager::getInstance()->getShareSize(Text::fromT(StilUtils::QtoTstr(directory))));
-			QTreeWidgetItem *fItm = new QTreeWidgetItem(SharedDir_tree, lt);
+			/*QTreeWidgetItem *fItm = */new QTreeWidgetItem(SharedDir_tree, lt);
 			
 			ShareManager::getInstance()->setDirty();
 			lbl_TotalSize->setText(StilUtils::fmtBytes(ShareManager::getInstance()->getShareSize() ));
@@ -443,7 +443,7 @@ void PreferencesDialog::SharingPageAdd()
 	}
 }
 
-void PreferencesDialog::SharingPageHidden(int state)
+void PreferencesDialog::SharingPageHidden(int /*state*/)
 {
 	// Save the checkbox state so that ShareManager knows to include/exclude hidden files
 //	Item i = items[1]; // The checkbox. Explicit index used - bad!
@@ -461,7 +461,7 @@ void PreferencesDialog::SharingPageHidden(int state)
 	{
 		QStringList row;
 		row << StilUtils::TstrtoQ(Text::toT(j->first)) << StilUtils::TstrtoQ(Text::toT(j->second)) << StilUtils::fmtBytes(ShareManager::getInstance()->getShareSize(j->second));
-		QTreeWidgetItem *fItm = new QTreeWidgetItem(SharedDir_tree, row);
+		/*QTreeWidgetItem *fItm = */new QTreeWidgetItem(SharedDir_tree, row);
 	}
 
 	// Display the new total share size

@@ -215,9 +215,6 @@ private:
 	
 	void setStatus(int s, const tstring& text);
 	void updateStatus();
-	//FIXME - delete, it's hack 
-	void setDirty(SettingsManager::IntSetting setting) {}
-
 	
 	bool speak();// { return true; }
 	void speak(Tasks s) { tasks.add(s, 0); speak(); }

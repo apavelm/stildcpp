@@ -1,7 +1,7 @@
 /***************************************************************************
  *   Copyright (C) 2007 - 2008 by Pavel Andreev                            *
  *   Mail: apavelm on gmail point com (apavelm@gmail.com)                  *
- *   Copyright (C) 2007 -, 2008 by Yakov Suraev aka BigBiker               *
+ *   Copyright (C) 2007 - 2008 by Yakov Suraev aka BigBiker                *
  *   Mail: adminbsd on gmail point com (adminbsd@gmail.com)                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -37,7 +37,6 @@ MainWindowImpl::~MainWindowImpl()
 	delete showhide;
 	delete trayIcon;
 	delete trayIconMenu;
-	//delete statusStatusLabel;
 	delete statusAwayLabel;
 	delete statusCountsLabel;
 	delete statusSlotsLabel;
@@ -45,13 +44,18 @@ MainWindowImpl::~MainWindowImpl()
 	delete statusUpTotalLabel;
 	delete statusDownDiffLabel;
 	delete statusUpDiffLabel;
-	//delete shareStatusLbl;
 	delete m_tabwin;
 	thrdGetTTh.wait();
 	
+	if (c != NULL) 
+	{
+		c->removeListener(this);
+		delete c;
+		c = NULL;
+	}
+	
 	LogManager::getInstance()->removeListener(this);
 	QueueManager::getInstance()->removeListener(this);
-	TimerManager::getInstance()->removeListener(this);	
 	
 	SearchManager::getInstance()->disconnect();
 	ConnectionManager::getInstance()->disconnect();
@@ -79,7 +83,7 @@ void MainWindowImpl::initMain()
 	createToolBars();
 	createTrayIcon();
 
-	connect(this, SIGNAL(speakerSignal(unsigned int, long)), this, SLOT(handleSpeaker(unsigned int, long)),Qt::QueuedConnection);
+	connect(this, SIGNAL(sigSpeak(StilUtils::Speaker, qint64)), this, SLOT(slotSpeak(StilUtils::Speaker, qint64)),Qt::QueuedConnection);
 //	connect(trayIcon, SIGNAL(messageClicked()), this, SLOT(messageClicked()));
 	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));	
 	updateWindowMenu();
@@ -87,10 +91,7 @@ void MainWindowImpl::initMain()
 	
 	setToolTip(tr(APPLICATIONNAME));
 	setWindowTitle(tr(APPLICATIONNAME));
-	
-	//shareStatusLbl = new QLabel;
-	//setShareSize(tr("Total shared: 0b"));
-	//statusBar()->addPermanentWidget(shareStatusLbl);
+
 	createStatusLabels();
 	
 	trayIcon->setIcon(QIcon(":/images/icon.png"));
@@ -112,7 +113,6 @@ void MainWindowImpl::createStatusLabels()
 {
 	//This is stupid code, but this is also workaround for setting labels size
 	 
-	//statusStatusLabel = new QLabel;
 	statusAwayLabel = new QLabel(tr(" AWAY "));
 	statusAwayLabel->setAlignment(Qt::AlignHCenter);
 	statusAwayLabel->setMinimumSize(statusAwayLabel->sizeHint());
@@ -136,7 +136,6 @@ void MainWindowImpl::createStatusLabels()
 	statusUpDiffLabel = new QLabel("U: 999.99MiB/s (99)");
 	statusUpDiffLabel->setMinimumSize(statusUpDiffLabel->sizeHint());
 	
-	//statusBar()->addWidget(statusStatusLabel, 1);
 	statusBar()->addPermanentWidget(statusAwayLabel);
 	statusBar()->addPermanentWidget(statusCountsLabel);
 	statusBar()->addPermanentWidget(statusSlotsLabel);
@@ -147,17 +146,9 @@ void MainWindowImpl::createStatusLabels()
 	
 }
 
-void MainWindowImpl::initSecond()
-{
-	QTimer *timer = new QTimer(this);
-	connect(timer, SIGNAL(timeout()), this, SLOT(eachSecond()));
-	timer->start(1000);
-}
-
-bool MainWindowImpl::eachSecond()
+void MainWindowImpl::timerEvent(QTimerEvent *)
 {
 	updateStatus();
-	return true;
 }
 
 void MainWindowImpl::updateStatus()
@@ -186,10 +177,8 @@ void MainWindowImpl::updateStatus()
 	setStatus(STATUS_SLOTS, Text::toT(_( "Slots: ") + Util::toString(UploadManager::getInstance()->getFreeSlots()) + '/' + Util::toString(SETTING(SLOTS))));
 	setStatus(STATUS_DOWN_TOTAL, Text::toT("D: " + Util::formatBytes(down)));
 	setStatus(STATUS_UP_TOTAL, Text::toT("U: " + Util::formatBytes(up)));
-	setStatus(STATUS_DOWN_DIFF, Text::toT("D: " + Util::formatBytes((downdiff*1000)/tdiff) + "/s ("
-	    + Util::toString(DownloadManager::getInstance()->getDownloadCount()) + ")"));
-	setStatus(STATUS_UP_DIFF, Text::toT("U: " + Util::formatBytes((updiff*1000)/tdiff) + "/s ("
-	    + Util::toString(UploadManager::getInstance()->getUploadCount()) + ")"));
+	setStatus(STATUS_DOWN_DIFF, Text::toT("D: " + Util::formatBytes((downdiff*1000)/tdiff) + "/s (" + Util::toString(DownloadManager::getInstance()->getDownloadCount()) + ")"));
+	setStatus(STATUS_UP_DIFF, Text::toT("U: " + Util::formatBytes((updiff*1000)/tdiff) + "/s (" + Util::toString(UploadManager::getInstance()->getUploadCount()) + ")"));
 }
 
 void MainWindowImpl::clientInit()
@@ -202,8 +191,11 @@ void MainWindowImpl::clientInit()
 	
 	TimerManager::getInstance()->start();
 	
-	TimerManager::getInstance()->addListener(this);
+	c = new HttpConnection;
+	c->addListener(this);
+	c->downloadFile("http://dcplusplus.sourceforge.net/version.xml");
 	
+	File::ensureDirectory(SETTING(LOG_DIRECTORY));
 	startSocket();
 	
 	if(BOOLSETTING(OPEN_SYSTEM_LOG)) SLogFunc();
@@ -218,7 +210,7 @@ void MainWindowImpl::clientInit()
 	if(BOOLSETTING(OPEN_PUBLIC)) PubHubFunc();
 	if(BOOLSETTING(OPEN_FAVORITE_HUBS)) FavHubListFunc();
 	
-	speak(AUTO_CONNECT);
+	speak(StilUtils::AUTO_CONNECT);
 	
 	// If First-time launch
 	if(SETTING(NICK).empty()) 
@@ -245,7 +237,7 @@ void MainWindowImpl::startSocket()
 MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f) : QMainWindow(parent, f)
 {
 	initMain();
-	initSecond();
+	startTimer(1000);
 }
 
 void MainWindowImpl::closeEvent(QCloseEvent *event)
@@ -481,7 +473,7 @@ void MainWindowImpl::OpenList(QWidget *parent, const tstring & aFile, const User
 	m_tabwin->setCurrentIndex( m_tabwin->addTab( (new FileListDlg(parent, u, aSpeed, t) ), aTitle ) );
 }
 
-void MainWindowImpl::OpenHub(const tstring& adr, QWidget *parent)
+void MainWindowImpl::OpenHub(const tstring& adr)
 {
 	m_tabwin->setCurrentIndex(m_tabwin->addTab((new HubWindow(m_tabwin, adr)),"Hub"));
 }
@@ -613,11 +605,6 @@ void MainWindowImpl::fQuickConFunc()
 void MainWindowImpl::statusbarcheck()
 {
 	if (actionStatusBar->isChecked()) statusbar->setVisible(true); else statusbar->setVisible(false);
-}
-
-void MainWindowImpl::setShareSize(const QString &sz)
-{
-//	shareStatusLbl->setText(sz);
 }
 
 void MainWindowImpl::updateWindowMenu()
@@ -874,88 +861,65 @@ void MainWindowImpl::autoConnect(const FavoriteHubEntryList& fl)
 	}
 }
 
-bool MainWindowImpl::speak(unsigned int w, long l)
+void MainWindowImpl::slotSpeak(StilUtils::Speaker type, qint64 lParam)
 {
-	emit speakerSignal(w, l);
-}
-
-//
-void MainWindowImpl::on(QueueManagerListener::Finished, QueueItem* qi, const string& dir, int64_t speed) throw()
-{
-	if (qi->isSet(QueueItem::FLAG_CLIENT_VIEW))
+	switch (type)
 	{
-		if (qi->isSet(QueueItem::FLAG_USER_LIST))
+		case StilUtils::DOWNLOAD_LISTING: 
 		{
-			// This is a file listing, show it...
-			DirectoryListInfo* i = new DirectoryListInfo(qi->getDownloads().at(0)->getUser(), Text::toT(qi->getListName()), Text::toT(dir), speed);
-
-			speak(DOWNLOAD_LISTING, (long)i);
+			boost::scoped_ptr<DirectoryListInfo> i(reinterpret_cast<DirectoryListInfo*>(lParam));
+			//DirectoryListingFrame::openWindow(getMDIParent(), i->file, i->dir, i->user, i->speed);
+			QString NickName = StilUtils::TstrtoQ(Text::toT((FileListDlg::getNickFromFilename(Text::fromT(i->file)))));
+			OpenList(this, i->file, i->user, i->speed, NickName);
 		}
-		else if (qi->isSet(QueueItem::FLAG_TEXT))
+			break;
+		case StilUtils::BROWSE_LISTING: 
+		{/*
+			boost::scoped_ptr<DirectoryBrowseInfo> i(reinterpret_cast<DirectoryBrowseInfo*>(lParam));
+			//DirectoryListingFrame::openWindow(getMDIParent(), i->user, i->text, 0);
+			OpenList(this, i->user, i->text, 0, QString(""));
+		*/}
+			break;
+		case StilUtils::AUTO_CONNECT:
 		{
-			speak(VIEW_FILE_AND_DELETE, reinterpret_cast<long>(new std::string(qi->getTarget())));
+			autoConnect(FavoriteManager::getInstance()->getFavoriteHubs());
 		}
-	}
-}
-
-void MainWindowImpl::on(PartialList, const UserPtr& aUser, const string& text) throw()
-{
-	speak(BROWSE_LISTING, (long)new DirectoryBrowseInfo(aUser, text));
-}
-
-int MainWindowImpl::handleSpeaker(unsigned int wParam, long lParam)
-{
-	Speaker s = static_cast<Speaker>(wParam);
-
-	switch (s) {
-	case DOWNLOAD_LISTING: {
-		boost::scoped_ptr<DirectoryListInfo> i(reinterpret_cast<DirectoryListInfo*>(lParam));
-		//DirectoryListingFrame::openWindow(getMDIParent(), i->file, i->dir, i->user, i->speed);
-		QString NickName = StilUtils::TstrtoQ(Text::toT((FileListDlg::getNickFromFilename(Text::fromT(i->file)))));
-		OpenList(this, i->file, i->user, i->speed, NickName);
-	}
-		break;
-	case BROWSE_LISTING: {/*
-		boost::scoped_ptr<DirectoryBrowseInfo> i(reinterpret_cast<DirectoryBrowseInfo*>(lParam));
-		//DirectoryListingFrame::openWindow(getMDIParent(), i->user, i->text, 0);
-		OpenList(this, i->user, i->text, 0, QString(""));
-	}*/
-		break;
-	case AUTO_CONNECT: {
-		autoConnect(FavoriteManager::getInstance()->getFavoriteHubs());
-	}
-		break;
-	case PARSE_COMMAND_LINE: {
-		//parseCommandLine(GetCommandLine());
-	}
-		break;
-	case VIEW_FILE_AND_DELETE: {
-		boost::scoped_ptr<std::string> file(reinterpret_cast<std::string*>(lParam));
-		openTextWindow(*file);
-		File::deleteFile(*file);
-	}
-		break;
-	case STATUS_MESSAGE: {
-		boost::scoped_ptr<pair<time_t, tstring> > msg(reinterpret_cast<std::pair<time_t, tstring>*>(lParam));
-		tstring line = Text::toT("[" + Util::getShortTimeString(msg->first) + "] ") + msg->second;
-
-		setStatus(STATUS_STATUS, line);
-		while (lastLinesList.size() + 1> MAX_CLIENT_LINES)
-			lastLinesList.erase(lastLinesList.begin());
-		if (line.find(_T('\r')) == tstring::npos) {
-			lastLinesList.push_back(line);
-		} else {
-			lastLinesList.push_back(line.substr(0, line.find(_T('\r'))));
+			break;
+		case StilUtils::PARSE_COMMAND_LINE:
+		{
+			//parseCommandLine(GetCommandLine());
 		}
+			break;
+		case StilUtils::VIEW_FILE_AND_DELETE:
+		{
+			boost::scoped_ptr<std::string> file(reinterpret_cast<std::string*>(lParam));
+			openTextWindow(*file);
+			File::deleteFile(*file);
+		}
+			break;
+		case StilUtils::STATUS_MESSAGE:
+		{
+			boost::scoped_ptr<pair<time_t, tstring> > msg(reinterpret_cast<std::pair<time_t, tstring>*>(lParam));
+			tstring line = Text::toT("[" + Util::getShortTimeString(msg->first) + "] ") + msg->second;
+	
+			setStatus(STATUS_STATUS, line);
+			while (lastLinesList.size() + 1> MAX_CLIENT_LINES)
+				lastLinesList.erase(lastLinesList.begin());
+			if (line.find(_T('\r')) == tstring::npos) {
+				lastLinesList.push_back(line);
+			} else {
+				lastLinesList.push_back(line.substr(0, line.find(_T('\r'))));
+			}
+		}
+			break;
+		case StilUtils::LAYOUT: 
+		{
+				//layout();
+		}
+			break;
+		default:
+			break;
 	}
-		break;
-	case LAYOUT: {
-		//layout();
-	}
-		break;
-	}
-	return 0;
-}
 }
 
 void MainWindowImpl::setStatus(int s, const tstring& text)
@@ -963,7 +927,6 @@ void MainWindowImpl::setStatus(int s, const tstring& text)
 	switch(s)
 	{
 		case STATUS_STATUS:
-			//statusStatusLabel->setText(StilUtils::TstrtoQ(text));
 			statusBar()->showMessage(StilUtils::TstrtoQ(text));
 			break;
 		case STATUS_AWAY:
@@ -989,3 +952,50 @@ void MainWindowImpl::setStatus(int s, const tstring& text)
 			break;
 	}
 }
+
+// Listeners
+
+void MainWindowImpl::on(HttpConnectionListener::Data, HttpConnection* /*conn*/, const uint8_t* buf, size_t len) throw()
+{
+	versionInfo += string((const char*)buf, len);
+}
+
+void MainWindowImpl::on(HttpConnectionListener::Complete, HttpConnection* /*aConn*/, const string&) throw()
+{
+	// Cheking update: downloading xml-file from internet and parse it;
+	
+	/*
+	qDebug() << "HTTP";
+	QFile xmlfile(QString::fromStdString(versionInfo));
+	xmlfile.open(QIODevice::ReadOnly);
+	qDebug() << xmlfile.fileName();
+	QByteArray data = xmlfile.readAll();
+	xmlfile.close();
+	QDomDocument xml;
+	xml.setContent(data);
+	qDebug() << xml.toByteArray();*/
+}
+
+void MainWindowImpl::on(QueueManagerListener::Finished, QueueItem* qi, const string& dir, int64_t speed) throw()
+{
+	if (qi->isSet(QueueItem::FLAG_CLIENT_VIEW))
+	{
+		if (qi->isSet(QueueItem::FLAG_USER_LIST))
+		{
+			// This is a file listing, show it...
+			DirectoryListInfo* i = new DirectoryListInfo(qi->getDownloads().at(0)->getUser(), Text::toT(qi->getListName()), Text::toT(dir), speed);
+
+			speak(StilUtils::DOWNLOAD_LISTING, (qint64)i);
+		}
+		else if (qi->isSet(QueueItem::FLAG_TEXT))
+		{
+			speak(StilUtils::VIEW_FILE_AND_DELETE, reinterpret_cast<qint64>(new std::string(qi->getTarget())));
+		}
+	}
+}
+
+void MainWindowImpl::on(PartialList, const UserPtr& aUser, const string& text) throw()
+{
+	speak(StilUtils::BROWSE_LISTING, (qint64)new DirectoryBrowseInfo(aUser, text));
+}
+

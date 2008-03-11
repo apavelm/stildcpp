@@ -49,6 +49,7 @@ public:
 	static int _type_tstring;
 	static int _type_UserPtr;
 	static int _type_FinishedItemPtr;
+	static int _type_Speaker;
 	
 	/*  0 - MdiChild (NONE)
 		1 - Hub
@@ -95,6 +96,17 @@ public:
 		,WIN_TYPE_NETWORK_STATS
 		,WIN_TYPE_WAITING_USERS
 		,WIN_TYPE_LAST
+	};
+	
+	enum Speaker
+	{
+		DOWNLOAD_LISTING,
+		BROWSE_LISTING,
+		AUTO_CONNECT,
+		PARSE_COMMAND_LINE,
+		VIEW_FILE_AND_DELETE,
+		STATUS_MESSAGE,
+		LAYOUT
 	};
 	
 	//StilUtils();

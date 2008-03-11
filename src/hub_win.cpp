@@ -621,7 +621,7 @@ void HubWindow::addStatus(const tstring& aLine, bool inChat /* = true */) {
 		lastLinesList.erase(lastLinesList.begin());
 	lastLinesList.push_back(line);
 
-	setDirty(SettingsManager::BOLD_HUB);
+	//setDirty(SettingsManager::BOLD_HUB);
 
 	if(BOOLSETTING(STATUS_IN_CHAT) && inChat) {
 		addChat(_T("*** ") + aLine);
@@ -701,7 +701,7 @@ void HubWindow::addChat(const tstring& aLine) {
 		ctrlClient.SetRedraw(TRUE);
 	}
 #endif
-	setDirty(SettingsManager::BOLD_HUB);
+	//setDirty(SettingsManager::BOLD_HUB);
 }
 
 void HubWindow::removeUser(const UserPtr& aUser) {
