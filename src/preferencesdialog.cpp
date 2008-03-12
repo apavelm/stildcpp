@@ -36,10 +36,13 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent)
 	initConnectionPage();
 	initDownloadsPage();
 	initDownloadsFavPage();
-	
+	initDownloadsPreviewPage();
+	initDownloadsQueuePage();	
 	initSharingPage();
 	initMessagesPage();
 	initLNFPage();
+	
+	initLNFTabsPage();
 	
 	categoryList->setCurrentItem(categoryList->topLevelItem(0));
 	show();
@@ -61,10 +64,10 @@ void PreferencesDialog::on_okBtn_clicked()
 void PreferencesDialog::initCategoryList() 
 {
 	QTreeWidgetItem *it0 = new QTreeWidgetItem(categoryList);
-		it0->setText(0,tr("General"));
+		it0->setText(0,tr("Personal information"));
 		it0->setIcon(0,QIcon(":/images/icon_error.png"));
 	QTreeWidgetItem *it1 = new QTreeWidgetItem(categoryList);
-		it1->setText(0,tr("Connection Settings"));
+		it1->setText(0,tr("Connection settings"));
 		it1->setIcon(0,QIcon(":/images/icon_mail.png"));
 	QTreeWidgetItem *it2 = new QTreeWidgetItem(categoryList);
 		it2->setText(0,tr("Downloads"));
@@ -99,6 +102,9 @@ void PreferencesDialog::initCategoryList()
 					QTreeWidgetItem *it5c = new QTreeWidgetItem(it5);
 						it5c->setText(0,tr("Sounds"));
 						it5c->setIcon(0,QIcon(":/images/pref_sounds.png"));
+					QTreeWidgetItem *it5d = new QTreeWidgetItem(it5);
+						it5d->setText(0,tr("Tabs and Windows"));
+						it5d->setIcon(0,QIcon(":/images/icon.png"));
 		
 	QTreeWidgetItem *it6 = new QTreeWidgetItem(categoryList);
 		it6->setText(0,tr("Additional"));
@@ -365,6 +371,119 @@ void PreferencesDialog::DownloadsFavPageAdd()
 	}
 }
 
+void PreferencesDialog::applyDownloadsFavPage()
+{
+	
+}
+
+void PreferencesDialog::initDownloadsPreviewPage()
+{
+	
+}
+
+void PreferencesDialog::applyDownloadsPreviewPage()
+{
+	
+}
+
+int download_queue_list_checked[] = {
+	dcpp::SettingsManager::PRIO_LOWEST,
+	dcpp::SettingsManager::AUTODROP_ALL,
+	dcpp::SettingsManager::AUTODROP_FILELISTS,
+	dcpp::SettingsManager::AUTODROP_DISCONNECT,
+	dcpp::SettingsManager::AUTO_SEARCH,
+	dcpp::SettingsManager::AUTO_SEARCH_AUTO_MATCH,
+	dcpp::SettingsManager::SKIP_ZERO_BYTE,
+	dcpp::SettingsManager::DONT_DL_ALREADY_SHARED,
+	dcpp::SettingsManager::DONT_DL_ALREADY_QUEUED,
+	dcpp::SettingsManager::ANTI_FRAG
+};
+
+const char* download_queue_list_names[] = {
+	N_("Set lowest prio for newly added files larger than Low prio size"),
+	N_("Autodrop slow sources for all queue items (except filelists)"),
+	N_("Remove slow filelists"),
+	N_("Don't remove the source when autodropping, only disconnect"),
+	N_("Automatically search for alternative download locations"),
+	N_("Automatically match queue for auto search hits"),
+	N_("Skip zero-byte files"),
+	N_("Don't download files already in share"),
+	N_("Don't download files already in the queue"),
+	N_("Use antifragmentation method for downloads")
+};
+
+void PreferencesDialog::initDownloadsQueuePage()
+{
+	group_autopriority->setTitle(StilUtils::TstrtoQ(dcpp::Text::toT(N_("Auto priority settings"))));
+	lbl_dlqueue_highest->setText(StilUtils::TstrtoQ(dcpp::Text::toT(N_("Highest prio max size"))));
+	lbl_dlqueue_high->setText(StilUtils::TstrtoQ(dcpp::Text::toT(N_("High prio max size"))));
+	lbl_dlqueue_normal->setText(StilUtils::TstrtoQ(dcpp::Text::toT(N_("Normal prio max size"))));
+	lbl_dlqueue_low->setText(StilUtils::TstrtoQ(dcpp::Text::toT(N_("Low prio max size"))));
+	
+	group_autodrop->setTitle(StilUtils::TstrtoQ(dcpp::Text::toT(N_("Autodrop settings"))));
+	edt_dlqueue_drop->setText(StilUtils::TstrtoQ(dcpp::Text::toT(N_("Drop sources below"))));
+	edt_dlqueue_minelapsed->setText(StilUtils::TstrtoQ(dcpp::Text::toT(N_("Min elapsed"))));
+	edt_dlqueue_minsources->setText(StilUtils::TstrtoQ(dcpp::Text::toT(N_("Min sources online"))));
+	edt_dlqueue_checkevery->setText(StilUtils::TstrtoQ(dcpp::Text::toT(N_("Check every"))));
+	edt_dlqueue_maxinactivity->setText(StilUtils::TstrtoQ(dcpp::Text::toT(N_("Max inactivity"))));
+	edt_dlqueue_minfilesize->setText(StilUtils::TstrtoQ(dcpp::Text::toT(N_("Min filesize"))));
+	
+	group_otherqueue->setTitle(StilUtils::TstrtoQ(dcpp::Text::toT(N_("Other queue options"))));
+	
+	edt_dlqueue_highest->setText(QString::number(SETTING(PRIO_HIGHEST_SIZE)));
+	edt_dlqueue_high->setText(QString::number(SETTING(PRIO_HIGH_SIZE)));
+	edt_dlqueue_normal->setText(QString::number(SETTING(PRIO_NORMAL_SIZE)));
+	edt_dlqueue_low->setText(QString::number(SETTING(PRIO_LOW_SIZE)));
+	edt_dlqueue_drop->setText(QString::number(SETTING(AUTODROP_SPEED)));
+	edt_dlqueue_minelapsed->setText(QString::number(SETTING(AUTODROP_ELAPSED)));
+	edt_dlqueue_minsources->setText(QString::number(SETTING(AUTODROP_MINSOURCES)));
+	edt_dlqueue_checkevery->setText(QString::number(SETTING(AUTODROP_INTERVAL)));
+	edt_dlqueue_maxinactivity->setText(QString::number(SETTING(AUTODROP_INACTIVITY)));
+	edt_dlqueue_minfilesize->setText(QString::number(SETTING(AUTODROP_FILESIZE)));
+	
+	//list_queueoptions
+	QListWidgetItem * w;
+	Qt::CheckState chk;
+	for (int i = 0; i < 10 /* Just counted */; i++)
+	{
+		w = new QListWidgetItem(list_queueoptions);
+		w->setText(StilUtils::TstrtoQ(dcpp::Text::toT(download_queue_list_names[i])) );
+		chk = (dcpp::SettingsManager::getInstance()->getBool(static_cast<dcpp::SettingsManager::IntSetting>(download_queue_list_checked[i])) ? Qt::Checked : Qt::Unchecked);
+		w->setCheckState(chk);
+	}
+}
+
+void PreferencesDialog::applyDownloadsQueuePage()
+{
+	dcpp::SettingsManager::getInstance()->set(dcpp::SettingsManager::PRIO_HIGHEST_SIZE, edt_dlqueue_highest->text().toInt());
+	dcpp::SettingsManager::getInstance()->set(dcpp::SettingsManager::PRIO_HIGH_SIZE, edt_dlqueue_high->text().toInt());
+	dcpp::SettingsManager::getInstance()->set(dcpp::SettingsManager::PRIO_NORMAL_SIZE, edt_dlqueue_normal->text().toInt());
+	dcpp::SettingsManager::getInstance()->set(dcpp::SettingsManager::PRIO_LOW_SIZE, edt_dlqueue_low->text().toInt());
+	dcpp::SettingsManager::getInstance()->set(dcpp::SettingsManager::AUTODROP_SPEED, edt_dlqueue_drop->text().toInt());
+	dcpp::SettingsManager::getInstance()->set(dcpp::SettingsManager::AUTODROP_ELAPSED, edt_dlqueue_minelapsed->text().toInt());
+	dcpp::SettingsManager::getInstance()->set(dcpp::SettingsManager::AUTODROP_MINSOURCES, edt_dlqueue_minsources->text().toInt());
+	dcpp::SettingsManager::getInstance()->set(dcpp::SettingsManager::AUTODROP_INTERVAL, edt_dlqueue_checkevery->text().toInt());
+	dcpp::SettingsManager::getInstance()->set(dcpp::SettingsManager::AUTODROP_INACTIVITY, edt_dlqueue_maxinactivity->text().toInt());
+	dcpp::SettingsManager::getInstance()->set(dcpp::SettingsManager::AUTODROP_FILESIZE, edt_dlqueue_minfilesize->text().toInt());
+	
+	//list_queueoptions
+	QListWidgetItem * w;
+	Qt::CheckState chk;
+	bool b;
+	for (int i = 0; i < 10 /* Just counted */; i++)
+	{
+		w = list_queueoptions->item(i);
+		chk = w->checkState();
+		b = chk == Qt::Checked ? true : false;
+		dcpp::SettingsManager::getInstance()->set(static_cast<dcpp::SettingsManager::IntSetting>(download_queue_list_checked[i]), static_cast<int>(b) );
+	}
+	
+	if(SETTING(AUTODROP_INTERVAL) < 1)
+		dcpp::SettingsManager::getInstance()->set(dcpp::SettingsManager::AUTODROP_INTERVAL, 1);
+	if(SETTING(AUTODROP_ELAPSED) < 1)
+		dcpp::SettingsManager::getInstance()->set(dcpp::SettingsManager::AUTODROP_ELAPSED, 1);
+}
+
 void PreferencesDialog::initSharingPage()
 {
 	connect(RenameShare_btn, SIGNAL(clicked()), this, SLOT(SharingPageRename()));
@@ -549,15 +668,150 @@ void PreferencesDialog::applyLNFPage()
 	SETAPPSETTING(i_HUBLEFTSIDE, chk_swpUserList->isChecked());
 }
 
+int lnf_tabs_autoopen_list_checked[] = {
+	dcpp::SettingsManager::OPEN_SYSTEM_LOG,
+	dcpp::SettingsManager::OPEN_FAVORITE_USERS,
+	dcpp::SettingsManager::OPEN_QUEUE,
+	dcpp::SettingsManager::OPEN_FINISHED_DOWNLOADS,
+	dcpp::SettingsManager::OPEN_WAITING_USERS,
+	dcpp::SettingsManager::OPEN_FINISHED_UPLOADS,
+	dcpp::SettingsManager::OPEN_SEARCH_SPY,
+	dcpp::SettingsManager::OPEN_NETWORK_STATISTICS,
+	dcpp::SettingsManager::OPEN_NOTEPAD,
+	dcpp::SettingsManager::OPEN_PUBLIC,
+	dcpp::SettingsManager::OPEN_FAVORITE_HUBS
+};
+
+const char* lnf_tabs_autoopen_list_names[] = {
+	N_("System Log"),
+	N_("Favorite Users"),
+	N_("Download Queue"),
+	N_("Finished Downloads"),
+	N_("Waiting Users"),
+	N_("Finished Uploads"),
+	N_("Search Spy"),
+	N_("Network Statistics"),
+	N_("Notepad"),
+	N_("Public Hubs"),
+	N_("Favorite Hubs")
+};
+
+int lnf_tabs_winopt_list_checked[] = {
+	dcpp::SettingsManager::POPUP_PMS,
+	dcpp::SettingsManager::POPUP_HUB_PMS,
+	dcpp::SettingsManager::POPUP_BOT_PMS,
+	dcpp::SettingsManager::POPUNDER_FILELIST,
+	dcpp::SettingsManager::POPUNDER_PM,
+	dcpp::SettingsManager::JOIN_OPEN_NEW_WINDOW,
+	dcpp::SettingsManager::IGNORE_HUB_PMS,
+	dcpp::SettingsManager::IGNORE_BOT_PMS,
+	dcpp::SettingsManager::TOGGLE_ACTIVE_WINDOW,
+	dcpp::SettingsManager::PROMPT_PASSWORD
+};
+
+const char* lnf_tabs_winopt_list_names[] = {
+	N_("Open private messages in their own window"),
+	N_("Open private messages from bots in their own window"),
+	N_("Open private messages from the hub in their own window"),
+	N_("Open new file list windows in the background"),
+	N_("Open new private message windows in the background"),
+	N_("Open new window when using /join"),
+	N_("Ignore private messages from the hub"),
+	N_("Ignore private messages from bots"),
+	N_("Toggle window when selecting an active tab"),
+	N_("Popup box to input password for hubs")
+};
+
+int lnf_tabs_confirmdlg_list_checked[] = {
+	dcpp::SettingsManager::CONFIRM_EXIT,
+	dcpp::SettingsManager::CONFIRM_HUB_REMOVAL,
+	dcpp::SettingsManager::CONFIRM_ITEM_REMOVAL
+};
+
+const char* lnf_tabs_confirmdlg_list_names[] = {
+	N_("Confirm application exit"),
+	N_("Confirm favorite hub removal"),
+	N_("Confirm item removal in download queue")
+};
+
+void PreferencesDialog::initLNFTabsPage()
+{
+	
+	group_autoopen->setTitle(StilUtils::TstrtoQ(dcpp::Text::toT(N_("Auto-open at startup"))));
+	group_winoptions->setTitle(StilUtils::TstrtoQ(dcpp::Text::toT(N_("Window options"))));
+	group_confdlgoptions->setTitle(StilUtils::TstrtoQ(dcpp::Text::toT(N_("Confirm dialog options"))));
+	
+	QListWidgetItem * w;
+	Qt::CheckState chk;
+	for (int i = 0; i < 11 /* Just counted */; i++)
+	{
+		w = new QListWidgetItem(list_autoopen);
+		w->setText(StilUtils::TstrtoQ(dcpp::Text::toT(lnf_tabs_autoopen_list_names[i])) );
+		chk = (dcpp::SettingsManager::getInstance()->getBool((dcpp::SettingsManager::IntSetting)lnf_tabs_autoopen_list_checked[i]) ? Qt::Checked : Qt::Unchecked);
+		w->setCheckState(chk);
+	}
+	
+	for (int i = 0; i < 10 /* Just counted */; i++)
+	{
+		w = new QListWidgetItem(list_winoptions);
+		w->setText(StilUtils::TstrtoQ(dcpp::Text::toT(lnf_tabs_winopt_list_names[i])) );
+		chk = (dcpp::SettingsManager::getInstance()->getBool((dcpp::SettingsManager::IntSetting)lnf_tabs_winopt_list_checked[i]) ? Qt::Checked : Qt::Unchecked);
+		w->setCheckState(chk);
+	}
+
+	for (int i = 0; i < 3 /* Just counted */; i++)
+	{
+		w = new QListWidgetItem(list_confdlgoptions);
+		w->setText(StilUtils::TstrtoQ(dcpp::Text::toT(lnf_tabs_confirmdlg_list_names[i])) );
+		chk = (dcpp::SettingsManager::getInstance()->getBool((dcpp::SettingsManager::IntSetting)lnf_tabs_confirmdlg_list_checked[i]) ? Qt::Checked : Qt::Unchecked);
+		w->setCheckState(chk);
+	}
+	
+}
+
+void PreferencesDialog::applyLNFTabsPage()
+{
+	QListWidgetItem * w;
+	Qt::CheckState chk;
+	bool b;
+	for (int i = 0; i < 11 /* Just counted */; i++)
+	{
+		w = list_autoopen->item(i);
+		chk = w->checkState();
+		b = chk == Qt::Checked ? true : false;
+		dcpp::SettingsManager::getInstance()->set((dcpp::SettingsManager::IntSetting)lnf_tabs_autoopen_list_checked[i], static_cast<int>(b) );
+	}
+	
+	for (int i = 0; i < 10 /* Just counted */; i++)
+	{
+		w = list_winoptions->item(i);
+		chk = w->checkState();
+		b = chk == Qt::Checked ? true : false;
+		dcpp::SettingsManager::getInstance()->set((dcpp::SettingsManager::IntSetting)lnf_tabs_winopt_list_checked[i], static_cast<int>(b) );
+	}
+	
+	for (int i = 0; i < 3 /* Just counted */; i++)
+	{
+		w = list_confdlgoptions->item(i);
+		chk = w->checkState();
+		b = chk == Qt::Checked ? true : false;
+		dcpp::SettingsManager::getInstance()->set((dcpp::SettingsManager::IntSetting)lnf_tabs_confirmdlg_list_checked[i], static_cast<int>(b) );
+	}
+}
+
 void PreferencesDialog::accept()
 {
 		applyGeneralPage();
 		applyConnectionPage();
 		applyDownloadsPage();
-		
+		applyDownloadsFavPage();
+		applyDownloadsPreviewPage();
+		applyDownloadsQueuePage();
 		applySharingPage();
 		applyMessagesPage();
 		applyLNFPage();
+		
+		applyLNFTabsPage();
 		
 
 	AppSettings::AppSettingsMgr::getInstance()->save();

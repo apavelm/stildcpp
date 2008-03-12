@@ -252,7 +252,7 @@ void MainWindowImpl::closeEvent(QCloseEvent *event)
 	} 
 	else 
 		{
-			if (APPSETTING(i_PROMPTONCLOSE))
+			if (BOOLSETTING(CONFIRM_EXIT))
 			{
 				QMessageBox::StandardButton reply;
 				reply = QMessageBox::question(this, tr("StilDC++"), tr("Do you realy want to exit?"), QMessageBox::Yes | QMessageBox::No);

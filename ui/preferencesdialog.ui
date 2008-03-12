@@ -8,8 +8,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>721</width>
-    <height>610</height>
+    <width>772</width>
+    <height>624</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -102,7 +102,7 @@
             <enum>QFrame::NoFrame</enum>
            </property>
            <property name="frameShadow" >
-            <enum>QFrame::Plain</enum>
+            <enum>QFrame::Sunken</enum>
            </property>
            <property name="currentIndex" >
             <number>0</number>
@@ -906,7 +906,348 @@
             </layout>
            </widget>
            <widget class="QWidget" name="DownloadsPreview" />
-           <widget class="QWidget" name="DownloadsQueue" />
+           <widget class="QWidget" name="DownloadsQueue" >
+            <layout class="QGridLayout" >
+             <item row="0" column="0" >
+              <layout class="QVBoxLayout" >
+               <item>
+                <widget class="QGroupBox" name="group_autopriority" >
+                 <property name="title" >
+                  <string>Auto priority settings</string>
+                 </property>
+                 <layout class="QGridLayout" >
+                  <item row="0" column="0" >
+                   <layout class="QVBoxLayout" >
+                    <item>
+                     <layout class="QHBoxLayout" >
+                      <item>
+                       <widget class="QLabel" name="lbl_dlqueue_highest" >
+                        <property name="minimumSize" >
+                         <size>
+                          <width>130</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                        <property name="text" >
+                         <string>Highest prio max size</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="edt_dlqueue_highest" />
+                      </item>
+                      <item>
+                       <widget class="QLabel" name="lbl_dlqueue_highest2" >
+                        <property name="sizePolicy" >
+                         <sizepolicy vsizetype="Preferred" hsizetype="Minimum" >
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="text" >
+                         <string>KiB</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" >
+                      <item>
+                       <widget class="QLabel" name="lbl_dlqueue_high" >
+                        <property name="minimumSize" >
+                         <size>
+                          <width>130</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                        <property name="text" >
+                         <string>High prio max size</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="edt_dlqueue_high" />
+                      </item>
+                      <item>
+                       <widget class="QLabel" name="lbl_dlqueue_high2" >
+                        <property name="sizePolicy" >
+                         <sizepolicy vsizetype="Preferred" hsizetype="Minimum" >
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="text" >
+                         <string>KiB</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" >
+                      <item>
+                       <widget class="QLabel" name="lbl_dlqueue_normal" >
+                        <property name="minimumSize" >
+                         <size>
+                          <width>130</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                        <property name="text" >
+                         <string>Normal prio max size</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="edt_dlqueue_normal" />
+                      </item>
+                      <item>
+                       <widget class="QLabel" name="lbl_dlqueue_normal2" >
+                        <property name="sizePolicy" >
+                         <sizepolicy vsizetype="Preferred" hsizetype="Minimum" >
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="text" >
+                         <string>KiB</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" >
+                      <item>
+                       <widget class="QLabel" name="lbl_dlqueue_low" >
+                        <property name="minimumSize" >
+                         <size>
+                          <width>130</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                        <property name="text" >
+                         <string>Low prio max size</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="edt_dlqueue_low" />
+                      </item>
+                      <item>
+                       <widget class="QLabel" name="lbl_dlqueue_low2" >
+                        <property name="sizePolicy" >
+                         <sizepolicy vsizetype="Preferred" hsizetype="Minimum" >
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="text" >
+                         <string>KiB</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QGroupBox" name="group_autodrop" >
+                 <property name="title" >
+                  <string>Autodrop settings</string>
+                 </property>
+                 <layout class="QGridLayout" >
+                  <property name="leftMargin" >
+                   <number>4</number>
+                  </property>
+                  <property name="topMargin" >
+                   <number>4</number>
+                  </property>
+                  <property name="rightMargin" >
+                   <number>4</number>
+                  </property>
+                  <property name="bottomMargin" >
+                   <number>8</number>
+                  </property>
+                  <item row="0" column="0" >
+                   <layout class="QHBoxLayout" >
+                    <item>
+                     <layout class="QVBoxLayout" >
+                      <item>
+                       <layout class="QHBoxLayout" >
+                        <item>
+                         <widget class="QLabel" name="lbl_dlqueue_drop" >
+                          <property name="text" >
+                           <string>Drop sources below</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QLineEdit" name="edt_dlqueue_drop" />
+                        </item>
+                        <item>
+                         <widget class="QLabel" name="lbl_dlqueue_drop2" >
+                          <property name="text" >
+                           <string>B/s</string>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </item>
+                      <item>
+                       <layout class="QHBoxLayout" >
+                        <item>
+                         <widget class="QLabel" name="lbl_dlqueue_minelapsed" >
+                          <property name="text" >
+                           <string>Min elapsed</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QLineEdit" name="edt_dlqueue_minelapsed" />
+                        </item>
+                        <item>
+                         <widget class="QLabel" name="lbl_dlqueue_minelapsed2" >
+                          <property name="text" >
+                           <string>s</string>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </item>
+                      <item>
+                       <layout class="QHBoxLayout" >
+                        <item>
+                         <widget class="QLabel" name="lbl_dlqueue_minsources" >
+                          <property name="text" >
+                           <string>Min sources online</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QLineEdit" name="edt_dlqueue_minsources" />
+                        </item>
+                       </layout>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <spacer>
+                      <property name="orientation" >
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" >
+                       <size>
+                        <width>20</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
+                     <layout class="QVBoxLayout" >
+                      <item>
+                       <layout class="QHBoxLayout" >
+                        <item>
+                         <widget class="QLabel" name="lbl_dlqueue_checkevery" >
+                          <property name="text" >
+                           <string>Check every</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QLineEdit" name="edt_dlqueue_checkevery" />
+                        </item>
+                        <item>
+                         <widget class="QLabel" name="lbl_dlqueue_checkevery2" >
+                          <property name="text" >
+                           <string>s</string>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </item>
+                      <item>
+                       <layout class="QHBoxLayout" >
+                        <item>
+                         <widget class="QLabel" name="lbl_dlqueue_maxinactivity" >
+                          <property name="text" >
+                           <string>Max inactivity</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QLineEdit" name="edt_dlqueue_maxinactivity" />
+                        </item>
+                        <item>
+                         <widget class="QLabel" name="lbl_dlqueue_maxinactivity2" >
+                          <property name="text" >
+                           <string>s</string>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </item>
+                      <item>
+                       <layout class="QHBoxLayout" >
+                        <item>
+                         <widget class="QLabel" name="lbl_dlqueue_minfilesize" >
+                          <property name="text" >
+                           <string>Min filesize</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QLineEdit" name="edt_dlqueue_minfilesize" />
+                        </item>
+                        <item>
+                         <widget class="QLabel" name="lbl_dlqueue_minfilesize2" >
+                          <property name="text" >
+                           <string>KiB</string>
+                          </property>
+                         </widget>
+                        </item>
+                       </layout>
+                      </item>
+                     </layout>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QGroupBox" name="group_otherqueue" >
+                 <property name="title" >
+                  <string>Other queue options</string>
+                 </property>
+                 <layout class="QGridLayout" >
+                  <property name="leftMargin" >
+                   <number>4</number>
+                  </property>
+                  <property name="topMargin" >
+                   <number>4</number>
+                  </property>
+                  <property name="rightMargin" >
+                   <number>4</number>
+                  </property>
+                  <property name="bottomMargin" >
+                   <number>8</number>
+                  </property>
+                  <item row="0" column="0" >
+                   <widget class="QListWidget" name="list_queueoptions" />
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
            <widget class="QWidget" name="Sharing" >
             <layout class="QVBoxLayout" >
              <item>
@@ -1196,7 +1537,63 @@
            </widget>
            <widget class="QWidget" name="ColorsNFonts" />
            <widget class="QWidget" name="Popups" />
-           <widget class="QWidget" name="Sounds" />
+           <widget class="QWidget" name="page" />
+           <widget class="QWidget" name="Sounds" >
+            <layout class="QGridLayout" >
+             <item row="0" column="0" >
+              <layout class="QVBoxLayout" >
+               <item>
+                <widget class="QGroupBox" name="group_autoopen" >
+                 <property name="title" >
+                  <string>Auto-open on startup</string>
+                 </property>
+                 <layout class="QGridLayout" >
+                  <property name="leftMargin" >
+                   <number>4</number>
+                  </property>
+                  <property name="topMargin" >
+                   <number>4</number>
+                  </property>
+                  <property name="rightMargin" >
+                   <number>4</number>
+                  </property>
+                  <property name="bottomMargin" >
+                   <number>8</number>
+                  </property>
+                  <item row="0" column="0" >
+                   <widget class="QListWidget" name="list_autoopen" />
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QGroupBox" name="group_winoptions" >
+                 <property name="title" >
+                  <string>Window options</string>
+                 </property>
+                 <layout class="QGridLayout" >
+                  <item row="0" column="0" >
+                   <widget class="QListWidget" name="list_winoptions" />
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QGroupBox" name="group_confdlgoptions" >
+                 <property name="title" >
+                  <string>Confirm dialog options</string>
+                 </property>
+                 <layout class="QGridLayout" >
+                  <item row="0" column="0" >
+                   <widget class="QListWidget" name="list_confdlgoptions" />
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
            <widget class="QWidget" name="Additional" />
            <widget class="QWidget" name="Logs" />
            <widget class="QWidget" name="UserCommands" />

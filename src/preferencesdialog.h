@@ -60,20 +60,27 @@ private:
 	void initConnectionPage();
 	void initDownloadsPage();
 	void initDownloadsFavPage();
-	
+	void initDownloadsPreviewPage();
+	void initDownloadsQueuePage();
 	void initSharingPage();
 	void initMessagesPage();
 	void initLNFPage();
+	
+	void initLNFTabsPage();
 	//////////////////////////////////////
 	
 	void applyGeneralPage();
 	void applyConnectionPage();
 	void applyDownloadsPage();
-	
+	void applyDownloadsFavPage();
+	void applyDownloadsPreviewPage();
+	void applyDownloadsQueuePage();	
 	void applySharingPage();
 	void applyMessagesPage();
 	void applyLNFPage();
 	
+	void applyLNFTabsPage();
+
 private slots:
 	void on_okBtn_clicked();
 	void on_categoryList_currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *);
