@@ -139,7 +139,6 @@ private slots:
 	void chooseColumn(QAction *action);
 	void showColumnMenu(const QPoint &point);
 	void showCnxtMenu(const QPoint& point);
-	void makeContextMenu();
 	
 	void updateList(int);
 	void slotRefresh();

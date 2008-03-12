@@ -124,6 +124,12 @@ PublicHubWindow::PublicHubWindow(QWidget *parent) : MdiChild(parent)
 	hubs->setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(hubs, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showCnxtMenu(const QPoint&)));
 	
+	cnxtMenu->clear();
+	QAction * t = cnxtMenu->addAction(/*QIcon(":/images/connect.png"),*/ StilUtils::TstrtoQ(T_("&Connect")) ,this ,SLOT(slotConnect()) );
+	cnxtMenu->addAction(/*QIcon(":/images/add_to_fav.png"),*/ StilUtils::TstrtoQ(T_("Add To &Favorites")) ,this ,SLOT(slotAddtoFav()) );
+	cnxtMenu->addAction(/*QIcon(":/images/copy2cliboard.png"),*/ StilUtils::TstrtoQ(T_("Copy &address to clipboard")) ,this ,SLOT(slotCopyHub()) );
+	cnxtMenu->setDefaultAction(t);
+	
 	//populate the filter list with the column names
 	for(int j=0; j<COLUMN_LAST; j++) 
 		filterSel->addItem(StilUtils::TstrtoQ(T_(columnNames[j])));
@@ -242,22 +248,10 @@ void PublicHubWindow::showColumnMenu(const QPoint &point)
 	columnMenu->exec(hubs->header()->mapToGlobal(point));
 }
 
-void PublicHubWindow::makeContextMenu() 
-{
-	cnxtMenu->clear();
-	QAction * t = cnxtMenu->addAction(/*QIcon(":/images/connect.png"),*/ StilUtils::TstrtoQ(T_("&Connect")) ,this ,SLOT(slotConnect()) );
-	cnxtMenu->addAction(/*QIcon(":/images/add_to_fav.png"),*/ StilUtils::TstrtoQ(T_("Add To &Favorites")) ,this ,SLOT(slotAddtoFav()) );
-	cnxtMenu->addAction(/*QIcon(":/images/copy2cliboard.png"),*/ StilUtils::TstrtoQ(T_("Copy &address to clipboard")) ,this ,SLOT(slotCopyHub()) );
-	cnxtMenu->setDefaultAction(t);
-}
-
 void PublicHubWindow::showCnxtMenu(const QPoint& point)
 {
 	if (hubs->indexAt(point).isValid())
-	{
-		makeContextMenu();
 		cnxtMenu->exec(mapToGlobal(point));
-	}
 }
 
 void PublicHubWindow::insert(HubInfo * hi)
@@ -273,7 +267,11 @@ void PublicHubWindow::insert(HubInfo * hi)
 void PublicHubWindow::updateList(int sel)
 {
 	hubs->clear();
+	//HubInfo* h;
+	//foreach(h, datalist) delete h;
 	datalist.clear();
+	//QTreeWidgetItem * w;
+	//foreach(w, datalistitem) delete w;
 	datalistitem.clear();
 	users = 0;
 	visibleHubs = 0;
@@ -499,7 +497,7 @@ bool PublicHubWindow::checkNick()
 {
 	if(SETTING(NICK).empty()) 
 	{
-		//createMessageBox().show(T_("Please enter a nickname in the settings dialog!"), _T(APPNAME) _T(" ") _T(VERSIONSTRING));
+		QMessageBox::critical(this, tr("StilDC++"), StilUtils::TstrtoQ(T_("Please enter a nickname in the settings dialog!")));
 		return false;
 	}
 	return true;
