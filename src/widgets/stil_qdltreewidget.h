@@ -33,6 +33,16 @@ signals:
 	void sig_KeyPressEvent(QKeyEvent *);
 };
 
+class QHubListWidget : public QListWidget
+{
+	Q_OBJECT
+public:
+	QHubListWidget(QWidget * parent = 0);
+	void keyPressEvent(QKeyEvent *); 
+signals:
+	void sig_KeyPressEvent(QKeyEvent *);
+};
+
 class QDLTreeWidget : public QTreeWidget
 {
 	Q_OBJECT

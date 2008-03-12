@@ -36,10 +36,12 @@ FORMS = ui/mainwindow.ui \
  ui/adl_prop.ui \
  ui/transview.ui \
  ui/waitingusers.ui \
- ui/hashman.ui
+ ui/hashman.ui \
+ ui/confpubhub.ui
 HEADERS = src/mainwindowimpl.h \
  src/frmAbout.h \
  src/mdi_c.h \
+ src/publichub_dlg.h \
  src/preferencesdialog.h \
  src/config.h \
  src/quickconnectdlg.h \
@@ -170,6 +172,7 @@ SOURCES = src/mainwindowimpl.cpp \
  src/main.cpp \
  src/frmAbout.cpp \
  src/mdi_c.cpp \
+ src/publichub_dlg.cpp \
  src/preferencesdialog.cpp \
  src/config.cpp \
  src/quickconnectdlg.cpp \

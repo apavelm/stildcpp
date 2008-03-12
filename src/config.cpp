@@ -38,7 +38,7 @@ const char * AppSettingsMgr::strTags[] =
 {
 	"IconSetPath", "DefaultHubEncoding", "TransferViewColumnVisibility", "DLWindowColumnVisibility"
 	,"SearchWindowColumnVisibility", "SearchSpyWindowColumnVisibility", "FinishedDLColumnVisibility"
-	,"FinishedULColumnVisibility", "ADLSearchColumnVisibility"
+	,"FinishedULColumnVisibility", "ADLSearchColumnVisibility", "PubHubsColumnVisibility"
 };
 
 void AppSettingsMgr::writeDefs()
@@ -53,6 +53,7 @@ void AppSettingsMgr::writeDefs()
 	strDefaults << "0,0,0,0,0,0,0,0";
 	strDefaults << "0,0,0,0,0,0,0,0";
 	strDefaults << "0,0,0,0,0";
+	strDefaults << "0,0,0,0,0,0,0,0,0,0,0,0";
 	intSettings = intDefaults;
 	strSettings = strDefaults;
 }

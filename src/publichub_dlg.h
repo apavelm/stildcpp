@@ -18,81 +18,35 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef PREFERENCESDIALOG_H
-#define PREFERENCESDIALOG_H
+#ifndef __CONFPUBHUB_H__
+#define __CONFPUBHUB_H__
 
-#include <QtGui>
 #include <QDialog>
-#include <QDir>
-#include <QFontDialog>
-#include <QHeaderView>
-#include <QItemDelegate>
-#include <QKeyEvent>
-#include <QLocale>
-#include <QTextCodec>
-
-#include "config.h"
 #include "stilutils.h"
-#include "mainwindowimpl.h"
-#include "indexing.h"
-#include "publichub_dlg.h"
 
-//
+#include "ui_confpubhub.h"
+
 #include "client/stdinc.h"
 #include "client/DCPlusPlus.h"
-#include "client/SettingsManager.h"
 #include "client/FavoriteManager.h"
-#include "client/ShareManager.h"
-#include "client/Text.h"
-//
+#include "client/StringTokenizer.h"
 
-#include "ui_preferencesdialog.h"
-
-
-class PreferencesDialog : public QDialog, private Ui::PreferencesDialog 
-{
+class ConfPubHubDlg : public QDialog, private Ui::dlg_confpubhub
+{ 
 	Q_OBJECT
-	
-private:
-	void accept();
-	void initCategoryList();
-	void initGeneralPage();
-	void initConnectionPage();
-	void initDownloadsPage();
-	void initDownloadsFavPage();
-	
-	void initSharingPage();
-	void initMessagesPage();
-	void initLNFPage();
-	//////////////////////////////////////
-	
-	void applyGeneralPage();
-	void applyConnectionPage();
-	void applyDownloadsPage();
-	
-	void applySharingPage();
-	void applyMessagesPage();
-	void applyLNFPage();
-	
-private slots:
-	void on_okBtn_clicked();
-	void on_categoryList_currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *);
-	void ConnectionPageUpdate();
-	void DownloadsFavPageRename();
-	void DownloadsFavPageRemove();
-	void DownloadsFavPageAdd();
-	void DownloadsPageBrowse1();
-	void DownloadsPageBrowse2();
-	void DownloadsPageConfPublic();
-	void SharingPageRename();
-	void SharingPageRemove();
-	void SharingPageAdd();
-	void SharingPageHidden(int);
-	void MessagesPageHelp();
-	void MessagesPageBrowse();
-	
 public:
-	PreferencesDialog(QWidget *);
+	ConfPubHubDlg(QWidget *parent);
+private:
+	void addHubList(const tstring& address);
+private slots:
+	void slotOK();
+	void slotCancel();
+	void slotAdd();
+	void slotEdit();
+	void slotEdit2(QListWidgetItem*);
+	void slotDelete();
+	
+	void slotKeyPress(QKeyEvent*);
 };
 
-#endif
+#endif // 

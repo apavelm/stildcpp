@@ -46,57 +46,40 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="frameShape" >
+          <enum>QFrame::StyledPanel</enum>
+         </property>
          <property name="text" >
           <string/>
          </property>
         </widget>
-       </item>
-       <item>
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" >
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
        </item>
        <item>
         <widget class="QLabel" name="lbl_count" >
          <property name="sizePolicy" >
-          <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
+          <sizepolicy vsizetype="Preferred" hsizetype="Minimum" >
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="frameShape" >
+          <enum>QFrame::StyledPanel</enum>
          </property>
          <property name="text" >
           <string/>
          </property>
         </widget>
-       </item>
-       <item>
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" >
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
        </item>
        <item>
         <widget class="QLabel" name="lbl_bytes" >
          <property name="sizePolicy" >
-          <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
+          <sizepolicy vsizetype="Preferred" hsizetype="Minimum" >
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="frameShape" >
+          <enum>QFrame::StyledPanel</enum>
          </property>
          <property name="text" >
           <string/>
@@ -104,25 +87,15 @@
         </widget>
        </item>
        <item>
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" >
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
         <widget class="QLabel" name="lbl_speed" >
          <property name="sizePolicy" >
-          <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
+          <sizepolicy vsizetype="Preferred" hsizetype="Minimum" >
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="frameShape" >
+          <enum>QFrame::StyledPanel</enum>
          </property>
          <property name="text" >
           <string/>

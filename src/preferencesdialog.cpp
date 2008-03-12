@@ -289,7 +289,7 @@ void PreferencesDialog::DownloadsPageBrowse2()
 
 void PreferencesDialog::DownloadsPageConfPublic()
 {
-	// NOT IMPLEMENTED
+	new ConfPubHubDlg(this);
 }
 
 void PreferencesDialog::applyDownloadsPage()
