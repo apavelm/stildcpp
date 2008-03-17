@@ -198,17 +198,17 @@ void MainWindowImpl::clientInit()
 	File::ensureDirectory(SETTING(LOG_DIRECTORY));
 	startSocket();
 	
-	if(BOOLSETTING(OPEN_SYSTEM_LOG)) SLogFunc();
-	if(BOOLSETTING(OPEN_FAVORITE_USERS)) FavUsrFunc();
-	if(BOOLSETTING(OPEN_QUEUE)) DLQueueFunc();
-	if(BOOLSETTING(OPEN_FINISHED_DOWNLOADS)) DLFinFunc();
-	if(BOOLSETTING(OPEN_WAITING_USERS)) WaitingFunc();
-	if(BOOLSETTING(OPEN_FINISHED_UPLOADS)) ULFinFunc();
-	if(BOOLSETTING(OPEN_SEARCH_SPY)) SSFunc();
-	if(BOOLSETTING(OPEN_NETWORK_STATISTICS)) StatsFunc();
-	if(BOOLSETTING(OPEN_NOTEPAD)) notepadFunc();
-	if(BOOLSETTING(OPEN_PUBLIC)) PubHubFunc();
-	if(BOOLSETTING(OPEN_FAVORITE_HUBS)) FavHubListFunc();
+	if(BOOLSETTING(OPEN_SYSTEM_LOG))			OpenSingleTab(StilUtils::WIN_TYPE_SYSTEM_LOG);
+	if(BOOLSETTING(OPEN_FAVORITE_USERS))		OpenSingleTab(StilUtils::WIN_TYPE_FAVORITE_USERS);
+	if(BOOLSETTING(OPEN_QUEUE))				OpenSingleTab(StilUtils::WIN_TYPE_DL_QUEUE);
+	if(BOOLSETTING(OPEN_FINISHED_DOWNLOADS))	OpenSingleTab(StilUtils::WIN_TYPE_FINISHED_DL);
+	if(BOOLSETTING(OPEN_WAITING_USERS))		OpenSingleTab(StilUtils::WIN_TYPE_WAITING_USERS);
+	if(BOOLSETTING(OPEN_FINISHED_UPLOADS))		OpenSingleTab(StilUtils::WIN_TYPE_FINISHED_UL);
+	if(BOOLSETTING(OPEN_SEARCH_SPY))			OpenSingleTab(StilUtils::WIN_TYPE_SEARCH_SPY);
+	if(BOOLSETTING(OPEN_NETWORK_STATISTICS))	OpenSingleTab(StilUtils::WIN_TYPE_NETWORK_STATS);
+	if(BOOLSETTING(OPEN_NOTEPAD))				OpenSingleTab(StilUtils::WIN_TYPE_NOTEPAD);
+	if(BOOLSETTING(OPEN_PUBLIC))				OpenSingleTab(StilUtils::WIN_TYPE_PUBLIC_HUBS);
+	if(BOOLSETTING(OPEN_FAVORITE_HUBS))		OpenSingleTab(StilUtils::WIN_TYPE_FAVORITE_HUB_LIST);
 	
 	speak(StilUtils::AUTO_CONNECT);
 	
@@ -313,53 +313,37 @@ void MainWindowImpl::createActions()
 	showhide->setStatusTip(tr("Show / Hide application window"));
 	showhide->setToolTip(tr("Show / Hide application window"));
 	connect(showhide, SIGNAL(triggered()), this, SLOT(showhideFunc()));
-	
 	connect(actionExit, SIGNAL(triggered()), qApp, SLOT(quit()));
-	
 	connect(actionOpen_filelist, SIGNAL(triggered()), this, SLOT(openfilelistFunc()));
 	connect(actionOpen_own_filelist, SIGNAL(triggered()), this, SLOT(openownfilelistFunc()));
 	connect(actionOpen_Downloads_Folder, SIGNAL(triggered()), this, SLOT(OpenDownloadsFolderFunc()));
 	connect(actionRefresh_own_filelist, SIGNAL(triggered()), this, SLOT(RefreshOwnFileListFunc()));
-
 	connect(actionAbout, SIGNAL(triggered()), this, SLOT(About()));	
 	connect(aboutqtact, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
-
 	connect(actionStatusBar, SIGNAL(triggered()), this, SLOT(statusbarcheck()));
 	connect(actionSysLog, SIGNAL(triggered()), this, SLOT(SLogFunc()));
-
-	
 	connect(actionSettings, SIGNAL(triggered()), this, SLOT(PreferencesFunc()));
 	connect(actionReconnect, SIGNAL(triggered()), this, SLOT(reconnectFunc()));
-	
-
 	connect(actionDonate, SIGNAL(triggered()), this, SLOT(DonateFunc()));
 	connect(actionHomepage, SIGNAL(triggered()), this, SLOT(HomepageFunc()));
 	connect(actionSearch, SIGNAL(triggered()), this, SLOT(SearchFunc()));
 	connect(actionGet_TTH_for_file, SIGNAL(triggered()), this, SLOT(GetTTHFunc()));
-	
 	connect(actionFavorite_Hubs, SIGNAL(triggered()), this, SLOT(FavHubListFunc()));
 	connect(actionPublic_Hubs, SIGNAL(triggered()), this, SLOT(PubHubFunc()));
 	connect(actionQuick_Connect, SIGNAL(triggered()), this, SLOT(fQuickConFunc()));
 	connect(actionDownload_Queue, SIGNAL(triggered()), this, SLOT(DLQueueFunc()));
 	connect(actionFavorite_Users, SIGNAL(triggered()), this, SLOT(FavUsrFunc()));
 	connect(actionIgnored_Users, SIGNAL(triggered()), this, SLOT(IgnoredUsrFunc()));
-	
 	connect(actionFinished_downloads, SIGNAL(triggered()), this, SLOT(DLFinFunc()));
 	connect(actionFinished_Uploads, SIGNAL(triggered()), this, SLOT(ULFinFunc()));
 	connect(actionWaiting, SIGNAL(triggered()), this, SLOT(WaitingFunc()));
-	
 	connect(actionNotePad, SIGNAL(triggered()), this, SLOT(notepadFunc()));
 	connect(actionNetStats, SIGNAL(triggered()), this, SLOT(StatsFunc()));
 	connect(actionIndexing_Progress, SIGNAL(triggered()), this, SLOT(indexingFunc()));
-	
-	
 	connect(actionADL_Search, SIGNAL(triggered()), this, SLOT(ADLFunc()));
 	connect(actionSearch_Spy, SIGNAL(triggered()), this, SLOT(SSFunc()));
-	
 	connect(&thrdGetTTh, SIGNAL(ready()), this, SLOT(show_tthFunc()));
-	
 	connect(actionClose_All, SIGNAL(triggered()), m_tabwin, SLOT(slotCloseAllTab()));
-	
 	connect(actionClose_All_Hub_Windows, SIGNAL(triggered()), this, SLOT(slotCloseWinTypeHub()));
 	connect(actionClose_All_Private_Chat_Windows, SIGNAL(triggered()), this, SLOT(slotCloseWinTypePM()));
 	connect(actionClose_All_Search_Windows, SIGNAL(triggered()), this, SLOT(slotCloseWinTypeSearch()));
@@ -367,7 +351,6 @@ void MainWindowImpl::createActions()
 	connect(actionClose_Disconnected_Hub_Windows, SIGNAL(triggered()), this, SLOT(slotCloseDisconnectedHubs()));
 	connect(actionClose_FileLists_Offline_Users, SIGNAL(triggered()), this, SLOT(slotCloseOfflineLists()));
 	connect(actionClose_Private_Chat_with_Offline_Users, SIGNAL(triggered()), this, SLOT(slotCloseOfflineChat()));
-	
 }
 
 void MainWindowImpl::showhideFunc()
@@ -464,20 +447,6 @@ void MainWindowImpl::HomepageFunc()
 	QDesktopServices::openUrl(url);
 }
 
-void MainWindowImpl::OpenList(QWidget *parent, const tstring & aFile, const UserPtr & aUser, int64_t aSpeed, const QString aTitle)
-{
-	// Function to open filelists
-	tstring t = aFile;
-	UserPtr u = aUser;
-		
-	m_tabwin->setCurrentIndex( m_tabwin->addTab( (new FileListDlg(parent, u, aSpeed, t) ), aTitle ) );
-}
-
-void MainWindowImpl::OpenHub(const tstring& adr)
-{
-	m_tabwin->setCurrentIndex(m_tabwin->addTab((new HubWindow(m_tabwin, adr)),"Hub"));
-}
-
 void MainWindowImpl::ShowHashDlg(bool autoClose)
 {
 	HashDlg * h = new HashDlg(this);
@@ -485,105 +454,79 @@ void MainWindowImpl::ShowHashDlg(bool autoClose)
 	h->sshow(autoClose);
 }
 
-void MainWindowImpl::OpenPM(const UserPtr& replyTo, const tstring& aMessage)
+void MainWindowImpl::OpenList(QWidget *parent, const tstring & aFile, const UserPtr & aUser, int64_t aSpeed, const QString aTitle, bool silent)
 {
-	m_tabwin->setCurrentIndex(m_tabwin->addTab((new PMWindow(m_tabwin, replyTo, aMessage)),"PM"));
+	// Function to open filelists
+	tstring t = aFile;
+	UserPtr u = aUser;
+	
+	if (silent)
+		{
+			m_tabwin->addTab( (new FileListDlg(parent, u, aSpeed, t) ), aTitle );
+		}
+	else
+		{
+			m_tabwin->setCurrentIndex( m_tabwin->addTab( (new FileListDlg(parent, u, aSpeed, t) ), aTitle ) );
+		}
 }
 
-void MainWindowImpl::SearchFunc(const tstring& str, int64_t size, SearchManager::SizeModes mode, SearchManager::TypeModes type)
+void MainWindowImpl::OpenHub(const tstring& adr, bool silent)
 {
-	m_tabwin->setCurrentIndex(m_tabwin->addTab((new SearchWindow(m_tabwin, str, size, mode, type)),"Search"));
+	HubWindow *p = new HubWindow(m_tabwin, adr);
+	if (silent)
+		{
+			m_tabwin->addTab(p);
+		}
+	else
+		{
+			m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
+		}
+		
+	p->setTabText(tr("Hub: ")+StilUtils::TstrtoQ(adr));
 }
 
-void MainWindowImpl::SLogFunc()
+void MainWindowImpl::OpenPM(const UserPtr& replyTo, const tstring& aMessage, bool silent)
 {
-	if (FindWinByType(StilUtils::WIN_TYPE_SYSTEM_LOG)==-1)
-		m_tabwin->setCurrentIndex(m_tabwin->addTab((new SysLogWindow(m_tabwin)),"System Log"));
-	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_SYSTEM_LOG));
+	PMWindow *p = new PMWindow(m_tabwin, replyTo, aMessage);
+	if (silent)
+		{
+			m_tabwin->addTab(p);
+		}
+	else
+		{
+			m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
+		}
+	p->setTabText(tr("Private Chat with: ")+StilUtils::TstrtoQ(StilUtils::getNicks(replyTo)));
 }
 
-void MainWindowImpl::WaitingFunc()
+void MainWindowImpl::OpenSearch(const tstring& str, int64_t size, SearchManager::SizeModes mode, SearchManager::TypeModes type, bool silent)
 {
-	if (FindWinByType(StilUtils::WIN_TYPE_WAITING_USERS)==-1)
-		m_tabwin->setCurrentIndex(m_tabwin->addTab((new WaitingUsersWindow(m_tabwin)),"Waiting Users"));
-	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_WAITING_USERS));
+	SearchWindow *p = new SearchWindow(m_tabwin, str, size, mode, type);
+	if (silent)
+		m_tabwin->addTab(p);
+	else
+		m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
+	p->setTabText(tr("Search for: ")+StilUtils::TstrtoQ(str));
 }
 
-void MainWindowImpl::StatsFunc()
+void MainWindowImpl::openTextWindow(const QString& fileName, bool silent)
 {
-	if (FindWinByType(StilUtils::WIN_TYPE_NETWORK_STATS)==-1)
-		m_tabwin->setCurrentIndex(m_tabwin->addTab( (new StatsWindow(m_tabwin)), "Net_Stats"));
-	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_NETWORK_STATS));
+	TextWindow *p = new TextWindow(m_tabwin, fileName);
+	if (silent)
+		m_tabwin->addTab(p);
+	else
+		m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
+	p->setTabText(tr("View As Text : ") + fileName);
 }
 
-void MainWindowImpl::ADLFunc()
+void MainWindowImpl::openTextWindow(const tstring& fileName, bool silent)
 {
-	if (FindWinByType(StilUtils::WIN_TYPE_ADL_SEARCH)==-1)
-		m_tabwin->setCurrentIndex(m_tabwin->addTab((new ADLSearchWindow(m_tabwin)),"ADL Search"));
-	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_ADL_SEARCH));
+	openTextWindow(StilUtils::TstrtoQ(fileName), silent);
 }
 
-void MainWindowImpl::SSFunc()
+void MainWindowImpl::openTextWindow(const string& fileName, bool silent)
 {
-	if (FindWinByType(StilUtils::WIN_TYPE_SEARCH_SPY)==-1)
-		m_tabwin->setCurrentIndex(m_tabwin->addTab((new SearchSpyWindow(m_tabwin)),"Search Spy"));
-	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_SEARCH_SPY));
-}
-
-void MainWindowImpl::ULFinFunc()
-{
-	if (FindWinByType(StilUtils::WIN_TYPE_FINISHED_UL)==-1)
-		m_tabwin->setCurrentIndex(m_tabwin->addTab((new UploadFinishedWindow(m_tabwin)),"UL_Fin"));
-	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_FINISHED_UL));
-}
-
-void MainWindowImpl::DLFinFunc()
-{
-	if (FindWinByType(StilUtils::WIN_TYPE_FINISHED_DL)==-1)
-		m_tabwin->setCurrentIndex(m_tabwin->addTab((new DownloadFinishedWindow(m_tabwin)),"DL_Fin"));
-	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_FINISHED_DL));
-}
-
-void MainWindowImpl::IgnoredUsrFunc()
-{
-	if (FindWinByType(StilUtils::WIN_TYPE_IGNORED_USERS)==-1)
-		m_tabwin->setCurrentIndex(m_tabwin->addTab((new IgnoredUsersWindow(m_tabwin)),"Ign_Usr"));
-	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_IGNORED_USERS));
-}
-
-void MainWindowImpl::FavUsrFunc()
-{
-	if (FindWinByType(StilUtils::WIN_TYPE_FAVORITE_USERS)==-1)
-		m_tabwin->setCurrentIndex(m_tabwin->addTab((new FavoriteUsersWindow(m_tabwin)),"Fav_Usr"));
-	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_FAVORITE_USERS));
-}
-
-void MainWindowImpl::FavHubListFunc()
-{
-	if (FindWinByType(StilUtils::WIN_TYPE_FAVORITE_HUB_LIST)==-1)
-		m_tabwin->setCurrentIndex(m_tabwin->addTab((new FavoriteHubListWindow(m_tabwin)),"Fav_Hub"));
-	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_FAVORITE_HUB_LIST));
-}
-
-void MainWindowImpl::PubHubFunc()
-{
-	if (FindWinByType(StilUtils::WIN_TYPE_PUBLIC_HUBS)==-1)
-		m_tabwin->setCurrentIndex(m_tabwin->addTab((new PublicHubWindow(m_tabwin)),"Pub Hub"));
-	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_PUBLIC_HUBS));
-}
-
-void MainWindowImpl::DLQueueFunc()
-{
-	if (FindWinByType(StilUtils::WIN_TYPE_DL_QUEUE)==-1)
-		m_tabwin->setCurrentIndex(m_tabwin->addTab((new DownLoadQueueWindow(m_tabwin)),"DL Queue"));
-	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_DL_QUEUE));
-}
-
-void MainWindowImpl::notepadFunc()
-{
-	if (FindWinByType(StilUtils::WIN_TYPE_NOTEPAD)==-1)
-		m_tabwin->setCurrentIndex(m_tabwin->addTab((new NotePad(m_tabwin)),"NotePad"));
-	else m_tabwin->setCurrentIndex(FindWinByType(StilUtils::WIN_TYPE_NOTEPAD));
+	openTextWindow(Text::toT(fileName), silent);
 }
 
 void MainWindowImpl::indexingFunc()
@@ -644,7 +587,7 @@ void MainWindowImpl::slotCloseOfflineLists()
 	for (int i=0; i<m_tabwin->count(); i++)
 	{
 		MdiChild *p = qobject_cast<MdiChild *>(m_tabwin->widget(i));
-		if (p->type==5)
+		if (p->type==StilUtils::WIN_TYPE_FILELIST)
 		{
 			FileListDlg *v = qobject_cast<FileListDlg *>(p);
 			if (!v->isConnected()) delete m_tabwin->widget(i);
@@ -657,7 +600,7 @@ void MainWindowImpl::slotCloseOfflineChat()
 	for (int i=0; i<m_tabwin->count(); i++)
 	{
 		MdiChild *p = qobject_cast<MdiChild *>(m_tabwin->widget(i));
-		if (p->type==2)
+		if (p->type==StilUtils::WIN_TYPE_PRIVATE_CHAT)
 		{
 			PMWindow *v = qobject_cast<PMWindow *>(p);
 			if (!v->isOnline()) delete m_tabwin->widget(i);
@@ -670,7 +613,7 @@ void MainWindowImpl::slotCloseDisconnectedHubs()
 	for (int i=0; i<m_tabwin->count(); i++)
 	{
 		MdiChild *p = qobject_cast<MdiChild *>(m_tabwin->widget(i));
-		if (p->type==1)
+		if (p->type==StilUtils::WIN_TYPE_HUB)
 		{
 			HubWindow *v = qobject_cast<HubWindow *>(p);
 			if (!v->isConnected()) delete m_tabwin->widget(i);
@@ -678,34 +621,14 @@ void MainWindowImpl::slotCloseDisconnectedHubs()
 	}
 }
 
-void MainWindowImpl::slotCloseWinType(int type)
+void MainWindowImpl::slotCloseWinType(StilUtils::tabWinTypes type)
 {
-	for (int j=0; j<5; j++)
+	for (int j=0; j<5; j++) // @BUG : WHY THIS LINE NESSESARY???
 	for (int i=0; i<m_tabwin->count(); i++)
 	{
 		MdiChild *p = qobject_cast<MdiChild *>(m_tabwin->widget(i));
 		if (p->type==type) delete m_tabwin->widget(i);
 	}
-}
-
-void MainWindowImpl::slotCloseWinTypeHub()
-{
-	slotCloseWinType(1);
-}
-
-void MainWindowImpl::slotCloseWinTypePM()
-{
-	slotCloseWinType(2);
-}
-
-void MainWindowImpl::slotCloseWinTypeSearch()
-{
-	slotCloseWinType(3);
-}
-
-void MainWindowImpl::slotCloseWinTypeFL()
-{
-	slotCloseWinType(5);
 }
 
 void ThreadGetTTH::run()
@@ -779,7 +702,6 @@ void MainWindowImpl::reconnectFunc()
 void MainWindowImpl::openfilelistFunc()
 {
 	// Open Custom FileList
-	
 	QString selectedFilter="";
 	QFileDialog::Options options;
 	//options |= QFileDialog::DontUseNativeDialog;
@@ -808,21 +730,6 @@ void MainWindowImpl::openownfilelistFunc()
 	
 	if(!ownFileList.empty())
 		OpenList(this, Text::toT(ownFileList), ClientManager::getInstance()->getMe(), 0, StilUtils::TstrtoQ(Text::toT(SETTING(NICK))) );
-}
-
-void MainWindowImpl::openTextWindow(const QString& fileName)
-{
-	m_tabwin->setCurrentIndex(m_tabwin->addTab((new TextWindow(m_tabwin, fileName)), "ViewAsText"));
-}
-
-void MainWindowImpl::openTextWindow(const tstring& fileName)
-{
-	openTextWindow(StilUtils::TstrtoQ(fileName));
-}
-
-void MainWindowImpl::openTextWindow(const string& fileName)
-{
-	openTextWindow(Text::toT(fileName));
 }
 
 void MainWindowImpl::RefreshOwnFileListFunc()
@@ -854,7 +761,6 @@ void MainWindowImpl::autoConnect(const FavoriteHubEntryList& fl)
 		{
 			if (!entry->getNick().empty() || !SETTING(NICK).empty())
 			{
-				//HubFrame::openWindow(getMDIParent(), entry->getServer());
 				OpenHub(Text::toT(entry->getServer()));
 			}
 		}
@@ -999,3 +905,199 @@ void MainWindowImpl::on(PartialList, const UserPtr& aUser, const string& text) t
 	speak(StilUtils::BROWSE_LISTING, (qint64)new DirectoryBrowseInfo(aUser, text));
 }
 
+// Static slots =)
+
+void MainWindowImpl::OpenSingleTab(StilUtils::tabWinTypes type, bool silent)
+{
+	int z = FindWinByType(type);
+	switch (type)
+	{
+		case StilUtils::WIN_TYPE_FINISHED_DL:
+		{
+			if (z == -1)
+			{
+				DownloadFinishedWindow *p = new DownloadFinishedWindow(m_tabwin);
+				if (silent)
+					m_tabwin->addTab(p);
+				else
+					m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
+				p->setTabText(tr("Finished Downloads"));
+			}
+			else m_tabwin->setCurrentIndex(z);
+		} break;
+		
+		case StilUtils::WIN_TYPE_FINISHED_UL:
+		{
+			if (z == -1)
+			{
+				UploadFinishedWindow *p = new UploadFinishedWindow(m_tabwin);
+				if (silent)
+					m_tabwin->addTab(p);
+				else
+					m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
+				p->setTabText(tr("Finished Uploads"));
+			}
+			else m_tabwin->setCurrentIndex(z);
+		} break;
+		
+		case StilUtils::WIN_TYPE_SYSTEM_LOG:
+		{
+			if (z == -1)
+			{
+				SysLogWindow *p = new SysLogWindow(m_tabwin);
+				if (silent)
+					m_tabwin->addTab(p);
+				else
+					m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
+				p->setTabText(tr("System Log"));
+			}
+			else m_tabwin->setCurrentIndex(z);
+		} break;
+		
+		case StilUtils::WIN_TYPE_WAITING_USERS:
+		{
+			if (z == -1)
+			{
+				WaitingUsersWindow *p = new WaitingUsersWindow(m_tabwin);
+				if (silent)
+					m_tabwin->addTab(p);
+				else
+					m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
+				p->setTabText(tr("Waiting Users"));
+			}
+			else m_tabwin->setCurrentIndex(z);
+		} break;
+		
+		case StilUtils::WIN_TYPE_NETWORK_STATS:
+		{
+			if (z == -1)
+			{
+				StatsWindow *p = new StatsWindow(m_tabwin);
+				if (silent)
+					m_tabwin->addTab(p);
+				else
+					m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
+				p->setTabText(tr("Network Statistics"));
+			}
+			else m_tabwin->setCurrentIndex(z);
+		} break;
+		
+		case StilUtils::WIN_TYPE_ADL_SEARCH:
+		{
+			if (z == -1)
+			{
+				ADLSearchWindow *p = new ADLSearchWindow(m_tabwin);
+				if (silent)
+					m_tabwin->addTab(p);
+				else
+					m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
+				p->setTabText(tr("Automatic Directory Listing Search"));
+			}
+			else m_tabwin->setCurrentIndex(z);
+		} break;
+		
+		case StilUtils::WIN_TYPE_SEARCH_SPY:
+		{
+			if (z == -1)
+			{
+				SearchSpyWindow *p = new SearchSpyWindow(m_tabwin);
+				if (silent)
+					m_tabwin->addTab(p);
+				else
+					m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
+				p->setTabText(tr("Search Spy"));
+			}
+			else m_tabwin->setCurrentIndex(z);
+		} break;
+		
+		case StilUtils::WIN_TYPE_IGNORED_USERS:
+		{
+			if (z == -1)
+			{
+				IgnoredUsersWindow *p = new IgnoredUsersWindow(m_tabwin);
+				if (silent)
+					m_tabwin->addTab(p);
+				else
+					m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
+				p->setTabText(tr("Ign_Usr"));
+			}
+			else m_tabwin->setCurrentIndex(z);
+		} break;
+		
+		case StilUtils::WIN_TYPE_FAVORITE_USERS:
+		{
+			if (z == -1)
+			{
+				FavoriteUsersWindow *p = new FavoriteUsersWindow(m_tabwin);
+				if (silent)
+					m_tabwin->addTab(p);
+				else
+					m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
+				p->setTabText(tr("Favorite Users"));
+			}
+			else m_tabwin->setCurrentIndex(z);
+		} break;
+		
+		case StilUtils::WIN_TYPE_FAVORITE_HUB_LIST:
+		{
+			if (z == -1)
+			{
+				FavoriteHubListWindow *p = new FavoriteHubListWindow(m_tabwin);
+				if (silent)
+					m_tabwin->addTab(p);
+				else
+					m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
+				p->setTabText(tr("Favorite Hubs"));
+			}
+			else m_tabwin->setCurrentIndex(z);
+		} break;
+		
+		case StilUtils::WIN_TYPE_PUBLIC_HUBS:
+		{
+			if (z == -1)
+			{
+				PublicHubWindow *p = new PublicHubWindow(m_tabwin);
+				if (silent)
+					m_tabwin->addTab(p);
+				else
+					m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
+				p->setTabText(StilUtils::TstrtoQ(T_("Public Hubs")));
+			}
+			else m_tabwin->setCurrentIndex(z);
+		} break;
+		
+		case StilUtils::WIN_TYPE_DL_QUEUE:
+		{
+			if (z == -1)
+			{
+				DownLoadQueueWindow *p = new DownLoadQueueWindow(m_tabwin);
+				if (silent)
+					m_tabwin->addTab(p);
+				else
+					m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
+				p->setTabText(tr("DL_Queue"));
+			}
+			else m_tabwin->setCurrentIndex(z);
+		} break;
+		
+		case StilUtils::WIN_TYPE_NOTEPAD:
+		{
+			if (z == -1)
+			{
+				NotePad *p = new NotePad(m_tabwin);
+				if (silent)
+					m_tabwin->addTab(p);
+				else
+					m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
+				p->setTabText(tr("NotePad"));
+			}
+			else m_tabwin->setCurrentIndex(z);
+		} break;
+		
+	}
+}
+
+TabWidget * MainWindowImpl::getTabs()
+{
+	return m_tabwin;
+}

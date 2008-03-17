@@ -76,7 +76,7 @@ PublicHubWindow::PublicHubWindow(QWidget *parent) : MdiChild(parent)
 {
 	setupUi(this);
 	type = StilUtils::WIN_TYPE_PUBLIC_HUBS;
-	setTabText(StilUtils::TstrtoQ(T_("Public Hubs")));
+	
 	datalist.clear();
 	datalistitem.clear();
 	hubs->clear();

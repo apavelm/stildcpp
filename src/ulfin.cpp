@@ -40,7 +40,7 @@ UploadFinishedWindow::UploadFinishedWindow(QWidget *parent) : MdiChild(parent)
 	type = StilUtils::WIN_TYPE_FINISHED_UL;
 	datalist.clear();
 	datalistitem.clear();
-	setTabText(tr("Finished Uploads"));
+	
 	connect(this, SIGNAL(sigSpeak(int, FinishedItemPtr)), this, SLOT(slotSpeak(int, FinishedItemPtr)), Qt::QueuedConnection);
 	
 	// labels

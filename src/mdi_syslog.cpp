@@ -29,8 +29,6 @@ SysLogWindow::SysLogWindow(QWidget *parent) : MdiChild(parent)
 {
 	setupUi(this);
 	type = StilUtils::WIN_TYPE_SYSTEM_LOG;
-	idText = "System Log";
-	setTabText(tr("System Log"));
 	
 	QFont f = textEdit->font();
 	f.setPointSize(APPSETTING(i_SYSLOGFONTSIZE));

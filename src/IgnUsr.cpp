@@ -24,6 +24,4 @@ IgnoredUsersWindow::IgnoredUsersWindow(QWidget *parent) : MdiChild(parent)
 {	
 	setupUi(this);
 	type = StilUtils::WIN_TYPE_IGNORED_USERS;
-	idText  = "";
-	setWindowTitle(tr("Ign_Usr"));
 }

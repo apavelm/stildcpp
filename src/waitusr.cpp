@@ -29,7 +29,7 @@ WaitingUsersWindow::WaitingUsersWindow(QWidget *parent) : MdiChild(parent)
 	datalist2.clear();
 	datalistitem.clear();
 	queued->clear();
-	setTabText(tr("Waiting Users"));
+	
 	connect(this, SIGNAL(sigSpeak(int, UserPtr, QString)), this, SLOT(slotSpeak(int, UserPtr, QString)), Qt::QueuedConnection);
 	connect(queued, SIGNAL(sig_KeyPressEvent(QKeyEvent*)), this, SLOT(onKeyPress(QKeyEvent *)) );
 	

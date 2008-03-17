@@ -69,7 +69,6 @@ HubWindow::HubWindow(QWidget *parent, const dcpp::tstring& url) : MdiChild(paren
 	connect(this, SIGNAL(speakerSignal()), this, SLOT(handleSpeaker()),Qt::QueuedConnection);
 	initSecond();
 	
-	setWindowTitle(tr("Hub: ")+StilUtils::TstrtoQ(url));
 	editor->clear();
 	setupeditor();
 
@@ -939,7 +938,7 @@ int HubWindow::UserInfo::compareItems(const HubWindow::UserInfo* a, const HubWin
 	if(col == COLUMN_SHARED) {
 		return compare(a->identity.getBytesShared(), b->identity.getBytesShared());;
 	}
-	return wcscasecmp(a->columns[col].c_str(), b->columns[col].c_str());
+	return QString::compare(StilUtils::TstrtoQ(a->columns[col]), StilUtils::TstrtoQ(b->columns[col]), Qt::CaseInsensitive);
 }
 
 void HubWindow::insertUser(UserInfo *ui)

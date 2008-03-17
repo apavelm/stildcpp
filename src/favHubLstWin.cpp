@@ -143,8 +143,6 @@ FavoriteHubListWindow::FavoriteHubListWindow(QWidget *parent) : MdiChild(parent)
 {	
 	setupUi(this);
 	type = StilUtils::WIN_TYPE_FAVORITE_HUB_LIST;
-	idText  = "";
-	setTabText(tr("Favorite Hubs"));
 	
 	list->setAlternatingRowColors(true);
 	list->sortByColumn(0,Qt::AscendingOrder);

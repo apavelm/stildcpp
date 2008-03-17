@@ -19,18 +19,18 @@
  ***************************************************************************/
 
 #include "mdi_c.h"
+#include "mainwindowimpl.h"
 
-MdiChild::MdiChild(QWidget *parent)
+MdiChild::MdiChild(QWidget *parent) : QDialog(parent), idText("")
 {
 	setAttribute(Qt::WA_DeleteOnClose, true);
 	type = StilUtils::WIN_TYPE_NONE;
-	idText="";
-	prnt = (TabWidget*) parent;
+	prnt = MainWindowImpl::getInstance()->getTabs();
 }
 
 MdiChild::~MdiChild()
 {
-	prnt =0;
+	prnt = NULL;
 }
 
 void MdiChild::setTabText(const QString &txt)

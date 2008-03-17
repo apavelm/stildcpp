@@ -32,7 +32,6 @@ TextWindow::TextWindow(QWidget *parent, const QString& fileName) : MdiChild(pare
 	setupUi(this);
 	type = StilUtils::WIN_TYPE_TEXT_WINDOW;
 	idText = fileName;
-	setTabText(tr("View As Text : ") + fileName);
 
 	QFont f = textEdit->font();
 	f.setPointSize(APPSETTING(i_SYSLOGFONTSIZE));

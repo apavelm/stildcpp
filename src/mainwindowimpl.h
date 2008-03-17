@@ -247,16 +247,6 @@ signals:
 	void sigSpeak(StilUtils::Speaker, qint64);
 	void signalForceCloseHashDialog();
 	
-public slots:
-	void OpenList(QWidget *, const tstring & , const UserPtr & , int64_t, const QString);
-	void OpenPM(const UserPtr& replyTo, const tstring& aMessage = Util::emptyStringT);
-	void OpenHub(const tstring& adr);
-	void SearchFunc(const tstring& str = Util::emptyStringT, int64_t size = 0, SearchManager::SizeModes mode = SearchManager::SIZE_ATLEAST, SearchManager::TypeModes type = SearchManager::TYPE_ANY);
-	void openTextWindow(const string& fileName);
-	void openTextWindow(const tstring& fileName);
-	void openTextWindow(const QString& fileName);
-	void ShowHashDlg(bool autoClose = false);
-	
 private slots:
 	void slotSpeak(StilUtils::Speaker, qint64);
 	void speak(StilUtils::Speaker a, qint64 b = 0) { emit sigSpeak(a, b); }
@@ -264,14 +254,6 @@ private slots:
 	void setToolTip(const QString & title);
 	void iconActivated(QSystemTrayIcon::ActivationReason reason);
 	void showMessage(const QString & title, const QString & message, int type, int millisecondsTimeoutHint = 10000);
-	void slotCloseWinTypeHub();
-	void slotCloseWinTypePM();
-	void slotCloseWinTypeSearch();
-	void slotCloseWinTypeFL();
-	void slotCloseWinType(int type);
-	void slotCloseDisconnectedHubs();
-	void slotCloseOfflineLists();
-	void slotCloseOfflineChat();
 	void slotCurrentTabChanged(int index);
 	void statusMessage(const QString & mes);
 	void About();
@@ -281,29 +263,54 @@ private slots:
 	void RefreshOwnFileListFunc();
 	void openownfilelistFunc();
 	void DonateFunc();
-	void DLQueueFunc();
-	void notepadFunc();
-	void SLogFunc();
 	void indexingFunc();
-	void ADLFunc();
-	void SSFunc();
-	void ULFinFunc();
-	void WaitingFunc();
-	void DLFinFunc();
-	void PubHubFunc();
 	void HomepageFunc();
-	void FavUsrFunc();
-	void StatsFunc();
-	void IgnoredUsrFunc();
 	void qcdconFunc(QString);
 	void show_tthFunc();
 	void showhideFunc();
 	void GetTTHFunc();
 	void PreferencesFunc();
-	void FavHubListFunc();
 	void reconnectFunc();
 	void fQuickConFunc();
 	void statusbarcheck();
+	
+	// slots for Closing Specific Tabs
+	void slotCloseWinType(StilUtils::tabWinTypes type);
+	void slotCloseDisconnectedHubs();
+	void slotCloseOfflineLists();
+	void slotCloseOfflineChat();
+	void slotCloseWinTypeHub()	 { slotCloseWinType(StilUtils::WIN_TYPE_HUB); }
+	void slotCloseWinTypePM()	 { slotCloseWinType(StilUtils::WIN_TYPE_PRIVATE_CHAT); }
+	void slotCloseWinTypeSearch()	 { slotCloseWinType(StilUtils::WIN_TYPE_SEARCH); }
+	void slotCloseWinTypeFL()	 { slotCloseWinType(StilUtils::WIN_TYPE_FILELIST); }
+	
+	// slots for opening Single Tabs
+	void DLQueueFunc()		 { OpenSingleTab(StilUtils::WIN_TYPE_DL_QUEUE); }
+	void notepadFunc()		 { OpenSingleTab(StilUtils::WIN_TYPE_NOTEPAD); }
+	void SLogFunc()		 { OpenSingleTab(StilUtils::WIN_TYPE_SYSTEM_LOG); }
+	void ADLFunc()			 { OpenSingleTab(StilUtils::WIN_TYPE_ADL_SEARCH); }
+	void SSFunc()			 { OpenSingleTab(StilUtils::WIN_TYPE_SEARCH_SPY); }
+	void ULFinFunc()		 { OpenSingleTab(StilUtils::WIN_TYPE_FINISHED_UL); }
+	void WaitingFunc()		 { OpenSingleTab(StilUtils::WIN_TYPE_WAITING_USERS); }
+	void DLFinFunc()		 { OpenSingleTab(StilUtils::WIN_TYPE_FINISHED_DL); }
+	void PubHubFunc()		 { OpenSingleTab(StilUtils::WIN_TYPE_PUBLIC_HUBS); }
+	void FavUsrFunc()		 { OpenSingleTab(StilUtils::WIN_TYPE_FAVORITE_USERS); }
+	void StatsFunc()		 { OpenSingleTab(StilUtils::WIN_TYPE_NETWORK_STATS); }
+	void IgnoredUsrFunc()	 { OpenSingleTab(StilUtils::WIN_TYPE_IGNORED_USERS); }
+	void FavHubListFunc()	 { OpenSingleTab(StilUtils::WIN_TYPE_FAVORITE_HUB_LIST); }
+	
+public:
+	// global functions
+	void OpenList(QWidget *, const tstring & , const UserPtr & , int64_t, const QString, bool silent = false);
+	void OpenPM(const UserPtr& replyTo, const tstring& aMessage = Util::emptyStringT, bool silent = false);
+	void OpenHub(const tstring& adr, bool silent = false);
+	void OpenSearch(const tstring& str = Util::emptyStringT, int64_t size = 0, SearchManager::SizeModes mode = SearchManager::SIZE_ATLEAST, SearchManager::TypeModes type = SearchManager::TYPE_ANY, bool silent = false);
+	void openTextWindow(const string& fileName, bool silent = false);
+	void openTextWindow(const tstring& fileName, bool silent = false);
+	void openTextWindow(const QString& fileName, bool silent = false);
+	void ShowHashDlg(bool autoClose = false);
+	void OpenSingleTab(StilUtils::tabWinTypes, bool silent = false);
+	TabWidget * getTabs();
 };
 
 #endif

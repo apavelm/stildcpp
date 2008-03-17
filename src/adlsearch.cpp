@@ -34,7 +34,7 @@ ADLSearchWindow::ADLSearchWindow(QWidget *parent) : MdiChild(parent)
 {	
 	setupUi(this);
 	type = StilUtils::WIN_TYPE_ADL_SEARCH;
-	setTabText(tr("Automatic Directory Listing Search"));
+	
 	connect(btn_add, SIGNAL(clicked()), this, SLOT(slotAdd()) );
 	connect(btn_remove, SIGNAL(clicked()), this, SLOT(slotRemove()) );
 	connect(btn_properties, SIGNAL(clicked()), this, SLOT(slotProp()) );

@@ -32,8 +32,6 @@ NotePad::NotePad(QWidget *parent) : MdiChild(parent)
 {
 	setupUi(this);
 	type = StilUtils::WIN_TYPE_NOTEPAD;
-	idText = "Notepad";
-	setTabText(tr("NotePad"));
 	
 	QFont f = textEdit->font();
 	f.setPointSize(APPSETTING(i_NOTEPADFONTSIZE));

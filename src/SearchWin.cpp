@@ -41,7 +41,6 @@ initialType(initialType_)
 	setupUi(this);
 	type = StilUtils::WIN_TYPE_SEARCH;
 	idText  = StilUtils::TstrtoQ(initialString);
-	setTabText(tr("Search for: ")+StilUtils::TstrtoQ(initialString));
 
 	folderIcon.addPixmap(style()->standardPixmap(QStyle::SP_DirClosedIcon),
 						QIcon::Normal, QIcon::Off);
@@ -897,7 +896,7 @@ void SearchWindow::actionSearchAlt()
 	const tstring tth = searchMap.value(item)->columns[COLUMN_TTH];
 
 	if (tth != Util::emptyStringT)
-		MainWindowImpl::getInstance()->SearchFunc(tth, 0, SearchManager::SIZE_DONTCARE, SearchManager::TYPE_TTH);
+		MainWindowImpl::getInstance()->OpenSearch(tth, 0, SearchManager::SIZE_DONTCARE, SearchManager::TYPE_TTH);
 }
 
 void SearchWindow::actionBitzi()

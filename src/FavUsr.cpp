@@ -49,8 +49,6 @@ FavoriteUsersWindow::FavoriteUsersWindow(QWidget *parent) : MdiChild(parent)
 {
 	setupUi(this);
 	type = StilUtils::WIN_TYPE_FAVORITE_USERS;
-	idText="";
-	setTabText(tr("Favorite Users"));
 	
 	datalist.clear();
 	datalistitem.clear();

@@ -38,7 +38,7 @@ DownloadFinishedWindow::DownloadFinishedWindow(QWidget *parent) : MdiChild(paren
 {	
 	setupUi(this);
 	type = StilUtils::WIN_TYPE_FINISHED_DL;
-	setTabText(tr("Finished Downloads"));
+	
 	datalist.clear();
 	datalistitem.clear();
 	connect(this, SIGNAL(sigSpeak(int, FinishedItemPtr)), this, SLOT(slotSpeak(int, FinishedItemPtr)), Qt::QueuedConnection);

@@ -41,6 +41,11 @@ public:
 	void setTabToolTip(int, const QString &);
 	void setTabIcon(int, const QIcon &);
 	
+	
+	int addTab ( QWidget * page, const QString & label ) { return QTabWidget::addTab(page, label); }
+	int addTab ( QWidget * page, const QIcon & icon, const QString & label ) { return QTabWidget::addTab(page, icon, label); }
+	int addTab ( QWidget * page, const QIcon & icon = QIcon() ) { return QTabWidget::addTab(page, icon, QString()); }
+	
 protected:
 	bool eventFilter(QObject *obj, QEvent *event);
 private:

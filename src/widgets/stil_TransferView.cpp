@@ -486,7 +486,7 @@ void TransferView::handleSearchAlternates()
 		string target = Text::fromT(ii->getText(DOWNLOAD_COLUMN_PATH) + ii->getText(DOWNLOAD_COLUMN_FILE));
 		TTHValue tth;
 		if(QueueManager::getInstance()->getTTH(target, tth))
-			MainWindowImpl::getInstance()->SearchFunc(Text::toT(tth.toBase32()), 0, SearchManager::SIZE_DONTCARE, SearchManager::TYPE_TTH);
+			MainWindowImpl::getInstance()->OpenSearch(Text::toT(tth.toBase32()), 0, SearchManager::SIZE_DONTCARE, SearchManager::TYPE_TTH);
 	}
 }
 

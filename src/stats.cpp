@@ -25,5 +25,4 @@ StatsWindow::StatsWindow(QWidget *parent) : MdiChild(parent)
 {	
 	setupUi(this);
 	type = StilUtils::WIN_TYPE_NETWORK_STATS;
-	setTabText(tr("Network Statistics"));
 }

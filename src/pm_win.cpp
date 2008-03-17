@@ -25,7 +25,7 @@ PMWindow::PMWindow(QWidget *parent, const UserPtr& replyTo, const tstring& aMess
 	setupUi(this);
 	type = StilUtils::WIN_TYPE_PRIVATE_CHAT;
 	idText  = StilUtils::TstrtoQ(StilUtils::getNicks(replyTo));
-	setTabText(tr("Private Chat with: ")+StilUtils::TstrtoQ(StilUtils::getNicks(replyTo)));
+	
 	editor->clear();
 	setupeditor();
 	connect(SendBtn,SIGNAL(pressed()),this,SLOT(send_pm_msg()));

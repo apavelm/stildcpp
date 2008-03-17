@@ -158,9 +158,9 @@ void SearchSpyWindow::slotSearch()
 {
 	tstring searchString = StilUtils::QtoTstr(searches->currentItem()->text(0));
 	if(Util::strnicmp(searchString.c_str(), _T("TTH:"), 4) == 0)
-		MainWindowImpl::getInstance()->SearchFunc(searchString.substr(4), 0, SearchManager::SIZE_DONTCARE, SearchManager::TYPE_TTH);
+		MainWindowImpl::getInstance()->OpenSearch(searchString.substr(4), 0, SearchManager::SIZE_DONTCARE, SearchManager::TYPE_TTH);
 	else
-		MainWindowImpl::getInstance()->SearchFunc(searchString);
+		MainWindowImpl::getInstance()->OpenSearch(searchString);
 }
 
 void SearchSpyWindow::timerEvent(QTimerEvent *)
