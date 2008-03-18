@@ -21,6 +21,7 @@
  ***************************************************************************/
 
 #include "stilutils.h"
+#include "mainwindowimpl.h"
 
 using namespace std;
 using namespace dcpp;
@@ -30,6 +31,28 @@ int StilUtils::_type_tstring = qRegisterMetaType<tstring>("tstring");
 int StilUtils::_type_UserPtr = qRegisterMetaType<UserPtr>("UserPtr");
 int StilUtils::_type_FinishedItemPtr = qRegisterMetaType<FinishedItemPtr>("FinishedItemPtr");
 int StilUtils::_type_Speaker = qRegisterMetaType<StilUtils::Speaker>("StilUtils::Speaker");
+
+tstring StilUtils::commands = _T("/refresh, /me <msg>, /slots #, /search <string>, /dc++, /away <msg>, /back, /g <searchstring>, /imdb <imdbquery>, /u <url>, /rebuild");
+
+const tstring msgs[] = { _T("\r\n-- I'm a happy dc++ user. You could be happy too.\r\n"),
+_T("\r\n-- Neo-...what? Nope...never heard of it...\r\n"),
+_T("\r\n-- Evolution of species: Ape --> Man\r\n-- Evolution of science: \"The Earth is Flat\" --> \"The Earth is Round\"\r\n-- Evolution of sharing: NMDC --> DC++\r\n"),
+_T("\r\n-- I share, therefore I am.\r\n"),
+_T("\r\n-- I came, I searched, I found...\r\n"),
+_T("\r\n-- I came, I shared, I sent...\r\n"),
+_T("\r\n-- I can set away mode, can't you?\r\n"),
+_T("\r\n-- I don't have to see any ads, do you?\r\n"),
+_T("\r\n-- I don't have to see those annoying kick messages, do you?\r\n"),
+_T("\r\n-- I can resume my files to a different filename, can you?\r\n"),
+_T("\r\n-- I can share huge amounts of files, can you?\r\n"),
+_T("\r\n-- My client doesn't spam the chat with useless debug messages, does yours?\r\n"),
+_T("\r\n-- I can add multiple users to the same download and have the client connect to another automatically when one goes offline, can you?\r\n"),
+_T("\r\n-- These addies are pretty annoying, aren't they? Get revenge by sending them yourself!\r\n"),
+_T("\r\n-- My client supports TTH hashes, does yours?\r\n"),
+_T("\r\n-- My client supports XML file lists, does yours?\r\n")
+};
+
+#define MSGS 16
 
 
 tstring StilUtils::getNicks(const CID& cid)
@@ -105,50 +128,102 @@ pair<tstring, bool> StilUtils::getHubNames(const UserPtr& u)
 	return getHubNames(u->getCID()); 
 }
 
-bool StilUtils::checkCommand(QString& cmd, QString& param, QString& message, QString& status)
+bool StilUtils::checkCommand(tstring& cmd, tstring& param, tstring& message, tstring& status, bool& thirdPerson)
 {
-	//if (cmd.at(0) == '/')
-	//{		
-		int space = cmd.indexOf(' ');
-		
-		if ((space != -1))// && cmd.size() > space + 1)
-		{			
-			param = cmd.mid(space + 1);
-			cmd = cmd.mid(1, space - 1);
-		}
-		else
-		{
-			cmd = cmd.mid(1);
-		}
-		
-		//cmd = cmd.toLower();
+	string::size_type i = cmd.find(' ');
+	if(i != string::npos) {
+		param = cmd.substr(i+1);
+		cmd = cmd.substr(1, i - 1);
+	} else {
+		cmd = cmd.substr(1);
+	}
 
-		if (QString::compare(cmd, "away", Qt::CaseInsensitive) == 0)
-		{
-			if (Util::getAway() && param.isEmpty())
-			{
-				Util::setAway(false);
-				Util::setManualAway(false);
-				status = StilUtils::TstrtoQ(T_("Away mode off"));
-			}
-			else
-			{
-				Util::setAway(true);
-				Util::setManualAway(true);
-				Util::setAwayMessage(Text::fromT(StilUtils::QtoTstr(param)));
-				status = StilUtils::TstrtoQ(T_("Away mode on: ") + Text::toT(Util::getAwayMessage()));
-			}
-		}
-		else if (QString::compare(cmd, "back", Qt::CaseInsensitive) == 0)
-		{
-			Util::setAway(FALSE);
-			status = StilUtils::TstrtoQ(T_("Away mode off"));
-		}
-		else
+	if(Util::stricmp(cmd.c_str(), _T("log")) == 0) {
+		if(Util::stricmp(param.c_str(), _T("system")) == 0) {
+			MainWindowImpl::getInstance()->openTextWindow(Text::toT(Util::validateFileName(SETTING(LOG_DIRECTORY) + "system.log")));
+		} else if(Util::stricmp(param.c_str(), _T("downloads")) == 0) {
+			MainWindowImpl::getInstance()->openTextWindow(Text::toT(Util::validateFileName(SETTING(LOG_DIRECTORY) + Util::formatTime(SETTING(LOG_FILE_DOWNLOAD), time(NULL)))));
+		} else if(Util::stricmp(param.c_str(), _T("uploads")) == 0) {
+			MainWindowImpl::getInstance()->openTextWindow(Text::toT(Util::validateFileName(SETTING(LOG_DIRECTORY) + Util::formatTime(SETTING(LOG_FILE_UPLOAD), time(NULL)))));
+		} else {
 			return false;
-			
-		return true;
-	
+		}
+	} else if(Util::stricmp(cmd.c_str(), _T("me")) == 0) {
+		message = param;
+		thirdPerson = true;
+	} else if(Util::stricmp(cmd.c_str(), _T("refresh"))==0) {
+		try {
+			ShareManager::getInstance()->setDirty();
+			ShareManager::getInstance()->refresh(true);
+		} catch(const ShareException& e) {
+			status = Text::toT(e.getError());
+		}
+	} else if(Util::stricmp(cmd.c_str(), _T("slots"))==0) {
+		int j = Util::toInt(Text::fromT(param));
+		if(j > 0) {
+			SettingsManager::getInstance()->set(SettingsManager::SLOTS, j);
+			status = T_("Slots set");
+			ClientManager::getInstance()->infoUpdated();
+		} else {
+			status = T_("Invalid number of slots");
+		}
+	} else if(Util::stricmp(cmd.c_str(), _T("search")) == 0) {
+		if(!param.empty()) {
+			MainWindowImpl::getInstance()->OpenSearch(param);
+		} else {
+			status = T_("Specify a search string");
+		}
+	} else if(Util::stricmp(cmd.c_str(), _T("dc++")) == 0) {
+		message = msgs[GET_TICK() % MSGS];
+	} else if(Util::stricmp(cmd.c_str(), _T("away")) == 0) {
+		if(Util::getAway() && param.empty()) {
+			Util::setAway(false);
+			Util::setManualAway(false);
+			status = T_("Away mode off");
+		} else {
+			Util::setAway(true);
+			Util::setManualAway(true);
+			Util::setAwayMessage(Text::fromT(param));
+			status = str(TF_("Away mode on: %1%") % Text::toT(Util::getAwayMessage()));
+		}
+	} else if(Util::stricmp(cmd.c_str(), _T("back")) == 0) {
+		Util::setAway(false);
+		Util::setManualAway(false);
+		status = T_("Away mode off");
+	} else if(Util::stricmp(cmd.c_str(), _T("g")) == 0) {
+		if(param.empty()) {
+			status = T_("Specify a search string");
+		} else {
+			StilUtils::openLink(_T("http://www.google.com/search?q=") + Text::toT(Util::encodeURI(Text::fromT(param))));
+		}
+	} else if(Util::stricmp(cmd.c_str(), _T("imdb")) == 0) {
+		if(param.empty()) {
+			status = T_("Specify a search string");
+		} else {
+			StilUtils::openLink(_T("http://www.imdb.com/find?q=") + Text::toT(Util::encodeURI(Text::fromT(param))));
+		}
+	} else if(Util::stricmp(cmd.c_str(), _T("u")) == 0) {
+		if (param.empty()) {
+			status = T_("Specify a URL");
+		} else {
+			StilUtils::openLink(Text::toT(Util::encodeURI(Text::fromT(param))));
+		}
+	} else if(Util::stricmp(cmd.c_str(), _T("rebuild")) == 0) {
+		HashManager::getInstance()->rebuild();
+	} else {
+		return false;
+	}
+
+	return true;
+}
+
+bool StilUtils::checkCommand(QString& cmd, QString& param, QString& message, QString& status, bool& thirdPerson)
+{
+	tstring a = QtoTstr(cmd);
+	tstring b = QtoTstr(param);
+	tstring c = QtoTstr(message);
+	tstring d = QtoTstr(status);
+	return checkCommand( a, b, c, d, thirdPerson );
 }
 
 bool StilUtils::getUCParams(QWidget *parent, const UserCommand& uc, StringMap& sm) throw()
@@ -204,6 +279,16 @@ void StilUtils::copy2Clipboard(const QString & txt)
 void StilUtils::copy2Clipboard(const tstring & txt)
 {
 	copy2Clipboard(TstrtoQ(txt));
+}
+
+void StilUtils::openLink(const tstring& url)
+{
+	openLink(TstrtoQ(url));
+}
+
+void StilUtils::openLink(const QString& url)
+{
+	
 }
 
 // of stilutils

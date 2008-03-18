@@ -1074,9 +1074,9 @@ void MainWindowImpl::OpenHub(const tstring& adr, bool silent)
 	//p->setTabIcon(QIcon(":/images/hub.png"));
 }
 
-void MainWindowImpl::OpenPM(const UserPtr& replyTo, const tstring& aMessage, bool silent)
+PMWindow * MainWindowImpl::OpenPM(const UserPtr& replyTo, bool silent)
 {
-	PMWindow *p = new PMWindow(m_tabwin, replyTo, aMessage);
+	PMWindow *p = new PMWindow(m_tabwin, replyTo);
 	if (silent)
 		{
 			m_tabwin->addTab(p);
@@ -1087,6 +1087,7 @@ void MainWindowImpl::OpenPM(const UserPtr& replyTo, const tstring& aMessage, boo
 		}
 	p->setTabText(tr("Private Chat with: ")+StilUtils::TstrtoQ(StilUtils::getNicks(replyTo)));
 	p->setTabIcon(QIcon(":/images/private_chat.png"));
+	return p;
 }
 
 void MainWindowImpl::OpenSearch(const tstring& str, int64_t size, SearchManager::SizeModes mode, SearchManager::TypeModes type, bool silent)
@@ -1119,4 +1120,59 @@ void MainWindowImpl::openTextWindow(const tstring& fileName, bool silent)
 void MainWindowImpl::openTextWindow(const string& fileName, bool silent)
 {
 	openTextWindow(Text::toT(fileName), silent);
+}
+
+// PMs
+int MainWindowImpl::isPM_Open(const UserPtr& u)
+{
+	bool res = false;
+	for (int i=0; i < m_tabwin->count(); i++)
+	{
+		MdiChild * p = qobject_cast<MdiChild *>(m_tabwin->widget(i));
+		if (p->type == StilUtils::WIN_TYPE_PRIVATE_CHAT) 
+			{
+				PMWindow * w = qobject_cast<PMWindow*>(p);
+				if (w->getUser() == u) return i;
+			}
+	}
+	return -1;
+}
+
+void MainWindowImpl::gotPrivateMessage(const UserPtr& from, const UserPtr& to, const UserPtr& replyTo, const tstring& aMessage)
+{
+	
+	const UserPtr& user = (replyTo == ClientManager::getInstance()->getMe()) ? to : replyTo;
+	int i = isPM_Open(user);
+	
+	PMWindow * p = NULL;
+	
+	if(i == -1) 
+	{
+		p = OpenPM(user, BOOLSETTING(POPUNDER_PM));
+		p->addChat(aMessage);
+		if(Util::getAway()) 
+			{
+				if(!(BOOLSETTING(NO_AWAYMSG_TO_BOTS) && user->isSet(User::BOT)))
+					p->sendMessage(Text::toT(Util::getAwayMessage()));
+			}
+		/*
+		if(BOOLSETTING(PRIVATE_MESSAGE_BEEP) || BOOLSETTING(PRIVATE_MESSAGE_BEEP_OPEN)) {
+			if (SETTING(BEEPFILE).empty())
+				MessageBeep(MB_OK);
+			else
+				::PlaySound(Text::toT(SETTING(BEEPFILE)).c_str(), NULL, SND_FILENAME | SND_ASYNC);
+		}*/
+	} 
+	else 
+		{
+			p = qobject_cast<PMWindow *>(m_tabwin->widget(i));
+			/*if(BOOLSETTING(PRIVATE_MESSAGE_BEEP)) 
+			{
+				if (SETTING(BEEPFILE).empty())
+					MessageBeep(MB_OK);
+				else
+					::PlaySound(Text::toT(SETTING(BEEPFILE)).c_str(), NULL, SND_FILENAME | SND_ASYNC);
+			}*/
+			p->addChat(aMessage);
+		}
 }

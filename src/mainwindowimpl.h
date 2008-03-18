@@ -250,7 +250,7 @@ signals:
 public slots:
 	// global functions
 	void OpenList(QWidget *, const tstring & , const UserPtr & , int64_t, const QString, bool silent = false);
-	void OpenPM(const UserPtr& replyTo, const tstring& aMessage = Util::emptyStringT, bool silent = false);
+	PMWindow * OpenPM(const UserPtr& replyTo, bool silent = false);
 	void OpenHub(const tstring& adr, bool silent = false);
 	void OpenSearch(const tstring& str = Util::emptyStringT, int64_t size = 0, SearchManager::SizeModes mode = SearchManager::SIZE_ATLEAST, SearchManager::TypeModes type = SearchManager::TYPE_ANY, bool silent = false);
 	void openTextWindow(const string& fileName, bool silent = false);
@@ -258,6 +258,10 @@ public slots:
 	void openTextWindow(const QString& fileName, bool silent = false);
 	void ShowHashDlg(bool autoClose = false);
 	void OpenSingleTab(StilUtils::tabWinTypes, bool silent = false);
+public:
+	int isPM_Open(const UserPtr& u);
+	bool isPMOpen(const UserPtr& u) { return (isPM_Open(u) != -1); }
+	void gotPrivateMessage(const UserPtr& from, const UserPtr& to, const UserPtr& replyTo, const tstring& aMessage);
 	
 private slots:
 	void slotSpeak(StilUtils::Speaker, qint64);

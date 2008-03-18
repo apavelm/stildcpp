@@ -116,8 +116,9 @@ void HubWindow::sendFunc(const QString &txt)
 			QString param;
 			QString msg;
 			QString status;
+			bool thirdPerson;
 
-			if(StilUtils::checkCommand(cmd, param, msg, status))
+			if(StilUtils::checkCommand(cmd, param, msg, status, thirdPerson))
 			{
 				if(!msg.isEmpty())
 					client->hubMessage((Text::fromT(StilUtils::QtoTstr(msg))));
@@ -833,25 +834,25 @@ void HubWindow::handleSpeaker()//Tasks s, const OnlineUser& u)
 			if(pm.hub) {
 				if(BOOLSETTING(IGNORE_HUB_PMS)) {
 					addStatus(T_("Ignored message: ") + Text::toT(pm.str), false);
-				} /*else if(BOOLSETTING(POPUP_HUB_PMS) || PrivateFrame::isOpen(pm.replyTo)) {
-					PrivateFrame::gotMessage(getParent(), pm.from, pm.to, pm.replyTo, Text::toT(pm.str));
-				} else {*/
+				} else if(BOOLSETTING(POPUP_HUB_PMS) || MainWindowImpl::getInstance()->isPMOpen(pm.replyTo)) {
+					MainWindowImpl::getInstance()->gotPrivateMessage(pm.from, pm.to, pm.replyTo, Text::toT(pm.str));
+				} else {
 					addChat(T_("Private message from ") + getNick(pm.from) + _T(": ") + Text::toT(pm.str));
-				//}
+				}
 			} else if(pm.bot) {
 				if(BOOLSETTING(IGNORE_BOT_PMS)) {
 					addStatus(T_("Ignored message: ") + Text::toT(pm.str), false);
-				} /*else if(BOOLSETTING(POPUP_BOT_PMS) || PrivateFrame::isOpen(pm.replyTo)) {
-					PrivateFrame::gotMessage(getParent(), pm.from, pm.to, pm.replyTo, Text::toT(pm.str));
-				} else {*/
+				} else if(BOOLSETTING(POPUP_BOT_PMS) || MainWindowImpl::getInstance()->isPMOpen(pm.replyTo)) {
+					MainWindowImpl::getInstance()->gotPrivateMessage(pm.from, pm.to, pm.replyTo, Text::toT(pm.str));
+				} else {
 					addChat(T_( "Private message from ") + getNick(pm.from) + _T(": ") + Text::toT(pm.str));
-				//}
-			} else {/*
-				if(BOOLSETTING(POPUP_PMS) || PrivateFrame::isOpen(pm.replyTo) || pm.from == client->getMyIdentity().getUser()) {
-					PrivateFrame::gotMessage(getParent(), pm.from, pm.to, pm.replyTo, Text::toT(pm.str));
-				} else {*/
+				}
+			} else {
+				if(BOOLSETTING(POPUP_PMS) || MainWindowImpl::getInstance()->isPMOpen(pm.replyTo) || pm.from == client->getMyIdentity().getUser()) {
+					MainWindowImpl::getInstance()->gotPrivateMessage(pm.from, pm.to, pm.replyTo, Text::toT(pm.str));
+				} else {
 					addChat(T_( "Private message from ") + getNick(pm.from) + _T(": ") + Text::toT(pm.str));
-				//}
+				}
 			}
 		} else if(i->first == FOLLOW) {
 			handleFollow();

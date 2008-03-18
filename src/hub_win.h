@@ -32,7 +32,6 @@
 #include "highlighter.h"
 #include "mdi_c.h"
 #include "config.h"
-#include "stilutils.h"
 #include "iconset.h"
 #include "textutil.h"
 #include "UserInfoBase.h"

@@ -29,6 +29,8 @@
 #include "client/User.h"
 #include "client/ClientManager.h"
 #include "client/UserCommand.h"
+#include "client/ShareManager.h"
+#include "client/HashManager.h"
 #include "client/ResourceManager.h"
 
 #include <QtCore>
@@ -40,6 +42,7 @@
 
 #include "defs.h"
 
+using namespace std;
 using namespace dcpp;
 
  class StilUtils  
@@ -50,6 +53,8 @@ public:
 	static int _type_UserPtr;
 	static int _type_FinishedItemPtr;
 	static int _type_Speaker;
+	
+	static tstring commands;
 	
 	/*  0 - MdiChild (NONE)
 		1 - Hub
@@ -120,7 +125,8 @@ public:
 	static pair<tstring, bool> getHubNames(const CID& cid);
 	static pair<tstring, bool> getHubNames(const UserPtr& u);
 	
-	static bool checkCommand(QString& cmd, QString& param, QString& message, QString& status);
+	static bool checkCommand(QString& cmd, QString& param, QString& message, QString& status, bool& thirdPerson);
+	static bool checkCommand(tstring& cmd, tstring& param, tstring& message, tstring& status, bool& thirdPerson);
 	static bool getUCParams(QWidget * parent, const UserCommand& uc, StringMap& sm) throw();
 
 	template<typename T>
@@ -140,6 +146,9 @@ public:
 	
 	static void copy2Clipboard(const QString & txt);
 	static void copy2Clipboard(const tstring & txt);
+	
+	static void openLink(const tstring& url);
+	static void openLink(const QString& url);
 };
 
 #endif // of StilUtils

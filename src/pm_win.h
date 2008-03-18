@@ -25,32 +25,60 @@
 
 #include "highlighter.h"
 #include "mdi_c.h"
+#include "config.h"
 #include "stilutils.h"
+#include "iconset.h"
+#include "textutil.h"
 
 //
 #include "client/stdinc.h"
 #include "client/DCPlusPlus.h"
 #include "client/Client.h"
-#include "client/forward.h"
 #include "client/ClientListener.h"
 #include "client/ClientManager.h"
+#include "client/LogManager.h"
+#include "client/UploadManager.h"
+#include "client/FavoriteManager.h"
 #include "client/User.h"
+#include "client/StringTokenizer.h"
 //
 
 #include "ui_PMWindow.h"
 
-class PMWindow : public MdiChild, private Ui::mdiPMwin
+using namespace std;
+using namespace dcpp;
+
+class PMWindow : public MdiChild, private Ui::mdiPMwin, private ClientManagerListener
 {
 	Q_OBJECT
 private:
 	Highlighter *highlighter;
-	UserPtr usr;
+	UserPtr replyTo;
+	
+	void readLog();
+	void updateTitle();
+	void speak() { emit sigSpeak(); }
+	// ClientManagerListener
+	virtual void on(ClientManagerListener::UserUpdated, const OnlineUser& aUser) throw();
+	virtual void on(ClientManagerListener::UserConnected, const UserPtr& aUser) throw();
+	virtual void on(ClientManagerListener::UserDisconnected, const UserPtr& aUser) throw();
+	
 public:
-	PMWindow(QWidget *parent, const UserPtr& replyTo, const tstring& aMessage);
+	PMWindow(QWidget *parent, const UserPtr& replyTo);
+	~PMWindow();
 	void setupeditor();
 	bool isOnline();
+	UserPtr getUser() const { return replyTo; }
+	
+	void sendMessage(const tstring& msg, bool thirdPerson = false) { ClientManager::getInstance()->privateMessage(replyTo, Text::fromT(msg), thirdPerson); }
+	void addChat(const tstring& aLine);
+	void addStatus(const tstring& aLine, bool inChat = true);
+	
+signals:
+	void sigSpeak();
 private slots:
-	void send_pm_msg();
+	void send_pm_msg(const QString &);
+	void slotSpeak();
 };
 
 // PRIVATE MESSAGE WINDOW
