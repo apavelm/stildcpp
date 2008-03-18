@@ -247,6 +247,18 @@ signals:
 	void sigSpeak(StilUtils::Speaker, qint64);
 	void signalForceCloseHashDialog();
 	
+public slots:
+	// global functions
+	void OpenList(QWidget *, const tstring & , const UserPtr & , int64_t, const QString, bool silent = false);
+	void OpenPM(const UserPtr& replyTo, const tstring& aMessage = Util::emptyStringT, bool silent = false);
+	void OpenHub(const tstring& adr, bool silent = false);
+	void OpenSearch(const tstring& str = Util::emptyStringT, int64_t size = 0, SearchManager::SizeModes mode = SearchManager::SIZE_ATLEAST, SearchManager::TypeModes type = SearchManager::TYPE_ANY, bool silent = false);
+	void openTextWindow(const string& fileName, bool silent = false);
+	void openTextWindow(const tstring& fileName, bool silent = false);
+	void openTextWindow(const QString& fileName, bool silent = false);
+	void ShowHashDlg(bool autoClose = false);
+	void OpenSingleTab(StilUtils::tabWinTypes, bool silent = false);
+	
 private slots:
 	void slotSpeak(StilUtils::Speaker, qint64);
 	void speak(StilUtils::Speaker a, qint64 b = 0) { emit sigSpeak(a, b); }
@@ -298,19 +310,6 @@ private slots:
 	void StatsFunc()		 { OpenSingleTab(StilUtils::WIN_TYPE_NETWORK_STATS); }
 	void IgnoredUsrFunc()	 { OpenSingleTab(StilUtils::WIN_TYPE_IGNORED_USERS); }
 	void FavHubListFunc()	 { OpenSingleTab(StilUtils::WIN_TYPE_FAVORITE_HUB_LIST); }
-	
-public:
-	// global functions
-	void OpenList(QWidget *, const tstring & , const UserPtr & , int64_t, const QString, bool silent = false);
-	void OpenPM(const UserPtr& replyTo, const tstring& aMessage = Util::emptyStringT, bool silent = false);
-	void OpenHub(const tstring& adr, bool silent = false);
-	void OpenSearch(const tstring& str = Util::emptyStringT, int64_t size = 0, SearchManager::SizeModes mode = SearchManager::SIZE_ATLEAST, SearchManager::TypeModes type = SearchManager::TYPE_ANY, bool silent = false);
-	void openTextWindow(const string& fileName, bool silent = false);
-	void openTextWindow(const tstring& fileName, bool silent = false);
-	void openTextWindow(const QString& fileName, bool silent = false);
-	void ShowHashDlg(bool autoClose = false);
-	void OpenSingleTab(StilUtils::tabWinTypes, bool silent = false);
-	TabWidget * getTabs();
 };
 
 #endif

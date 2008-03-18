@@ -183,7 +183,6 @@ void MainWindowImpl::updateStatus()
 
 void MainWindowImpl::clientInit()
 {
-
 	updateStatus();
 	
 	QueueManager::getInstance()->addListener(this);
@@ -198,19 +197,17 @@ void MainWindowImpl::clientInit()
 	File::ensureDirectory(SETTING(LOG_DIRECTORY));
 	startSocket();
 	
-	if(BOOLSETTING(OPEN_SYSTEM_LOG))			OpenSingleTab(StilUtils::WIN_TYPE_SYSTEM_LOG);
-	if(BOOLSETTING(OPEN_FAVORITE_USERS))		OpenSingleTab(StilUtils::WIN_TYPE_FAVORITE_USERS);
-	if(BOOLSETTING(OPEN_QUEUE))				OpenSingleTab(StilUtils::WIN_TYPE_DL_QUEUE);
-	if(BOOLSETTING(OPEN_FINISHED_DOWNLOADS))	OpenSingleTab(StilUtils::WIN_TYPE_FINISHED_DL);
-	if(BOOLSETTING(OPEN_WAITING_USERS))		OpenSingleTab(StilUtils::WIN_TYPE_WAITING_USERS);
-	if(BOOLSETTING(OPEN_FINISHED_UPLOADS))		OpenSingleTab(StilUtils::WIN_TYPE_FINISHED_UL);
-	if(BOOLSETTING(OPEN_SEARCH_SPY))			OpenSingleTab(StilUtils::WIN_TYPE_SEARCH_SPY);
-	if(BOOLSETTING(OPEN_NETWORK_STATISTICS))	OpenSingleTab(StilUtils::WIN_TYPE_NETWORK_STATS);
-	if(BOOLSETTING(OPEN_NOTEPAD))				OpenSingleTab(StilUtils::WIN_TYPE_NOTEPAD);
-	if(BOOLSETTING(OPEN_PUBLIC))				OpenSingleTab(StilUtils::WIN_TYPE_PUBLIC_HUBS);
-	if(BOOLSETTING(OPEN_FAVORITE_HUBS))		OpenSingleTab(StilUtils::WIN_TYPE_FAVORITE_HUB_LIST);
-	
-	speak(StilUtils::AUTO_CONNECT);
+		if(BOOLSETTING(OPEN_SYSTEM_LOG))			OpenSingleTab(StilUtils::WIN_TYPE_SYSTEM_LOG, true);
+	if(BOOLSETTING(OPEN_FAVORITE_USERS))		OpenSingleTab(StilUtils::WIN_TYPE_FAVORITE_USERS, true);
+	if(BOOLSETTING(OPEN_QUEUE))				OpenSingleTab(StilUtils::WIN_TYPE_DL_QUEUE, true);
+	if(BOOLSETTING(OPEN_FINISHED_DOWNLOADS))	OpenSingleTab(StilUtils::WIN_TYPE_FINISHED_DL, true);
+	if(BOOLSETTING(OPEN_WAITING_USERS))		OpenSingleTab(StilUtils::WIN_TYPE_WAITING_USERS, true);
+	if(BOOLSETTING(OPEN_FINISHED_UPLOADS))		OpenSingleTab(StilUtils::WIN_TYPE_FINISHED_UL, true);
+	if(BOOLSETTING(OPEN_SEARCH_SPY))			OpenSingleTab(StilUtils::WIN_TYPE_SEARCH_SPY, true);
+	if(BOOLSETTING(OPEN_NETWORK_STATISTICS))	OpenSingleTab(StilUtils::WIN_TYPE_NETWORK_STATS, true);
+	if(BOOLSETTING(OPEN_NOTEPAD))				OpenSingleTab(StilUtils::WIN_TYPE_NOTEPAD, true);
+	if(BOOLSETTING(OPEN_PUBLIC))				OpenSingleTab(StilUtils::WIN_TYPE_PUBLIC_HUBS, true);
+	if(BOOLSETTING(OPEN_FAVORITE_HUBS))		OpenSingleTab(StilUtils::WIN_TYPE_FAVORITE_HUB_LIST, true);
 	
 	// If First-time launch
 	if(SETTING(NICK).empty()) 
@@ -218,7 +215,8 @@ void MainWindowImpl::clientInit()
 		// open settings dialog
 		PreferencesFunc();
 	}
-	
+	else
+		speak(StilUtils::AUTO_CONNECT);	
 }
 
 void MainWindowImpl::startSocket() 
@@ -231,7 +229,6 @@ void MainWindowImpl::startSocket()
 		ConnectionManager::getInstance()->listen();
 		SearchManager::getInstance()->listen();
 	}
-
 }
 
 MainWindowImpl::MainWindowImpl( QWidget * parent, Qt::WFlags f) : QMainWindow(parent, f)
@@ -326,7 +323,7 @@ void MainWindowImpl::createActions()
 	connect(actionReconnect, SIGNAL(triggered()), this, SLOT(reconnectFunc()));
 	connect(actionDonate, SIGNAL(triggered()), this, SLOT(DonateFunc()));
 	connect(actionHomepage, SIGNAL(triggered()), this, SLOT(HomepageFunc()));
-	connect(actionSearch, SIGNAL(triggered()), this, SLOT(SearchFunc()));
+	connect(actionSearch, SIGNAL(triggered()), this, SLOT(OpenSearch()));
 	connect(actionGet_TTH_for_file, SIGNAL(triggered()), this, SLOT(GetTTHFunc()));
 	connect(actionFavorite_Hubs, SIGNAL(triggered()), this, SLOT(FavHubListFunc()));
 	connect(actionPublic_Hubs, SIGNAL(triggered()), this, SLOT(PubHubFunc()));
@@ -452,81 +449,6 @@ void MainWindowImpl::ShowHashDlg(bool autoClose)
 	HashDlg * h = new HashDlg(this);
 	connect(MainWindowImpl::getInstance(), SIGNAL(signalForceCloseHashDialog()), h, SLOT(close()));
 	h->sshow(autoClose);
-}
-
-void MainWindowImpl::OpenList(QWidget *parent, const tstring & aFile, const UserPtr & aUser, int64_t aSpeed, const QString aTitle, bool silent)
-{
-	// Function to open filelists
-	tstring t = aFile;
-	UserPtr u = aUser;
-	
-	if (silent)
-		{
-			m_tabwin->addTab( (new FileListDlg(parent, u, aSpeed, t) ), aTitle );
-		}
-	else
-		{
-			m_tabwin->setCurrentIndex( m_tabwin->addTab( (new FileListDlg(parent, u, aSpeed, t) ), aTitle ) );
-		}
-}
-
-void MainWindowImpl::OpenHub(const tstring& adr, bool silent)
-{
-	HubWindow *p = new HubWindow(m_tabwin, adr);
-	if (silent)
-		{
-			m_tabwin->addTab(p);
-		}
-	else
-		{
-			m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
-		}
-		
-	p->setTabText(tr("Hub: ")+StilUtils::TstrtoQ(adr));
-}
-
-void MainWindowImpl::OpenPM(const UserPtr& replyTo, const tstring& aMessage, bool silent)
-{
-	PMWindow *p = new PMWindow(m_tabwin, replyTo, aMessage);
-	if (silent)
-		{
-			m_tabwin->addTab(p);
-		}
-	else
-		{
-			m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
-		}
-	p->setTabText(tr("Private Chat with: ")+StilUtils::TstrtoQ(StilUtils::getNicks(replyTo)));
-}
-
-void MainWindowImpl::OpenSearch(const tstring& str, int64_t size, SearchManager::SizeModes mode, SearchManager::TypeModes type, bool silent)
-{
-	SearchWindow *p = new SearchWindow(m_tabwin, str, size, mode, type);
-	if (silent)
-		m_tabwin->addTab(p);
-	else
-		m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
-	p->setTabText(tr("Search for: ")+StilUtils::TstrtoQ(str));
-}
-
-void MainWindowImpl::openTextWindow(const QString& fileName, bool silent)
-{
-	TextWindow *p = new TextWindow(m_tabwin, fileName);
-	if (silent)
-		m_tabwin->addTab(p);
-	else
-		m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
-	p->setTabText(tr("View As Text : ") + fileName);
-}
-
-void MainWindowImpl::openTextWindow(const tstring& fileName, bool silent)
-{
-	openTextWindow(StilUtils::TstrtoQ(fileName), silent);
-}
-
-void MainWindowImpl::openTextWindow(const string& fileName, bool silent)
-{
-	openTextWindow(Text::toT(fileName), silent);
 }
 
 void MainWindowImpl::indexingFunc()
@@ -905,8 +827,6 @@ void MainWindowImpl::on(PartialList, const UserPtr& aUser, const string& text) t
 	speak(StilUtils::BROWSE_LISTING, (qint64)new DirectoryBrowseInfo(aUser, text));
 }
 
-// Static slots =)
-
 void MainWindowImpl::OpenSingleTab(StilUtils::tabWinTypes type, bool silent)
 {
 	int z = FindWinByType(type);
@@ -1094,10 +1014,89 @@ void MainWindowImpl::OpenSingleTab(StilUtils::tabWinTypes type, bool silent)
 			else m_tabwin->setCurrentIndex(z);
 		} break;
 		
+		
+		// garbage not used! 'cause it isn't single tabs
+		case StilUtils::WIN_TYPE_NONE: break;
+		case StilUtils::WIN_TYPE_HUB: break;
+		case StilUtils::WIN_TYPE_PRIVATE_CHAT: break;
+		case StilUtils::WIN_TYPE_SEARCH: break;
+		case StilUtils::WIN_TYPE_FILELIST: break;
+		case StilUtils::WIN_TYPE_TEXT_WINDOW: break;
+		case StilUtils::WIN_TYPE_LAST: break;
 	}
 }
 
-TabWidget * MainWindowImpl::getTabs()
+void MainWindowImpl::OpenList(QWidget *parent, const tstring & aFile, const UserPtr & aUser, int64_t aSpeed, const QString aTitle, bool silent)
 {
-	return m_tabwin;
+	// Function to open filelists
+	tstring t = aFile;
+	UserPtr u = aUser;
+	
+	if (silent)
+		{
+			m_tabwin->addTab( (new FileListDlg(parent, u, aSpeed, t) ), aTitle );
+		}
+	else
+		{
+			m_tabwin->setCurrentIndex( m_tabwin->addTab( (new FileListDlg(parent, u, aSpeed, t) ), aTitle ) );
+		}
+}
+
+void MainWindowImpl::OpenHub(const tstring& adr, bool silent)
+{
+	HubWindow *p = new HubWindow(m_tabwin, adr);
+	if (silent)
+		{
+			m_tabwin->addTab(p);
+		}
+	else
+		{
+			m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
+		}
+		
+	p->setTabText(tr("Hub: ")+StilUtils::TstrtoQ(adr));
+}
+
+void MainWindowImpl::OpenPM(const UserPtr& replyTo, const tstring& aMessage, bool silent)
+{
+	PMWindow *p = new PMWindow(m_tabwin, replyTo, aMessage);
+	if (silent)
+		{
+			m_tabwin->addTab(p);
+		}
+	else
+		{
+			m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
+		}
+	p->setTabText(tr("Private Chat with: ")+StilUtils::TstrtoQ(StilUtils::getNicks(replyTo)));
+}
+
+void MainWindowImpl::OpenSearch(const tstring& str, int64_t size, SearchManager::SizeModes mode, SearchManager::TypeModes type, bool silent)
+{
+	SearchWindow *p = new SearchWindow(m_tabwin, str, size, mode, type);
+	if (silent)
+		m_tabwin->addTab(p);
+	else
+		m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
+	p->setTabText(tr("Search for: ")+StilUtils::TstrtoQ(str));
+}
+
+void MainWindowImpl::openTextWindow(const QString& fileName, bool silent)
+{
+	TextWindow *p = new TextWindow(m_tabwin, fileName);
+	if (silent)
+		m_tabwin->addTab(p);
+	else
+		m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
+	p->setTabText(tr("View As Text : ") + fileName);
+}
+
+void MainWindowImpl::openTextWindow(const tstring& fileName, bool silent)
+{
+	openTextWindow(StilUtils::TstrtoQ(fileName), silent);
+}
+
+void MainWindowImpl::openTextWindow(const string& fileName, bool silent)
+{
+	openTextWindow(Text::toT(fileName), silent);
 }

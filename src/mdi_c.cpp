@@ -25,7 +25,7 @@ MdiChild::MdiChild(QWidget *parent) : QDialog(parent), idText("")
 {
 	setAttribute(Qt::WA_DeleteOnClose, true);
 	type = StilUtils::WIN_TYPE_NONE;
-	prnt = MainWindowImpl::getInstance()->getTabs();
+	prnt = qobject_cast<TabWidget*>(parent);
 }
 
 MdiChild::~MdiChild()
