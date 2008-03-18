@@ -197,7 +197,7 @@ void MainWindowImpl::clientInit()
 	File::ensureDirectory(SETTING(LOG_DIRECTORY));
 	startSocket();
 	
-		if(BOOLSETTING(OPEN_SYSTEM_LOG))			OpenSingleTab(StilUtils::WIN_TYPE_SYSTEM_LOG, true);
+	if(BOOLSETTING(OPEN_SYSTEM_LOG))			OpenSingleTab(StilUtils::WIN_TYPE_SYSTEM_LOG, true);
 	if(BOOLSETTING(OPEN_FAVORITE_USERS))		OpenSingleTab(StilUtils::WIN_TYPE_FAVORITE_USERS, true);
 	if(BOOLSETTING(OPEN_QUEUE))				OpenSingleTab(StilUtils::WIN_TYPE_DL_QUEUE, true);
 	if(BOOLSETTING(OPEN_FINISHED_DOWNLOADS))	OpenSingleTab(StilUtils::WIN_TYPE_FINISHED_DL, true);
@@ -842,6 +842,7 @@ void MainWindowImpl::OpenSingleTab(StilUtils::tabWinTypes type, bool silent)
 				else
 					m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
 				p->setTabText(tr("Finished Downloads"));
+				p->setTabIcon(actionFinished_downloads->icon());
 			}
 			else m_tabwin->setCurrentIndex(z);
 		} break;
@@ -856,6 +857,7 @@ void MainWindowImpl::OpenSingleTab(StilUtils::tabWinTypes type, bool silent)
 				else
 					m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
 				p->setTabText(tr("Finished Uploads"));
+				p->setTabIcon(actionFinished_Uploads->icon());
 			}
 			else m_tabwin->setCurrentIndex(z);
 		} break;
@@ -870,6 +872,7 @@ void MainWindowImpl::OpenSingleTab(StilUtils::tabWinTypes type, bool silent)
 				else
 					m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
 				p->setTabText(tr("System Log"));
+				p->setTabIcon(actionSysLog->icon());
 			}
 			else m_tabwin->setCurrentIndex(z);
 		} break;
@@ -884,6 +887,7 @@ void MainWindowImpl::OpenSingleTab(StilUtils::tabWinTypes type, bool silent)
 				else
 					m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
 				p->setTabText(tr("Waiting Users"));
+				p->setTabIcon(actionWaiting->icon());
 			}
 			else m_tabwin->setCurrentIndex(z);
 		} break;
@@ -898,6 +902,7 @@ void MainWindowImpl::OpenSingleTab(StilUtils::tabWinTypes type, bool silent)
 				else
 					m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
 				p->setTabText(tr("Network Statistics"));
+				p->setTabIcon(actionNetStats->icon());
 			}
 			else m_tabwin->setCurrentIndex(z);
 		} break;
@@ -912,6 +917,7 @@ void MainWindowImpl::OpenSingleTab(StilUtils::tabWinTypes type, bool silent)
 				else
 					m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
 				p->setTabText(tr("Automatic Directory Listing Search"));
+				p->setTabIcon(actionADL_Search->icon());
 			}
 			else m_tabwin->setCurrentIndex(z);
 		} break;
@@ -926,6 +932,7 @@ void MainWindowImpl::OpenSingleTab(StilUtils::tabWinTypes type, bool silent)
 				else
 					m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
 				p->setTabText(tr("Search Spy"));
+				p->setTabIcon(actionSearch_Spy->icon());
 			}
 			else m_tabwin->setCurrentIndex(z);
 		} break;
@@ -940,6 +947,7 @@ void MainWindowImpl::OpenSingleTab(StilUtils::tabWinTypes type, bool silent)
 				else
 					m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
 				p->setTabText(tr("Ign_Usr"));
+				p->setTabIcon(actionIgnored_Users->icon());
 			}
 			else m_tabwin->setCurrentIndex(z);
 		} break;
@@ -954,6 +962,7 @@ void MainWindowImpl::OpenSingleTab(StilUtils::tabWinTypes type, bool silent)
 				else
 					m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
 				p->setTabText(tr("Favorite Users"));
+				p->setTabIcon(actionFavorite_Users->icon());
 			}
 			else m_tabwin->setCurrentIndex(z);
 		} break;
@@ -968,6 +977,7 @@ void MainWindowImpl::OpenSingleTab(StilUtils::tabWinTypes type, bool silent)
 				else
 					m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
 				p->setTabText(tr("Favorite Hubs"));
+				p->setTabIcon(actionFavorite_Hubs->icon());
 			}
 			else m_tabwin->setCurrentIndex(z);
 		} break;
@@ -982,6 +992,7 @@ void MainWindowImpl::OpenSingleTab(StilUtils::tabWinTypes type, bool silent)
 				else
 					m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
 				p->setTabText(StilUtils::TstrtoQ(T_("Public Hubs")));
+				p->setTabIcon(actionPublic_Hubs->icon());
 			}
 			else m_tabwin->setCurrentIndex(z);
 		} break;
@@ -996,6 +1007,7 @@ void MainWindowImpl::OpenSingleTab(StilUtils::tabWinTypes type, bool silent)
 				else
 					m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
 				p->setTabText(tr("DL_Queue"));
+				p->setTabIcon(actionDownload_Queue->icon());
 			}
 			else m_tabwin->setCurrentIndex(z);
 		} break;
@@ -1010,6 +1022,7 @@ void MainWindowImpl::OpenSingleTab(StilUtils::tabWinTypes type, bool silent)
 				else
 					m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
 				p->setTabText(tr("NotePad"));
+				p->setTabIcon(actionNotePad->icon());
 			}
 			else m_tabwin->setCurrentIndex(z);
 		} break;
@@ -1032,14 +1045,17 @@ void MainWindowImpl::OpenList(QWidget *parent, const tstring & aFile, const User
 	tstring t = aFile;
 	UserPtr u = aUser;
 	
+	FileListDlg *p = new FileListDlg(parent, u, aSpeed, t);
+	
 	if (silent)
 		{
-			m_tabwin->addTab( (new FileListDlg(parent, u, aSpeed, t) ), aTitle );
+			m_tabwin->addTab( p, aTitle );
 		}
 	else
 		{
-			m_tabwin->setCurrentIndex( m_tabwin->addTab( (new FileListDlg(parent, u, aSpeed, t) ), aTitle ) );
+			m_tabwin->setCurrentIndex( m_tabwin->addTab( p, aTitle ) );
 		}
+		//p->setTabIcon(QIcon(":/images/file_list.png"));
 }
 
 void MainWindowImpl::OpenHub(const tstring& adr, bool silent)
@@ -1055,6 +1071,7 @@ void MainWindowImpl::OpenHub(const tstring& adr, bool silent)
 		}
 		
 	p->setTabText(tr("Hub: ")+StilUtils::TstrtoQ(adr));
+	//p->setTabIcon(QIcon(":/images/hub.png"));
 }
 
 void MainWindowImpl::OpenPM(const UserPtr& replyTo, const tstring& aMessage, bool silent)
@@ -1069,6 +1086,7 @@ void MainWindowImpl::OpenPM(const UserPtr& replyTo, const tstring& aMessage, boo
 			m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
 		}
 	p->setTabText(tr("Private Chat with: ")+StilUtils::TstrtoQ(StilUtils::getNicks(replyTo)));
+	p->setTabIcon(QIcon(":/images/private_chat.png"));
 }
 
 void MainWindowImpl::OpenSearch(const tstring& str, int64_t size, SearchManager::SizeModes mode, SearchManager::TypeModes type, bool silent)
@@ -1079,6 +1097,7 @@ void MainWindowImpl::OpenSearch(const tstring& str, int64_t size, SearchManager:
 	else
 		m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
 	p->setTabText(tr("Search for: ")+StilUtils::TstrtoQ(str));
+	p->setTabIcon(actionSearch->icon());
 }
 
 void MainWindowImpl::openTextWindow(const QString& fileName, bool silent)
@@ -1089,6 +1108,7 @@ void MainWindowImpl::openTextWindow(const QString& fileName, bool silent)
 	else
 		m_tabwin->setCurrentIndex(m_tabwin->addTab(p));
 	p->setTabText(tr("View As Text : ") + fileName);
+	p->setTabIcon(QIcon(":/images/view_as_text.png"));
 }
 
 void MainWindowImpl::openTextWindow(const tstring& fileName, bool silent)

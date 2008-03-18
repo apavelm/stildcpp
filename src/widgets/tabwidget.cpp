@@ -21,11 +21,10 @@
 #include "tabwidget.h"
 
 
-TabWidget::TabWidget(QWidget *parent) : QTabWidget(parent)
+TabWidget::TabWidget(QWidget *parent) : QTabWidget(parent), tab_Pos(0)
 {
 	setMouseTracking( true );
 	tabBar()->installEventFilter(this);
-	tb=0;
 	setTabShape(QTabWidget::Rounded);
 	setElideMode(Qt::ElideRight);
 	
@@ -34,17 +33,18 @@ TabWidget::TabWidget(QWidget *parent) : QTabWidget(parent)
 	
 	// Position Submenu
 	QMenu *a = menu->addMenu(tr("Position"));
-	connect(a->addAction(QIcon(":/images/tab_up.png"), tr("Tabs Position Up")), SIGNAL(triggered()), this, SLOT(tabup()) );
-	connect(a->addAction(QIcon(":/images/tab_down.png"), tr("Tabs Position Down")), SIGNAL(triggered()), this, SLOT(tabdown()) );
+	connect(a->addAction(QIcon(":/images/tabs/tabs_position_up.png"), tr("Tabs Position Up")), SIGNAL(triggered()), this, SLOT(tabup()) );
+	connect(a->addAction(QIcon(":/images/tabs/tabs_position_down.png"), tr("Tabs Position Down")), SIGNAL(triggered()), this, SLOT(tabdown()) );
+	menu->addSeparator();
 
-	connect(menu->addAction(QIcon(":/images/cross.png"), tr("Close Current Tab")), SIGNAL(triggered()), this, SLOT(slotCloseTab()) );
-	connect(menu->addAction(QIcon(":/images/cross2.png"), tr("Close Other Tabs")), SIGNAL(triggered()), this, SLOT(slotCloseOtherTab()) );
-	connect(menu->addAction(QIcon(":/images/cross_black.png"), tr("Close All Tabs")), SIGNAL(triggered()), this, SLOT(slotCloseAllTab()) );
+	connect(menu->addAction(QIcon(":/images/tabs/close_tab.png"), tr("Close Current Tab")), SIGNAL(triggered()), this, SLOT(slotCloseTab()) );
+	connect(menu->addAction(QIcon(":/images/tabs/close_other_tabs.png"), tr("Close Other Tabs")), SIGNAL(triggered()), this, SLOT(slotCloseOtherTab()) );
+	connect(menu->addAction(QIcon(":/images/tabs/close_all_tabs.png"), tr("Close All Tabs")), SIGNAL(triggered()), this, SLOT(slotCloseAllTab()) );
 
 	
 	// Corner Close-cross Button
 	crossButton = new QToolButton(this);
-	crossButton->setIcon( QIcon(":/images/cross.png") );
+	crossButton->setIcon( QIcon(":/images/tabs/close_tab.png") );
 	connect(crossButton, SIGNAL(clicked()), this, SLOT(slotCloseTab()) );
 	crossButton->setGeometry(0,0,32,32);
 	this->setCornerWidget(crossButton);
@@ -56,21 +56,10 @@ TabWidget::~TabWidget()
 	delete crossButton;
 }
 
-void TabWidget::tabdown()
+void TabWidget::setOpt(int value)
 {
-	setOpt(1);
-}
-
-void TabWidget::tabup()
-{
-	setOpt(0);
-}
-
-
-void TabWidget::setOpt(int k)
-{
-	tb=k;
-	if (k==0) setTabPosition(QTabWidget::North);
+	tab_Pos = value;
+	if (!value) setTabPosition(QTabWidget::North);
 		else setTabPosition(QTabWidget::South);
 }
 

@@ -998,7 +998,7 @@ void TransferView::connections_insert(ConnectionInfo* ci)
 	for (int i = 0; i < CONNECTION_COLUMN_LAST; i++) 
 		lst << StilUtils::TstrtoQ(ci->getText(i));
 	QTreeWidgetItem *it = new QTreeWidgetItem(connections, lst);
-	it->setIcon(0,QIcon( (ci->download ? ":/images/trans_DL.png" : ":/images/trans_UL.png") ));
+	it->setIcon(0,QIcon( (ci->download ? ":/images/transfers/down.png" : ":/images/transfers/up.png") ));
 	
 	//if (SETTING(SHOW_PROGRESS_BARS))
 	//{

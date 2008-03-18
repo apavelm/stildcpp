@@ -1,10 +1,10 @@
 <!DOCTYPE RCC><RCC version="1.0">
 	<qresource>
-		<file>images/splash.png</file>
-		<file>images/cross.png</file>
-		<file>images/cross2.png</file>
-		<file>images/cross_black.png</file>
-		<file>images/tab_down.png</file>
-		<file>images/tab_up.png</file>
+		<file>images/splash_editor.png</file>
+		<file>images/tabs/close_tab.png</file>
+		<file>images/tabs/close_other_tabs.png</file>
+		<file>images/tabs/close_all_tabs.png</file>
+		<file>images/tabs/tabs_position_down.png</file>
+		<file>images/tabs/tabs_position_up.png</file>
 	</qresource>
 </RCC>

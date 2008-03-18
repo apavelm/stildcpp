@@ -1,38 +1,54 @@
 <!DOCTYPE RCC><RCC version="1.0">
 	<qresource>
-		<file>images/QuickCon.png</file>
-		<file>images/icon.png</file>
-		<file>images/favhubs.png</file>
-		<file>images/favusers.png</file>
-		<file>images/fav_user1.png</file>
-		<file>images/fav_user2.png</file>
-		<file>images/ignoredusers.png</file>
-		<file>images/FinishedUL.png</file>
-		<file>images/finisheddownloads.png</file>
-		<file>images/note.png</file>
-		<file>images/icon.png</file>
-		<file>images/trans_DL.png</file>
-		<file>images/trans_UL.png</file>
-		<file>images/DL_queue.png</file>
-		<file>images/reload.png</file>
-		<file>images/hub.png</file>
-		<file>images/icon_error.png</file>
-		<file>images/icon_mail.png</file>
-		<file>images/splash.png</file>
-		<file>images/pref_colors_n_fonts.png</file>
-		<file>images/pref_icons.png</file>
-		<file>images/pref_icon.png</file>
-		<file>images/pref_sounds.png</file>
-		<file>images/icon_linux.png</file>
-		<file>images/DCPlusPlus.png</file>
-		<file>images/magnet.png</file>
-		<file>images/tth_file.png</file>
-		<file>images/tth_tth.png</file>
-		<file>images/cross.png</file>
-		<file>images/cross2.png</file>
-		<file>images/cross_black.png</file>
-		<file>images/tab_down.png</file>
-		<file>images/tab_up.png</file>
+		<file>images/tabs/close_tab.png</file>
+		<file>images/tabs/close_other_tabs.png</file>
+		<file>images/tabs/close_all_tabs.png</file>
+		<file>images/tabs/tabs_position_down.png</file>
+		<file>images/tabs/tabs_position_up.png</file>
+		
+		<file>images/actions/public_hubs.png</file>
+		<file>images/actions/reconnect.png</file>
+		<file>images/actions/redirect.png</file>
+		<file>images/actions/favorite_hubs.png</file>
+		<file>images/actions/favorite_users.png</file>
+		<file>images/actions/ignored_users.png</file>		
+		<file>images/actions/download_queue.png</file>
+		<file>images/actions/finished_downloads.png</file>
+		<file>images/actions/waiting_users.png</file>
+		<file>images/actions/finished_uploads.png</file>		
+		<file>images/actions/search.png</file>
+		<file>images/actions/adlsearch.png</file>
+		<file>images/actions/searchspy.png</file>
+		<file>images/actions/preferences.png</file>
+		<file>images/actions/open_filelist.png</file>
+		<file>images/actions/get_tth_for_file.png</file>
+		<file>images/actions/system_log.png</file>
+		<file>images/actions/network_statistics.png</file>
+		<file>images/actions/indexing_progress.png</file>
+		<file>images/actions/notepad.png</file>
+		<file>images/actions/quick_connect.png</file>
+		
+		<file>images/transfers/down.png</file>
+		<file>images/transfers/up.png</file>
+		
+		<file>images/settings/personal_info.png</file>
+		<file>images/settings/connection_settings.png</file>
+		<file>images/settings/downloads.png</file>
+		<file>images/settings/favorites.png</file>
+		<file>images/settings/preview.png</file>
+		<file>images/settings/queue.png</file>
+		<file>images/settings/sharing.png</file>
+		<file>images/settings/messages.png</file>
+		<file>images/settings/look_and_feel.png</file>
+		<file>images/settings/colors_and_fonts.png</file>
+		<file>images/settings/popup_messages.png</file>
+		<file>images/settings/sounds.png</file>
+		<file>images/settings/tabs_and_windows.png</file>
+		<file>images/settings/additional.png</file>
+		<file>images/settings/logs.png</file>
+		<file>images/settings/user_commands.png</file>
+		<file>images/settings/misc.png</file>
+		
 		<file>images/status/green_16.png</file>
 		<file>images/status/green-star_16.png</file>
 		<file>images/status/red_16.png</file>
@@ -41,9 +57,18 @@
 		<file>images/status/yellow-green-star_16.png</file>
 		<file>images/status/yellow-red_16.png</file>
 		<file>images/status/yellow-red-star_16.png</file>
-		<file>images/actions/search.png</file>
-		<file>images/actions/adlsearch.png</file>
-		<file>images/actions/searchspy.png</file>
-		<file>images/actions/redirect.png</file>
+		
+		<file>images/splash.png</file>
+		<file>images/DCPlusPlus.png</file>
+		<file>images/icon_linux.png</file>
+		<file>images/icon.png</file>
+		<file>images/magnet.png</file>
+		<file>images/tth_file.png</file>
+		<file>images/tth_tth.png</file>
+		
+		<file>images/hub.png</file>
+		<file>images/private_chat.png</file>
+		<file>images/file_list.png</file>
+		<file>images/view_as_text.png</file>
 	</qresource>
 </RCC>

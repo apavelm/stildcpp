@@ -26,7 +26,7 @@ TQuickConnectDialog::TQuickConnectDialog(QWidget *parent) : QDialog(parent)
 	setAttribute(Qt::WA_DeleteOnClose, true);
 
 	AdrLabel->setText(tr("Input Hub Address below:"));
-	IconLabel->setPixmap(QPixmap(":/images/QuickCon.png"));	
+	IconLabel->setPixmap(QPixmap(":/images/actions/quick_connect.png"));
 	
 	#ifdef _DEBUG
 		adrline->setText("localhost:4111");
@@ -41,6 +41,5 @@ TQuickConnectDialog::TQuickConnectDialog(QWidget *parent) : QDialog(parent)
 
 void TQuickConnectDialog::okFunc()
 {
-	QString a=adrline->text();
-	emit con_pressed(a);
+	emit con_pressed(adrline->text());
 }

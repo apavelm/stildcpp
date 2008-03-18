@@ -27,7 +27,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent) : QDialog(parent)
 {
 	setupUi(this);
 	setAttribute(Qt::WA_DeleteOnClose, true);
-	setWindowIcon(QIcon(":/images/pref_icon.png"));
+	setWindowIcon(QIcon(":/images/actions/preferences.png"));
 
 	categoryList->header()->hide();
 
@@ -65,60 +65,60 @@ void PreferencesDialog::initCategoryList()
 {
 	QTreeWidgetItem *it0 = new QTreeWidgetItem(categoryList);
 		it0->setText(0,tr("Personal information"));
-		it0->setIcon(0,QIcon(":/images/icon_error.png"));
+		it0->setIcon(0,QIcon(":/images/settings/personal_info.png"));
 	QTreeWidgetItem *it1 = new QTreeWidgetItem(categoryList);
 		it1->setText(0,tr("Connection settings"));
-		it1->setIcon(0,QIcon(":/images/icon_mail.png"));
+		it1->setIcon(0,QIcon(":/images/settings/connection_settings.png"));
 	QTreeWidgetItem *it2 = new QTreeWidgetItem(categoryList);
 		it2->setText(0,tr("Downloads"));
-		it2->setIcon(0,QIcon(":/images/icon.png"));
+		it2->setIcon(0,QIcon(":/images/settings/downloads.png"));
 				
 					QTreeWidgetItem *it2a = new QTreeWidgetItem(it2);
 						it2a->setText(0,tr("Favorites"));
-						it2a->setIcon(0,QIcon(":/images/icon_error.png"));
+						it2a->setIcon(0,QIcon(":/images/settings/favorites.png"));
 					QTreeWidgetItem *it2b = new QTreeWidgetItem(it2);
 						it2b->setText(0,tr("Preview"));
-						it2b->setIcon(0,QIcon(":/images/icon_mail.png"));
+						it2b->setIcon(0,QIcon(":/images/settings/preview.png"));
 					QTreeWidgetItem *it2c = new QTreeWidgetItem(it2);
 						it2c->setText(0,tr("Queue"));
-						it2c->setIcon(0,QIcon(":/images/icon.png"));
+						it2c->setIcon(0,QIcon(":/images/settings/queue.png"));
 								
 	QTreeWidgetItem *it3 = new QTreeWidgetItem(categoryList);
 		it3->setText(0,tr("Sharing"));
-		it3->setIcon(0,QIcon(":/images/icon_error.png"));
+		it3->setIcon(0,QIcon(":/images/settings/sharing.png"));
 	QTreeWidgetItem *it4 = new QTreeWidgetItem(categoryList);
 		it4->setText(0,tr("Messages"));
-		it4->setIcon(0,QIcon(":/images/icon_mail.png"));
+		it4->setIcon(0,QIcon(":/images/settings/messages.png"));
 	QTreeWidgetItem *it5 = new QTreeWidgetItem(categoryList);
 		it5->setText(0,tr("Look and Feel"));
-		it5->setIcon(0,QIcon(":/images/icon.png"));
+		it5->setIcon(0,QIcon(":/images/settings/look_and_feel.png"));
 		
 					QTreeWidgetItem *it5a = new QTreeWidgetItem(it5);
 						it5a->setText(0,tr("Colors and Fonts"));
-						it5a->setIcon(0,QIcon(":/images/pref_colors_n_fonts.png"));
+						it5a->setIcon(0,QIcon(":/images/settings/colors_and_fonts.png"));
 					QTreeWidgetItem *it5b = new QTreeWidgetItem(it5);
 						it5b->setText(0,tr("Popup Messages"));
-						it5b->setIcon(0,QIcon(":/images/icon_mail.png"));
+						it5b->setIcon(0,QIcon(":/images/settings/popup_messages.png"));
 					QTreeWidgetItem *it5c = new QTreeWidgetItem(it5);
 						it5c->setText(0,tr("Sounds"));
-						it5c->setIcon(0,QIcon(":/images/pref_sounds.png"));
+						it5c->setIcon(0,QIcon(":/images/settings/sounds.png"));
 					QTreeWidgetItem *it5d = new QTreeWidgetItem(it5);
 						it5d->setText(0,tr("Tabs and Windows"));
-						it5d->setIcon(0,QIcon(":/images/icon.png"));
+						it5d->setIcon(0,QIcon(":/images/settings/tabs_and_windows.png"));
 		
 	QTreeWidgetItem *it6 = new QTreeWidgetItem(categoryList);
 		it6->setText(0,tr("Additional"));
-		it6->setIcon(0,QIcon(":/images/icon_error.png"));
+		it6->setIcon(0,QIcon(":/images/settings/additional.png"));
 		
 					QTreeWidgetItem *it6a = new QTreeWidgetItem(it6);
 						it6a->setText(0,tr("Logs"));
-						it6a->setIcon(0,QIcon(":/images/icon_mail.png"));
+						it6a->setIcon(0,QIcon(":/images/settings/logs.png"));
 					QTreeWidgetItem *it6b = new QTreeWidgetItem(it6);
 						it6b->setText(0,tr("User Commands"));
-						it6b->setIcon(0,QIcon(":/images/icon.png"));		
+						it6b->setIcon(0,QIcon(":/images/settings/user_commands.png"));
 					QTreeWidgetItem *it6c = new QTreeWidgetItem(it6);
 						it6c->setText(0,tr("Misc"));
-						it6c->setIcon(0,QIcon(":/images/icon_error.png"));		
+						it6c->setIcon(0,QIcon(":/images/settings/misc.png"));		
 		
 	categoryList->setAlternatingRowColors(true);
 

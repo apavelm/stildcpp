@@ -21,12 +21,8 @@
 #ifndef TABWIDGET_H
 #define TABWIDGET_H
 
-#include <QTabWidget>
-#include <QMouseEvent>
-#include <QTabBar>
-#include <QMenu>
-#include <QApplication>
-#include <QToolButton>
+#include <QtCore>
+#include <QtGui>
 
 class TabWidget : public QTabWidget
 {
@@ -34,8 +30,8 @@ class TabWidget : public QTabWidget
 public:
 	TabWidget(QWidget *parent);
 	~TabWidget();
-	void setOpt(int k);
-	int getOpt() const { return tb; }
+	void setOpt(int);
+	int getOpt() const { return tab_Pos; }
 	void setTextChange(int, const QString &);
 	void setTextColor(int, QColor &);
 	void setTabToolTip(int, const QString &);
@@ -49,14 +45,14 @@ public:
 protected:
 	bool eventFilter(QObject *obj, QEvent *event);
 private:
-	int tb;
+	int tab_Pos;
 	bool swapTabs(int index1, int index2);
 	QToolButton *crossButton;
 	QMenu *menu;
 	void setCrossButton(bool activate);
 private slots:
-	void tabdown();
-	void tabup();
+	void tabdown() { setOpt(1); }
+	void tabup() { setOpt(0); }
 public slots:
 	void slotCloseTab();
 	void slotCloseTab(int n);

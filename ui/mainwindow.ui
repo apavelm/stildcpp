@@ -168,6 +168,9 @@
    </property>
   </action>
   <action name="actionAbout" >
+   <property name="icon" >
+    <iconset resource="../src/stildcpp.qrc" >:/images/icon_linux.png</iconset>
+   </property>
    <property name="text" >
     <string>About</string>
    </property>
@@ -176,6 +179,9 @@
    </property>
   </action>
   <action name="actionOpen_filelist" >
+   <property name="icon" >
+    <iconset resource="../src/stildcpp.qrc" >:/images/actions/open_filelist.png</iconset>
+   </property>
    <property name="text" >
     <string>Open filelist</string>
    </property>
@@ -209,7 +215,7 @@
   </action>
   <action name="actionQuick_Connect" >
    <property name="icon" >
-    <iconset resource="../src/stildcpp.qrc" >:/images/QuickCon.png</iconset>
+    <iconset resource="../src/stildcpp.qrc" >:/images/actions/quick_connect.png</iconset>
    </property>
    <property name="text" >
     <string>Quick Connect</string>
@@ -231,7 +237,7 @@
   </action>
   <action name="actionReconnect" >
    <property name="icon" >
-    <iconset resource="../src/stildcpp.qrc" >:/images/reload.png</iconset>
+    <iconset resource="../src/stildcpp.qrc" >:/images/actions/reconnect.png</iconset>
    </property>
    <property name="text" >
     <string>Reconnect</string>
@@ -245,7 +251,7 @@
   </action>
   <action name="actionSettings" >
    <property name="icon" >
-    <iconset resource="../src/stildcpp.qrc" >:/images/pref_icon.png</iconset>
+    <iconset resource="../src/stildcpp.qrc" >:/images/actions/preferences.png</iconset>
    </property>
    <property name="text" >
     <string>Settings</string>
@@ -258,6 +264,9 @@
    </property>
   </action>
   <action name="actionGet_TTH_for_file" >
+   <property name="icon" >
+    <iconset resource="../src/stildcpp.qrc" >:/images/actions/get_tth_for_file.png</iconset>
+   </property>
    <property name="text" >
     <string>Get TTH for file...</string>
    </property>
@@ -266,13 +275,16 @@
    </property>
   </action>
   <action name="actionPublic_Hubs" >
+   <property name="icon" >
+    <iconset resource="../src/stildcpp.qrc" >:/images/actions/public_hubs.png</iconset>
+   </property>
    <property name="text" >
     <string>Public Hubs</string>
    </property>
   </action>
   <action name="actionFavorite_Hubs" >
    <property name="icon" >
-    <iconset resource="../src/stildcpp.qrc" >:/images/favhubs.png</iconset>
+    <iconset resource="../src/stildcpp.qrc" >:/images/actions/favorite_hubs.png</iconset>
    </property>
    <property name="text" >
     <string>Favorite Hubs</string>
@@ -280,7 +292,7 @@
   </action>
   <action name="actionFavorite_Users" >
    <property name="icon" >
-    <iconset resource="../src/stildcpp.qrc" >:/images/favusers.png</iconset>
+    <iconset resource="../src/stildcpp.qrc" >:/images/actions/favorite_users.png</iconset>
    </property>
    <property name="text" >
     <string>Favorite Users</string>
@@ -288,7 +300,7 @@
   </action>
   <action name="actionIgnored_Users" >
    <property name="icon" >
-    <iconset resource="../src/stildcpp.qrc" >:/images/ignoredusers.png</iconset>
+    <iconset resource="../src/stildcpp.qrc" >:/images/actions/ignored_users.png</iconset>
    </property>
    <property name="text" >
     <string>Ignored Users</string>
@@ -324,6 +336,9 @@
    </property>
   </action>
   <action name="actionIndexing_Progress" >
+   <property name="icon" >
+    <iconset resource="../src/stildcpp.qrc" >:/images/actions/indexing_progress.png</iconset>
+   </property>
    <property name="text" >
     <string>Indexing Progress</string>
    </property>
@@ -344,7 +359,7 @@
   </action>
   <action name="actionDownload_Queue" >
    <property name="icon" >
-    <iconset resource="../src/stildcpp.qrc" >:/images/DL_queue.png</iconset>
+    <iconset resource="../src/stildcpp.qrc" >:/images/actions/download_queue.png</iconset>
    </property>
    <property name="text" >
     <string>Download Queue</string>
@@ -352,7 +367,7 @@
   </action>
   <action name="actionFinished_downloads" >
    <property name="icon" >
-    <iconset resource="../src/stildcpp.qrc" >:/images/finisheddownloads.png</iconset>
+    <iconset resource="../src/stildcpp.qrc" >:/images/actions/finished_downloads.png</iconset>
    </property>
    <property name="text" >
     <string>Finished Downloads</string>
@@ -360,7 +375,7 @@
   </action>
   <action name="actionFinished_Uploads" >
    <property name="icon" >
-    <iconset resource="../src/stildcpp.qrc" >:/images/FinishedUL.png</iconset>
+    <iconset resource="../src/stildcpp.qrc" >:/images/actions/finished_uploads.png</iconset>
    </property>
    <property name="text" >
     <string>Finished Uploads</string>
@@ -426,7 +441,7 @@
   </action>
   <action name="actionNotePad" >
    <property name="icon" >
-    <iconset resource="../src/stildcpp.qrc" >:/images/note.png</iconset>
+    <iconset resource="../src/stildcpp.qrc" >:/images/actions/notepad.png</iconset>
    </property>
    <property name="text" >
     <string>NotePad</string>
@@ -436,16 +451,25 @@
    </property>
   </action>
   <action name="actionSysLog" >
+   <property name="icon" >
+    <iconset resource="../src/stildcpp.qrc" >:/images/actions/system_log.png</iconset>
+   </property>
    <property name="text" >
     <string>System Log</string>
    </property>
   </action>
   <action name="actionNetStats" >
+   <property name="icon" >
+    <iconset resource="../src/stildcpp.qrc" >:/images/actions/network_statistics.png</iconset>
+   </property>
    <property name="text" >
     <string>Network Statistics</string>
    </property>
   </action>
   <action name="actionWaiting" >
+   <property name="icon" >
+    <iconset resource="../src/stildcpp.qrc" >:/images/actions/waiting_users.png</iconset>
+   </property>
    <property name="text" >
     <string>Waiting Users</string>
    </property>
