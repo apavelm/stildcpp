@@ -288,7 +288,8 @@ void StilUtils::openLink(const tstring& url)
 
 void StilUtils::openLink(const QString& url)
 {
-	
+	QUrl u = QUrl(url);
+	QDesktopServices::openUrl(u);
 }
 
 // of stilutils

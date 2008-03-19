@@ -20,7 +20,7 @@
 
 #include "tabwidget.h"
 
-
+/*
 TabWidget::TabWidget(QWidget *parent) : QTabWidget(parent), tab_Pos(0)
 {
 	setMouseTracking( true );
@@ -33,13 +33,7 @@ TabWidget::TabWidget(QWidget *parent) : QTabWidget(parent), tab_Pos(0)
 	
 	// Position Submenu
 	QMenu *a = menu->addMenu(tr("Position"));
-	connect(a->addAction(QIcon(":/images/tabs/tabs_position_up.png"), tr("Tabs Position Up")), SIGNAL(triggered()), this, SLOT(tabup()) );
-	connect(a->addAction(QIcon(":/images/tabs/tabs_position_down.png"), tr("Tabs Position Down")), SIGNAL(triggered()), this, SLOT(tabdown()) );
-	menu->addSeparator();
 
-	connect(menu->addAction(QIcon(":/images/tabs/close_tab.png"), tr("Close Current Tab")), SIGNAL(triggered()), this, SLOT(slotCloseTab()) );
-	connect(menu->addAction(QIcon(":/images/tabs/close_other_tabs.png"), tr("Close Other Tabs")), SIGNAL(triggered()), this, SLOT(slotCloseOtherTab()) );
-	connect(menu->addAction(QIcon(":/images/tabs/close_all_tabs.png"), tr("Close All Tabs")), SIGNAL(triggered()), this, SLOT(slotCloseAllTab()) );
 
 	
 	// Corner Close-cross Button
@@ -49,113 +43,51 @@ TabWidget::TabWidget(QWidget *parent) : QTabWidget(parent), tab_Pos(0)
 	crossButton->setGeometry(0,0,32,32);
 	this->setCornerWidget(crossButton);
 }
+*/
+
+TabWidget::TabWidget(QWidget *parent) : QTabWidget(parent)
+{
+	tabBar_ = new TabBar(this);
+	tabBar_->setElideMode(Qt::ElideRight);
+	setTabBar( tabBar_ );
+	buttons_ = new TabButtonWidget(this);
+
+	int buttonwidth = qMax(tabBar()->style()->pixelMetric(QStyle::PM_TabBarScrollButtonWidth, 0, tabBar()), QApplication::globalStrut().width());
+	buttons_->downButton()->setFixedWidth(buttonwidth);
+	buttons_->downButton()->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
+	buttons_->downButton()->setArrowType(Qt::DownArrow);
+	buttons_->downButton()->setPopupMode(QToolButton::InstantPopup);
+	
+	menu_ = new QMenu(this);
+	buttons_->downButton()->setMenu(menu_);
+	
+	connect(menu_, SIGNAL(aboutToShow()), SLOT(menu_aboutToShow()));
+	connect(menu_, SIGNAL(triggered(QAction*)), SLOT(menu_triggered(QAction*)));
+
+	buttons_->closeButton()->setFixedWidth(buttonwidth);
+	buttons_->closeButton()->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
+	buttons_->closeButton()->setText("x");
+
+	connect( tabBar(), SIGNAL(mouseDoubleClickTab(int)), SLOT(mouseDoubleClickTab(int)));
+	connect( tabBar(), SIGNAL( currentChanged(int)), SLOT(tab_currentChanged(int)));
+	connect( tabBar(), SIGNAL( contextMenu(QContextMenuEvent*,int)), SLOT( tab_contextMenu(QContextMenuEvent*,int)));
+	connect( buttons_->closeButton(), SIGNAL(clicked()), SIGNAL(closeButtonClicked()));
+	connect(this, SIGNAL(closeButtonClicked()), this, SLOT(slotCloseTab()) );
+	setCornerWidget(buttons_);
+}
 
 TabWidget::~TabWidget()
 {
-	delete menu;
-	delete crossButton;
-}
-
-void TabWidget::setOpt(int value)
-{
-	tab_Pos = value;
-	if (!value) setTabPosition(QTabWidget::North);
-		else setTabPosition(QTabWidget::South);
-}
-
-bool TabWidget::eventFilter(QObject *obj, QEvent *event)
-{
-	if (obj==tabBar())
-	{
-		if (event->type() == QEvent::MouseButtonRelease )
-		{
-		qApp->restoreOverrideCursor();
-		}
-		
-		else 
-		
-		if (event->type() == QEvent::MouseButtonPress )
-		{
-			QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
-			int tmp2=-1;
-			for (int i=0; i<tabBar()->count(); i++)
-			{
-				if ( tabBar()->tabRect(i).contains( mouseEvent->pos() ) )
-				{
-				tmp2 = i;
-				break;
-				}
-			}
-			if ( mouseEvent->button() == Qt::LeftButton )
-				qApp->setOverrideCursor( Qt::ClosedHandCursor );
-			if ( mouseEvent->button() == Qt::MidButton )
-				if (tmp2>-1) slotCloseTab(tmp2);
-			if ( mouseEvent->button() == Qt::RightButton )
-				menu->exec(mouseEvent->globalPos());
-		}
-		
-		else 
-		
-		if (event->type() == QEvent::MouseMove )
-		{
-		QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
-		for (int i=0; i<tabBar()->count(); i++)
-		{
-			if ( tabBar()->tabRect(i).contains( mouseEvent->pos() ) )
-			{
-				if ( swapTabs(i, currentIndex()) )
-				{
-					setCurrentWidget(widget(i));
-					update();
-					int x;
-					if ( !tabBar()->tabRect(i).contains( mouseEvent->pos() ) )
-					{
-						if ( tabBar()->tabRect(currentIndex()).x() < tabBar()->tabRect(i).x() )
-							x = tabBar()->tabRect(i).x();
-						else
-							x = tabBar()->tabRect(i).x()+(tabBar()->tabRect(i).width()-(qAbs(tabBar()->tabRect(i).width()-tabBar()->tabRect(currentIndex()).width())));
-						QPoint point =  QPoint(x, mouseEvent->pos().y() );
-						point =  widget(i)->mapToGlobal( point );
-						QCursor::setPos ( point.x(), QCursor::pos().y() );
-					}
-				break;
-				}
-			}
-		}
-		}
-	}
-	return QTabWidget::eventFilter( obj, event);
-}
-
-bool TabWidget::swapTabs(int index1, int index2)
-{
-	if (index1==index2) return false;
-	int t1 = qMin(index1,index2);
-	int t2 = qMax(index1,index2);
-	
-	index1=t1;
-	index2=t2;
-
-	QString name1 = tabBar()->tabText(index1);
-	QString name2 = tabBar()->tabText(index2);
-
-	QWidget *tab1 = widget(index1);
-	QWidget *tab2 = widget(index2);
-
-	removeTab(index2);
-	removeTab(index1);
-
-	insertTab(index1,tab2,name2);
-	insertTab(index2,tab1,name1);
-	return true;
+	delete menu_;
+	delete buttons_;
 }
 
 void TabWidget::slotCloseTab(int n)
 {
-	if ( this->widget(n)) 
+	if ( widget(n)) 
 	{
-		if ( !(this->widget(n)->close()) ) return;
-			else delete this->widget(n);
+		if ( !(widget(n)->close()) ) return;
+			else delete widget(n);
 	}
 }
 
@@ -180,56 +112,141 @@ void TabWidget::slotCloseOtherTab()
 			slotCloseTab(1);
 }
 
-void TabWidget::setCrossButton(bool activate)
+void TabWidget::setCloseIcon(const QIcon& icon)
 {
-	if (!activate) crossButton->hide();
-	else crossButton->show();
+	buttons_->closeButton()->setIcon(icon);
+	buttons_->closeButton()->setText("");
 }
 
-void TabWidget::setTextChange(int index, const QString & txt)
+void TabWidget::mouseDoubleClickTab(int tab)
 {
-	if ( (index<0)||(index>=tabBar()->count())||(txt.isEmpty()) ) return;
-	int ix = currentIndex();
-	QWidget *tab1 = widget(index);
-
-	removeTab(index);
-	insertTab(index,tab1,txt);
-	setCurrentIndex(ix);
+	emit mouseDoubleClickTab(widget(tab));
 }
 
-void TabWidget::slotTextChange(int index, const QString & txt)
+void TabWidget::tab_currentChanged(int tab)
 {
-	setTextChange(index, txt);
+	setCurrentIndex(tab);
+	emit currentChanged(currentWidget());
 }
 
-void TabWidget::setTextColor(int index, QColor & c)
+void TabWidget::setTabText(QWidget* widget, const QString& label)
 {
-	tabBar()->setTabTextColor(index, c);
+	int index = indexOf(widget);
+	if (index != -1) tabBar()->setTabText(index, label);
+} 
+
+const QString TabWidget::tabText(int index) const
+{
+	return tabBar()->tabText(index);
 }
 
-void TabWidget::setTabToolTip(int index, const QString & txt)
+void TabWidget::setTabToolTip(QWidget * widget, const QString & tooltip)
 {
-	tabBar()->setTabToolTip(index, txt);
+	int index = indexOf(widget);
+	if (index != -1) tabBar()->setTabToolTip(index, tooltip);
 }
+
+const QString TabWidget::tabToolTip(int index) const
+{
+	return tabBar()->tabToolTip(index);
+}
+
+void TabWidget::setTabIcon(QWidget * widget, const QIcon & icon)
+{
+	int index = indexOf(widget);
+	if (index != -1) tabBar()->setTabIcon(index, icon);
+}
+
+const QIcon TabWidget::tabIcon(int index) const
+{
+	return tabBar()->tabIcon(index);
+}
+
+void TabWidget::setTabTextColor(QWidget * widget, const QColor & color)
+{
+	int index = indexOf(widget);
+	if (index != -1) tabBar()->setTabTextColor(index, color);
+}
+
+const QColor TabWidget::tabTextColor(int index) const
+{
+	return tabBar()->tabTextColor(index);
+}
+
+void TabWidget::menu_aboutToShow()
+{
+	menu_->clear();
+	bool vis = false;
+	for (int i = 0; i < tabBar()->count(); i++)
+	{
+		QRect r = tabBar()->tabRect(i);
+		bool newvis = tabBar()->rect().contains(r);
+		if (newvis != vis)
+		{
+			menu_->addSeparator();
+			vis = newvis;
+		}
+		menu_->addAction(tabBar()->tabIcon(i), tabBar()->tabText(i))->setData(i+1);
+	}
 	
-void TabWidget::slotTextColor(int index, QColor & c)
-{
-	setTextColor(index, c);
+	menu_->addSeparator();
+	QMenu * b = new QMenu();
+	connect(b->addAction(/*QIcon(":/images/tabs/tabs_position_up.png"),*/ tr("Tabs Position Up")), SIGNAL(triggered()), this, SLOT(tabup()) );
+	connect(b->addAction(/*QIcon(":/images/tabs/tabs_position_down.png"),*/ tr("Tabs Position Down")), SIGNAL(triggered()), this, SLOT(tabdown()) );
+	connect(b->addAction(/*QIcon(":/images/tabs/tabs_position_up.png"),*/ tr("Tabs Position Left")), SIGNAL(triggered()), this, SLOT(tableft()) );
+	connect(b->addAction(/*QIcon(":/images/tabs/tabs_position_down.png"),*/ tr("Tabs Position Right")), SIGNAL(triggered()), this, SLOT(tabright()) );
+	QAction * y = menu_->addMenu(b);
+	y->setText(tr("Position"));
+	menu_->addSeparator();
+	
+	QMenu * a = new QMenu();
+	connect(a->addAction(QIcon(":/images/tabs/close_tab.png"), tr("Close Current Tab")), SIGNAL(triggered()), this, SLOT(slotCloseTab()) );
+	connect(a->addAction(QIcon(":/images/tabs/close_other_tabs.png"), tr("Close Other Tabs")), SIGNAL(triggered()), this, SLOT(slotCloseOtherTab()) );
+	connect(a->addAction(QIcon(":/images/tabs/close_all_tabs.png"), tr("Close All Tabs")), SIGNAL(triggered()), this, SLOT(slotCloseAllTab()) );
+	
+	QAction * z = menu_->addMenu(a);
+	z->setText(tr("Close..."));
+	
+	emit aboutToShowMenu(menu_);
 }
 
-void TabWidget::slotTabToolTip(int index, const QString & txt)
-{
-	setTabToolTip(index, txt);
+void TabWidget::menu_triggered(QAction *act) {
+	int idx = act->data().toInt();
+	if (idx <= 0 || idx > tabBar()->count()) {
+		// out of range
+		// emit signal? 
+	} else {
+		setCurrentIndex(idx-1);
+	}
 }
 
-void TabWidget::setTabIcon(int index, const QIcon & icn)
+void TabWidget::tab_contextMenu( QContextMenuEvent * event, int tab)
 {
-	tabBar()->setTabIcon(index, icn);
+	emit tabContextMenu(tab, tabBar()->mapToGlobal(event->pos()), event);
 }
 
-void TabWidget::slotTabIcon(int index, const QIcon & icn)
-{
-	setTabIcon(index, icn);
+/**
+ * Show/hide the tab bar of this widget
+ */
+void TabWidget::setTabBarShown(bool shown) {
+	if (shown && tabBar()->isHidden()) {
+		tabBar()->show();
+	} else if (!shown && !tabBar()->isHidden()) {
+		tabBar()->hide();
+	}
+}
+
+/**
+ * Show/hide the menu and close buttons that appear next to the tab bar
+ */
+void TabWidget::setTabButtonsShown(bool shown) {
+	if (shown && buttons_->downButton()->isHidden()) {
+		buttons_->downButton()->show();
+		buttons_->closeButton()->show();
+	} else if (!shown && !buttons_->downButton()->isHidden()) {
+		buttons_->downButton()->hide();
+		buttons_->closeButton()->hide();
+	}
 }
 
 //

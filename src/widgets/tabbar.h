@@ -18,59 +18,42 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "mdi_c.h"
-#include "mainwindowimpl.h"
+#ifndef _TABBAR_H_
+#define _TABBAR_H_
 
-MdiChild::MdiChild(QWidget *parent) : QDialog(parent), idText("")
+#include <QtCore>
+#include <QtGui>
+
+#include "tabwidget.h"
+#include "../config.h"
+
+class TabWidget;
+
+class TabBar : public QTabBar
 {
-	setAttribute(Qt::WA_DeleteOnClose, true);
-	type = StilUtils::WIN_TYPE_NONE;
-	prnt = qobject_cast<TabWidget*>(parent);
-}
+	Q_OBJECT
 
-MdiChild::~MdiChild()
-{
-	prnt = NULL;
-}
+public:
+	TabBar(TabWidget * parent);
+	~TabBar();
 
-void MdiChild::setTabText(const QString &txt)
-{
-	prnt->setTabText(this, txt);
-}
+signals:
+	void mouseDoubleClickTab(int tab);
+	void tabDropped(int tab, TabBar *source);
+	void contextMenu(QContextMenuEvent *event, int tab);
 
-void MdiChild::slot_setTabText(const QString &txt)
-{
-	setTabText(txt);
-}
+protected:
+	void mouseDoubleClickEvent(QMouseEvent *event);
+	void dragEnterEvent(QDragEnterEvent *event);
+	void dragMoveEvent(QDragMoveEvent *event);
+	void dropEvent(QDropEvent *event);
+	
+	void mousePressEvent(QMouseEvent *event);
+	void contextMenuEvent(QContextMenuEvent *event);
+	void wheelEvent(QWheelEvent *event);
 
-void MdiChild::setTabTextColor(QColor & c)
-{
-	prnt->setTabTextColor(this, c);
-}
+private:
+	int findTabUnder(const QPoint &pos);
+};
 
-void MdiChild::slot_setTabTextColor(QColor & c)
-{
-	setTabTextColor(c);
-}
-
-void MdiChild::setTabToolTip(const QString &txt)
-{
-	prnt->setTabToolTip(this, txt);
-}
-
-void MdiChild::slot_setTabToolTip(const QString &txt)
-{
-	setTabToolTip(txt);
-}
-
-void MdiChild::setTabIcon(const QIcon & icn)
-{
-	prnt->setTabIcon(this, icn);
-}
-
-void MdiChild::slot_setTabIcon(const QIcon & icn)
-{
-	setTabIcon(icn);
-}
-
-//
+#endif /* _TABBAR_H_ */

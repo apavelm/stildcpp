@@ -37,6 +37,7 @@ FORMS = ui/mainwindow.ui \
  ui/transview.ui \
  ui/waitingusers.ui \
  ui/hashman.ui \
+ ui/tabbuttonwidget.ui \
  ui/confpubhub.ui
 HEADERS = src/mainwindowimpl.h \
  src/frmAbout.h \
@@ -51,6 +52,7 @@ HEADERS = src/mainwindowimpl.h \
  src/mdi_filelist.h \
  src/defs.h \
  src/pm_win.h \
+ src/widgets/tabbar.h \
  src/widgets/tabwidget.h \
  src/favHubLstWin.h \
  src/SearchWin.h \
@@ -182,6 +184,7 @@ SOURCES = src/mainwindowimpl.cpp \
  src/mdi_filelist.cpp \
  src/defs.cpp \
  src/pm_win.cpp \
+ src/widgets/tabbar.cpp \
  src/widgets/tabwidget.cpp \
  src/favHubLstWin.cpp \
  src/SearchWin.cpp \

@@ -68,8 +68,7 @@ void MainWindowImpl::initMain()
 	m_tabwin = new TabWidget( this );
 	connect(m_tabwin, SIGNAL(currentChanged(int)), this, SLOT(slotCurrentTabChanged(int)) );
 	setCentralWidget(m_tabwin);
-	m_tabwin->setOpt(APPSETTING(i_TABPOSIOTION));
-	
+	m_tabwin->setTabPosition((QTabWidget::TabPosition)APPSETTING(i_TABPOSIOTION));
 	int pos_x= SETTING(MAIN_WINDOW_POS_X);
 	int pos_y= SETTING(MAIN_WINDOW_POS_Y);
 	int size_x= SETTING(MAIN_WINDOW_SIZE_X);
@@ -434,14 +433,12 @@ void MainWindowImpl::PreferencesFunc()
 
 void MainWindowImpl::DonateFunc()
 {
-	QUrl url = QUrl(APPDONATEPAGE);
-	QDesktopServices::openUrl(url);
+	StilUtils::openLink(APPDONATEPAGE);
 }
 
 void MainWindowImpl::HomepageFunc()
 {
-	QUrl url = QUrl(APPHOMEPAGE);
-	QDesktopServices::openUrl(url);
+	StilUtils::openLink(APPHOMEPAGE);
 }
 
 void MainWindowImpl::ShowHashDlg(bool autoClose)
@@ -609,10 +606,10 @@ void MainWindowImpl::show_tthFunc()
 
 void MainWindowImpl::reconnectFunc()
 {
-	int i = m_tabwin->currentIndex();
-	if ( (i>-1)&&(m_tabwin->count()>0) )
+	QWidget * w = m_tabwin->currentWidget();
+	if ( w )
 	{
-		MdiChild *p = qobject_cast<MdiChild *>(m_tabwin->widget(i));
+		MdiChild *p = qobject_cast<MdiChild *>(w);
 		if (p->type==1)
 		{
 			HubWindow *v = qobject_cast<HubWindow *>(p);
@@ -1049,11 +1046,13 @@ void MainWindowImpl::OpenList(QWidget *parent, const tstring & aFile, const User
 	
 	if (silent)
 		{
-			m_tabwin->addTab( p, aTitle );
+			m_tabwin->addTab(p);
+			p->setTabText(aTitle);
 		}
 	else
 		{
-			m_tabwin->setCurrentIndex( m_tabwin->addTab( p, aTitle ) );
+			m_tabwin->setCurrentIndex( m_tabwin->addTab( p ) );
+			p->setTabText(aTitle);
 		}
 		//p->setTabIcon(QIcon(":/images/file_list.png"));
 }

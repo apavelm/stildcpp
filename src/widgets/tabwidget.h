@@ -24,44 +24,74 @@
 #include <QtCore>
 #include <QtGui>
 
+#include "tabbar.h"
+
+#include "ui_tabbuttonwidget.h"
+
+class TabButtonWidget : public QWidget, private Ui::uiTabButtonWidget
+{
+	Q_OBJECT
+public:
+	TabButtonWidget(QWidget * parent) : QWidget(parent) { setupUi(this); }
+	~TabButtonWidget() {}
+	QToolButton * closeButton() { return closeButton_; }
+	QToolButton * downButton() { return downButton_; }
+};
+
 class TabWidget : public QTabWidget
 {
 	Q_OBJECT
 public:
-	TabWidget(QWidget *parent);
+	TabWidget(QWidget *parent = 0);
 	~TabWidget();
-	void setOpt(int);
-	int getOpt() const { return tab_Pos; }
-	void setTextChange(int, const QString &);
-	void setTextColor(int, QColor &);
-	void setTabToolTip(int, const QString &);
-	void setTabIcon(int, const QIcon &);
+	
+	int addTab(QWidget * w) { return QTabWidget::addTab(w, QString("unnamed")); }
+
+	void setTabText(QWidget *, const QString &);
+	const QString tabText(int) const;
+	void setTabToolTip(QWidget *, const QString &);
+	const QString tabToolTip(int) const;
+	void setTabIcon(QWidget *, const QIcon &);
+	const QIcon tabIcon(int) const;
+	void setTabTextColor(QWidget *, const QColor &);
+	const QColor tabTextColor(int) const;
 	
 	
-	int addTab ( QWidget * page, const QString & label ) { return QTabWidget::addTab(page, label); }
-	int addTab ( QWidget * page, const QIcon & icon, const QString & label ) { return QTabWidget::addTab(page, icon, label); }
-	int addTab ( QWidget * page, const QIcon & icon = QIcon() ) { return QTabWidget::addTab(page, icon, QString()); }
-	
-protected:
-	bool eventFilter(QObject *obj, QEvent *event);
-private:
-	int tab_Pos;
-	bool swapTabs(int index1, int index2);
-	QToolButton *crossButton;
-	QMenu *menu;
-	void setCrossButton(bool activate);
+	void setCloseIcon(const QIcon &);
+
+	void setTabBarShown(bool shown);     // default shown
+	void setTabButtonsShown(bool shown); // default shown
+
+signals:
+	void mouseDoubleClickTab(QWidget *tab);
+	void currentChanged(QWidget *selected);
+	void closeButtonClicked();
+	void aboutToShowMenu(QMenu *);
+
+	// context menu on the blank space will have tab==-1
+	void tabContextMenu(int tab, QPoint pos, QContextMenuEvent *event);
+
 private slots:
-	void tabdown() { setOpt(1); }
-	void tabup() { setOpt(0); }
+	void mouseDoubleClickTab(int tab);
+	void tab_currentChanged(int tab);
+	void tab_contextMenu(QContextMenuEvent *event, int tab);
+	void menu_aboutToShow();
+	void menu_triggered(QAction *act);
+	
+	void tabup() { setTabPosition(QTabWidget::North); }
+	void tabdown() { setTabPosition(QTabWidget::South); }
+	void tableft() { setTabPosition(QTabWidget::West); }
+	void tabright() { setTabPosition(QTabWidget::East); }
+
+private:
+	QTabBar *tabBar_;
+	TabButtonWidget * buttons_;
+	QMenu *menu_;
 public slots:
 	void slotCloseTab();
 	void slotCloseTab(int n);
-	void slotCloseOtherTab();
 	void slotCloseAllTab();
-	void slotTextChange(int, const QString &);
-	void slotTextColor(int, QColor &);
-	void slotTabToolTip(int, const QString &);
-	void slotTabIcon(int, const QIcon &);
+	void slotCloseOtherTab();
 };
 
 #endif
