@@ -45,8 +45,9 @@ public:
 	TabWidget(QWidget *parent = 0);
 	~TabWidget();
 	
-	int addTab(QWidget * w) { return QTabWidget::addTab(w, QString("unnamed")); }
-
+	int addTab(QWidget * w) { return addTab(w, QString("unnamed")); }
+	int addTab( QWidget * page, const QString & label ) { return QTabWidget::addTab( page, label ); }
+	int addTab( QWidget * page, const QIcon & icon, const QString & label ) { return QTabWidget::addTab(page, icon, label); }
 	void setTabText(QWidget *, const QString &);
 	const QString tabText(int) const;
 	void setTabToolTip(QWidget *, const QString &);

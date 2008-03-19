@@ -20,31 +20,6 @@
 
 #include "tabwidget.h"
 
-/*
-TabWidget::TabWidget(QWidget *parent) : QTabWidget(parent), tab_Pos(0)
-{
-	setMouseTracking( true );
-	tabBar()->installEventFilter(this);
-	setTabShape(QTabWidget::Rounded);
-	setElideMode(Qt::ElideRight);
-	
-	// Context Menu
-	menu = new QMenu(this);
-	
-	// Position Submenu
-	QMenu *a = menu->addMenu(tr("Position"));
-
-
-	
-	// Corner Close-cross Button
-	crossButton = new QToolButton(this);
-	crossButton->setIcon( QIcon(":/images/tabs/close_tab.png") );
-	connect(crossButton, SIGNAL(clicked()), this, SLOT(slotCloseTab()) );
-	crossButton->setGeometry(0,0,32,32);
-	this->setCornerWidget(crossButton);
-}
-*/
-
 TabWidget::TabWidget(QWidget *parent) : QTabWidget(parent)
 {
 	tabBar_ = new TabBar(this);
