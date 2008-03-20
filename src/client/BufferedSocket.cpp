@@ -145,7 +145,7 @@ void BufferedSocket::threadRead() throw(SocketException) {
 		return;
 	} else if(left == 0) {
 		// This socket has been closed...
-		throw SocketException(("Connection closed"));
+		throw SocketException(_("Connection closed"));
 	}
 	string::size_type pos = 0;
 	// always uncompressed data
@@ -372,7 +372,7 @@ void BufferedSocket::threadSendData() {
 
 bool BufferedSocket::checkEvents() {
 	while(state == RUNNING ? taskSem.wait(0) : taskSem.wait()) {
-		pair<Tasks, boost::shared_ptr<TaskData> > p;
+		pair<Tasks, std::tr1::shared_ptr<TaskData> > p;
 		{
 			Lock l(cs);
 			dcassert(tasks.size() > 0);

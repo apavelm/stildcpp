@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: dcpp\n"
 "Report-Msgid-Bugs-To: dcplusplus-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-03-04 23:00+0100\n"
-"PO-Revision-Date: 2008-02-06 16:43+0000\n"
+"POT-Creation-Date: 2008-03-18 22:52+0100\n"
+"PO-Revision-Date: 2008-03-18 10:53+0000\n"
 "Last-Translator: Kryppy <Unknown>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-03-04 21:52+0000\n"
+"X-Launchpad-Export-Date: 2008-03-18 21:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: dcpp/Util.cpp:381
@@ -50,12 +50,12 @@ msgstr "%.02f TiB"
 #: dcpp/AdcHub.cpp:139
 #, boost-format
 msgid "%1% (%2%) has same CID {%3%} as %4% (%5%), ignoring"
-msgstr ""
+msgstr "%1% (%2%) ha lo stesso CID {%3%} di %4% (%5%), ignora"
 
 #: dcpp/NmdcHub.cpp:281
 #, boost-format
 msgid "%1% (Nick unknown)"
-msgstr "%1% (Nick usconosciuto)"
+msgstr "%1% (Nick sconosciuto)"
 
 #: dcpp/HashManager.cpp:767
 #, boost-format
@@ -73,12 +73,12 @@ msgstr "%1% rinominato in %2%"
 #: dcpp/AdcHub.cpp:281
 #, boost-format
 msgid "%1% was kicked by %2%: %3%"
-msgstr ""
+msgstr "%1% e stato kikkato da  %2%: %3%"
 
 #: dcpp/AdcHub.cpp:284
 #, boost-format
 msgid "%1% was kicked: %2%"
-msgstr ""
+msgstr "%1% e stato kikkato: %2%"
 
 #: dcpp/DownloadManager.cpp:530
 #, boost-format
@@ -130,8 +130,12 @@ msgstr "Inconsistenza CRC32 (Controllo SFV) (File: %1%)"
 msgid "Certificate not trusted, unable to connect"
 msgstr "Certificato non valido, impossibile connettersi"
 
+#: dcpp/BufferedSocket.cpp:148
+msgid "Connection closed"
+msgstr "Connessione chiusa"
+
 #: dcpp/Socket.cpp:154 dcpp/ConnectionManager.cpp:182
-#: dcpp/BufferedSocket.cpp:154
+#: dcpp/BufferedSocket.cpp:131
 msgid "Connection timeout"
 msgstr "Connessione in timeout"
 
@@ -144,7 +148,11 @@ msgstr "Impossibile aprire il file di destinazione: %1%"
 msgid "Directory already shared"
 msgstr "Cartella già condivisa"
 
-#: dcpp/BufferedSocket.cpp:407 dcpp/BufferedSocket.cpp:426
+#: dcpp/ADLSearch.h:281
+msgid "Discard"
+msgstr "Abbandona"
+
+#: dcpp/BufferedSocket.cpp:404
 msgid "Disconnected"
 msgstr "Disconnesso"
 
@@ -153,7 +161,7 @@ msgstr "Disconnesso"
 msgid "Disconnected user leaving the hub: %1%"
 msgstr "Utente disconnesso lasciando l' hub: %1%"
 
-#: dcpp/DCPlusPlus.cpp:103
+#: dcpp/DCPlusPlus.cpp:107
 msgid "Download Queue"
 msgstr "Download in Coda"
 
@@ -209,15 +217,15 @@ msgstr "Impossibile caricare il codice privato"
 
 #: dcpp/AdcHub.cpp:206
 msgid "Failed to negotiate base protocol"
-msgstr ""
+msgstr "Impossibile negoziare il protocollo di base"
 
 #: dcpp/Socket.cpp:408
 msgid ""
 "Failed to set up the socks server for UDP relay (check socks address and "
 "port)"
 msgstr ""
-"Impossibile impostare il server sockr per il relay UDP (verificare l "
-"indirizzo  del sock e la porta)"
+"Impossibile impostare il server socks per il relay UDP (verificare l "
+"indirizzo del sock e la porta)"
 
 #: dcpp/ShareManager.cpp:776
 #, boost-format
@@ -262,7 +270,7 @@ msgstr "L'albero delle cartelle non è coerente con la radice TTH"
 msgid "Generated new TLS certificate"
 msgstr "Creato nuovo certificato TLS"
 
-#: dcpp/DCPlusPlus.cpp:97
+#: dcpp/DCPlusPlus.cpp:101
 msgid "Hash database"
 msgstr "Archivio hash"
 
@@ -280,6 +288,8 @@ msgid ""
 "Hub probably uses an old version of ADC, please encourage the owner to "
 "upgrade"
 msgstr ""
+"Probabilmente l' Hub utilizza una vecchia versione di ADC , si prega di "
+"incoraggiare il proprietario ad aggiornarlo"
 
 #: dcpp/DownloadManager.cpp:220
 msgid "Invalid size"
@@ -298,11 +308,11 @@ msgid "Kick user(s)"
 msgstr "Blocca utente(i)"
 
 #: dcpp/ConnectionManager.cpp:230
-#, fuzzy, boost-format
+#, boost-format
 msgid "Listening socket failed (you need to restart %1%): %2%"
-msgstr "Socket di ascolto non riuscito (dovete riavviare DC++): %1%"
+msgstr "Socket di ascolto non riuscito (dovete riavviare %1%): %2%"
 
-#: dcpp/BufferedSocket.cpp:261
+#: dcpp/BufferedSocket.cpp:237
 msgid "Maximum command length exceeded"
 msgstr "Superata massima lunghezza comando"
 
@@ -318,12 +328,12 @@ msgstr "Nessuna cartella specificata"
 msgid "No slots available"
 msgstr "Nessuno slot disponibile"
 
-#: dcpp/AdcHub.cpp:576
-#, fuzzy, boost-format
+#: dcpp/AdcHub.cpp:577
+#, boost-format
 msgid "Not listening for connections - please restart %1%"
-msgstr "Nessun ascolto per la connessione - riavviare DC++"
+msgstr "Nessun ascolto per la connessione - riavviare %1%"
 
-#: dcpp/Transfer.cpp:63 dcpp/Transfer.cpp:67 dcpp/ClientManager.cpp:115
+#: dcpp/Transfer.cpp:63 dcpp/Transfer.cpp:67 dcpp/ClientManager.cpp:114
 #: dcpp/SearchManager.cpp:267 dcpp/SearchManager.cpp:329
 #: dcpp/SearchManager.cpp:331
 msgid "Offline"
@@ -337,12 +347,15 @@ msgstr "Reindirizza utente(i)"
 msgid "Remove all subdirectories before adding this one"
 msgstr "Elimina tutte le sottocartelle prima di aggiungere questa"
 
-#: dcpp/DownloadManager.cpp:225
-#, fuzzy
-msgid "Response does not match request"
-msgstr "L'albero delle cartelle non è coerente con la radice TTH"
+#: dcpp/BitInputStream.h:40
+msgid "Request to seek beyond the end of data"
+msgstr "Richiesta di ricercare oltre la fine dei dati"
 
-#: dcpp/DCPlusPlus.cpp:100
+#: dcpp/DownloadManager.cpp:225
+msgid "Response does not match request"
+msgstr "Risultato non corrisponde con la richiesta"
+
+#: dcpp/DCPlusPlus.cpp:104
 msgid "Shared Files"
 msgstr "File Condivisi"
 
@@ -359,6 +372,10 @@ msgstr "TLS disattivato, file certificato non creato: %1%"
 #: dcpp/CryptoManager.cpp:211
 msgid "TLS disabled, no certificate file set"
 msgstr "TLS disattivato, file certificato non impostato"
+
+#: dcpp/MerkleCheckOutputStream.h:53 dcpp/MerkleCheckOutputStream.h:113
+msgid "TTH inconsistency"
+msgstr "incoerenza TTH"
 
 #: dcpp/QueueManager.cpp:510 dcpp/QueueManager.cpp:519
 msgid "Target filename too long"

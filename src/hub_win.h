@@ -215,7 +215,7 @@ private:
 	void setStatus(int s, const tstring& text);
 	void updateStatus();
 	
-	bool speak();// { return true; }
+	void speak();// { return true; }
 	void speak(Tasks s) { tasks.add(s, 0); speak(); }
 	void speak(Tasks s, const string& msg) { tasks.add(s, new StringTask(msg)); speak(); }
 	void speak(Tasks s, const OnlineUser& u) { tasks.add(s, new UserTask(u)); updateUsers = true; }

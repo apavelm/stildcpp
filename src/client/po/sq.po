@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: dcpp\n"
 "Report-Msgid-Bugs-To: dcplusplus-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-03-04 23:00+0100\n"
-"PO-Revision-Date: 2008-02-05 23:02+0000\n"
-"Last-Translator: Rrjeti <Unknown>\n"
+"POT-Creation-Date: 2008-03-18 22:52+0100\n"
+"PO-Revision-Date: 2008-03-13 23:13+0000\n"
+"Last-Translator: Jacek Sieka <Unknown>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-03-04 21:52+0000\n"
+"X-Launchpad-Export-Date: 2008-03-18 21:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: dcpp/Util.cpp:381
@@ -129,8 +129,13 @@ msgstr "SFV-kontrolli dha një shumë kontroll të gabuar CRC32"
 msgid "Certificate not trusted, unable to connect"
 msgstr ""
 
+#: dcpp/BufferedSocket.cpp:148
+#, fuzzy
+msgid "Connection closed"
+msgstr "Jashtëkohe(Timeout) gjatë lidhjes"
+
 #: dcpp/Socket.cpp:154 dcpp/ConnectionManager.cpp:182
-#: dcpp/BufferedSocket.cpp:154
+#: dcpp/BufferedSocket.cpp:131
 msgid "Connection timeout"
 msgstr "Jashtëkohe(Timeout) gjatë lidhjes"
 
@@ -143,7 +148,11 @@ msgstr ""
 msgid "Directory already shared"
 msgstr "Dosja i gatshëm për shpërndarje"
 
-#: dcpp/BufferedSocket.cpp:407 dcpp/BufferedSocket.cpp:426
+#: dcpp/ADLSearch.h:281
+msgid "Discard"
+msgstr ""
+
+#: dcpp/BufferedSocket.cpp:404
 msgid "Disconnected"
 msgstr "Shkëputur"
 
@@ -152,7 +161,7 @@ msgstr "Shkëputur"
 msgid "Disconnected user leaving the hub: %1%"
 msgstr ""
 
-#: dcpp/DCPlusPlus.cpp:103
+#: dcpp/DCPlusPlus.cpp:107
 msgid "Download Queue"
 msgstr "Lista e shkarkimeve"
 
@@ -255,7 +264,7 @@ msgstr "Struktura e shkarkuar s`i përgjigjet TTH rrënjës"
 msgid "Generated new TLS certificate"
 msgstr ""
 
-#: dcpp/DCPlusPlus.cpp:97
+#: dcpp/DCPlusPlus.cpp:101
 msgid "Hash database"
 msgstr "TTH-indeksimi i bazës kompjuterike/dosjes"
 
@@ -293,7 +302,7 @@ msgstr "Përjashto përdoruesin(at)"
 msgid "Listening socket failed (you need to restart %1%): %2%"
 msgstr ""
 
-#: dcpp/BufferedSocket.cpp:261
+#: dcpp/BufferedSocket.cpp:237
 msgid "Maximum command length exceeded"
 msgstr ""
 
@@ -309,12 +318,12 @@ msgstr "S´është caktuar asnjë dosje"
 msgid "No slots available"
 msgstr "Kanalet s`janë të arritshme/në dispozicion"
 
-#: dcpp/AdcHub.cpp:576
+#: dcpp/AdcHub.cpp:577
 #, boost-format
 msgid "Not listening for connections - please restart %1%"
 msgstr ""
 
-#: dcpp/Transfer.cpp:63 dcpp/Transfer.cpp:67 dcpp/ClientManager.cpp:115
+#: dcpp/Transfer.cpp:63 dcpp/Transfer.cpp:67 dcpp/ClientManager.cpp:114
 #: dcpp/SearchManager.cpp:267 dcpp/SearchManager.cpp:329
 #: dcpp/SearchManager.cpp:331
 msgid "Offline"
@@ -328,12 +337,16 @@ msgstr "Riorijento përdoruesin(-at)"
 msgid "Remove all subdirectories before adding this one"
 msgstr "Përpara se t`a vendosish këtë, zhvendos të gjitha nën-dosjet"
 
+#: dcpp/BitInputStream.h:40
+msgid "Request to seek beyond the end of data"
+msgstr ""
+
 #: dcpp/DownloadManager.cpp:225
 #, fuzzy
 msgid "Response does not match request"
 msgstr "Struktura e shkarkuar s`i përgjigjet TTH rrënjës"
 
-#: dcpp/DCPlusPlus.cpp:100
+#: dcpp/DCPlusPlus.cpp:104
 msgid "Shared Files"
 msgstr "Filet e shpërndara"
 
@@ -350,6 +363,10 @@ msgstr ""
 
 #: dcpp/CryptoManager.cpp:211
 msgid "TLS disabled, no certificate file set"
+msgstr ""
+
+#: dcpp/MerkleCheckOutputStream.h:53 dcpp/MerkleCheckOutputStream.h:113
+msgid "TTH inconsistency"
 msgstr ""
 
 #: dcpp/QueueManager.cpp:510 dcpp/QueueManager.cpp:519

@@ -1,3 +1,4 @@
+
 /***************************************************************************
  *   Copyright (C) 2007 - 2008 by Pavel Andreev                            *
  *   Mail: apavelm on gmail point com (apavelm@gmail.com)                  *

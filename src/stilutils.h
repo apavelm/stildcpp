@@ -45,6 +45,8 @@
 using namespace std;
 using namespace dcpp;
 
+Q_DECLARE_METATYPE(UserPtr);
+
  class StilUtils  
 {
 public:

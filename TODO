@@ -1,1 +1,27 @@
-Add "view in charset" option in "View As Text"
+* Highlight files in filelist, if they (files) already in share. (FUTURE: Or if it now *  downloading)
+* New instance of own filelist doesn't open if it has been opened, switch to nessesary tab and refreshing;
+* Own charset for each hub.
+* Connection type for each hub
+* $HubTopic support
+* Showing your own position in queue while "waiting slot" (StrongDC++)
+* Own tag (ex. <StrngDC++>)
+* Implement in "favorite users" options for different hub, 'cause one users can be or can't be "favorite" on different hubs.
+* Opening FileList in new Thread.
+* _silent_ opening filelists
+* Switching to nessecary tab if trying to connect to already conneted hub.
+* Context menu tab-header
+* Make HANDLER for links such as dchub://la-la-la
+* Sorting in TransferView
+* "return" progressbar in transfers/downloads.
+* Implement avatar for each Favorite user
+* Reimplement QApplication::notify()
+* Using StilUtils::linuxSeparator() and StilUtils::windowsSeparator() according to platform
+* In Search: setup priority downloading acording to modificator-keys.
+* Previewing (video)files
+* Add "view in charset" option in "View As Text"
+* Find and fix bug in "WaitingUsers"
+* Fix tab problems
+* Complete PrivateMessage
+* Comlete and clean-up Hub-Window
+* ReImplement FileList dialog
+

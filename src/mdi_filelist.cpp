@@ -22,6 +22,10 @@
 
 #include "mdi_filelist.h"
 
+
+QIcon FileListDlg::folderIcon;
+QIcon FileListDlg::fileIcon;
+
 FileListDlg::FileListDlg(QWidget *parent, const UserPtr &aUser, int64_t aSpeed, tstring &strFile) 
 					: MdiChild(parent), shareSize(0),shareItems(0),listing(aUser),usr(aUser)
 {	

@@ -267,7 +267,10 @@ private:
 	QMenu *userMenu;
 	QMenu *columnMenu;
 	QList<QAction*> fantomActions;
-	
+
+	static QIcon folderIcon;
+	static QIcon fileIcon;
+
 	//reimplemented thiz
 	void speak(unsigned int, long=0);
 

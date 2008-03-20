@@ -67,10 +67,10 @@ private:
 	//QList<QTreeWidgetItem *> dirList; 
 	int shareItems;
 	int64_t shareSize;
-//	static 
-	QIcon folderIcon;
-//	static 
-	QIcon fileIcon;
+
+	static QIcon folderIcon;
+	static QIcon fileIcon;
+
 	DirectoryListing listing;
 	QList<QTreeWidgetItem *> pathList;
 	UserPtr usr;

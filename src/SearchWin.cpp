@@ -27,8 +27,8 @@ int SearchWindow::columnSizes[] = { 200, 100, 50, 80, 100, 40, 100, 150, 80, 100
 
 TStringList SearchWindow::lastSearches;
 
-static QIcon folderIcon;
-static QIcon fileIcon;
+QIcon SearchWindow::folderIcon;
+QIcon SearchWindow::fileIcon;
 
 SearchWindow::SearchWindow(QWidget *parent, const tstring& initialString_, int64_t initialSize_, SearchManager::SizeModes initialMode_, SearchManager::TypeModes initialType_) : MdiChild(parent),
 isHash(false),

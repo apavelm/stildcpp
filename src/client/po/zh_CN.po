@@ -1,16 +1,16 @@
-# Icelandic translations for the DC++ package.
-# Copyright (C) 2008 The translators
-# This file is distributed under the same license as the DC++ package.
-#  <dd-hyper@users.sourceforge.net>, 2008.
+# Simplified Chinese translation for dcplusplus
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# This file is distributed under the same license as the dcplusplus package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: dcpp\n"
+"Project-Id-Version: dcplusplus\n"
 "Report-Msgid-Bugs-To: dcplusplus-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2008-03-18 22:52+0100\n"
-"PO-Revision-Date: 2008-03-13 23:09+0000\n"
-"Last-Translator: Jacek Sieka <Unknown>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2008-03-13 23:13+0000\n"
+"Last-Translator: Tao Wei <weitao1979@gmail.com>\n"
+"Language-Team: Simplified Chinese <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,32 +20,32 @@ msgstr ""
 #: dcpp/Util.cpp:381
 #, c-format, boost-format
 msgid "%'lld B"
-msgstr ""
+msgstr "%'lld B"
 
 #: dcpp/Util.cpp:343
 #, c-format, boost-format
 msgid "%.02f GiB"
-msgstr ""
+msgstr "%.02f GiB"
 
 #: dcpp/Util.cpp:339
 #, c-format, boost-format
 msgid "%.02f KiB"
-msgstr ""
+msgstr "%.02f KiB"
 
 #: dcpp/Util.cpp:341
 #, c-format, boost-format
 msgid "%.02f MiB"
-msgstr ""
+msgstr "%.02f MiB"
 
 #: dcpp/Util.cpp:347
 #, c-format, boost-format
 msgid "%.02f PiB"
-msgstr ""
+msgstr "%.02f PiB"
 
 #: dcpp/Util.cpp:345
 #, c-format, boost-format
 msgid "%.02f TiB"
-msgstr ""
+msgstr "%.02f TiB"
 
 #: dcpp/AdcHub.cpp:139
 #, boost-format
@@ -81,50 +81,46 @@ msgstr ""
 #: dcpp/DownloadManager.cpp:530
 #, fuzzy, boost-format
 msgid "%1%: File not available"
-msgstr "Skrá ekki til"
+msgstr "文件不存在"
 
 #: dcpp/Util.cpp:337
 #, c-format, boost-format
 msgid "%d B"
-msgstr ""
+msgstr "%d B"
 
 #: dcpp/Util.cpp:377
 #, c-format, boost-format
 msgid "%s B"
-msgstr ""
+msgstr "%s B"
 
 #: dcpp/QueueManager.cpp:532
 msgid "A file of equal or larger size already exists at the target location"
-msgstr "Eins skrá með eins eða stærri stærð er þegar til"
+msgstr "一个相等或更大的文件已经存在于下载目录中"
 
 #: dcpp/QueueManager.cpp:475
 msgid "A file with a different size already exists in the queue"
-msgstr "Eins skrá með annari stærð er þegar til í biðlista"
+msgstr "存在大小不同的同名文件"
 
 #: dcpp/QueueManager.cpp:478
 msgid "A file with different tth root already exists in the queue"
-msgstr "Eins skrá með aðra TTH rót er þegar í biðlista"
+msgstr "队列中已经有一个不同 tth root 的文件"
 
 #: dcpp/QueueManager.cpp:442
 msgid "A file with the same hash already exists in your share"
-msgstr "Skrá með sama auðkenni er þegar í deilingu"
+msgstr "在你的共享中已经有一个相同hash值的文件了"
 
 #: dcpp/ConnectionManager.cpp:176
 msgid "All download slots taken"
-msgstr "Engin niðurhleðsluhólf laus"
+msgstr "对方所有上传通道都已被占用"
 
 #: dcpp/DownloadManager.cpp:376
 msgid "CRC32 inconsistency (SFV-Check)"
-msgstr ""
-"SFV/CRC32 segir skránna sótta viltaust. Ef sfv/crc32 skráin í sömu möppu "
-"gildir ekki skaltu slökkva á þessum möguleika, en annars sækja hana aftur"
+msgstr "CRC32 出错(SFV-Check)"
 
 #: dcpp/DownloadManager.cpp:374
 #, fuzzy, boost-format
 msgid "CRC32 inconsistency (SFV-Check) (File: %1%)"
-msgstr ""
-"SFV/CRC32 segir skránna sótta viltaust. Ef sfv/crc32 skráin í sömu möppu "
-"gildir ekki skaltu slökkva á þessum möguleika, en annars sækja hana aftur"
+msgstr "CRC32 出错(SFV-Check)"
 
 #: dcpp/ConnectionManager.cpp:376
 msgid "Certificate not trusted, unable to connect"
@@ -133,12 +129,12 @@ msgstr ""
 #: dcpp/BufferedSocket.cpp:148
 #, fuzzy
 msgid "Connection closed"
-msgstr "Tenging rann út"
+msgstr "连接超时"
 
 #: dcpp/Socket.cpp:154 dcpp/ConnectionManager.cpp:182
 #: dcpp/BufferedSocket.cpp:131
 msgid "Connection timeout"
-msgstr "Tenging rann út"
+msgstr "连接超时"
 
 #: dcpp/DownloadManager.cpp:232
 #, boost-format
@@ -147,7 +143,7 @@ msgstr ""
 
 #: dcpp/ShareManager.cpp:418
 msgid "Directory already shared"
-msgstr "Mappa þegar deild"
+msgstr "目录已经共享"
 
 #: dcpp/ADLSearch.h:281
 msgid "Discard"
@@ -155,7 +151,7 @@ msgstr ""
 
 #: dcpp/BufferedSocket.cpp:404
 msgid "Disconnected"
-msgstr "Aftengd/ur"
+msgstr "已断开"
 
 #: dcpp/UploadManager.cpp:450
 #, boost-format
@@ -164,7 +160,7 @@ msgstr ""
 
 #: dcpp/DCPlusPlus.cpp:107
 msgid "Download Queue"
-msgstr "Bið niðurhleðslu"
+msgstr "下载队列"
 
 #: dcpp/ShareManager.cpp:741
 #, boost-format
@@ -186,13 +182,13 @@ msgstr ""
 #: dcpp/ZUtils.cpp:33 dcpp/ZUtils.cpp:54 dcpp/ZUtils.cpp:76 dcpp/ZUtils.cpp:86
 #: dcpp/BZUtils.cpp:31 dcpp/BZUtils.cpp:52 dcpp/BZUtils.cpp:60
 msgid "Error during compression"
-msgstr "Villa í þjöppun"
+msgstr "压缩过程发生错误"
 
 #: dcpp/ZUtils.cpp:100 dcpp/ZUtils.cpp:123 dcpp/BZUtils.cpp:72
 #: dcpp/BZUtils.cpp:94 dcpp/BZUtils.cpp:97 dcpp/CryptoManager.cpp:342
 #: dcpp/CryptoManager.cpp:361 dcpp/CryptoManager.cpp:375
 msgid "Error during decompression"
-msgstr "Villa í afþjöppun"
+msgstr "解压缩出错"
 
 #: dcpp/HashManager.cpp:772
 #, boost-format
@@ -222,18 +218,16 @@ msgstr ""
 msgid ""
 "Failed to set up the socks server for UDP relay (check socks address and "
 "port)"
-msgstr ""
-"Mistókst að setja upp socks þjónin fyrir UDP svar (athugið socks slóð og "
-"port)"
+msgstr "socks服务器UDP回应失败(检查socks服务器的地址和端口)"
 
 #: dcpp/ShareManager.cpp:776
 #, fuzzy, boost-format
 msgid "File list refresh failed: %1%"
-msgstr "Skráarlisti endurnýjaður"
+msgstr "文件列表已更新"
 
 #: dcpp/ShareManager.cpp:820
 msgid "File list refresh finished"
-msgstr "Skráarlisti endurnýjaður"
+msgstr "文件列表已更新"
 
 #: dcpp/ShareManager.cpp:756
 msgid ""
@@ -243,11 +237,11 @@ msgstr ""
 
 #: dcpp/ShareManager.cpp:798
 msgid "File list refresh initiated"
-msgstr "Endurnýjun skráarlista hafið"
+msgstr "文件列表刷新已开始"
 
 #: dcpp/DirectoryListing.cpp:102
 msgid "File not available"
-msgstr "Skrá ekki til"
+msgstr "文件不存在"
 
 #: dcpp/HashManager.cpp:89
 #, boost-format
@@ -261,7 +255,7 @@ msgstr ""
 
 #: dcpp/DownloadManager.cpp:308
 msgid "Full tree does not match TTH root"
-msgstr "Sótt auðkenni passar ekki við TTH auðkenningu"
+msgstr "已下载的“树”不匹配于 TTH root"
 
 #: dcpp/CryptoManager.cpp:219
 msgid "Generated new TLS certificate"
@@ -269,11 +263,11 @@ msgstr ""
 
 #: dcpp/DCPlusPlus.cpp:101
 msgid "Hash database"
-msgstr "Geri TTH auðkenni fyrir skrár í deilingu..."
+msgstr "Hash 数据库"
 
 #: dcpp/HashManager.cpp:677
 msgid "Hash database rebuilt"
-msgstr "Byrja á TTH auðkenningu"
+msgstr "Hash 数据库已重建"
 
 #: dcpp/HashManager.cpp:73 dcpp/HashManager.cpp:277
 #, boost-format
@@ -294,13 +288,11 @@ msgstr ""
 msgid ""
 "Invalid target file (missing directory, check default download directory "
 "setting)"
-msgstr ""
-"Röng staðsetning skráar (týnd upphafsstaðsetning, athugið staðsetningar "
-"stillingar fyrir niðurhalsmöppu)"
+msgstr "目标文件无法访问(目录已被删除, 请检查缺省的下载地址设置)"
 
 #: dcpp/FavoriteManager.cpp:438
 msgid "Kick user(s)"
-msgstr "Sparka notanda"
+msgstr "踢出该用户"
 
 #: dcpp/ConnectionManager.cpp:230
 #, boost-format
@@ -313,15 +305,15 @@ msgstr ""
 
 #: dcpp/DownloadManager.cpp:280
 msgid "More data was sent than was expected"
-msgstr "Meira af gögnum var sent en bjóst var við"
+msgstr "发送了比预期更多的数据量"
 
 #: dcpp/ShareManager.cpp:403
 msgid "No directory specified"
-msgstr "Engin mappa valin"
+msgstr "没有指定目录"
 
 #: dcpp/DownloadManager.cpp:419
 msgid "No slots available"
-msgstr "Engin hleðsluhólf laus"
+msgstr "对方上传通道都已经满了"
 
 #: dcpp/AdcHub.cpp:577
 #, boost-format
@@ -332,15 +324,15 @@ msgstr ""
 #: dcpp/SearchManager.cpp:267 dcpp/SearchManager.cpp:329
 #: dcpp/SearchManager.cpp:331
 msgid "Offline"
-msgstr "Aftengdur"
+msgstr "离线"
 
 #: dcpp/FavoriteManager.cpp:442
 msgid "Redirect user(s)"
-msgstr "Áframsenda notanda(um)"
+msgstr "重定向用户"
 
 #: dcpp/ShareManager.cpp:421
 msgid "Remove all subdirectories before adding this one"
-msgstr "Fjarlægðu allar möppur staðsettar undir þessari á undan"
+msgstr "增加前先删除所有子文件夹"
 
 #: dcpp/BitInputStream.h:40
 msgid "Request to seek beyond the end of data"
@@ -349,15 +341,15 @@ msgstr ""
 #: dcpp/DownloadManager.cpp:225
 #, fuzzy
 msgid "Response does not match request"
-msgstr "Sótt auðkenni passar ekki við TTH auðkenningu"
+msgstr "已下载的“树”不匹配于 TTH root"
 
 #: dcpp/DCPlusPlus.cpp:104
 msgid "Shared Files"
-msgstr "Deildar skrár"
+msgstr "共享文件"
 
 #: dcpp/Socket.cpp:269 dcpp/Socket.cpp:273
 msgid "Socks server authentication failed (bad login / password?)"
-msgstr "Auðkenning á Socks þjóni mistókst (vitlaust notendanafn / lykilorð?)"
+msgstr "Socks代理鉴权失败 (用户名/密码错误?)"
 
 #: dcpp/CryptoManager.cpp:221
 #, boost-format
@@ -374,7 +366,7 @@ msgstr ""
 
 #: dcpp/QueueManager.cpp:510 dcpp/QueueManager.cpp:519
 msgid "Target filename too long"
-msgstr "Nafn á viðfangsefni of langt"
+msgstr "目标文件名太长"
 
 #: dcpp/QueueManager.cpp:798
 msgid "Target removed"
@@ -382,20 +374,20 @@ msgstr ""
 
 #: dcpp/Socket.cpp:255
 msgid "The socks server doesn't support login / password authentication"
-msgstr "Þessi socks þjónn styður ekki notendanafn / lykilorða auðkenni"
+msgstr "Socks代理不支持「用户/密码」验证"
 
 #: dcpp/Socket.cpp:162 dcpp/Socket.cpp:173 dcpp/Socket.cpp:206
 #: dcpp/Socket.cpp:210 dcpp/Socket.cpp:237 dcpp/Socket.cpp:252
 msgid "The socks server failed establish a connection"
-msgstr "Socks þjóninum mistókst að koma á tengingu"
+msgstr "Socks代理连接失败"
 
 #: dcpp/Socket.cpp:241
 msgid "The socks server requires authentication"
-msgstr "Þessi socks þjónn þarfnast auðkenna"
+msgstr "Socks代理需要「用户/密码」验证"
 
 #: dcpp/ShareManager.cpp:407
 msgid "The temporary download directory cannot be shared"
-msgstr "Ekki er hægt að deila temp möppum"
+msgstr "不能共享下载的临时文件目录"
 
 #: dcpp/QueueManager.cpp:465
 msgid "This file is already queued"
@@ -403,7 +395,7 @@ msgstr ""
 
 #: dcpp/Thread.cpp:34 dcpp/Thread.cpp:42
 msgid "Unable to create thread"
-msgstr "Get ekki sett inn þráð"
+msgstr "不能建立线程"
 
 #: dcpp/QueueManager.cpp:995
 #, boost-format
@@ -413,12 +405,12 @@ msgstr ""
 #: dcpp/HashManager.cpp:131
 #, fuzzy
 msgid "Unable to read hash data file"
-msgstr "Get ekki sett inn þráð"
+msgstr "不能建立线程"
 
 #: dcpp/QueueManager.cpp:327
 #, fuzzy, boost-format
 msgid "Unable to rename %1%: %2%"
-msgstr "Get ekki sett inn þráð"
+msgstr "不能建立线程"
 
 #: dcpp/UploadManager.cpp:149
 #, boost-format
@@ -432,11 +424,11 @@ msgstr ""
 
 #: dcpp/ShareManager.cpp:426 dcpp/ShareManager.cpp:468
 msgid "Virtual directory name already exists"
-msgstr "Stafrænt nafn möppunnar er þegar til"
+msgstr "要虚拟的名字已经存在了(不允许重复)"
 
 #: dcpp/QueueManager.cpp:412 dcpp/QueueManager.cpp:436
 msgid "You're trying to download from yourself!"
-msgstr "Það er ekki hægt að sækja frá sjálfum sér!"
+msgstr "不能下载自己!"
 
 #: dcpp/SettingsManager.cpp:156
 msgid "downloaded from"

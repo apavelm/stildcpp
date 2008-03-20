@@ -27,6 +27,7 @@
 #include "Util.h"
 #include "Socket.h"
 
+#include <tr1/memory>
 namespace dcpp {
 
 class BufferedSocket : public Speaker<BufferedSocketListener>, private Thread {
@@ -127,7 +128,7 @@ private:
 	CriticalSection cs;
 
 	Semaphore taskSem;
-	deque<pair<Tasks, boost::shared_ptr<TaskData> > > tasks;
+	deque<pair<Tasks, std::tr1::shared_ptr<TaskData> > > tasks;
 
 	Modes mode;
 	std::auto_ptr<UnZFilter> filterIn;

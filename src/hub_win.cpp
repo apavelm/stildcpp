@@ -531,7 +531,7 @@ void HubWindow::on(SearchFlood, Client*, const string& line) throw() {
 	speak(ADD_STATUS_LINE, _("Search spam detected from ") + line);
 }
 
-bool HubWindow::speak()
+void HubWindow::speak()
 {
 	//QApplication::postEvent(this, HubEvent);
 	//handleSpeaker();

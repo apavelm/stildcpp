@@ -7,12 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: dcpp\n"
 "Report-Msgid-Bugs-To: dcplusplus-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-03-04 23:00+0100\n"
-"Last-Translator:  <keblo@users.sourceforge.net>\n"
+"POT-Creation-Date: 2008-03-18 22:52+0100\n"
+"PO-Revision-Date: 2008-03-13 23:09+0000\n"
+"Last-Translator: Jacek Sieka <Unknown>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Launchpad-Export-Date: 2008-03-18 21:20+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #: dcpp/Util.cpp:381
 #, c-format, boost-format
@@ -124,8 +127,13 @@ msgstr "CRC32 不一致 (SFV-チェック)"
 msgid "Certificate not trusted, unable to connect"
 msgstr ""
 
+#: dcpp/BufferedSocket.cpp:148
+#, fuzzy
+msgid "Connection closed"
+msgstr "接続時間切れ"
+
 #: dcpp/Socket.cpp:154 dcpp/ConnectionManager.cpp:182
-#: dcpp/BufferedSocket.cpp:154
+#: dcpp/BufferedSocket.cpp:131
 msgid "Connection timeout"
 msgstr "接続時間切れ"
 
@@ -138,7 +146,11 @@ msgstr ""
 msgid "Directory already shared"
 msgstr "このディレクトリはすでに共有されています。"
 
-#: dcpp/BufferedSocket.cpp:407 dcpp/BufferedSocket.cpp:426
+#: dcpp/ADLSearch.h:281
+msgid "Discard"
+msgstr ""
+
+#: dcpp/BufferedSocket.cpp:404
 msgid "Disconnected"
 msgstr "切断"
 
@@ -147,7 +159,7 @@ msgstr "切断"
 msgid "Disconnected user leaving the hub: %1%"
 msgstr ""
 
-#: dcpp/DCPlusPlus.cpp:103
+#: dcpp/DCPlusPlus.cpp:107
 msgid "Download Queue"
 msgstr "ダウンロードキュー"
 
@@ -251,7 +263,7 @@ msgstr "ダウンロードしたツリーが TTH の Root と合致しません�
 msgid "Generated new TLS certificate"
 msgstr ""
 
-#: dcpp/DCPlusPlus.cpp:97
+#: dcpp/DCPlusPlus.cpp:101
 msgid "Hash database"
 msgstr "ハッシュデータベース"
 
@@ -291,7 +303,7 @@ msgstr "ユーザーをキック"
 msgid "Listening socket failed (you need to restart %1%): %2%"
 msgstr ""
 
-#: dcpp/BufferedSocket.cpp:261
+#: dcpp/BufferedSocket.cpp:237
 msgid "Maximum command length exceeded"
 msgstr ""
 
@@ -307,12 +319,12 @@ msgstr "ディレクトリが指定されていません。"
 msgid "No slots available"
 msgstr "空きスロットなし"
 
-#: dcpp/AdcHub.cpp:576
+#: dcpp/AdcHub.cpp:577
 #, boost-format
 msgid "Not listening for connections - please restart %1%"
 msgstr ""
 
-#: dcpp/Transfer.cpp:63 dcpp/Transfer.cpp:67 dcpp/ClientManager.cpp:115
+#: dcpp/Transfer.cpp:63 dcpp/Transfer.cpp:67 dcpp/ClientManager.cpp:114
 #: dcpp/SearchManager.cpp:267 dcpp/SearchManager.cpp:329
 #: dcpp/SearchManager.cpp:331
 msgid "Offline"
@@ -326,12 +338,16 @@ msgstr "ユーザーをリダイレクト"
 msgid "Remove all subdirectories before adding this one"
 msgstr "追加する前にすべてのサブディレクトリを除外"
 
+#: dcpp/BitInputStream.h:40
+msgid "Request to seek beyond the end of data"
+msgstr ""
+
 #: dcpp/DownloadManager.cpp:225
 #, fuzzy
 msgid "Response does not match request"
 msgstr "ダウンロードしたツリーが TTH の Root と合致しません。"
 
-#: dcpp/DCPlusPlus.cpp:100
+#: dcpp/DCPlusPlus.cpp:104
 msgid "Shared Files"
 msgstr "共有ファイル"
 
@@ -346,6 +362,10 @@ msgstr ""
 
 #: dcpp/CryptoManager.cpp:211
 msgid "TLS disabled, no certificate file set"
+msgstr ""
+
+#: dcpp/MerkleCheckOutputStream.h:53 dcpp/MerkleCheckOutputStream.h:113
+msgid "TTH inconsistency"
 msgstr ""
 
 #: dcpp/QueueManager.cpp:510 dcpp/QueueManager.cpp:519
