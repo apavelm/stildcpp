@@ -36,7 +36,7 @@ class SmileIcon : public QObject
 {
 	Q_OBJECT
 public:
-	SmileIcon(QObject * parent = 0): QObject(parent), _name(""), _regExp(""), _icon(0) { _text.clear(); }
+	SmileIcon(QObject * parent = 0): QObject(parent), _name(""), _regExp("") { _text.clear(); }
 	SmileIcon(SmileIcon &from);
 	
 	~SmileIcon() { }

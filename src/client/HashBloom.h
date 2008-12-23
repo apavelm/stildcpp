@@ -2,6 +2,7 @@
 #define HASHBLOOM_H_
 
 #include "MerkleTree.h"
+#include "math.h"
 
 namespace dcpp {
 /**

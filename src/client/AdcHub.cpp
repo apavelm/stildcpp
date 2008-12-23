@@ -30,6 +30,7 @@
 #include "UserCommand.h"
 #include "CryptoManager.h"
 #include "LogManager.h"
+#include "math.h"
 
 namespace dcpp {
 
